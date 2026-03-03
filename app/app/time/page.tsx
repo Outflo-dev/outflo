@@ -8,7 +8,7 @@
 /* ------------------------------
    Imports
 -------------------------------- */
-import { getOrCreateUserEpochMs } from "@/lib/time/userEpoch";
+import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
 import TimeClient from "./TimeClient";
 
 /* ------------------------------

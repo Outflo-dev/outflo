@@ -1,6 +1,6 @@
 /* ==========================================================
    OUTFLO — USE ENVIRONMENT HOOK
-   File: lib/environment/useEnvironment.ts
+   File: lib/environment/use-environment.ts
    Scope: Time-driven environment state updater (1s interval)
    ========================================================== */
 
@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import {
   getEnvironmentState,
   EnvironmentState,
-} from "./environmentEngine";
+} from "./environment-engine";
 
 /* ------------------------------
    Types

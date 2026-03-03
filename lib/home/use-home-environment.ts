@@ -1,6 +1,6 @@
 /* ==========================================================
    OUTFLO — HOME ENVIRONMENT ORCHESTRATOR
-   File: lib/home/useHomeEnvironment.ts
+   File: lib/home/use-home-environment.ts
    Scope: Integrates location, weather, and environment layers
    ========================================================== */
 
@@ -11,14 +11,14 @@
 -------------------------------- */
 
 import { useEffect, useState } from "react";
-import { useEnvironment } from "../environment/useEnvironment";
-import { getDeviceLocation } from "../location/getDeviceLocation";
+import { useEnvironment } from "../environment/use-environment";
+import { getDeviceLocation } from "../location/get-device-location";
 import {
   resolveLocation,
   ManualLocation,
   ResolvedLocation,
-} from "../location/resolveLocation";
-import { getWeather, NormalizedWeather } from "../weather/getWeather";
+} from "../location/resolve-location";
+import { getWeather, NormalizedWeather } from "../weather/get-weather";
 
 /* ------------------------------
    Types

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSwipe } from "@/hooks/useSwipe";
+import { useSwipe } from "@/hooks/use-swipe";
 
 export default function State() {
   const router = useRouter();

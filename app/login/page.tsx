@@ -6,7 +6,7 @@
 
 import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
-import LoginClient from "./login-client";
+import LoginClient from "./LoginClient";
 
 export default async function LoginPage() {
   const supabase = await supabaseServer();

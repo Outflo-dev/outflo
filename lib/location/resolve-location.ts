@@ -1,6 +1,6 @@
 /* ==========================================================
    OUTFLO — LOCATION RESOLVER
-   File: lib/location/resolveLocation.ts
+   File: lib/location/get-device-location.ts
    Scope: Determines authoritative runtime location source
    ========================================================== */
 
@@ -8,7 +8,7 @@
    Imports
 -------------------------------- */
 
-import { DeviceLocationResult } from "./getDeviceLocation";
+import { DeviceLocationResult } from "./get-device-location";
 
 /* ------------------------------
    Types

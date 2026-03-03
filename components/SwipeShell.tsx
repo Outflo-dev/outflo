@@ -12,7 +12,7 @@
 import { ReactNode, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useSwipe } from "../hooks/useSwipe";
+import { useSwipe } from "../hooks/use-swipe";
 
 /* ------------------------------
    Constants

@@ -7,34 +7,34 @@ Scope: Home orchestration architecture
 
 ## Layer Hierarchy
 
-environmentEngine.ts  
+environment-engine.ts  
 → Pure orbital math  
 → No I/O  
 → Deterministic  
 
-useEnvironment.ts  
+use-environment.ts  
 → Time cadence (1s interval)  
 → Feeds engine  
 → No location logic  
 
-getDeviceLocation.ts  
+get-device-location.ts  
 → Browser geolocation wrapper  
 → Promise-based  
 → No UI  
 
-resolveLocation.ts  
+resolve-location.ts  
 → Determines authoritative source  
 → Priority:
    1. Device
    2. Manual
    3. None  
 
-getWeather.ts  
+get-weather.ts  
 → Provider-isolated weather fetch  
 → Normalized Outflō weather model  
 → Forecast-ready  
 
-useHomeEnvironment.ts  
+use-home-environment.ts  
 → Orchestration layer  
 → Calls location  
 → Resolves authority  

@@ -1,6 +1,6 @@
 /* ==========================================================
    OUTFLO — WEATHER FETCH
-   File: lib/weather/getWeather.ts
+   File: lib/weather/get-weather.ts
    Scope: Provider-agnostic weather fetch + normalization
    ========================================================== */
 

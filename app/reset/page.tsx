@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabaseBrowser } from "@/lib/supabase/browser";
+import { supabaseBrowser } from "@/lib/supabase/client";
 
 export default function ResetPage() {
   const [ready, setReady] = useState(false);

@@ -1,6 +1,6 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT ENGINE
-   File: lib/environment/environmentEngine.ts
+   File: lib/environment/environment-engine.ts
    Scope: Deterministic orbital environment state generator
    ========================================================== */
 

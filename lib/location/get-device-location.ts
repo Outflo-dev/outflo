@@ -1,6 +1,6 @@
 /* ==========================================================
    OUTFLO — DEVICE LOCATION
-   File: lib/location/getDeviceLocation.ts
+   File: lib/location/get-device-location.ts
    Scope: Promise-based wrapper for browser geolocation API
    ========================================================== */
 

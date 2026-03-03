@@ -8,7 +8,7 @@
    Imports
 -------------------------------- */
 import { supabaseServer } from "@/lib/supabase/server";
-import { getOrCreateUserEpochMs } from "@/lib/time/userEpoch";
+import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
 import Portal from "@/components/Portal";
 
 /* ------------------------------
