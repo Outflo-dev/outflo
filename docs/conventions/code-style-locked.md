@@ -11,20 +11,23 @@ This standard is intentionally minimal and stable. It is designed so the codebas
 
 # Rules
 
-## Scope
+##  Scope
 
-This style applies to the following source files:
+This style applies to executable source files in the Outflō repository, including:
 
 - `.ts`
 - `.tsx`
 - `.js`
 - `.jsx`
+- `.ps1`
+- `.sh`
 
 It does **not** apply to:
 
 - Markdown documentation (`.md`)
 - JSON configuration files
 - CSS or styling files
+- Plaintext snapshots (e.g. `docs/repo-tree.txt`)
 
 Documentation files follow normal Markdown conventions.
 
