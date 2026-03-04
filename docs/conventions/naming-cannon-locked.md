@@ -1,41 +1,42 @@
 # OUTFLO — NAMING CANON (LOCKED)
 
-Purpose:  
-Remove naming as a variable. Prevent drift across the codebase.
+Purpose  
+Remove naming as a variable and prevent drift across the codebase.
 
 Outflō prioritizes naming stability over stylistic preference. Once a naming convention is locked, it should not change unless it removes measurable development friction.
 
 ---
 
-## 1. Core Identity
+# Rules
 
-**Brand name (marketing / copy):** Outflō  
-**Technical identifiers (code / URLs / DB / domains):** outflo
+## Core Identity
+
+Brand name (marketing / copy): Outflō  
+Technical identifiers (code / URLs / DB / domains): outflo
 
 Rules:
+
 - All technical surfaces remain **ASCII only** (no diacritics).
 - All technical identifiers remain **lowercase**.
 
 ---
 
-## 2. Filesystem Conventions
+## Filesystem Conventions
 
-### 2.1 Folder Naming
+### Folder Naming
+
 All folders use **kebab-case**, except where the framework requires otherwise.
 
-Examples:
-- `email-mirror/`
-- `home-integration-flow/`
-- `environment-engine/`
-
 Next.js dynamic route segments are reserved patterns:
+
 - `[id]/`
 - `[slug]/`
 - `[...slug]/`
 
 ---
 
-### 2.2 Next.js Reserved Filenames
+### Next.js Reserved Filenames
+
 These must match framework expectations exactly:
 
 - `page.tsx`
@@ -47,33 +48,85 @@ These must match framework expectations exactly:
 
 ---
 
-### 2.3 React Component Files
-**PascalCase**.
+### React Component Files
+
+React component files use **PascalCase**.
 
 Applies to files exporting React components (including Client components).
 
-Examples:
+---
+
+### Non-Component TypeScript
+
+Non-component TypeScript files use **kebab-case**.
+
+Applies to:
+
+- libraries
+- services
+- hooks
+- utilities
+- pure functions
+
+---
+
+## Documentation
+
+All documentation files use **kebab-case**.
+
+Architecture documents are **versioned inside folders**, not inside filenames.
+
+---
+
+## Database Naming
+
+Database objects use **snake_case**.
+
+---
+
+## URL + Domain Naming
+
+All technical identifiers remain lowercase.
+
+---
+
+## Repository Exceptions
+
+The following filenames are allowed because they are ecosystem standards:
+
+- `README.md`
+- `LICENSE`
+- `package.json`
+- `package-lock.json`
+- `pnpm-lock.yaml`
+- `yarn.lock`
+- `tsconfig.json`
+- `next.config.js`
+- `next.config.mjs`
+- `.gitignore`
+- `.env*`
+- `.eslintrc*`
+- `prettier.config.*`
+
+---
+
+# Examples
+
+Folder examples:
+
+- `email-mirror/`
+- `home-integration-flow/`
+- `environment-engine/`
+
+Component examples:
+
 - `LoginClient.tsx`
 - `SwipeShell.tsx`
 - `EmailMirrorClient.tsx`
 - `Portal.tsx`
 
-Notes:
-- Component files are typically located in `components/` or adjacent to a route when tightly coupled to that page.
+Utility examples:
 
----
-
-### 2.4 Non-Component TypeScript
-**kebab-case**.
-
-Applies to:
-- libraries
-- services
-- hooks (non-component)
-- utilities
-- pure functions / helpers
-
-Examples:
 - `use-swipe.ts`
 - `environment-engine.ts`
 - `resolve-location.ts`
@@ -81,15 +134,7 @@ Examples:
 - `get-device-location.ts`
 - `get-weather.ts`
 
----
-
-## 3. Documentation
-
-All documentation files use **kebab-case**.
-
-Architecture documents are **versioned inside folders**.
-
-Canonical structure:
+Documentation structure example:
 
 ```
 docs/
@@ -102,7 +147,7 @@ docs/
       canonical.md
 
     database/
-      contract.md
+      v1.md
 
     environment-engine/
       v1.md
@@ -117,61 +162,27 @@ docs/
       v1.md
 ```
 
-Versioning pattern:
+Database examples:
 
-```
-system-name/
-  v1.md
-  v2.md
-  v3.md
-```
-
-Version numbers belong **inside the folder**, not in the filename.
-
----
-
-## 4. Database Naming
-
-Database objects use **snake_case**.
-
-Examples:
 - `user_epoch`
 - `receipt_number`
 - `merchant_slug`
 - `ingest_events`
 
----
+URL examples:
 
-## 5. URL + Domain Naming
-
-All technical identifiers remain lowercase.
-
-Examples:
 - `outflo.xyz`
 - `github.com/outflo/outflo`
 
 ---
 
-## 6. Repository Exceptions (Allowed Non-Canon Filenames)
+# Invariant
 
-These are permitted because they are ecosystem standards:
+Components → PascalCase  
+Everything else → kebab-case  
 
-- `README.md`
-- `LICENSE`
-- `package.json`
-- `package-lock.json` / `pnpm-lock.yaml` / `yarn.lock`
-- `tsconfig.json`
-- `next.config.js` / `next.config.mjs`
-- `.gitignore`
-- `.env*`
-- `.eslintrc*`
-- `prettier.config.*`
+This rule holds across the repository.
 
 ---
 
-## 7. Invariant
-
-**Components → PascalCase**  
-**Everything else → kebab-case**  
-
-This rule should hold across the repository.
+End of Document.

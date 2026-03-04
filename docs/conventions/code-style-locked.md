@@ -1,15 +1,17 @@
 # Outflō Code Style — Locked
 
-This document defines the approved structural conventions for source code files in the Outflō codebase.
-
-Purpose:  
+Purpose  
 Maintain visual consistency and reduce formatting drift across files.
+
+This document defines the approved structural conventions for source code files in the Outflō codebase.
 
 This standard is intentionally minimal and stable. It is designed so the codebase does not need to revisit formatting decisions.
 
 ---
 
-## 1. Scope
+# Rules
+
+## Scope
 
 This style applies to the following source files:
 
@@ -28,61 +30,27 @@ Documentation files follow normal Markdown conventions.
 
 ---
 
-## 2. File Header (Top of File)
+## File Header (Top of File)
 
 Every source file should begin with the Outflō file header.
 
 Use exactly this format:
 
-```ts
-/* ==========================================================
-   OUTFLO — <FILE PURPOSE>
-   File: <repo-relative-path>
-   Scope: <one-line responsibility>
-   ========================================================== */
-```
-
-Example:
-
-```ts
-/* ==========================================================
-   OUTFLO — ROOT LAYOUT
-   File: app/layout.tsx
-   Scope: Global frame, metadata, and viewport contract
-   ========================================================== */
-```
-
-Example (deep route):
-
-```ts
-/* ==========================================================
-   OUTFLO — RECEIPT DETAIL PAGE
-   File: app/money/receipts/[id]/page.tsx
-   Scope: Display single receipt drill-down
-   ========================================================== */
-```
-
-Example (API route):
-
-```ts
-/* ==========================================================
-   OUTFLO — RESEND INGEST WEBHOOK
-   File: app/api/ingest/resend/route.ts
-   Scope: Handle inbound email receipt ingestion
-   ========================================================== */
-```
+    /* ==========================================================
+       OUTFLO — <FILE PURPOSE>
+       File: <repo-relative-path>
+       Scope: <one-line responsibility>
+       ========================================================== */
 
 ---
 
-## 3. Section Headers (Major Blocks)
+## Section Headers (Major Blocks)
 
 Use the following structure for major sections inside a file.
 
-```ts
-/* ------------------------------
-   <Section Title>
--------------------------------- */
-```
+    /* ------------------------------
+       <Section Title>
+    -------------------------------- */
 
 Typical section titles include:
 
@@ -98,7 +66,7 @@ Sections should be used only where they improve readability.
 
 ---
 
-## 4. Disallowed Variants
+## Disallowed Variants
 
 Do **not** use:
 
@@ -111,17 +79,15 @@ The codebase should maintain a single consistent header style.
 
 ---
 
-## 5. File Path Rule (Locked)
+## File Path Rule (Locked)
 
 The `File:` field must contain the **full repository-relative path**.
 
 Examples:
 
-```
-File: app/layout.tsx
-File: app/money/receipts/[id]/page.tsx
-File: app/api/ingest/resend/route.ts
-```
+    File: app/layout.tsx
+    File: app/money/receipts/[id]/page.tsx
+    File: app/api/ingest/resend/route.ts
 
 Do not shorten or truncate the path.
 
@@ -129,23 +95,61 @@ This ensures the header always reflects the file’s true location within the pr
 
 ---
 
-## 6. Formatting Conventions
+## Formatting Conventions
 
 Outflō follows modern TypeScript project defaults.
 
-```
-Indentation: 2 spaces
-Line width target: ~100 characters
-```
+    Indentation: 2 spaces
+    Line width target: ~100 characters
 
 These align with common formatting tools such as Prettier.
 
 ---
 
-## 7. Rule of Application
+## Rule of Application
 
 When touching a file meaningfully, bring it into compliance with this style.
 
 Do **not** create commits purely for comment formatting unless necessary.
 
 New files must follow the style immediately.
+
+---
+
+# Examples
+
+Header example:
+
+    /* ==========================================================
+       OUTFLO — ROOT LAYOUT
+       File: app/layout.tsx
+       Scope: Global frame, metadata, and viewport contract
+       ========================================================== */
+
+Deep route example:
+
+    /* ==========================================================
+       OUTFLO — RECEIPT DETAIL PAGE
+       File: app/money/receipts/[id]/page.tsx
+       Scope: Display single receipt drill-down
+       ========================================================== */
+
+API route example:
+
+    /* ==========================================================
+       OUTFLO — RESEND INGEST WEBHOOK
+       File: app/api/ingest/resend/route.ts
+       Scope: Handle inbound email receipt ingestion
+       ========================================================== */
+
+---
+
+# Invariant
+
+All source files follow the same header format, section header structure, and repository-relative file path rule.
+
+Code style decisions should not be revisited unless they remove measurable development friction.
+
+---
+
+End of Document.
