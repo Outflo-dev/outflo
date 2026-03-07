@@ -1,53 +1,265 @@
-"use client";
-
 /* ==========================================================
-   OUTFLO — ENABLE EMAIL MIRROR BUTTON
-   File: app/account/profile/enable-email-mirror-button.tsx
-   Scope: Open 2-minute window + navigate to Email Mirror verification page
+   OUTFLO — ACCOUNT PROFILE PAGE
+   File: app/account/profile/page.tsx
+   Scope: Render the launch identity surface for the authenticated user
    ========================================================== */
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { supabaseServer } from "@/lib/supabase/server";
 
-export default function EnableEmailMirrorButton() {
-  const router = useRouter();
-  const [busy, setBusy] = useState(false);
+/* ------------------------------
+   Page
+-------------------------------- */
+export default async function AccountProfilePage() {
+  const supabase = await supabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const onClick = async () => {
-    if (busy) return;
-    setBusy(true);
+  if (!user) {
+    redirect("/login");
+  }
 
-    try {
-      // Email Mirror namespace (not forwarding)
-      const r = await fetch("/api/email-mirror/open", {
-        method: "POST",
-        cache: "no-store",
-        headers: { Accept: "application/json" },
-      });
+  const { data: identity } = await supabase
+    .from("user_identity_assets")
+    .select("display_name, username, avatar_url")
+    .eq("user_id", user.id)
+    .maybeSingle();
 
-      // even if open fails, don't brick profile—just stop
-      if (!r.ok) return;
+  const { data: preferences } = await supabase
+    .from("user_preferences")
+    .select("manual_city")
+    .eq("user_id", user.id)
+    .maybeSingle();
 
-      router.push("/account/email-mirror");
-    } finally {
-      setBusy(false);
-    }
-  };
+  const { data: aliases } = await supabase
+    .from("ingest_aliases")
+    .select("alias")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: true })
+    .limit(1);
+
+  const displayName = identity?.display_name?.trim() || "Not set";
+  const username = identity?.username?.trim() || "";
+  const avatarUrl = identity?.avatar_url?.trim() || "";
+  const homeCity = preferences?.manual_city?.trim() || "Not set";
+
+  const alias = aliases?.[0]?.alias ?? null;
+  const accountNumber = alias ? alias.split("@")[0] : "Not set";
+
+  const fallbackLetter =
+    displayName && displayName !== "Not set"
+      ? displayName.charAt(0).toUpperCase()
+      : "O";
 
   return (
-    <button
-      onClick={onClick}
-      disabled={busy}
+    <main
       style={{
-        padding: "10px 14px",
-        fontSize: 14,
-        fontWeight: 700,
-        cursor: busy ? "default" : "pointer",
-        borderRadius: 12,
-        opacity: busy ? 0.7 : 1,
+        maxWidth: 520,
+        margin: "0 auto",
+        padding: "32px 20px 64px",
       }}
     >
-      {busy ? "Opening…" : "Enable Email Mirror"}
-    </button>
+      <section
+        style={{
+          display: "grid",
+          justifyItems: "center",
+          gap: 12,
+          marginBottom: 28,
+        }}
+      >
+        {avatarUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={avatarUrl}
+            alt={displayName}
+            style={{
+              width: 92,
+              height: 92,
+              borderRadius: "50%",
+              objectFit: "cover",
+              border: "1px solid rgba(255,255,255,0.12)",
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              width: 92,
+              height: 92,
+              borderRadius: "50%",
+              display: "grid",
+              placeItems: "center",
+              fontSize: 28,
+              fontWeight: 700,
+              border: "1px solid rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.04)",
+            }}
+          >
+            {fallbackLetter}
+          </div>
+        )}
+
+        <div style={{ textAlign: "center" }}>
+          <h1
+            style={{
+              fontSize: 28,
+              lineHeight: 1.1,
+              margin: 0,
+              marginBottom: 6,
+            }}
+          >
+            {displayName}
+          </h1>
+
+          <p
+            style={{
+              margin: 0,
+              opacity: 0.75,
+              fontSize: 15,
+            }}
+          >
+            {username ? `@${username}` : "Username not set"}
+          </p>
+        </div>
+      </section>
+
+      <section
+        style={{
+          borderTop: "1px solid rgba(255,255,255,0.1)",
+          borderBottom: "1px solid rgba(255,255,255,0.1)",
+          marginBottom: 20,
+        }}
+      >
+        <IdentityRow label="Account" value={accountNumber} />
+        <IdentityRow label="Home" value={homeCity} />
+      </section>
+
+      <section
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 12,
+          marginBottom: 24,
+        }}
+      >
+        <ActionButton href="/account/profile/edit" label="Edit Profile" />
+        <ActionButton href="/logout" label="Sign Out" />
+      </section>
+
+      <section
+        style={{
+          borderTop: "1px solid rgba(255,255,255,0.1)",
+          borderBottom: "1px solid rgba(255,255,255,0.1)",
+        }}
+      >
+        <NavRow href="/account/profile/edit" label="Environment" />
+        <NavRow href="/account/email-mirror" label="Email Mirror" />
+        <StaticRow label="Support" value="Soon" />
+        <StaticRow label="Legal" value="Soon" />
+      </section>
+    </main>
+  );
+}
+
+/* ------------------------------
+   Helpers
+-------------------------------- */
+function IdentityRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        gap: 16,
+        padding: "16px 0",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
+      <span style={{ opacity: 0.7 }}>{label}</span>
+      <span style={{ fontWeight: 600, textAlign: "right" }}>{value}</span>
+    </div>
+  );
+}
+
+function ActionButton({
+  href,
+  label,
+}: {
+  href: string;
+  label: string;
+}) {
+  return (
+    <Link
+      href={href}
+      style={{
+        display: "grid",
+        placeItems: "center",
+        minHeight: 48,
+        borderRadius: 14,
+        textDecoration: "none",
+        fontWeight: 700,
+        border: "1px solid rgba(255,255,255,0.12)",
+        background: "rgba(255,255,255,0.04)",
+      }}
+    >
+      {label}
+    </Link>
+  );
+}
+
+function NavRow({
+  href,
+  label,
+}: {
+  href: string;
+  label: string;
+}) {
+  return (
+    <Link
+      href={href}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 16,
+        padding: "18px 0",
+        textDecoration: "none",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
+      <span>{label}</span>
+      <span style={{ opacity: 0.6 }}>→</span>
+    </Link>
+  );
+}
+
+function StaticRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 16,
+        padding: "18px 0",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
+      <span>{label}</span>
+      <span style={{ opacity: 0.6 }}>{value}</span>
+    </div>
   );
 }

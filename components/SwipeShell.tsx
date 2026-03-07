@@ -17,7 +17,7 @@ import { useSwipe } from "../hooks/use-swipe";
 /* ------------------------------
    Constants
 -------------------------------- */
-const ROUTES = ["/", "/app/systems", "/time"];
+const ROUTES = ["/", "/app/systems", "/app/time", "/account/profile"];
 
 /* ------------------------------
    Helpers
@@ -83,13 +83,25 @@ export default function SwipeShell({ children }: { children: ReactNode }) {
               backdropFilter: "blur(10px)",
             }}
           >
-            <Pill href="/" active={pathname === "/"} label="Home" />
+            <Pill href="/" active={pathname === "/"} label="Portal" />
+
             <Pill
               href="/app/systems"
               active={pathname === "/app/systems"}
               label="Systems"
             />
-            <Pill href="/time" active={pathname === "/time"} label="Time" />
+
+            <Pill
+              href="/app/time"
+              active={pathname === "/app/time"}
+              label="Time"
+            />
+
+            <Pill
+              href="/account/profile"
+              active={pathname === "/account/profile"}
+              label="Home"
+            />
           </div>
         </nav>
       )}
@@ -114,7 +126,7 @@ function Pill({
       href={href}
       style={{
         textDecoration: "none",
-        color: "#fffefa", // ✅ was black
+        color: "#fffefa",
         fontSize: 12,
         opacity: active ? 1 : 0.55,
         padding: "8px 12px",
@@ -129,6 +141,3 @@ function Pill({
     </Link>
   );
 }
-
-
-
