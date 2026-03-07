@@ -7,6 +7,7 @@
    ========================================================== */
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 /* ------------------------------
    Types
@@ -118,8 +119,20 @@ export default function ProfileClient({
         margin: "0 auto",
         padding: "32px 20px 64px",
       }}
+    ><div style={{ marginBottom: 16 }}>
+  <Link
+    href="/account/profile"
+    style={{
+      textDecoration: "none",
+      fontSize: 14,
+      opacity: 0.8,
+    }}
     >
-      <h1 style={{ fontSize: 28, marginBottom: 8 }}>Profile</h1>
+    ← Back to Profile
+     </Link>
+    </div>
+
+    <h1 style={{ fontSize: 28, marginBottom: 8 }}>Profile</h1>
       <p style={{ opacity: 0.8, marginBottom: 28 }}>
         Define identity and environment preferences for the system.
       </p>

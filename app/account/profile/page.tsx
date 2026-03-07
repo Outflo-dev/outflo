@@ -42,7 +42,6 @@ export default async function AccountProfilePage() {
 
   const displayName = identity?.display_name?.trim() || "Not set";
   const username = identity?.username?.trim() || "";
-  const avatarUrl = identity?.avatar_url?.trim() || "";
   const homeCity = preferences?.manual_city?.trim() || "Not set";
 
   const alias = aliases?.[0]?.alias ?? null;
@@ -69,20 +68,6 @@ export default async function AccountProfilePage() {
           marginBottom: 28,
         }}
       >
-        {avatarUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={avatarUrl}
-            alt={displayName}
-            style={{
-              width: 92,
-              height: 92,
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "1px solid rgba(255,255,255,0.12)",
-            }}
-          />
-        ) : (
           <div
             style={{
               width: 92,
@@ -99,7 +84,7 @@ export default async function AccountProfilePage() {
 >
             {fallbackLetter}
           </div>
-        )}
+        
 
         <div style={{ textAlign: "center" }}>
           <h1
