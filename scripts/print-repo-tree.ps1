@@ -1,20 +1,21 @@
-# ==========================================================
-# OUTFLO - REPOSITORY TREE PRINTER
-# File: scripts/print-repo-tree.ps1
-# Scope: Generate current repository tree and timestamped snapshots
-# ==========================================================
+##### ==========================================================
+##### OUTFLO - REPOSITORY TREE PRINTER
+##### File: scripts/print-repo-tree.ps1
+##### Scope: Generate current repository tree, timestamped snapshots, and terminal-only subsection views
+##### ==========================================================
 
 param(
   [switch]$WriteToDocs,
-  [int]$MaxDepth = 6
+  [int]$MaxDepth = 6,
+  [string]$Only
 )
 
 $ErrorActionPreference = "Stop"
 
-# ------------------------------
-# Repo Root + Output Paths
-# ------------------------------
-$RepoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+##### ------------------------------
+##### Repo Root + Output Paths
+##### ------------------------------
+$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 Set-Location $RepoRoot
 
 $RepositoryDir = Join-Path $RepoRoot "docs\repository"
@@ -23,9 +24,9 @@ $SnapshotsDir = Join-Path $RepositoryDir "snapshots"
 
 $CurrentOutPath = Join-Path $CurrentDir "repository-tree.txt"
 
-# ------------------------------
-# Config
-# ------------------------------
+##### ------------------------------
+##### Config
+##### ------------------------------
 $IncludeRoots = @(
   "app",
   "components",
@@ -52,14 +53,21 @@ $ExcludeFiles = @(
   ".DS_Store"
 )
 
-# ------------------------------
-# Helpers
-# ------------------------------
+##### ------------------------------
+##### Guards
+##### ------------------------------
+if ($WriteToDocs -and $Only) {
+  throw "Do not combine -WriteToDocs with -Only. Use -Only for terminal preview only."
+}
+
+##### ------------------------------
+##### Helpers
+##### ------------------------------
 function Is-ExcludedPath {
   param([string]$FullName)
 
   foreach ($d in $ExcludeDirs) {
-    $pattern = "(^|\\)$([Regex]::Escape($d))(\\|$)"
+    $pattern = "(^|[\\/])$([Regex]::Escape($d))([\\/]|$)"
     if ($FullName -match $pattern) {
       return $true
     }
@@ -131,12 +139,26 @@ function Ensure-Directory {
   }
 }
 
-# ------------------------------
-# Build Output
-# ------------------------------
+function Build-TreeLines {
+  param(
+    [string]$RootPath,
+    [string]$Label,
+    [int]$DepthLimit
+  )
+
+  $lines = @()
+  $lines += ($Label + "\")
+  $lines += Print-Node -Path $RootPath -Prefix "" -Depth 1 -LimitDepth $DepthLimit
+  $lines += ""
+
+  return $lines
+}
+
+##### ------------------------------
+##### Build Output
+##### ------------------------------
 $Now = Get-Date
-$UnixTime = [DateTimeOffset]$Now
-$UnixSeconds = $UnixTime.ToUnixTimeSeconds()
+$UnixSeconds = ([DateTimeOffset]$Now).ToUnixTimeSeconds()
 $HumanStamp = $Now.ToString("yyyy-MM-dd_HH-mm")
 $SnapshotFileName = "$UnixSeconds" + "__" + "$HumanStamp.txt"
 $SnapshotOutPath = Join-Path $SnapshotsDir $SnapshotFileName
@@ -148,30 +170,41 @@ $Lines += ("Unix: " + $UnixSeconds)
 $Lines += ("Root: " + $RepoRoot)
 $Lines += ""
 
-foreach ($root in $IncludeRoots) {
-  $full = Join-Path $RepoRoot $root
+if ($Only) {
+  $NormalizedOnly = $Only.Trim().TrimStart('\').TrimStart('/')
+  $OnlyPath = Join-Path $RepoRoot $NormalizedOnly
 
-  if (!(Test-Path -LiteralPath $full)) {
-    $Lines += ($root + "\ (missing)")
-    $Lines += ""
-    continue
+  if (!(Test-Path -LiteralPath $OnlyPath)) {
+    $Lines += ($NormalizedOnly + "\ (missing)")
   }
+  else {
+    $Lines += Build-TreeLines -RootPath $OnlyPath -Label $NormalizedOnly -DepthLimit $MaxDepth
+  }
+}
+else {
+  foreach ($root in $IncludeRoots) {
+    $full = Join-Path $RepoRoot $root
 
-  $Lines += ($root + "\")
-  $Lines += Print-Node -Path $full -Prefix "" -Depth 1 -LimitDepth $MaxDepth
-  $Lines += ""
+    if (!(Test-Path -LiteralPath $full)) {
+      $Lines += ($root + "\ (missing)")
+      $Lines += ""
+      continue
+    }
+
+    $Lines += Build-TreeLines -RootPath $full -Label $root -DepthLimit $MaxDepth
+  }
 }
 
-# ------------------------------
-# Output
-# ------------------------------
+##### ------------------------------
+##### Output
+##### ------------------------------
 if ($WriteToDocs) {
   Ensure-Directory -Path $RepositoryDir
   Ensure-Directory -Path $CurrentDir
   Ensure-Directory -Path $SnapshotsDir
 
-  $Lines | Set-Content -Path $CurrentOutPath -Encoding UTF8
-  $Lines | Set-Content -Path $SnapshotOutPath -Encoding UTF8
+  $Lines | Set-Content -LiteralPath $CurrentOutPath -Encoding UTF8
+  $Lines | Set-Content -LiteralPath $SnapshotOutPath -Encoding UTF8
 
   Write-Host ("Wrote current tree: " + $CurrentOutPath)
   Write-Host ("Wrote snapshot: " + $SnapshotOutPath)

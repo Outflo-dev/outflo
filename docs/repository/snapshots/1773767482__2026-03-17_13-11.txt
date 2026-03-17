@@ -1,6 +1,6 @@
 ﻿OUTFLO - REPOSITORY TREE
-Generated: 2026-03-17 13:29:25
-Unix: 1773768565
+Generated: 2026-03-17 13:11:22
+Unix: 1773767482
 Root: C:\dev\Outflo
 
 app\
@@ -211,11 +211,10 @@ docs\
 +-- philosophy\
 |   +-- outflo-way.md
 +-- product\
-|   +-- domains\
-|   |   +-- profile\
-|   |   |   +-- v1.md
-|   |   +-- receipts\
-|   |       +-- v1.md
+|   +-- account-profile\
+|   |   +-- v1.md
+|   +-- receipt-system\
+|   |   +-- v1.md
 |   +-- ui\
 |       +-- money\
 |       |   +-- receipts-detail\
@@ -229,7 +228,6 @@ docs\
 |   |   +-- repository-tree.txt
 |   +-- snapshots\
 |   |   +-- 1773766949__2026-03-17_13-02.txt
-|   |   +-- 1773767482__2026-03-17_13-11.txt
 |   +-- README.md
 +-- README.md
 
