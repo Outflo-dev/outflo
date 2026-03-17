@@ -32,61 +32,111 @@ docs/
 
 Each top-level folder represents a distinct system layer:
 
-- Philosophy defines how systems are built
-- Conventions define repository laws
-- Architecture defines system contracts
-- Product defines user-facing behavior
-- Archive preserves historical systems
+- Philosophy defines how systems are built  
+- Conventions define repository laws  
+- Architecture defines system contracts  
+- Product defines user-facing behavior  
+- Archive preserves historical systems  
 
 Layers must not overlap in responsibility.
 
 ---
 
-### 2. Filename Independence (Locked)
+### 2. Versioning Law (Locked)
+
+Documentation may evolve through versioned files.
+
+When multiple versions exist within a folder:
+
+- The **highest version number is always the active canonical document**
+- Lower versions are preserved as historical reference
+
+Example:
+
+```
+system/
+  system-v1.md
+  system-v2.md   ← active
+```
+
+This rule applies across:
+
+- architecture  
+- product  
+- and any versioned documentation systems  
+
+#### Exception — Conventions
+
+Conventions represent repository laws and are generally **not versioned**.
+
+However, when versioning is used:
+
+- The same rule applies  
+- The highest version remains canonical  
+
+---
+
+### 3. Filename Independence (Locked)
 
 All versioned documents must remain intelligible when separated from their folder path.
 
 This ensures documents can be:
 
-- exported
-- shared
-- uploaded
-- reviewed in isolation
+- exported  
+- shared  
+- uploaded  
+- reviewed in isolation  
 
 Rule:
 
 Versioned files must use descriptive filenames:
 
-    <system-name>-v1.md
-    <system-name>-v2.md
+    <system-name>-v1.md  
+    <system-name>-v2.md  
 
 Examples:
 
-    outflo-ledger-v1.md
-    ingest-pipeline-v1.md
-    database-v2.md
-    profile-page-v1.md
+    outflo-ledger-v1.md  
+    ingest-pipeline-v1.md  
+    database-v2.md  
+    profile-page-v1.md  
 
 Files must never rely solely on:
 
-    v1.md
+    v1.md  
 
 ---
 
-### 3. README Contract (Locked)
+### 4. README Contract (Locked)
 
 README.md is reserved for index and navigation purposes only.
 
 It must not contain:
 
-- system contracts
-- architecture definitions
-- versioned documents
+- system contracts  
+- architecture definitions  
+- versioned documents  
 
 Usage:
 
-- docs/README.md → documentation entry point
-- folder README.md → local index for that folder
+- docs/README.md → documentation entry point  
+- folder README.md → local index for that folder  
+
+---
+
+### 5. Active vs Archived Systems (Locked)
+
+The architecture layer must contain **only active systems**.
+
+Archived systems must:
+
+- be moved entirely into `docs/archive/`
+- not remain in `architecture/` in any form
+- not leave behind placeholder or redirect files
+
+Architecture must remain a clean representation of the **current system only**.
+
+The archive serves as the sole location for historical system designs.
 
 ---
 
@@ -108,24 +158,31 @@ These documents define the conceptual foundation of the project rather than spec
 
 ## Conventions
 
-Conventions define repository laws and are not versioned.
+Conventions define repository laws and documentation standards.
 
 Location:
 
     docs/conventions/
 
-Examples:
+Structure:
 
-- naming-canon-locked.md
-- code-style-locked.md
+    conventions/
+      laws/        → Locked repository rules  
+      templates/   → Reusable documentation templates  
 
-Templates used when writing documentation also live here.
+Examples (laws):
 
-Examples:
+- naming-canon-locked.md  
+- code-style-locked.md  
 
-- convention-template.md
-- architecture-template.md
-- placeholder-readme-template.md
+Examples (templates):
+
+- convention-template.md  
+- architecture-template.md  
+- placeholder-readme-template.md  
+- UI-contract-template.md  
+
+Conventions are authoritative and govern the entire repository.
 
 ---
 
@@ -139,12 +196,15 @@ Location:
 
 Each system owns its own folder.
 
-Architecture documents are versioned and must follow the Filename Independence rule.
+Architecture documents are versioned and must follow:
+
+- Versioning Law  
+- Filename Independence rule  
 
 Example:
 
     outflo-ledger/
-      outflo-ledger-v1.md
+      outflo-ledger-v1.md  
 
 Architecture documents define system behavior and invariants.
 
@@ -158,14 +218,23 @@ Location:
 
     docs/product/
 
+Structure:
+
+    product/
+      domains/     → Functional product capabilities  
+      ui/          → UI surfaces and rendering layer  
+
 Examples:
 
-- UI surfaces
-- page-level contracts
-- interaction flows
-- user-visible system behavior
+- UI surfaces  
+- page-level contracts  
+- interaction flows  
+- user-visible system behavior  
 
-Product documents may be versioned and must follow the Filename Independence rule.
+Product documents may be versioned and must follow:
+
+- Versioning Law  
+- Filename Independence rule  
 
 ---
 
@@ -182,7 +251,7 @@ Archived systems remain documented but are excluded from the live architecture s
 Example:
 
     archive/environment-engine/
-      environment-engine-v1.md
+      environment-engine-v1.md  
 
 The archive preserves historical exploration without affecting active system contracts.
 
@@ -192,10 +261,11 @@ The archive preserves historical exploration without affecting active system con
 
 Outflō documentation is structured to:
 
-- separate system law from implementation
-- preserve clarity across layers
-- ensure documents remain readable in isolation
-- prevent structural drift
+- separate system law from implementation  
+- preserve clarity across layers  
+- ensure documents remain readable in isolation  
+- allow systems to evolve without ambiguity  
+- prevent structural drift  
 
 ---
 

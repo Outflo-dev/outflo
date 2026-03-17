@@ -1,8 +1,8 @@
-##### ==========================================================
-##### OUTFLO - REPOSITORY TREE PRINTER
-##### File: scripts/print-repo-tree.ps1
-##### Scope: Generate current repository tree, timestamped snapshots, and terminal-only subsection views
-##### ==========================================================
+# ==========================================================
+# OUTFLO - REPOSITORY TREE PRINTER
+# File: scripts/print-repo-tree.ps1
+# Scope: Generate current repository tree, timestamped snapshots, and terminal-only subsection views
+# ==========================================================
 
 param(
   [switch]$WriteToDocs,
@@ -12,9 +12,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-##### ------------------------------
-##### Repo Root + Output Paths
-##### ------------------------------
+# ------------------------------
+# Repo Root + Output Paths
+# ------------------------------
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 Set-Location $RepoRoot
 
@@ -24,9 +24,9 @@ $SnapshotsDir = Join-Path $RepositoryDir "snapshots"
 
 $CurrentOutPath = Join-Path $CurrentDir "repository-tree.txt"
 
-##### ------------------------------
-##### Config
-##### ------------------------------
+# ------------------------------
+# Config
+# ------------------------------
 $IncludeRoots = @(
   "app",
   "components",
@@ -53,16 +53,16 @@ $ExcludeFiles = @(
   ".DS_Store"
 )
 
-##### ------------------------------
-##### Guards
-##### ------------------------------
+# ------------------------------
+# Guards
+# ------------------------------
 if ($WriteToDocs -and $Only) {
   throw "Do not combine -WriteToDocs with -Only. Use -Only for terminal preview only."
 }
 
-##### ------------------------------
-##### Helpers
-##### ------------------------------
+# ------------------------------
+# Helpers
+# ------------------------------
 function Is-ExcludedPath {
   param([string]$FullName)
 
@@ -154,9 +154,9 @@ function Build-TreeLines {
   return $lines
 }
 
-##### ------------------------------
-##### Build Output
-##### ------------------------------
+# ------------------------------
+# Build Output
+# ------------------------------
 $Now = Get-Date
 $UnixSeconds = ([DateTimeOffset]$Now).ToUnixTimeSeconds()
 $HumanStamp = $Now.ToString("yyyy-MM-dd_HH-mm")
@@ -195,9 +195,9 @@ else {
   }
 }
 
-##### ------------------------------
-##### Output
-##### ------------------------------
+# ------------------------------
+# Output
+# ------------------------------
 if ($WriteToDocs) {
   Ensure-Directory -Path $RepositoryDir
   Ensure-Directory -Path $CurrentDir
