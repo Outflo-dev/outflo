@@ -269,4 +269,43 @@ Outflō documentation is structured to:
 
 ---
 
+### Enforcement Rules (Locked)
+
+- Only one version of a system may exist in the active architecture layer at any time.
+- When a new version is created, the previous version must be immediately removed from `architecture/`.
+
+- Previous versions must be either:
+  - moved to `docs/archive/`, or
+  - deleted if no longer needed
+
+- Duplicate versions within `architecture/` are not permitted under any circumstance.
+
+- The architecture layer must always represent:
+  
+  → one system  
+  → one version  
+  → one source of truth  
+
+---
+
+### AI Context Rule
+
+- Only documents in `docs/architecture/` represent valid system state.
+- Files in `docs/archive/` are strictly historical and must not influence implementation decisions.
+
+---
+
+### System Principle
+
+Outflō enforces singular truth.
+
+There is never:
+
+- more than one active version  
+- more than one interpretation of a system  
+
+Drift is eliminated at the file system level.
+
+---
+
 End of Document.
