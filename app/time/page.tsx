@@ -13,7 +13,7 @@ import { redirect } from "next/navigation";
    Component
 -------------------------------- */
 export default function TimeLegacyRedirect() {
-  redirect("app/time");
+  redirect("/app/time");
 }
 
 

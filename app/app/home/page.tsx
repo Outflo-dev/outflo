@@ -1,7 +1,7 @@
 /* ==========================================================
-   OUTFLO — APP HOME REDIRECT
+   OUTFLO — APP HOME REDIRECT (LEGACY)
    File: app/app/home/page.tsx
-   Scope: Redirects legacy /app/home to public portal (/)
+   Scope: Redirect legacy /app/home to app root (/app)
    ========================================================== */
 
 /* ------------------------------
@@ -13,5 +13,5 @@ import { redirect } from "next/navigation";
    Component
 -------------------------------- */
 export default function Page() {
-  redirect("/");
+  redirect("/app");
 }
