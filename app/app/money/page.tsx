@@ -1,30 +1,35 @@
+/* ==========================================================
+   OUTFLO — MONEY ROOT
+   File: app/app/money/page.tsx
+   Scope: Render money root surface with current spend summary and quick add
+   ========================================================== */
+
 "use client";
 
 /* ------------------------------
-   IMPORTS
+   Imports
 -------------------------------- */
 import type React from "react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 /* ------------------------------
-   TYPES
+   Types
 -------------------------------- */
 type Receipt = {
   id: string;
   place: string;
   amount: number;
-  ts: number; // epoch ms
+  ts: number;
 };
 
 /* ------------------------------
-   STORAGE
+   Constants
 -------------------------------- */
-// Cloud source of truth
 const API_RECEIPTS = "/api/receipts";
 
 /* ------------------------------
-   COMPUTE
+   Helpers
 -------------------------------- */
 function startOfTodayLocal(nowTs: number) {
   const d = new Date(nowTs);
@@ -32,40 +37,44 @@ function startOfTodayLocal(nowTs: number) {
   return d.getTime();
 }
 
-function sumAmounts(rs: Receipt[]) {
-  let s = 0;
-  for (const r of rs) s += r.amount;
-  return s;
+function sumAmounts(receipts: Receipt[]) {
+  let total = 0;
+  for (const receipt of receipts) total += receipt.amount;
+  return total;
 }
 
-function formatMoney(n: number) {
-  return `$${n.toFixed(2)}`;
+function formatMoney(value: number) {
+  return `$${value.toFixed(2)}`;
+}
+
+function isReceipt(value: any): value is Receipt {
+  return (
+    value &&
+    typeof value.id === "string" &&
+    typeof value.place === "string" &&
+    typeof value.amount === "number" &&
+    typeof value.ts === "number"
+  );
 }
 
 /* ------------------------------
    API
 -------------------------------- */
 async function apiGetReceipts(): Promise<Receipt[]> {
-  const res = await fetch(API_RECEIPTS, {
+  const response = await fetch(API_RECEIPTS, {
     method: "GET",
     cache: "no-store",
     credentials: "include",
   });
 
-  if (!res.ok) throw new Error(`GET /api/receipts failed (${res.status})`);
+  if (!response.ok) {
+    throw new Error(`GET /api/receipts failed (${response.status})`);
+  }
 
-  const json = await res.json();
+  const json = await response.json();
   const receipts = Array.isArray(json?.receipts) ? json.receipts : [];
 
-  // minimal shape filter
-  return receipts.filter(
-    (t: any) =>
-      t &&
-      typeof t.id === "string" &&
-      typeof t.place === "string" &&
-      typeof t.amount === "number" &&
-      typeof t.ts === "number"
-  );
+  return receipts.filter(isReceipt);
 }
 
 async function apiPostReceipt(input: {
@@ -73,37 +82,33 @@ async function apiPostReceipt(input: {
   amount: number;
   ts: number;
 }): Promise<Receipt> {
-  const res = await fetch(API_RECEIPTS, {
+  const response = await fetch(API_RECEIPTS, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify(input),
   });
 
-  if (!res.ok) throw new Error(`POST /api/receipts failed (${res.status})`);
+  if (!response.ok) {
+    throw new Error(`POST /api/receipts failed (${response.status})`);
+  }
 
-  const json = await res.json();
-  const r = json?.receipt;
+  const json = await response.json();
+  const receipt = json?.receipt;
 
-  if (
-    !r ||
-    typeof r.id !== "string" ||
-    typeof r.place !== "string" ||
-    typeof r.amount !== "number" ||
-    typeof r.ts !== "number"
-  ) {
+  if (!isReceipt(receipt)) {
     throw new Error("Invalid receipt response");
   }
 
-  return r as Receipt;
+  return receipt;
 }
 
 /* ------------------------------
-   PAGE
+   Component
 -------------------------------- */
 export default function MoneyPage() {
   /* ------------------------------
-     STATE
+     State
   -------------------------------- */
   const [receipts, setReceipts] = useState<Receipt[]>([]);
   const [place, setPlace] = useState("");
@@ -111,18 +116,18 @@ export default function MoneyPage() {
   const [loading, setLoading] = useState(true);
 
   /* ------------------------------
-     EFFECTS
+     Effects
   -------------------------------- */
   useEffect(() => {
     let alive = true;
 
     (async () => {
       try {
-        const rs = await apiGetReceipts();
+        const nextReceipts = await apiGetReceipts();
         if (!alive) return;
-        setReceipts(rs);
+        setReceipts(nextReceipts);
       } catch {
-        // silent fail = non-blocking
+        // Silent fail for current sprint
       } finally {
         if (!alive) return;
         setLoading(false);
@@ -135,49 +140,57 @@ export default function MoneyPage() {
   }, []);
 
   /* ------------------------------
-     COMPUTE
+     Compute
   -------------------------------- */
-  // NOTE: this will be stabilized in Priority #3 (clock jitter).
   const nowTs = Date.now();
 
   const { todaySpend, spend365 } = useMemo(() => {
-    const today0 = startOfTodayLocal(nowTs);
-    const cutoff365 = nowTs - 365 * 24 * 60 * 60 * 1000;
+    const todayStartTs = startOfTodayLocal(nowTs);
+    const cutoff365Ts = nowTs - 365 * 24 * 60 * 60 * 1000;
 
-    const today = receipts.filter((r) => r.ts >= today0 && r.ts <= nowTs);
-    const rolling = receipts.filter((r) => r.ts >= cutoff365 && r.ts <= nowTs);
+    const todayReceipts = receipts.filter(
+      (receipt) => receipt.ts >= todayStartTs && receipt.ts <= nowTs
+    );
+
+    const rollingReceipts = receipts.filter(
+      (receipt) => receipt.ts >= cutoff365Ts && receipt.ts <= nowTs
+    );
 
     return {
-      todaySpend: sumAmounts(today),
-      spend365: sumAmounts(rolling),
+      todaySpend: sumAmounts(todayReceipts),
+      spend365: sumAmounts(rollingReceipts),
     };
   }, [receipts, nowTs]);
 
   /* ------------------------------
-     HANDLERS
+     Handlers
   -------------------------------- */
   async function addReceipt() {
-    const p = place.trim();
-    const a = Number(amount);
+    const nextPlace = place.trim();
+    const nextAmount = Number(amount);
 
-    if (!p) return;
-    if (!Number.isFinite(a) || a <= 0) return;
+    if (!nextPlace) return;
+    if (!Number.isFinite(nextAmount) || nextAmount <= 0) return;
 
-    const t = Date.now();
+    const ts = Date.now();
 
     try {
-      const created = await apiPostReceipt({ place: p, amount: a, ts: t });
-      // append-only behavior, cloud-confirmed
+      const created = await apiPostReceipt({
+        place: nextPlace,
+        amount: nextAmount,
+        ts,
+      });
+
       setReceipts((prev) => [created, ...prev]);
       setPlace("");
       setAmount("");
     } catch {
-      // silent fail for sprint (no UI sprawl)
+      // Silent fail for current sprint
     }
   }
 
   /* ------------------------------
-     RENDER
+     Render
   -------------------------------- */
   return (
     <div
@@ -187,19 +200,18 @@ export default function MoneyPage() {
         color: "white",
         display: "grid",
         placeItems: "center",
-        padding: "max(24px, 6vh) 0px", // vertical only; global frame owns horizontal
+        padding: "max(24px, 6vh) 0px",
         width: "100%",
       }}
     >
       <section
         style={{
-          width: "100%", // obey global 520 frame
+          width: "100%",
           display: "grid",
           rowGap: "clamp(28px, 5vh, 56px)",
           boxSizing: "border-box",
         }}
       >
-        {/* Today Spend */}
         <div style={{ display: "grid", rowGap: 10 }}>
           <div style={{ fontSize: 13, opacity: 0.55 }}>Today Spend</div>
           <div
@@ -213,7 +225,6 @@ export default function MoneyPage() {
           </div>
         </div>
 
-        {/* 365 Spend */}
         <div style={{ display: "grid", rowGap: 10 }}>
           <div style={{ fontSize: 13, opacity: 0.55 }}>365 Spend</div>
           <div
@@ -227,12 +238,11 @@ export default function MoneyPage() {
           </div>
         </div>
 
-        {/* Inputs */}
         <div style={{ display: "grid", rowGap: 14 }}>
           <input
             placeholder="Place"
             value={place}
-            onChange={(e) => setPlace(e.target.value)}
+            onChange={(event) => setPlace(event.target.value)}
             style={inputStyle}
           />
 
@@ -240,7 +250,7 @@ export default function MoneyPage() {
             placeholder="Amount"
             inputMode="decimal"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(event) => setAmount(event.target.value)}
             style={inputStyle}
           />
 
@@ -248,7 +258,6 @@ export default function MoneyPage() {
             Add
           </button>
 
-          {/* Receipts Count (Left Aligned, Bold Number) */}
           <div style={{ fontSize: 13, opacity: 0.85 }}>
             <Link
               href="/app/money/receipts"
@@ -272,7 +281,7 @@ export default function MoneyPage() {
 }
 
 /* ------------------------------
-   STYLES
+   Styles
 -------------------------------- */
 const inputStyle: React.CSSProperties = {
   width: "100%",

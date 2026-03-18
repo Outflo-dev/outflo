@@ -8,7 +8,6 @@
    Imports
 -------------------------------- */
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
 
 /* ------------------------------
@@ -82,11 +81,7 @@ export default async function ProfilePage() {
   const supabase = await supabaseServer();
   const { data } = await supabase.auth.getUser();
 
-  if (!data.user) {
-    redirect("/login");
-  }
-
-  const user = data.user;
+  const user = data.user!;
   const displayName = getDisplayName(user);
   const username = getUsername(user);
   const initial = getInitial(displayName);
@@ -102,11 +97,12 @@ export default async function ProfilePage() {
       <div
         style={{
           width: "100%",
-          maxWidth: "100vh",
           margin: "0 auto",
         }}
       >
-        {/* --- UI: Profile — Identity ---------------------------- */}
+        {/* ------------------------------
+           UI — Profile Identity
+        -------------------------------- */}
         <section
           style={{
             display: "flex",
@@ -209,7 +205,9 @@ export default async function ProfilePage() {
           </div>
         </section>
 
-        {/* --- UI: Profile — Navigation -------------------------- */}
+        {/* ------------------------------
+           UI — Profile Navigation
+        -------------------------------- */}
         <section
           style={{
             marginTop: 28,
@@ -246,7 +244,9 @@ export default async function ProfilePage() {
           </nav>
         </section>
 
-        {/* --- UI: Profile — Statement --------------------------- */}
+        {/* ------------------------------
+           UI — Profile Statement
+        -------------------------------- */}
         <section
           style={{
             marginTop: 28,
@@ -268,7 +268,9 @@ export default async function ProfilePage() {
           </p>
         </section>
 
-        {/* --- UI: Profile — Footer ------------------------------ */}
+        {/* ------------------------------
+           UI — Profile Footer
+        -------------------------------- */}
         <section
           style={{
             marginTop: 28,

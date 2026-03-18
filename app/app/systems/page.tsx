@@ -1,28 +1,40 @@
+/* ==========================================================
+   OUTFLO — SYSTEMS ROOT
+   File: app/app/systems/page.tsx
+   Scope: Render system selector for authenticated app surfaces
+   ========================================================== */
+
 /* ------------------------------
-   app/app/systems/page.tsx
+   Imports
 -------------------------------- */
+import type React from "react";
 import Link from "next/link";
 
 /* ------------------------------
-   Systems Page
+   Page
 -------------------------------- */
 export default function SystemsPage() {
   return (
-    <div
+    <main
       style={{
         minHeight: "100svh",
         backgroundColor: "black",
         color: "white",
-        padding: "max(24px, 6vh) 0px", // vertical only; global frame owns horizontal padding
+        padding: "max(24px, 6vh) 0px",
         display: "grid",
         placeItems: "center",
         width: "100%",
       }}
     >
-      <section style={{ width: "100%" }}>
-        <div style={{ fontSize: 13, opacity: 0.55, marginBottom: 14 }}>
-          systems
-        </div>
+      <section
+        style={{
+          width: "100%",
+          display: "grid",
+          rowGap: 18,
+          boxSizing: "border-box",
+        }}
+      >
+        <div style={{ fontSize: 13, opacity: 0.55 }}>Systems</div>
 
         <div
           style={{
@@ -39,13 +51,21 @@ export default function SystemsPage() {
           </div>
         </div>
 
-        <div style={{ marginTop: 18 }}>
-          <Link href="/app" style={{ color: "white", opacity: 0.7 }}>
-            ← Profile
+        <div>
+          <Link
+            href="/app"
+            style={{
+              color: "white",
+              opacity: 0.7,
+              textDecoration: "none",
+              fontSize: 13,
+            }}
+          >
+            ← App
           </Link>
         </div>
       </section>
-    </div>
+    </main>
   );
 }
 
