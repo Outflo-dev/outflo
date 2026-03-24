@@ -115,6 +115,12 @@ timestamp → create event doc
 
 ---
 
+## 14. Unix Terminal time
+
+node -e "console.log({ ms: Date.now(), iso: new Date().toISOString() })"
+
+---
+
 ## Rule
 
 Only add commands you actually reuse.

@@ -2,6 +2,10 @@
    OUTFLO — DAY RECEIPTS
    File: app/app/money/day/[key]/page.tsx
    Scope: Cloud-only day view (filter receipts by local day key)
+   Last Updated:
+   - ms: 1774325529558
+   - iso: 2026-03-24T04:12:09.558Z
+   - note: Phase C read alignment
    ========================================================== */
 
 "use client";
@@ -18,9 +22,10 @@ import { useParams } from "next/navigation";
 -------------------------------- */
 type Receipt = {
   id: string;
-  place: string;
-  amount: number;
-  ts: number; // epoch ms (truth)
+  merchant_raw: string;
+  amount_minor: number;
+  currency: string;
+  moment_ms: number;
 };
 
 /* ------------------------------
@@ -41,20 +46,25 @@ async function apiGetReceipts(): Promise<Receipt[]> {
   const receipts = Array.isArray(json?.receipts) ? json.receipts : [];
 
   return receipts.filter(
-    (t: any) =>
-      t &&
-      typeof t.id === "string" &&
-      typeof t.place === "string" &&
-      typeof t.amount === "number" &&
-      typeof t.ts === "number"
+    (t: unknown) =>
+      typeof t === "object" &&
+      t !== null &&
+      typeof (t as Receipt).id === "string" &&
+      typeof (t as Receipt).merchant_raw === "string" &&
+      typeof (t as Receipt).amount_minor === "number" &&
+      typeof (t as Receipt).currency === "string" &&
+      typeof (t as Receipt).moment_ms === "number"
   );
 }
 
 /* ------------------------------
    Format / Compute
 -------------------------------- */
-function formatMoney(n: number) {
-  return `$${n.toFixed(2)}`;
+function formatMoney(amountMinor: number, currency: string) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+  }).format(amountMinor / 100);
 }
 
 function receiptSuffix(id: string) {
@@ -63,8 +73,8 @@ function receiptSuffix(id: string) {
 }
 
 /* 24-hour European time (time only) */
-function formatReceiptTime(ts: number) {
-  const d = new Date(ts);
+function formatReceiptTime(momentMs: number) {
+  const d = new Date(momentMs);
   return d.toLocaleTimeString("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
@@ -88,8 +98,8 @@ function formatDayHeaderFromKey(key: string) {
 }
 
 /* Stable local day key */
-function dayKeyLocal(ts: number) {
-  const d = new Date(ts);
+function dayKeyLocal(momentMs: number) {
+  const d = new Date(momentMs);
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
@@ -106,33 +116,40 @@ function csvEscape(v: string) {
   return needsQuotes ? `"${v}"` : v;
 }
 
-function formatLocalDate(ts: number) {
-  const d = new Date(ts);
+function formatLocalDate(momentMs: number) {
+  const d = new Date(momentMs);
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function formatLocalTime(ts: number) {
-  const d = new Date(ts);
+function formatLocalTime(momentMs: number) {
+  const d = new Date(momentMs);
   const hh = String(d.getHours()).padStart(2, "0");
   const mi = String(d.getMinutes()).padStart(2, "0");
   return `${hh}:${mi}`;
 }
 
 function receiptsToCsv(receipts: Receipt[]) {
-  const header = ["ts", "localDate", "localTime", "place", "amount", "id"].join(
-    ","
-  );
+  const header = [
+    "moment_ms",
+    "localDate",
+    "localTime",
+    "merchant_raw",
+    "amount_minor",
+    "currency",
+    "id",
+  ].join(",");
 
   const rows = receipts.map((r) => {
     const fields = [
-      String(r.ts),
-      formatLocalDate(r.ts),
-      formatLocalTime(r.ts),
-      csvEscape(r.place),
-      r.amount.toFixed(2),
+      String(r.moment_ms),
+      formatLocalDate(r.moment_ms),
+      formatLocalTime(r.moment_ms),
+      csvEscape(r.merchant_raw),
+      String(r.amount_minor),
+      csvEscape(r.currency),
       csvEscape(r.id),
     ];
     return fields.join(",");
@@ -160,8 +177,10 @@ function downloadTextFile(filename: string, content: string, mime: string) {
 -------------------------------- */
 export default function DayPage() {
   const params = useParams();
-  const rawKey = (params as any)?.key;
-  const key = decodeURIComponent(Array.isArray(rawKey) ? rawKey[0] : (rawKey ?? ""));
+  const rawKey = (params as { key?: string | string[] })?.key;
+  const key = decodeURIComponent(
+    Array.isArray(rawKey) ? rawKey[0] : (rawKey ?? "")
+  );
 
   const [receipts, setReceipts] = useState<Receipt[]>([]);
   const [loading, setLoading] = useState(true);
@@ -189,13 +208,13 @@ export default function DayPage() {
 
   const dayReceipts = useMemo(() => {
     if (!key) return [];
-    const filtered = receipts.filter((r) => dayKeyLocal(r.ts) === key);
-    return filtered.sort((a, b) => b.ts - a.ts);
+    const filtered = receipts.filter((r) => dayKeyLocal(r.moment_ms) === key);
+    return filtered.sort((a, b) => b.moment_ms - a.moment_ms);
   }, [receipts, key]);
 
   const dayTotal = useMemo(() => {
     let s = 0;
-    for (const r of dayReceipts) s += r.amount;
+    for (const r of dayReceipts) s += r.amount_minor;
     return s;
   }, [dayReceipts]);
 
@@ -203,13 +222,13 @@ export default function DayPage() {
     const out = new Map<string, number>();
 
     const asc = [...dayReceipts].sort((a, b) => {
-      if (a.ts !== b.ts) return a.ts - b.ts;
+      if (a.moment_ms !== b.moment_ms) return a.moment_ms - b.moment_ms;
       return a.id.localeCompare(b.id);
     });
 
     let s = 0;
     for (const r of asc) {
-      s += r.amount;
+      s += r.amount_minor;
       out.set(r.id, s);
     }
 
@@ -217,7 +236,7 @@ export default function DayPage() {
   }, [dayReceipts]);
 
   function exportDayCsv() {
-    const sorted = [...dayReceipts].sort((a, b) => b.ts - a.ts);
+    const sorted = [...dayReceipts].sort((a, b) => b.moment_ms - a.moment_ms);
     const csv = receiptsToCsv(sorted);
     downloadTextFile(
       `outflo_day_${key}_${Date.now()}.csv`,
@@ -247,7 +266,6 @@ export default function DayPage() {
           boxSizing: "border-box",
         }}
       >
-        {/* TOP ROW */}
         <div
           style={{
             display: "flex",
@@ -273,7 +291,6 @@ export default function DayPage() {
           </button>
         </div>
 
-        {/* HEADER */}
         <div style={{ display: "grid", gap: 6 }}>
           <div style={{ fontSize: 13, opacity: 0.85 }}>Day</div>
 
@@ -285,7 +302,10 @@ export default function DayPage() {
               textTransform: "uppercase",
             }}
           >
-            {formatDayHeaderFromKey(key)} · {formatMoney(dayTotal)}
+            {formatDayHeaderFromKey(key)} ·{" "}
+            {dayReceipts[0]
+              ? formatMoney(dayTotal, dayReceipts[0].currency)
+              : "—"}
           </div>
 
           <div style={{ fontSize: 12, opacity: 0.45 }}>
@@ -296,7 +316,6 @@ export default function DayPage() {
           </div>
         </div>
 
-        {/* LIST */}
         {loading ? (
           <div style={{ fontSize: 12, opacity: 0.35 }}>Loading…</div>
         ) : dayReceipts.length === 0 ? (
@@ -305,7 +324,10 @@ export default function DayPage() {
           <div style={{ display: "grid", gap: 12 }}>
             {dayReceipts.map((r) => {
               const cum = dayCumById.get(r.id);
-              const cumText = formatMoney(typeof cum === "number" ? cum : r.amount);
+              const cumText = formatMoney(
+                typeof cum === "number" ? cum : r.amount_minor,
+                r.currency
+              );
 
               return (
                 <Link
@@ -335,7 +357,9 @@ export default function DayPage() {
                         gap: 12,
                       }}
                     >
-                      <div style={{ fontSize: 14, opacity: 0.9 }}>{r.place}</div>
+                      <div style={{ fontSize: 14, opacity: 0.9 }}>
+                        {r.merchant_raw}
+                      </div>
 
                       <div
                         style={{
@@ -360,7 +384,7 @@ export default function DayPage() {
                         letterSpacing: "-0.02em",
                       }}
                     >
-                      {formatMoney(r.amount)}
+                      {formatMoney(r.amount_minor, r.currency)}
                     </div>
 
                     <div
@@ -372,7 +396,7 @@ export default function DayPage() {
                         opacity: 0.55,
                       }}
                     >
-                      <span>{formatReceiptTime(r.ts)}</span>
+                      <span>{formatReceiptTime(r.moment_ms)}</span>
 
                       <span
                         style={{

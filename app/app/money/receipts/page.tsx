@@ -1,31 +1,51 @@
-// app/money/receipts/page.tsx
+/* ==========================================================
+   OUTFLO — RECEIPTS PAGE
+   File: app/app/money/receipts/page.tsx
+   Scope: Render receipt list from canonical receipt reads
+   Last Updated:
+   - ms: 1774325010177
+   - iso: 2026-03-24T04:03:30.177Z
+   - note: Phase C read alignment
+   ========================================================== */
+
 "use client";
 
-/* --- IMPORTS --- */
+/* ------------------------------
+   Imports
+-------------------------------- */
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
-/* --- TYPES --- */
+/* ------------------------------
+   Types
+-------------------------------- */
 type Receipt = {
   id: string;
-  place: string;
-  amount: number;
-  ts: number; // epoch ms (truth)
+  merchant_raw: string;
+  amount_minor: number;
+  currency: string;
+  moment_ms: number;
 };
 
-/* --- STORAGE --- */
-// Cloud source of truth
+/* ------------------------------
+   Constants
+-------------------------------- */
 const API_RECEIPTS = "/api/receipts";
 
-/* --- COMPUTE --- */
-function formatMoney(n: number) {
-  return `$${n.toFixed(2)}`;
+/* ------------------------------
+   Helpers
+-------------------------------- */
+function formatMoney(amountMinor: number, currency: string) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+  }).format(amountMinor / 100);
 }
 
 /* 24-hour European time (time only) */
-function formatReceiptTime(ts: number) {
-  const d = new Date(ts);
+function formatReceiptTime(momentMs: number) {
+  const d = new Date(momentMs);
   return d.toLocaleTimeString("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
@@ -34,8 +54,8 @@ function formatReceiptTime(ts: number) {
 }
 
 /* Day header: 11 Feb 2026 */
-function formatDayHeader(ts: number) {
-  const d = new Date(ts);
+function formatDayHeader(momentMs: number) {
+  const d = new Date(momentMs);
   return d.toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
@@ -44,8 +64,8 @@ function formatDayHeader(ts: number) {
 }
 
 /* Stable local day key */
-function dayKeyLocal(ts: number) {
-  const d = new Date(ts);
+function dayKeyLocal(momentMs: number) {
+  const d = new Date(momentMs);
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
@@ -59,7 +79,7 @@ function receiptSuffix(id: string) {
 
 function sumDay(items: Receipt[]) {
   let s = 0;
-  for (const r of items) s += r.amount;
+  for (const r of items) s += r.amount_minor;
   return s;
 }
 
@@ -71,38 +91,45 @@ function csvEscape(v: string) {
   return needsQuotes ? `"${v}"` : v;
 }
 
-function formatLocalDate(ts: number) {
-  const d = new Date(ts);
+function formatLocalDate(momentMs: number) {
+  const d = new Date(momentMs);
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function formatLocalTime(ts: number) {
-  const d = new Date(ts);
+function formatLocalTime(momentMs: number) {
+  const d = new Date(momentMs);
   const hh = String(d.getHours()).padStart(2, "0");
   const mi = String(d.getMinutes()).padStart(2, "0");
   return `${hh}:${mi}`;
 }
 
 function receiptsToCsv(receipts: Receipt[]) {
-  const header = ["ts", "localDate", "localTime", "place", "amount", "id"].join(
-    ","
-  );
+  const header = [
+    "moment_ms",
+    "localDate",
+    "localTime",
+    "merchant_raw",
+    "amount_minor",
+    "currency",
+    "id",
+  ].join(",");
+
   const rows = receipts.map((r) => {
     const fields = [
-      String(r.ts),
-      formatLocalDate(r.ts),
-      formatLocalTime(r.ts),
-      csvEscape(r.place),
-      r.amount.toFixed(2),
+      String(r.moment_ms),
+      formatLocalDate(r.moment_ms),
+      formatLocalTime(r.moment_ms),
+      csvEscape(r.merchant_raw),
+      String(r.amount_minor),
+      csvEscape(r.currency),
       csvEscape(r.id),
     ];
     return fields.join(",");
   });
 
-  // CRLF for Excel compatibility
   return [header, ...rows].join("\r\n");
 }
 
@@ -131,18 +158,21 @@ async function apiGetReceipts(): Promise<Receipt[]> {
   const json = await res.json();
   const receipts = Array.isArray(json?.receipts) ? json.receipts : [];
 
-  // minimal shape filter
   return receipts.filter(
-    (t: any) =>
-      t &&
-      typeof t.id === "string" &&
-      typeof t.place === "string" &&
-      typeof t.amount === "number" &&
-      typeof t.ts === "number"
+    (t: unknown) =>
+      typeof t === "object" &&
+      t !== null &&
+      typeof (t as Receipt).id === "string" &&
+      typeof (t as Receipt).merchant_raw === "string" &&
+      typeof (t as Receipt).amount_minor === "number" &&
+      typeof (t as Receipt).currency === "string" &&
+      typeof (t as Receipt).moment_ms === "number"
   );
 }
 
-/* --- STATE --- */
+/* ------------------------------
+   Component
+-------------------------------- */
 export default function ReceiptsPage() {
   const router = useRouter();
 
@@ -150,7 +180,6 @@ export default function ReceiptsPage() {
   const [tapCount, setTapCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  /* --- EFFECTS --- */
   useEffect(() => {
     let alive = true;
 
@@ -172,9 +201,8 @@ export default function ReceiptsPage() {
     };
   }, []);
 
-  /* --- COMPUTE --- */
   const sortedLimited = useMemo(() => {
-    const sorted = [...receipts].sort((a, b) => b.ts - a.ts);
+    const sorted = [...receipts].sort((a, b) => b.moment_ms - a.moment_ms);
     return sorted.slice(0, 300);
   }, [receipts]);
 
@@ -183,7 +211,7 @@ export default function ReceiptsPage() {
     const map = new Map<string, Receipt[]>();
 
     for (const r of sortedLimited) {
-      const key = dayKeyLocal(r.ts);
+      const key = dayKeyLocal(r.moment_ms);
       if (!map.has(key)) {
         map.set(key, []);
         order.push(key);
@@ -194,26 +222,25 @@ export default function ReceiptsPage() {
     return { order, map };
   }, [sortedLimited]);
 
-  // Per-receipt "day cumulative at that moment" (computed chronologically, rendered newest-first)
   const dayCumById = useMemo(() => {
     const out = new Map<string, number>();
 
     const byDay = new Map<string, Receipt[]>();
     for (const r of receipts) {
-      const k = dayKeyLocal(r.ts);
+      const k = dayKeyLocal(r.moment_ms);
       if (!byDay.has(k)) byDay.set(k, []);
       byDay.get(k)!.push(r);
     }
 
     for (const [, items] of byDay) {
       const asc = [...items].sort((a, b) => {
-        if (a.ts !== b.ts) return a.ts - b.ts;
-        return a.id.localeCompare(b.id); // deterministic for ts collisions
+        if (a.moment_ms !== b.moment_ms) return a.moment_ms - b.moment_ms;
+        return a.id.localeCompare(b.id);
       });
 
       let s = 0;
       for (const r of asc) {
-        s += r.amount;
+        s += r.amount_minor;
         out.set(r.id, s);
       }
     }
@@ -224,13 +251,12 @@ export default function ReceiptsPage() {
   const showCsv = tapCount >= 3;
   const showAdmin = tapCount >= 11;
 
-  /* --- HANDLERS --- */
   function onTapTitle() {
     setTapCount((n) => n + 1);
   }
 
   function exportCsv() {
-    const sorted = [...receipts].sort((a, b) => b.ts - a.ts); // full vault (cloud)
+    const sorted = [...receipts].sort((a, b) => b.moment_ms - a.moment_ms);
     const csv = receiptsToCsv(sorted);
     downloadTextFile(
       `outflo_receipts_${Date.now()}.csv`,
@@ -245,7 +271,6 @@ export default function ReceiptsPage() {
     router.push("/admin");
   }
 
-  /* --- RENDER --- */
   return (
     <main
       style={{
@@ -254,7 +279,7 @@ export default function ReceiptsPage() {
         color: "white",
         display: "grid",
         placeItems: "center",
-        padding: "max(24px, 6vh) 0px", // vertical only; global frame owns horizontal
+        padding: "max(24px, 6vh) 0px",
         width: "100%",
         maxWidth: "none",
       }}
@@ -267,7 +292,6 @@ export default function ReceiptsPage() {
           boxSizing: "border-box",
         }}
       >
-        {/* Top row */}
         <div
           style={{
             display: "flex",
@@ -297,7 +321,6 @@ export default function ReceiptsPage() {
           )}
         </div>
 
-        {/* Header */}
         <div style={{ display: "grid", gap: 6 }}>
           <div
             onClick={onTapTitle}
@@ -323,7 +346,6 @@ export default function ReceiptsPage() {
             </span>
           </div>
 
-          {/* Export controls (appear after 3 taps) */}
           {showCsv ? (
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               <button onClick={exportCsv} style={pillButtonStyle}>
@@ -333,7 +355,6 @@ export default function ReceiptsPage() {
           ) : null}
         </div>
 
-        {/* Grouped by day */}
         {loading ? (
           <div style={{ fontSize: 12, opacity: 0.35 }}>Loading…</div>
         ) : sortedLimited.length === 0 ? (
@@ -342,8 +363,9 @@ export default function ReceiptsPage() {
           <div style={{ display: "grid", gap: 18 }}>
             {grouped.order.map((key) => {
               const items = grouped.map.get(key)!;
-              const header = formatDayHeader(items[0].ts);
+              const header = formatDayHeader(items[0].moment_ms);
               const dayTotal = sumDay(items);
+              const dayCurrency = items[0].currency;
 
               return (
                 <div key={key} style={{ display: "grid", gap: 10 }}>
@@ -355,14 +377,15 @@ export default function ReceiptsPage() {
                       textTransform: "uppercase",
                     }}
                   >
-                    {header} · {formatMoney(dayTotal)}
+                    {header} · {formatMoney(dayTotal, dayCurrency)}
                   </div>
 
                   <div style={{ display: "grid", gap: 12 }}>
                     {items.map((r) => {
                       const cum = dayCumById.get(r.id);
                       const cumText = formatMoney(
-                        typeof cum === "number" ? cum : r.amount
+                        typeof cum === "number" ? cum : r.amount_minor,
+                        r.currency
                       );
 
                       return (
@@ -387,7 +410,6 @@ export default function ReceiptsPage() {
                               gap: 10,
                             }}
                           >
-                            {/* Tile top row: merchant left, day-cumulative snapshot right */}
                             <div
                               style={{
                                 display: "flex",
@@ -397,7 +419,7 @@ export default function ReceiptsPage() {
                               }}
                             >
                               <div style={{ fontSize: 14, opacity: 0.9 }}>
-                                {r.place}
+                                {r.merchant_raw}
                               </div>
 
                               <div
@@ -423,7 +445,7 @@ export default function ReceiptsPage() {
                                 letterSpacing: "-0.02em",
                               }}
                             >
-                              {formatMoney(r.amount)}
+                              {formatMoney(r.amount_minor, r.currency)}
                             </div>
 
                             <div
@@ -435,7 +457,7 @@ export default function ReceiptsPage() {
                                 opacity: 0.55,
                               }}
                             >
-                              <span>{formatReceiptTime(r.ts)}</span>
+                              <span>{formatReceiptTime(r.moment_ms)}</span>
 
                               <span
                                 style={{
@@ -466,7 +488,9 @@ export default function ReceiptsPage() {
   );
 }
 
-/* --- STORAGE --- */
+/* ------------------------------
+   Styles
+-------------------------------- */
 const pillButtonStyle: React.CSSProperties = {
   background: "rgba(255,255,255,0.10)",
   border: "1px solid rgba(255,255,255,0.14)",
@@ -486,7 +510,6 @@ const dangerButtonStyle: React.CSSProperties = {
   fontSize: 12,
   cursor: "pointer",
 };
-
 
 
 

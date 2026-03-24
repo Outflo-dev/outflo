@@ -2,6 +2,10 @@
    OUTFLO — RESEND INGEST WEBHOOK (INSTANT STUB + CASHAPP V1)
    File: app/api/ingest/resend/route.ts
    Scope: Receive Resend webhook, bind user via ingest_aliases, persist ingest_events, create receipt stub immediately, enrich via CashApp subject parser
+   Last Updated:
+   - ms: 1774327761245
+   - iso: 2026-03-24T04:49:21.245Z
+   - note: Phase D write alignment
    ========================================================== */
 
 /* ------------------------------
@@ -41,7 +45,8 @@ type DbErrorLike = {
 export const runtime = "nodejs";
 
 const PROVIDER = "resend";
-const VERSION = "ingest-resend-v4-cashapp-subject";
+const VERSION = "ingest-resend-v5-canonical-receipts";
+const DEFAULT_CURRENCY = "USD";
 
 /* ------------------------------
    Helpers
@@ -68,8 +73,9 @@ function isoNow(): string {
 }
 
 function pickReceivedAt(payload: ResendWebhookPayload): string {
-  if (payload?.created_at && typeof payload.created_at === "string")
+  if (payload?.created_at && typeof payload.created_at === "string") {
     return payload.created_at;
+  }
   return isoNow();
 }
 
@@ -99,6 +105,7 @@ function extractAliasLocalPart(payload: ResendWebhookPayload): string | null {
     const local = trimmed.slice(0, at).trim();
     if (local.length) return local;
   }
+
   return null;
 }
 
@@ -108,23 +115,30 @@ function receivedAtToTsMs(received_at: string): number {
   return Date.now();
 }
 
+function dollarsToMinor(amount: number): number {
+  return Math.round(amount * 100);
+}
+
 function supabaseService() {
   const url =
     envOrNull("SUPABASE_URL") || envOrNull("NEXT_PUBLIC_SUPABASE_URL");
   const key = envOrNull("SUPABASE_SERVICE_ROLE_KEY");
 
-  if (!url)
+  if (!url) {
     return {
       ok: false as const,
       where: "env" as const,
       message: "Missing SUPABASE_URL",
     };
-  if (!key)
+  }
+
+  if (!key) {
     return {
       ok: false as const,
       where: "env" as const,
       message: "Missing SUPABASE_SERVICE_ROLE_KEY",
     };
+  }
 
   return {
     ok: true as const,
@@ -142,8 +156,8 @@ function parseCashAppSubject(subject: string | undefined) {
   if (spentMatch) {
     return {
       direction: "out" as const,
-      amount: parseFloat(spentMatch[1]),
-      place: spentMatch[2].trim(),
+      amount_minor: dollarsToMinor(parseFloat(spentMatch[1])),
+      merchant_raw: spentMatch[2].trim(),
       confidence: "high" as const,
     };
   }
@@ -154,8 +168,8 @@ function parseCashAppSubject(subject: string | undefined) {
   if (receivedMatch) {
     return {
       direction: "in" as const,
-      amount: parseFloat(receivedMatch[1]),
-      place: receivedMatch[2].trim(),
+      amount_minor: dollarsToMinor(parseFloat(receivedMatch[1])),
+      merchant_raw: receivedMatch[2].trim(),
       confidence: "high" as const,
     };
   }
@@ -187,7 +201,7 @@ async function ensureReceiptStub(args: {
     payload,
   } = args;
 
-  const ts = receivedAtToTsMs(received_at);
+  const moment_ms = receivedAtToTsMs(received_at);
 
   const { error: upsertErr } = await supabase
     .from("receipts")
@@ -195,10 +209,10 @@ async function ensureReceiptStub(args: {
       {
         id: ingest_id,
         user_id,
-        ts,
-        // stub: subject is allowed temporarily; enrichment overwrites
-        place: payload?.data?.subject ?? "ingest",
-        amount: 0,
+        moment_ms,
+        merchant_raw: payload?.data?.subject ?? "ingest",
+        amount_minor: 0,
+        currency: DEFAULT_CURRENCY,
         raw: {
           source: "ingest",
           provider,
@@ -302,6 +316,7 @@ export async function POST(req: Request) {
     if ((insErr as DbErrorLike).code === "23505") {
       return NextResponse.json({ ok: true, deduped: true, version: VERSION });
     }
+
     return NextResponse.json(
       { ok: false, where: "db", message: insErr.message, version: VERSION },
       { status: 500 }
@@ -328,37 +343,40 @@ export async function POST(req: Request) {
     );
   }
 
-/* ------------------------------
-   CashApp Enrichment
--------------------------------- */
-const from = payload?.data?.from;
-const subject = payload?.data?.subject;
+  /* ------------------------------
+     CashApp Enrichment
+  -------------------------------- */
+  const from = payload?.data?.from;
+  const subject = payload?.data?.subject;
 
-const isCashApp =
-  typeof from === "string" && /(cash\.app|square\.com)/i.test(from);
+  const isCashApp =
+    typeof from === "string" && /(cash\.app|square\.com)/i.test(from);
 
-if (isCashApp) {
-  const parsedCash = parseCashAppSubject(subject);
+  if (isCashApp) {
+    const parsedCash = parseCashAppSubject(subject);
 
-  if (parsedCash?.place) {
-    await supabase
-      .from("receipts")
-      .update({
-        ...(parsedCash.amount != null ? { amount: parsedCash.amount } : {}),
-        place: parsedCash.place,
-      } as any)
-      .eq("id", ingest_id);
+    if (parsedCash?.merchant_raw) {
+      await supabase
+        .from("receipts")
+        .update({
+          ...(parsedCash.amount_minor != null
+            ? { amount_minor: parsedCash.amount_minor }
+            : {}),
+          merchant_raw: parsedCash.merchant_raw,
+          currency: DEFAULT_CURRENCY,
+        } as any)
+        .eq("id", ingest_id);
+    }
   }
-}
 
-return NextResponse.json(
-  {
-    ok: true,
-    receipt_id: ingest_id,
-    event_id,
-    user_id,
-    version: VERSION,
-  },
-  { status: 200 }
-);
+  return NextResponse.json(
+    {
+      ok: true,
+      receipt_id: ingest_id,
+      event_id,
+      user_id,
+      version: VERSION,
+    },
+    { status: 200 }
+  );
 }

@@ -2,6 +2,10 @@
    OUTFLO — RECEIPTS API
    File: app/api/receipts/route.ts
    Scope: List receipts and create one receipt (user-scoped, cloud truth)
+   Last Updated:
+   - ms: 1774327678082
+   - iso: 2026-03-24T04:47:58.082Z
+   - note: Phase D write alignment
    ========================================================== */
 
 /* ------------------------------
@@ -14,9 +18,10 @@ import { supabaseServer } from "@/lib/supabase/server";
    Types
 -------------------------------- */
 type CreateReceiptBody = {
-  place?: unknown;
-  amount?: unknown;
-  ts?: unknown;
+  merchant_raw?: unknown;
+  amount_minor?: unknown;
+  currency?: unknown;
+  moment_ms?: unknown;
 };
 
 /* ------------------------------
@@ -27,11 +32,24 @@ function json(payload: unknown, status = 200) {
 }
 
 function parseCreateReceiptBody(body: CreateReceiptBody | null) {
-  const place = typeof body?.place === "string" ? body.place.trim() : "";
-  const amount = typeof body?.amount === "number" ? body.amount : NaN;
-  const ts = typeof body?.ts === "number" ? body.ts : Date.now();
+  const merchant_raw =
+    typeof body?.merchant_raw === "string" ? body.merchant_raw.trim() : "";
 
-  return { place, amount, ts };
+  const amount_minor =
+    typeof body?.amount_minor === "number" ? body.amount_minor : NaN;
+
+  const currency =
+    typeof body?.currency === "string" ? body.currency.trim().toUpperCase() : "";
+
+  const moment_ms =
+    typeof body?.moment_ms === "number" ? body.moment_ms : Date.now();
+
+  return {
+    merchant_raw,
+    amount_minor,
+    currency,
+    moment_ms,
+  };
 }
 
 /* ------------------------------
@@ -51,9 +69,9 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from("receipts")
-    .select("id, ts, place, amount")
+    .select("id, moment_ms, merchant_raw, amount_minor, currency")
     .eq("user_id", user.id)
-    .order("ts", { ascending: false })
+    .order("moment_ms", { ascending: false })
     .limit(500);
 
   if (error) {
@@ -79,9 +97,21 @@ export async function POST(request: Request) {
   }
 
   const body = (await request.json().catch(() => null)) as CreateReceiptBody | null;
-  const { place, amount, ts } = parseCreateReceiptBody(body);
 
-  if (!place || !Number.isFinite(amount)) {
+  const {
+    merchant_raw,
+    amount_minor,
+    currency,
+    moment_ms,
+  } = parseCreateReceiptBody(body);
+
+  if (
+    !merchant_raw ||
+    !Number.isFinite(amount_minor) ||
+    !Number.isInteger(amount_minor) ||
+    !currency ||
+    !Number.isFinite(moment_ms)
+  ) {
     return json({ error: "invalid payload" }, 400);
   }
 
@@ -89,11 +119,12 @@ export async function POST(request: Request) {
     .from("receipts")
     .insert({
       user_id: user.id,
-      place,
-      amount,
-      ts,
+      merchant_raw,
+      amount_minor,
+      currency,
+      moment_ms,
     })
-    .select("id, ts, place, amount")
+    .select("id, moment_ms, merchant_raw, amount_minor, currency")
     .single();
 
   if (error) {

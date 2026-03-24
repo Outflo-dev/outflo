@@ -2,6 +2,10 @@
    OUTFLO — RECEIPT DETAIL PAGE
    File: app/money/receipts/[id]/page.tsx
    Scope: Render a single receipt (cloud truth) with day + 365 context
+   Last Updated:
+   - ms: 1774325409190
+   - iso: 2026-03-24T04:10:09.190Z
+   - note: Phase C read alignment
    ========================================================== */
 
 /* ------------------------------
@@ -18,9 +22,10 @@ import { useParams, useRouter } from "next/navigation";
 -------------------------------- */
 type Receipt = {
   id: string;
-  place: string;
-  amount: number;
-  ts: number;
+  merchant_raw: string;
+  amount_minor: number;
+  currency: string;
+  moment_ms: number;
 };
 
 /* ------------------------------
@@ -56,12 +61,15 @@ function getOrCreateSystemEpoch(): number {
   }
 }
 
-function formatMoney(n: number) {
-  return `$${n.toFixed(2)}`;
+function formatMoney(amountMinor: number, currency: string) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+  }).format(amountMinor / 100);
 }
 
-function formatHeroDateTime(ts: number) {
-  const d = new Date(ts);
+function formatHeroDateTime(momentMs: number) {
+  const d = new Date(momentMs);
   const date = d.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -74,16 +82,16 @@ function formatHeroDateTime(ts: number) {
   return `${date} · ${time}`;
 }
 
-function formatTime24WithSeconds(ts: number) {
-  const d = new Date(ts);
+function formatTime24WithSeconds(momentMs: number) {
+  const d = new Date(momentMs);
   const hh = String(d.getHours()).padStart(2, "0");
   const mi = String(d.getMinutes()).padStart(2, "0");
   const ss = String(d.getSeconds()).padStart(2, "0");
   return `${hh}:${mi}:${ss}`;
 }
 
-function dayKeyLocal(ts: number) {
-  const d = new Date(ts);
+function dayKeyLocal(momentMs: number) {
+  const d = new Date(momentMs);
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
@@ -92,25 +100,27 @@ function dayKeyLocal(ts: number) {
 
 function sumDay(items: Receipt[]) {
   let s = 0;
-  for (const r of items) s += r.amount;
+  for (const r of items) s += r.amount_minor;
   return s;
 }
 
 function dayCumulativeAtMoment(target: Receipt, receipts: Receipt[]) {
-  const k = dayKeyLocal(target.ts);
-  const sameDay = receipts.filter((r) => dayKeyLocal(r.ts) === k);
+  const k = dayKeyLocal(target.moment_ms);
+  const sameDay = receipts.filter(
+    (r) => dayKeyLocal(r.moment_ms) === k
+  );
 
   const asc = [...sameDay].sort((a, b) => {
-    if (a.ts !== b.ts) return a.ts - b.ts;
+    if (a.moment_ms !== b.moment_ms) return a.moment_ms - b.moment_ms;
     return a.id.localeCompare(b.id);
   });
 
   let s = 0;
   for (const r of asc) {
-    s += r.amount;
+    s += r.amount_minor;
     if (r.id === target.id) return s;
   }
-  return target.amount;
+  return target.amount_minor;
 }
 
 function receiptSuffix(id: string) {
@@ -118,8 +128,8 @@ function receiptSuffix(id: string) {
   return parts.length > 1 ? parts[1] : id;
 }
 
-function firstGlyph(place: string) {
-  const s = (place || "").trim();
+function firstGlyph(merchant: string) {
+  const s = (merchant || "").trim();
   for (let i = 0; i < s.length; i++) {
     const c = s[i];
     if (/[A-Za-z0-9]/.test(c)) return c.toUpperCase();
@@ -136,16 +146,16 @@ function hashString(s: string) {
   return h >>> 0;
 }
 
-function avatarColors(place: string) {
-  const h = hashString(place || "outflo") % 360;
+function avatarColors(merchant: string) {
+  const h = hashString(merchant || "outflo") % 360;
   return {
     bg: `hsl(${h} 42% 22%)`,
     fg: `hsl(${h} 80% 86%)`,
   };
 }
 
-function normalizeMerchantKey(place: string) {
-  return (place || "")
+function normalizeMerchantKey(merchant: string) {
+  return (merchant || "")
     .trim()
     .toLowerCase()
     .replace(/\s+/g, " ")
@@ -154,18 +164,17 @@ function normalizeMerchantKey(place: string) {
     .replace(/&/g, "and");
 }
 
-function logoUrlFor(place: string) {
-  const key = normalizeMerchantKey(place);
+function logoUrlFor(merchant: string) {
+  const key = normalizeMerchantKey(merchant);
 
-  // Minimal seed map (expand over time)
   const MAP: Record<string, string> = {
     "7-eleven": "7-eleven.com",
-    "amazon": "amazon.com",
+    amazon: "amazon.com",
     "t-mobile": "t-mobile.com",
-    "tmobile": "t-mobile.com",
-    "starbucks": "starbucks.com",
-    "walmart": "walmart.com",
-    "target": "target.com",
+    tmobile: "t-mobile.com",
+    starbucks: "starbucks.com",
+    walmart: "walmart.com",
+    target: "target.com",
   };
 
   const domain = MAP[key] ?? null;
@@ -196,7 +205,6 @@ export default function ReceiptDetailPage() {
 
     async function run() {
       try {
-        // 1) authoritative receipt by id (cloud truth)
         const r1 = await fetch(`/api/receipts/${encodeURIComponent(id)}`, {
           cache: "no-store",
         });
@@ -212,7 +220,6 @@ export default function ReceiptDetailPage() {
         const j1 = await r1.json();
         const one: Receipt | null = j1?.receipt ?? null;
 
-        // 2) list for day + 365 context (cloud truth)
         const r2 = await fetch("/api/receipts", { cache: "no-store" });
         const j2 = await r2.json();
         const list: Receipt[] = Array.isArray(j2?.receipts) ? j2.receipts : [];
@@ -247,14 +254,16 @@ export default function ReceiptDetailPage() {
   const computed = useMemo(() => {
     if (!receipt) return null;
 
-    const dayKey = dayKeyLocal(receipt.ts);
-    const sameDay = receipts.filter((r) => dayKeyLocal(r.ts) === dayKey);
+    const dayKey = dayKeyLocal(receipt.moment_ms);
+    const sameDay = receipts.filter(
+      (r) => dayKeyLocal(r.moment_ms) === dayKey
+    );
 
     const dayCum = dayCumulativeAtMoment(receipt, receipts);
-    const total365 = receipts.reduce((s, r) => s + r.amount, 0);
+    const total365 = receipts.reduce((s, r) => s + r.amount_minor, 0);
 
     const asc = [...sameDay].sort((a, b) => {
-      if (a.ts !== b.ts) return a.ts - b.ts;
+      if (a.moment_ms !== b.moment_ms) return a.moment_ms - b.moment_ms;
       return a.id.localeCompare(b.id);
     });
 
@@ -272,7 +281,7 @@ export default function ReceiptDetailPage() {
 
   let userEpochTime = "(unavailable)";
   if (systemEpoch != null && receipt != null) {
-    const elapsedMs = Math.max(0, receipt.ts - systemEpoch);
+    const elapsedMs = Math.max(0, receipt.moment_ms - systemEpoch);
 
     const totalSeconds = Math.floor(elapsedMs / 1000);
     const days = Math.floor(totalSeconds / 86400);
@@ -361,7 +370,8 @@ export default function ReceiptDetailPage() {
     );
   }
 
-  const merchantName = (receipt.place || "").trim() || "Merchant";
+  const merchantName =
+    (receipt.merchant_raw || "").trim() || "Merchant";
   const glyph = firstGlyph(merchantName);
   const colors = avatarColors(merchantName);
 
@@ -371,8 +381,8 @@ export default function ReceiptDetailPage() {
   const placeHref = `/app/money/place/${encodeURIComponent(merchantName)}`;
 
   const heroAmount =
-    Number.isFinite(receipt.amount) && receipt.amount > 0
-      ? formatMoney(receipt.amount)
+    Number.isFinite(receipt.amount_minor) && receipt.amount_minor > 0
+      ? formatMoney(receipt.amount_minor, receipt.currency)
       : "—";
 
   return (
@@ -382,14 +392,10 @@ export default function ReceiptDetailPage() {
       </button>
 
       <div style={frame}>
-        {/* ------------------------------
-           Hero
-        -------------------------------- */}
         <section style={{ ...section, paddingTop: NAV_H }}>
           <div style={heroStack}>
             <div style={{ ...avatar, background: colors.bg, color: colors.fg }}>
               {logoUrl && logoOk ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={logoUrl}
                   alt={merchantName}
@@ -413,7 +419,9 @@ export default function ReceiptDetailPage() {
               <div style={merchant} title={merchantName}>
                 {merchantName}
               </div>
-              <div style={metaLine}>{formatHeroDateTime(receipt.ts)}</div>
+              <div style={metaLine}>
+                {formatHeroDateTime(receipt.moment_ms)}
+              </div>
             </div>
 
             <div style={amount}>{heroAmount}</div>
@@ -422,24 +430,21 @@ export default function ReceiptDetailPage() {
 
         <div style={sectionDivider} />
 
-        {/* ------------------------------
-           Position
-        -------------------------------- */}
         <section style={section}>
           <Title>Position</Title>
 
           <div style={rows}>
             <Row label="Day" value={computed.dayKey} mono />
-            <Row label="Orbit" value={formatMoney(computed.dayCum)} />
+            <Row
+              label="Orbit"
+              value={formatMoney(computed.dayCum, receipt.currency)}
+            />
             <Row label="Index" value={String(computed.dayIndex)} mono />
           </div>
         </section>
 
         <div style={sectionDivider} />
 
-        {/* ------------------------------
-           Orientation
-        -------------------------------- */}
         <section style={section}>
           <Title>Orientation</Title>
 
@@ -451,9 +456,6 @@ export default function ReceiptDetailPage() {
 
         <div style={sectionDivider} />
 
-        {/* ------------------------------
-           Ledger
-        -------------------------------- */}
         <section style={section}>
           <Title>Ledger</Title>
 
@@ -461,10 +463,14 @@ export default function ReceiptDetailPage() {
             <Row label="Receipt ID" value={`#${receiptSuffix(receipt.id)}`} mono />
             <Row
               label="Raw time (24h + seconds)"
-              value={formatTime24WithSeconds(receipt.ts)}
+              value={formatTime24WithSeconds(receipt.moment_ms)}
               mono
             />
-            <Row label="Epoch" value={String(receipt.ts)} mono />
+            <Row
+              label="Epoch"
+              value={String(receipt.moment_ms)}
+              mono
+            />
             <Row label="User Epoch" value={userEpochTime} mono />
             <Row
               label="Coordinates"
@@ -477,9 +483,6 @@ export default function ReceiptDetailPage() {
 
         <div style={sectionDivider} />
 
-        {/* ------------------------------
-           Explore
-        -------------------------------- */}
         <section style={section}>
           <Title>Explore</Title>
 
@@ -495,9 +498,6 @@ export default function ReceiptDetailPage() {
 
         <div style={sectionDivider} />
 
-        {/* ------------------------------
-           Footer
-        -------------------------------- */}
         <section style={footerSection}>
           <div style={footerBrand}>Outflō</div>
           <div style={footerLine}>{FOOTER_STREET}</div>
@@ -575,7 +575,7 @@ const wrap: React.CSSProperties = {
   color: "white",
   display: "grid",
   placeItems: "start stretch",
-  padding: "max(24px, 6vh) 0px", // vertical only; global frame owns horizontal
+  padding: "max(24px, 6vh) 0px",
 };
 
 const frame: React.CSSProperties = {
@@ -765,4 +765,3 @@ const pillButtonStyle: React.CSSProperties = {
   fontSize: 12,
   cursor: "pointer",
 };
-

@@ -2,6 +2,10 @@
    OUTFLO — MERCHANT RECEIPTS
    File: app/app/money/place/[slug]/page.tsx
    Scope: Cloud-only merchant drilldown with windowed totals
+   Last Updated:
+   - ms: 1774326820402
+   - iso: 2026-03-24T04:33:40.402Z
+   - note: Phase C read alignment
    ========================================================== */
 
 "use client";
@@ -18,9 +22,10 @@ import { useParams, useRouter } from "next/navigation";
 -------------------------------- */
 type Receipt = {
   id: string;
-  place: string;
-  amount: number;
-  ts: number; // epoch ms
+  merchant_raw: string;
+  amount_minor: number;
+  currency: string;
+  moment_ms: number;
 };
 
 /* ------------------------------
@@ -35,13 +40,15 @@ const NAV_H = 56;
 /* ------------------------------
    Helpers
 -------------------------------- */
-function isReceipt(x: any): x is Receipt {
+function isReceipt(x: unknown): x is Receipt {
   return (
-    x &&
-    typeof x.id === "string" &&
-    typeof x.place === "string" &&
-    typeof x.amount === "number" &&
-    typeof x.ts === "number"
+    typeof x === "object" &&
+    x !== null &&
+    typeof (x as Receipt).id === "string" &&
+    typeof (x as Receipt).merchant_raw === "string" &&
+    typeof (x as Receipt).amount_minor === "number" &&
+    typeof (x as Receipt).currency === "string" &&
+    typeof (x as Receipt).moment_ms === "number"
   );
 }
 
@@ -78,12 +85,15 @@ function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
 }
 
-function formatMoney(n: number) {
-  return `$${n.toFixed(2)}`;
+function formatMoney(amountMinor: number, currency: string) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+  }).format(amountMinor / 100);
 }
 
-function formatDate(ts: number) {
-  const d = new Date(ts);
+function formatDate(momentMs: number) {
+  const d = new Date(momentMs);
   return d.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -91,8 +101,8 @@ function formatDate(ts: number) {
   });
 }
 
-function formatTime(ts: number) {
-  const d = new Date(ts);
+function formatTime(momentMs: number) {
+  const d = new Date(momentMs);
   return d.toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
@@ -102,8 +112,8 @@ function formatTime(ts: number) {
 /* ------------------------------
    Avatar
 -------------------------------- */
-function firstGlyph(place: string) {
-  const s = (place || "").trim();
+function firstGlyph(merchant: string) {
+  const s = (merchant || "").trim();
   for (let i = 0; i < s.length; i++) {
     const c = s[i];
     if (/[A-Za-z0-9]/.test(c)) return c.toUpperCase();
@@ -120,8 +130,8 @@ function hashString(s: string) {
   return h >>> 0;
 }
 
-function avatarColors(place: string) {
-  const h = hashString(place || "outflo") % 360;
+function avatarColors(merchant: string) {
+  const h = hashString(merchant || "outflo") % 360;
   return {
     bg: `hsl(${h} 42% 22%)`,
     fg: `hsl(${h} 80% 86%)`,
@@ -204,21 +214,25 @@ export default function PlacePage() {
   const view = useMemo(() => {
     const target = normalizeMerchant(slugDecoded);
 
-    const matching = receipts.filter((r) => normalizeMerchant(r.place) === target);
+    const matching = receipts.filter(
+      (r) => normalizeMerchant(r.merchant_raw) === target
+    );
 
     const endMs = now;
     const startMs = endMs - windowDays * DAY_MS;
 
-    const inWindow = matching.filter((r) => r.ts >= startMs && r.ts <= endMs);
-    const total = inWindow.reduce((s, r) => s + r.amount, 0);
+    const inWindow = matching.filter(
+      (r) => r.moment_ms >= startMs && r.moment_ms <= endMs
+    );
+    const total = inWindow.reduce((s, r) => s + r.amount_minor, 0);
     const count = inWindow.length;
     const avg = count ? total / count : 0;
 
-    const asc = [...inWindow].sort((a, b) => a.ts - b.ts);
+    const asc = [...inWindow].sort((a, b) => a.moment_ms - b.moment_ms);
     const first = asc[0] ?? null;
     const last = asc[asc.length - 1] ?? null;
 
-    const allTotal = matching.reduce((s, r) => s + r.amount, 0);
+    const allTotal = matching.reduce((s, r) => s + r.amount_minor, 0);
 
     return {
       target,
@@ -237,7 +251,7 @@ export default function PlacePage() {
 
   const merchantName = useMemo(() => {
     const hit = view.matching[0] ?? null;
-    return (hit?.place || slugDecoded || "").trim();
+    return (hit?.merchant_raw || slugDecoded || "").trim();
   }, [view.matching, slugDecoded]);
 
   function close() {
@@ -250,6 +264,7 @@ export default function PlacePage() {
 
   const glyph = firstGlyph(merchantName || "Merchant");
   const colors = avatarColors(merchantName || "Merchant");
+  const displayCurrency = view.matching[0]?.currency ?? "USD";
 
   if (!loaded) {
     return (
@@ -317,7 +332,7 @@ export default function PlacePage() {
               </div>
             </div>
 
-            <div style={amount}>{formatMoney(view.total)}</div>
+            <div style={amount}>{formatMoney(view.total, displayCurrency)}</div>
             <div style={subAmount}>
               {formatDate(view.startMs)} → {formatDate(view.endMs)}
             </div>
@@ -352,16 +367,24 @@ export default function PlacePage() {
             />
 
             <div style={{ display: "grid", gap: 12 }}>
-              <Row label="Total (window)" value={formatMoney(view.total)} />
+              <Row label="Total (window)" value={formatMoney(view.total, displayCurrency)} />
               <Row label="Count (window)" value={String(view.count)} mono />
-              <Row label="Avg (window)" value={formatMoney(view.avg)} />
+              <Row label="Avg (window)" value={formatMoney(avgToMinor(view.avg), displayCurrency)} />
               <Row
                 label="First (window)"
-                value={view.first ? `${formatDate(view.first.ts)} · ${formatTime(view.first.ts)}` : "(none)"}
+                value={
+                  view.first
+                    ? `${formatDate(view.first.moment_ms)} · ${formatTime(view.first.moment_ms)}`
+                    : "(none)"
+                }
               />
               <Row
                 label="Last (window)"
-                value={view.last ? `${formatDate(view.last.ts)} · ${formatTime(view.last.ts)}` : "(none)"}
+                value={
+                  view.last
+                    ? `${formatDate(view.last.moment_ms)} · ${formatTime(view.last.moment_ms)}`
+                    : "(none)"
+                }
               />
             </div>
           </div>
@@ -376,7 +399,7 @@ export default function PlacePage() {
           <Title>Ledger</Title>
 
           <div style={rows}>
-            <Row label="Total (all time)" value={formatMoney(view.allTotal)} />
+            <Row label="Total (all time)" value={formatMoney(view.allTotal, displayCurrency)} />
             <Row label="Receipts (all time)" value={String(view.matching.length)} mono />
           </div>
         </section>
@@ -441,6 +464,10 @@ function Row({
   );
 }
 
+function avgToMinor(avg: number) {
+  return Math.round(avg);
+}
+
 /* ------------------------------
    Styles
 -------------------------------- */
@@ -450,13 +477,13 @@ const wrap: React.CSSProperties = {
   color: "white",
   display: "grid",
   placeItems: "start center",
-  padding: "max(24px, 6vh) 0px", // match receipts page (no horizontal padding)
+  padding: "max(24px, 6vh) 0px",
   width: "100%",
 };
 
 const frame: React.CSSProperties = {
   width: "100%",
-  maxWidth: "none", // global frame owns width
+  maxWidth: "none",
   boxSizing: "border-box",
   position: "relative",
 };

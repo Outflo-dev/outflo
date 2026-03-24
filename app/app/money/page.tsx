@@ -2,6 +2,10 @@
    OUTFLO — MONEY ROOT
    File: app/app/money/page.tsx
    Scope: Render money root surface with current spend summary and quick add
+   Last Updated:
+   - ms: 1774328392539
+   - iso: 2026-03-24T04:59:52.539Z
+   - note: Phase D write alignment
    ========================================================== */
 
 "use client";
@@ -18,15 +22,17 @@ import { useEffect, useMemo, useState } from "react";
 -------------------------------- */
 type Receipt = {
   id: string;
-  place: string;
-  amount: number;
-  ts: number;
+  merchant_raw: string;
+  amount_minor: number;
+  currency: string;
+  moment_ms: number;
 };
 
 /* ------------------------------
    Constants
 -------------------------------- */
 const API_RECEIPTS = "/api/receipts";
+const DEFAULT_CURRENCY = "USD";
 
 /* ------------------------------
    Helpers
@@ -37,24 +43,33 @@ function startOfTodayLocal(nowTs: number) {
   return d.getTime();
 }
 
-function sumAmounts(receipts: Receipt[]) {
+function sumAmountsMinor(receipts: Receipt[]) {
   let total = 0;
-  for (const receipt of receipts) total += receipt.amount;
+  for (const receipt of receipts) total += receipt.amount_minor;
   return total;
 }
 
-function formatMoney(value: number) {
-  return `$${value.toFixed(2)}`;
+function formatMoney(amountMinor: number, currency: string) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+  }).format(amountMinor / 100);
 }
 
-function isReceipt(value: any): value is Receipt {
+function isReceipt(value: unknown): value is Receipt {
   return (
-    value &&
-    typeof value.id === "string" &&
-    typeof value.place === "string" &&
-    typeof value.amount === "number" &&
-    typeof value.ts === "number"
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as Receipt).id === "string" &&
+    typeof (value as Receipt).merchant_raw === "string" &&
+    typeof (value as Receipt).amount_minor === "number" &&
+    typeof (value as Receipt).currency === "string" &&
+    typeof (value as Receipt).moment_ms === "number"
   );
+}
+
+function dollarsToMinor(amount: number) {
+  return Math.round(amount * 100);
 }
 
 /* ------------------------------
@@ -78,9 +93,10 @@ async function apiGetReceipts(): Promise<Receipt[]> {
 }
 
 async function apiPostReceipt(input: {
-  place: string;
-  amount: number;
-  ts: number;
+  merchant_raw: string;
+  amount_minor: number;
+  currency: string;
+  moment_ms: number;
 }): Promise<Receipt> {
   const response = await fetch(API_RECEIPTS, {
     method: "POST",
@@ -143,22 +159,25 @@ export default function MoneyPage() {
      Compute
   -------------------------------- */
   const nowTs = Date.now();
+  const displayCurrency = receipts[0]?.currency ?? DEFAULT_CURRENCY;
 
-  const { todaySpend, spend365 } = useMemo(() => {
+  const { todaySpendMinor, spend365Minor } = useMemo(() => {
     const todayStartTs = startOfTodayLocal(nowTs);
     const cutoff365Ts = nowTs - 365 * 24 * 60 * 60 * 1000;
 
     const todayReceipts = receipts.filter(
-      (receipt) => receipt.ts >= todayStartTs && receipt.ts <= nowTs
+      (receipt) =>
+        receipt.moment_ms >= todayStartTs && receipt.moment_ms <= nowTs
     );
 
     const rollingReceipts = receipts.filter(
-      (receipt) => receipt.ts >= cutoff365Ts && receipt.ts <= nowTs
+      (receipt) =>
+        receipt.moment_ms >= cutoff365Ts && receipt.moment_ms <= nowTs
     );
 
     return {
-      todaySpend: sumAmounts(todayReceipts),
-      spend365: sumAmounts(rollingReceipts),
+      todaySpendMinor: sumAmountsMinor(todayReceipts),
+      spend365Minor: sumAmountsMinor(rollingReceipts),
     };
   }, [receipts, nowTs]);
 
@@ -172,13 +191,14 @@ export default function MoneyPage() {
     if (!nextPlace) return;
     if (!Number.isFinite(nextAmount) || nextAmount <= 0) return;
 
-    const ts = Date.now();
+    const moment_ms = Date.now();
 
     try {
       const created = await apiPostReceipt({
-        place: nextPlace,
-        amount: nextAmount,
-        ts,
+        merchant_raw: nextPlace,
+        amount_minor: dollarsToMinor(nextAmount),
+        currency: DEFAULT_CURRENCY,
+        moment_ms,
       });
 
       setReceipts((prev) => [created, ...prev]);
@@ -221,7 +241,7 @@ export default function MoneyPage() {
               fontVariantNumeric: "tabular-nums",
             }}
           >
-            {formatMoney(todaySpend)}
+            {formatMoney(todaySpendMinor, displayCurrency)}
           </div>
         </div>
 
@@ -234,7 +254,7 @@ export default function MoneyPage() {
               fontVariantNumeric: "tabular-nums",
             }}
           >
-            {formatMoney(spend365)}
+            {formatMoney(spend365Minor, displayCurrency)}
           </div>
         </div>
 

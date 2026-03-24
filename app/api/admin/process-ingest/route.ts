@@ -2,6 +2,10 @@
    OUTFLO — PROCESS INGEST EVENTS
    File: app/api/admin/process-ingest/route.ts
    Scope: Claim ingest_events, bind user via ingest_aliases, upsert into receipts, mark processed_at
+   Last Updated:
+   - ms: 1774327877516
+   - iso: 2026-03-24T04:51:17.516Z
+   - note: Phase D write alignment
    ========================================================== */
 
 /* ------------------------------
@@ -14,15 +18,15 @@ import { createClient } from "@supabase/supabase-js";
    Types
 -------------------------------- */
 type IngestEventRow = {
-  id: string; // uuid
+  id: string;
   provider: string | null;
-  received_at: string | null; // timestamptz
-  message_id: string | null; // provider email id
-  event_id: string | null; // webhook event id
-  user_id: string | null; // bound user
-  claimed_at: string | null; // timestamptz (processing claim)
-  processed_at: string | null; // timestamptz (completion)
-  raw: any; // jsonb
+  received_at: string | null;
+  message_id: string | null;
+  event_id: string | null;
+  user_id: string | null;
+  claimed_at: string | null;
+  processed_at: string | null;
+  raw: any;
 };
 
 type AliasRow = {
@@ -45,6 +49,7 @@ export const runtime = "nodejs";
 
 const PROVIDER = "resend";
 const DEFAULT_LIMIT = 25;
+const DEFAULT_CURRENCY = "USD";
 
 /* ------------------------------
    Helpers
@@ -65,12 +70,25 @@ function bad(status: number, payload: any) {
 }
 
 function supabaseService() {
-  const url = envOrNull("SUPABASE_URL") || envOrNull("NEXT_PUBLIC_SUPABASE_URL");
+  const url =
+    envOrNull("SUPABASE_URL") || envOrNull("NEXT_PUBLIC_SUPABASE_URL");
   const key = envOrNull("SUPABASE_SERVICE_ROLE_KEY");
 
-  if (!url) return { ok: false as const, where: "env" as const, message: "Missing SUPABASE_URL" };
-  if (!key)
-    return { ok: false as const, where: "env" as const, message: "Missing SUPABASE_SERVICE_ROLE_KEY" };
+  if (!url) {
+    return {
+      ok: false as const,
+      where: "env" as const,
+      message: "Missing SUPABASE_URL",
+    };
+  }
+
+  if (!key) {
+    return {
+      ok: false as const,
+      where: "env" as const,
+      message: "Missing SUPABASE_SERVICE_ROLE_KEY",
+    };
+  }
 
   return {
     ok: true as const,
@@ -105,26 +123,30 @@ function extractLocalPartFromRaw(raw: any): string | null {
   return local.length ? local : null;
 }
 
-function extractReceiptPlace(raw: any): string {
+function extractReceiptMerchantRaw(raw: any): string {
   const subject = raw?.data?.subject;
-  if (typeof subject === "string" && subject.trim().length) return subject.trim();
+  if (typeof subject === "string" && subject.trim().length) {
+    return subject.trim();
+  }
 
   const type = raw?.type;
-  if (typeof type === "string" && type.trim().length) return type.trim();
+  if (typeof type === "string" && type.trim().length) {
+    return type.trim();
+  }
 
   return "ingest";
 }
 
-function extractReceiptTsMs(ev: IngestEventRow): number {
+function extractReceiptMomentMs(ev: IngestEventRow): number {
   if (ev.received_at) {
     const ms = Date.parse(ev.received_at);
     if (Number.isFinite(ms)) return ms;
   }
+
   return Date.now();
 }
 
-function extractReceiptAmount(_raw: any): number {
-  // Parsing not enabled yet. Pipe test = 0.
+function extractReceiptAmountMinor(_raw: any): number {
   return 0;
 }
 
@@ -132,39 +154,44 @@ function extractReceiptAmount(_raw: any): number {
    Handler
 -------------------------------- */
 export async function POST(req: Request) {
-  /* ------------------------------
-     Auth
-  -------------------------------- */
   const expectedVault = envOrNull("OUTFLO_VAULT_KEY");
   const providedVault = getVaultKey(req);
 
   if (expectedVault) {
     if (!providedVault || providedVault !== expectedVault) {
-      return bad(401, { ok: false, where: "auth", message: "Invalid vault key" });
+      return bad(401, {
+        ok: false,
+        where: "auth",
+        message: "Invalid vault key",
+      });
     }
   } else {
-    return bad(500, { ok: false, where: "env", message: "Missing OUTFLO_VAULT_KEY" });
+    return bad(500, {
+      ok: false,
+      where: "env",
+      message: "Missing OUTFLO_VAULT_KEY",
+    });
   }
 
-  /* ------------------------------
-     Supabase
-  -------------------------------- */
   const svc = supabaseService();
-  if (!svc.ok) return bad(500, { ok: false, where: svc.where, message: svc.message });
+  if (!svc.ok) {
+    return bad(500, {
+      ok: false,
+      where: svc.where,
+      message: svc.message,
+    });
+  }
+
   const supabase = svc.client;
 
-  /* ------------------------------
-     Params
-  -------------------------------- */
   const url = new URL(req.url);
   const limit = mustInt(url.searchParams.get("limit"), DEFAULT_LIMIT);
 
-  /* ------------------------------
-     Fetch unprocessed, unclaimed events
-  -------------------------------- */
   const { data: events, error: fetchErr } = await supabase
     .from("ingest_events")
-    .select("id, provider, received_at, message_id, event_id, user_id, claimed_at, processed_at, raw")
+    .select(
+      "id, provider, received_at, message_id, event_id, user_id, claimed_at, processed_at, raw"
+    )
     .eq("provider", PROVIDER)
     .is("processed_at", null)
     .is("claimed_at", null)
@@ -182,9 +209,6 @@ export async function POST(req: Request) {
 
   const rows = (events || []) as IngestEventRow[];
 
-  /* ------------------------------
-     Process
-  -------------------------------- */
   let scanned = 0;
   let claimed = 0;
   let skipped_claimed = 0;
@@ -195,7 +219,6 @@ export async function POST(req: Request) {
   for (const ev0 of rows) {
     scanned += 1;
 
-    // 0) Claim row (concurrency seal)
     const claimAt = isoNow();
 
     const { data: claimedRow, error: claimErr } = await supabase
@@ -204,7 +227,9 @@ export async function POST(req: Request) {
       .eq("id", ev0.id)
       .is("processed_at", null)
       .is("claimed_at", null)
-      .select("id, provider, received_at, message_id, event_id, user_id, claimed_at, processed_at, raw")
+      .select(
+        "id, provider, received_at, message_id, event_id, user_id, claimed_at, processed_at, raw"
+      )
       .maybeSingle();
 
     if (claimErr) {
@@ -216,7 +241,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // If we didn't get a row back, someone else claimed/processed it between fetch and claim.
     if (!claimedRow) {
       skipped_claimed += 1;
       continue;
@@ -226,7 +250,6 @@ export async function POST(req: Request) {
 
     const ev = claimedRow as IngestEventRow;
 
-    // 1) Ensure user_id is bound (via alias lookup)
     let userId = ev.user_id;
 
     if (!userId) {
@@ -243,8 +266,11 @@ export async function POST(req: Request) {
           .maybeSingle();
 
         if (aliasErr) {
-          // release claim before failing
-          await supabase.from("ingest_events").update({ claimed_at: null } as any).eq("id", ev.id);
+          await supabase
+            .from("ingest_events")
+            .update({ claimed_at: null } as any)
+            .eq("id", ev.id);
+
           return bad(500, {
             ok: false,
             where: "db",
@@ -264,7 +290,11 @@ export async function POST(req: Request) {
             .eq("id", ev.id);
 
           if (bindErr) {
-            await supabase.from("ingest_events").update({ claimed_at: null } as any).eq("id", ev.id);
+            await supabase
+              .from("ingest_events")
+              .update({ claimed_at: null } as any)
+              .eq("id", ev.id);
+
             return bad(500, {
               ok: false,
               where: "db",
@@ -278,17 +308,18 @@ export async function POST(req: Request) {
       }
     }
 
-    // If still no user, release claim and leave unprocessed/unclaimed for later binding
     if (!userId) {
-      await supabase.from("ingest_events").update({ claimed_at: null } as any).eq("id", ev.id);
+      await supabase
+        .from("ingest_events")
+        .update({ claimed_at: null } as any)
+        .eq("id", ev.id);
       continue;
     }
 
-    // 2) Build receipt row (pipe-test minimal)
-    const receiptId = ev.id; // law: 1 ingest_event => 1 receipt
-    const ts = extractReceiptTsMs(ev);
-    const place = extractReceiptPlace(ev.raw);
-    const amount = extractReceiptAmount(ev.raw);
+    const receiptId = ev.id;
+    const moment_ms = extractReceiptMomentMs(ev);
+    const merchant_raw = extractReceiptMerchantRaw(ev.raw);
+    const amount_minor = extractReceiptAmountMinor(ev.raw);
     const raw = {
       source: "ingest",
       provider: ev.provider,
@@ -298,24 +329,29 @@ export async function POST(req: Request) {
       payload: ev.raw,
     };
 
-    // 3) Upsert into receipts (idempotent on id)
     const { error: upsertErr } = await supabase
       .from("receipts")
       .upsert(
         {
           id: receiptId,
           user_id: userId,
-          ts,
-          place,
-          amount,
+          moment_ms,
+          merchant_raw,
+          amount_minor,
+          currency: DEFAULT_CURRENCY,
           raw,
         } as any,
         { onConflict: "id" }
       );
 
     if (upsertErr) {
-      const e = upsertErr as unknown as DbErrorLike;
-      await supabase.from("ingest_events").update({ claimed_at: null } as any).eq("id", ev.id);
+      const e = upsertErr as DbErrorLike;
+
+      await supabase
+        .from("ingest_events")
+        .update({ claimed_at: null } as any)
+        .eq("id", ev.id);
+
       return bad(500, {
         ok: false,
         where: "db",
@@ -327,7 +363,6 @@ export async function POST(req: Request) {
 
     upserted += 1;
 
-    // 4) Mark ingest event processed + release claim
     const processedAt = isoNow();
 
     const { error: markErr } = await supabase
@@ -348,9 +383,6 @@ export async function POST(req: Request) {
     processed += 1;
   }
 
-  /* ------------------------------
-     Response
-  -------------------------------- */
   return NextResponse.json(
     {
       ok: true,
@@ -362,7 +394,7 @@ export async function POST(req: Request) {
       bound,
       upserted,
       processed,
-      version: "process-ingest-v2-claimed",
+      version: "process-ingest-v3-canonical",
       note: "Concurrency sealed via ingest_events.claimed_at; completion uses processed_at.",
     },
     { status: 200 }

@@ -2,6 +2,10 @@
    OUTFLO — RECEIPT BY ID API
    File: app/api/receipts/[id]/route.ts
    Scope: Fetch single receipt (user-scoped, cloud truth)
+   Last Updated:
+   - ms: 1774324819434
+   - iso: 2026-03-24T04:00:19.434Z
+   - note: Phase C read alignment
    ========================================================== */
 
 /* ------------------------------
@@ -51,7 +55,7 @@ export async function GET(
 
   const { data, error } = await supabase
     .from("receipts")
-    .select("id, ts, place, amount")
+    .select("id, moment_ms, merchant_raw, amount_minor, currency")
     .eq("user_id", user.id)
     .eq("id", decodedId)
     .single();
