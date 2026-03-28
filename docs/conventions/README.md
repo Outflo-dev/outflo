@@ -45,9 +45,14 @@ Contains:
 
 These documents are:
 
-- **not versioned**
-- **considered authoritative**
+- versioned over time
+- only one version is active at any time
+- considered authoritative
 - updated only when explicitly revised and re-locked
+
+Prior versions must be removed from active directories and preserved in:
+
+    docs/archive/
 
 ---
 
@@ -79,4 +84,38 @@ Templates are used to create new documents and ensure consistency.
 
 ---
 
-End of Document.
+## ACTIVE DOCUMENT RULE (LOCKED)
+
+Each system directory must contain exactly one active document.
+
+The active document represents the current canonical truth.
+
+All prior versions must be removed from the active directory and preserved in:
+
+    docs/archive/
+
+No active directory may contain multiple versions of the same system.
+
+Active = current truth  
+Archive = historical truth  
+
+Both layers are:
+
+- complete
+- immutable
+- non-overlapping
+
+---
+
+## System Principle
+
+Outflō documentation follows the same laws as the system:
+
+- nothing is overwritten  
+- everything is versioned  
+- history is preserved  
+- truth is singular at any given layer  
+
+---
+
+End of Document

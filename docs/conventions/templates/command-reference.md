@@ -121,6 +121,23 @@ node -e "console.log({ ms: Date.now(), iso: new Date().toISOString() })"
 
 ---
 
+## 15. Database — Receipts Schema
+
+# Current receipts table columns (source of truth)
+
+select column_name, data_type, is_nullable
+from information_schema.columns
+where table_name = 'receipts'
+order by ordinal_position;
+
+# Receipts indexes
+
+select indexname, indexdef
+from pg_indexes
+where tablename = 'receipts';
+
+---
+
 ## Rule
 
 Only add commands you actually reuse.
