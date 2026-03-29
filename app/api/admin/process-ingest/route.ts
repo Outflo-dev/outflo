@@ -1,18 +1,18 @@
 /* ==========================================================
    OUTFLO — PROCESS INGEST EVENTS
    File: app/api/admin/process-ingest/route.ts
-   Scope: Claim ingest_events, bind user via ingest_aliases, upsert into receipts, mark processed_at
+   Scope: Claim ingest_events, bind user via ingest_aliases, create canonical receipts, mark processed_at
    Last Updated:
-   - ms: 1774327877516
-   - iso: 2026-03-24T04:51:17.516Z
-   - note: Phase D write alignment
+   - ms: 1774797630902
+   - iso: 2026-03-29T15:20:30.902Z
+   - note: Cash App parsing + canonical receipt builder + alias fix (to[0]) + strict finalization accounting
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 /* ------------------------------
    Types
@@ -35,11 +35,18 @@ type AliasRow = {
   type: string | null;
 };
 
-type DbErrorLike = {
-  message?: string;
-  code?: string;
-  details?: string | null;
-  hint?: string | null;
+type ReceiptInsert = {
+  id: string;
+  receipt_no: number;
+  user_id: string;
+  moment_ms: number;
+  amount_minor: number;
+  currency: string;
+  amount_base_minor: number;
+  base_currency: string;
+  fx_rate: number;
+  merchant_raw: string;
+  raw: any;
 };
 
 /* ------------------------------
@@ -52,55 +59,14 @@ const DEFAULT_LIMIT = 25;
 const DEFAULT_CURRENCY = "USD";
 
 /* ------------------------------
-   Helpers
+   Helpers — Core
 -------------------------------- */
-function envOrNull(key: string): string | null {
-  const v = process.env[key];
-  if (!v) return null;
-  const t = v.trim();
-  return t.length ? t : null;
-}
-
 function isoNow(): string {
   return new Date().toISOString();
 }
 
 function bad(status: number, payload: any) {
   return NextResponse.json(payload, { status });
-}
-
-function supabaseService() {
-  const url =
-    envOrNull("SUPABASE_URL") || envOrNull("NEXT_PUBLIC_SUPABASE_URL");
-  const key = envOrNull("SUPABASE_SERVICE_ROLE_KEY");
-
-  if (!url) {
-    return {
-      ok: false as const,
-      where: "env" as const,
-      message: "Missing SUPABASE_URL",
-    };
-  }
-
-  if (!key) {
-    return {
-      ok: false as const,
-      where: "env" as const,
-      message: "Missing SUPABASE_SERVICE_ROLE_KEY",
-    };
-  }
-
-  return {
-    ok: true as const,
-    client: createClient(url, key, { auth: { persistSession: false } }),
-  };
-}
-
-function getVaultKey(req: Request): string | null {
-  const h = req.headers.get("x-outflo-vault-key");
-  if (!h) return null;
-  const t = h.trim();
-  return t.length ? t : null;
 }
 
 function mustInt(v: string | null, fallback: number): number {
@@ -110,12 +76,23 @@ function mustInt(v: string | null, fallback: number): number {
   return n;
 }
 
-function extractLocalPartFromRaw(raw: any): string | null {
-  const from = raw?.data?.from;
-  if (typeof from !== "string") return null;
+function getVaultKey(req: Request): string | null {
+  const h = req.headers.get("x-outflo-vault-key");
+  return h?.trim() || null;
+}
 
-  const m = from.match(/<([^>]+)>/);
-  const addr = (m ? m[1] : from).trim().toLowerCase();
+function nextReceiptNo(): number {
+  return Math.floor(1000000000000 + Math.random() * 9000000000000);
+}
+
+/* ------------------------------
+   Helpers — Alias
+-------------------------------- */
+function extractAliasLocalPartFromRaw(raw: any): string | null {
+  const to = raw?.data?.to;
+  if (!Array.isArray(to) || to.length === 0) return null;
+
+  const addr = String(to[0]).trim().toLowerCase();
   const at = addr.indexOf("@");
   if (at <= 0) return null;
 
@@ -123,22 +100,43 @@ function extractLocalPartFromRaw(raw: any): string | null {
   return local.length ? local : null;
 }
 
-function extractReceiptMerchantRaw(raw: any): string {
-  const subject = raw?.data?.subject;
-  if (typeof subject === "string" && subject.trim().length) {
-    return subject.trim();
-  }
+/* ------------------------------
+   Helpers — Cash App Parsing
+-------------------------------- */
+function extractCashAppSpend(subject: string): {
+  amount_minor: number;
+  merchant_raw: string;
+} | null {
+  const s = subject.trim();
 
-  const type = raw?.type;
-  if (typeof type === "string" && type.trim().length) {
-    return type.trim();
-  }
+  if (!s.startsWith("You spent $")) return null;
 
-  return "ingest";
+  const match = s.match(/^You spent \$([0-9]+\.[0-9]{2}) at (.+)$/);
+  if (!match) return null;
+
+  const dollars = Number.parseFloat(match[1]);
+  if (!Number.isFinite(dollars)) return null;
+
+  const amount_minor = Math.round(dollars * 100);
+  if (!Number.isInteger(amount_minor) || amount_minor <= 0) return null;
+
+  const merchant_raw = match[2].trim();
+  if (!merchant_raw) return null;
+
+  return { amount_minor, merchant_raw };
 }
 
+/* ------------------------------
+   Helpers — Time
+-------------------------------- */
 function extractReceiptMomentMs(ev: IngestEventRow): number {
-  if (ev.received_at) {
+  const rawCreatedAt = ev.raw?.data?.created_at;
+  if (typeof rawCreatedAt === "string") {
+    const ms = Date.parse(rawCreatedAt);
+    if (Number.isFinite(ms)) return ms;
+  }
+
+  if (typeof ev.received_at === "string") {
     const ms = Date.parse(ev.received_at);
     if (Number.isFinite(ms)) return ms;
   }
@@ -146,43 +144,63 @@ function extractReceiptMomentMs(ev: IngestEventRow): number {
   return Date.now();
 }
 
-function extractReceiptAmountMinor(_raw: any): number {
-  return 0;
+/* ------------------------------
+   Helpers — Receipt Builder
+-------------------------------- */
+function buildReceiptFromEvent(
+  ev: IngestEventRow,
+  userId: string
+): ReceiptInsert | null {
+  const subject = ev.raw?.data?.subject;
+  if (typeof subject !== "string") return null;
+
+  const parsed = extractCashAppSpend(subject);
+  if (!parsed) return null;
+
+  const moment_ms = extractReceiptMomentMs(ev);
+
+  if (!Number.isFinite(moment_ms)) {
+    throw new Error("Invalid moment_ms during ingest processing");
+  }
+
+  return {
+    id: ev.id,
+    receipt_no: nextReceiptNo(),
+    user_id: userId,
+    moment_ms,
+    amount_minor: parsed.amount_minor,
+    currency: DEFAULT_CURRENCY,
+    amount_base_minor: parsed.amount_minor,
+    base_currency: DEFAULT_CURRENCY,
+    fx_rate: 1,
+    merchant_raw: parsed.merchant_raw,
+    raw: {
+      source: "ingest",
+      provider: ev.provider,
+      event_id: ev.event_id,
+      message_id: ev.message_id,
+      received_at: ev.received_at,
+      payload: ev.raw,
+    },
+  };
 }
 
 /* ------------------------------
    Handler
 -------------------------------- */
 export async function POST(req: Request) {
-  const expectedVault = envOrNull("OUTFLO_VAULT_KEY");
+  const expectedVault = process.env.OUTFLO_VAULT_KEY;
   const providedVault = getVaultKey(req);
 
-  if (expectedVault) {
-    if (!providedVault || providedVault !== expectedVault) {
-      return bad(401, {
-        ok: false,
-        where: "auth",
-        message: "Invalid vault key",
-      });
-    }
-  } else {
-    return bad(500, {
+  if (!expectedVault || providedVault !== expectedVault) {
+    return bad(401, {
       ok: false,
-      where: "env",
-      message: "Missing OUTFLO_VAULT_KEY",
+      where: "auth",
+      message: "Invalid vault key",
     });
   }
 
-  const svc = supabaseService();
-  if (!svc.ok) {
-    return bad(500, {
-      ok: false,
-      where: svc.where,
-      message: svc.message,
-    });
-  }
-
-  const supabase = svc.client;
+  const supabase = createAdminClient();
 
   const url = new URL(req.url);
   const limit = mustInt(url.searchParams.get("limit"), DEFAULT_LIMIT);
@@ -202,8 +220,8 @@ export async function POST(req: Request) {
     return bad(500, {
       ok: false,
       where: "db",
-      message: fetchErr.message,
       step: "fetch_events",
+      message: fetchErr.message,
     });
   }
 
@@ -213,8 +231,11 @@ export async function POST(req: Request) {
   let claimed = 0;
   let skipped_claimed = 0;
   let bound = 0;
-  let upserted = 0;
-  let processed = 0;
+  let skipped_no_user = 0;
+  let skipped_non_spend = 0;
+  let receipt_upserted = 0;
+  let marked_processed = 0;
+  let finalize_failed = 0;
 
   for (const ev0 of rows) {
     scanned += 1;
@@ -236,8 +257,9 @@ export async function POST(req: Request) {
       return bad(500, {
         ok: false,
         where: "db",
-        message: claimErr.message,
         step: "claim_event",
+        event_id: ev0.id,
+        message: claimErr.message,
       });
     }
 
@@ -249,11 +271,10 @@ export async function POST(req: Request) {
     claimed += 1;
 
     const ev = claimedRow as IngestEventRow;
-
     let userId = ev.user_id;
 
     if (!userId) {
-      const localPart = extractLocalPartFromRaw(ev.raw);
+      const localPart = extractAliasLocalPartFromRaw(ev.raw);
 
       if (localPart) {
         const { data: alias, error: aliasErr } = await supabase
@@ -274,13 +295,15 @@ export async function POST(req: Request) {
           return bad(500, {
             ok: false,
             where: "db",
-            message: aliasErr.message,
             step: "lookup_alias",
+            event_id: ev.id,
             local_part: localPart,
+            message: aliasErr.message,
           });
         }
 
         const a = alias as AliasRow | null;
+
         if (a?.user_id) {
           userId = a.user_id;
 
@@ -298,8 +321,9 @@ export async function POST(req: Request) {
             return bad(500, {
               ok: false,
               where: "db",
-              message: bindErr.message,
               step: "bind_user",
+              event_id: ev.id,
+              message: bindErr.message,
             });
           }
 
@@ -309,100 +333,108 @@ export async function POST(req: Request) {
     }
 
     if (!userId) {
-      await supabase
+      skipped_no_user += 1;
+
+      const { error: releaseErr } = await supabase
         .from("ingest_events")
         .update({ claimed_at: null } as any)
         .eq("id", ev.id);
+
+      if (releaseErr) {
+        return bad(500, {
+          ok: false,
+          where: "db",
+          step: "release_unbound_event",
+          event_id: ev.id,
+          message: releaseErr.message,
+        });
+      }
+
       continue;
     }
 
-    const receiptId = ev.id;
-    const moment_ms = extractReceiptMomentMs(ev);
-    const merchant_raw = extractReceiptMerchantRaw(ev.raw);
-    const amount_minor = extractReceiptAmountMinor(ev.raw);
-    const raw = {
-      source: "ingest",
-      provider: ev.provider,
-      event_id: ev.event_id,
-      message_id: ev.message_id,
-      received_at: ev.received_at,
-      payload: ev.raw,
-    };
+    const receipt = buildReceiptFromEvent(ev, userId);
 
-  if (
-  !Number.isFinite(moment_ms) ||
-  !merchant_raw ||
-  !Number.isFinite(amount_minor) ||
-  !Number.isInteger(amount_minor) ||
-  amount_minor <= 0
-) {
-  throw new Error("Invalid canonical receipt fields during ingest processing");
-}
+    if (!receipt) {
+      skipped_non_spend += 1;
 
-const currency = DEFAULT_CURRENCY;
-const base_currency = DEFAULT_CURRENCY;
-const fx_rate = 1;
-const amount_base_minor = amount_minor;
+      const processedAt = isoNow();
 
-const receipt_no =
-  Math.floor(1000000000000 + Math.random() * 9000000000000);
+      const { error: skipFinalizeErr } = await supabase
+        .from("ingest_events")
+        .update({ processed_at: processedAt, claimed_at: null } as any)
+        .eq("id", ev.id)
+        .is("processed_at", null);
 
-const { error: upsertErr } = await supabase
-  .from("receipts")
-  .upsert(
-    {
-      id: receiptId,
-      receipt_no,
-      user_id: userId,
-      moment_ms,
-      amount_minor,
-      currency,
-      amount_base_minor,
-      base_currency,
-      fx_rate,
-      merchant_raw,
-      raw,
-    } as any,
-    { onConflict: "id" }
-  );
+      if (skipFinalizeErr) {
+        finalize_failed += 1;
+
+        return bad(500, {
+          ok: false,
+          where: "db",
+          step: "finalize_non_spend",
+          event_id: ev.id,
+          message: skipFinalizeErr.message,
+        });
+      }
+
+      marked_processed += 1;
+      continue;
+    }
+
+    const { error: upsertErr } = await supabase
+      .from("receipts")
+      .upsert(receipt as any, { onConflict: "id" });
 
     if (upsertErr) {
-      const e = upsertErr as DbErrorLike;
-
-      await supabase
+      const { error: releaseErr } = await supabase
         .from("ingest_events")
         .update({ claimed_at: null } as any)
         .eq("id", ev.id);
+
+      if (releaseErr) {
+        return bad(500, {
+          ok: false,
+          where: "db",
+          step: "release_after_upsert_failure",
+          event_id: ev.id,
+          message: releaseErr.message,
+          upstream: upsertErr.message,
+        });
+      }
 
       return bad(500, {
         ok: false,
         where: "db",
-        message: e.message || "Receipt upsert failed",
-        code: e.code || null,
         step: "upsert_receipt",
+        event_id: ev.id,
+        message: upsertErr.message,
       });
     }
 
-    upserted += 1;
+    receipt_upserted += 1;
 
     const processedAt = isoNow();
 
-    const { error: markErr } = await supabase
+    const { error: finalizeErr } = await supabase
       .from("ingest_events")
       .update({ processed_at: processedAt, claimed_at: null } as any)
       .eq("id", ev.id)
       .is("processed_at", null);
 
-    if (markErr) {
+    if (finalizeErr) {
+      finalize_failed += 1;
+
       return bad(500, {
         ok: false,
         where: "db",
-        message: markErr.message,
         step: "mark_processed",
+        event_id: ev.id,
+        message: finalizeErr.message,
       });
     }
 
-    processed += 1;
+    marked_processed += 1;
   }
 
   return NextResponse.json(
@@ -414,10 +446,13 @@ const { error: upsertErr } = await supabase
       claimed,
       skipped_claimed,
       bound,
-      upserted,
-      processed,
-      version: "process-ingest-v3-canonical",
-      note: "Concurrency sealed via ingest_events.claimed_at; completion uses processed_at.",
+      skipped_no_user,
+      skipped_non_spend,
+      receipt_upserted,
+      marked_processed,
+      finalize_failed,
+      version: "process-ingest-v4-finalization",
+      note: "Strict finalization accounting enabled.",
     },
     { status: 200 }
   );
