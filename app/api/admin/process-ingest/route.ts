@@ -329,20 +329,42 @@ export async function POST(req: Request) {
       payload: ev.raw,
     };
 
-    const { error: upsertErr } = await supabase
-      .from("receipts")
-      .upsert(
-        {
-          id: receiptId,
-          user_id: userId,
-          moment_ms,
-          merchant_raw,
-          amount_minor,
-          currency: DEFAULT_CURRENCY,
-          raw,
-        } as any,
-        { onConflict: "id" }
-      );
+  if (
+  !Number.isFinite(moment_ms) ||
+  !merchant_raw ||
+  !Number.isFinite(amount_minor) ||
+  !Number.isInteger(amount_minor) ||
+  amount_minor <= 0
+) {
+  throw new Error("Invalid canonical receipt fields during ingest processing");
+}
+
+const currency = DEFAULT_CURRENCY;
+const base_currency = DEFAULT_CURRENCY;
+const fx_rate = 1;
+const amount_base_minor = amount_minor;
+
+const receipt_no =
+  Math.floor(1000000000000 + Math.random() * 9000000000000);
+
+const { error: upsertErr } = await supabase
+  .from("receipts")
+  .upsert(
+    {
+      id: receiptId,
+      receipt_no,
+      user_id: userId,
+      moment_ms,
+      amount_minor,
+      currency,
+      amount_base_minor,
+      base_currency,
+      fx_rate,
+      merchant_raw,
+      raw,
+    } as any,
+    { onConflict: "id" }
+  );
 
     if (upsertErr) {
       const e = upsertErr as DbErrorLike;

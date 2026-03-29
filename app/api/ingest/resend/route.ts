@@ -147,37 +147,6 @@ function supabaseService() {
 }
 
 /* ------------------------------
-   CashApp Subject Parser v1
--------------------------------- */
-function parseCashAppSubject(subject: string | undefined) {
-  if (!subject || typeof subject !== "string") return null;
-
-  const spentMatch = subject.match(/You spent \$([0-9]+\.[0-9]{2}) at (.+)$/i);
-  if (spentMatch) {
-    return {
-      direction: "out" as const,
-      amount_minor: dollarsToMinor(parseFloat(spentMatch[1])),
-      merchant_raw: spentMatch[2].trim(),
-      confidence: "high" as const,
-    };
-  }
-
-  const receivedMatch = subject.match(
-    /You received \$([0-9]+\.[0-9]{2}) from (.+)$/i
-  );
-  if (receivedMatch) {
-    return {
-      direction: "in" as const,
-      amount_minor: dollarsToMinor(parseFloat(receivedMatch[1])),
-      merchant_raw: receivedMatch[2].trim(),
-      confidence: "high" as const,
-    };
-  }
-
-  return null;
-}
-
-/* ------------------------------
    Ensure Stub Creation
 -------------------------------- */
 async function ensureReceiptStub(args: {
@@ -202,32 +171,6 @@ async function ensureReceiptStub(args: {
   } = args;
 
   const moment_ms = receivedAtToTsMs(received_at);
-
-  const { error: upsertErr } = await supabase
-    .from("receipts")
-    .upsert(
-      {
-        id: ingest_id,
-        user_id,
-        moment_ms,
-        merchant_raw: payload?.data?.subject ?? "ingest",
-        amount_minor: 0,
-        currency: DEFAULT_CURRENCY,
-        raw: {
-          source: "ingest",
-          provider,
-          event_id,
-          message_id,
-          received_at,
-          payload,
-        },
-      } as any,
-      { onConflict: "id" }
-    );
-
-  if (upsertErr) {
-    return { ok: false, message: upsertErr.message };
-  }
 
   const { error: markErr } = await supabase
     .from("ingest_events")
@@ -341,32 +284,6 @@ export async function POST(req: Request) {
       { ok: false, where: "stub", message: stub.message, version: VERSION },
       { status: 500 }
     );
-  }
-
-  /* ------------------------------
-     CashApp Enrichment
-  -------------------------------- */
-  const from = payload?.data?.from;
-  const subject = payload?.data?.subject;
-
-  const isCashApp =
-    typeof from === "string" && /(cash\.app|square\.com)/i.test(from);
-
-  if (isCashApp) {
-    const parsedCash = parseCashAppSubject(subject);
-
-    if (parsedCash?.merchant_raw) {
-      await supabase
-        .from("receipts")
-        .update({
-          ...(parsedCash.amount_minor != null
-            ? { amount_minor: parsedCash.amount_minor }
-            : {}),
-          merchant_raw: parsedCash.merchant_raw,
-          currency: DEFAULT_CURRENCY,
-        } as any)
-        .eq("id", ingest_id);
-    }
   }
 
   return NextResponse.json(
