@@ -1,11 +1,11 @@
 /* ==========================================================
-   OUTFLO — RESEND INGEST WEBHOOK (INSTANT STUB + CASHAPP V1)
+   OUTFLO — RESEND INGEST WEBHOOK
    File: app/api/ingest/resend/route.ts
-   Scope: Receive Resend webhook, bind user via ingest_aliases, persist ingest_events, create receipt stub immediately, enrich via CashApp subject parser
+   Scope: Receive Resend webhook, resolve ingest alias, persist canonical ingest_events row only
    Last Updated:
-   - ms: 1774327761245
-   - iso: 2026-03-24T04:49:21.245Z
-   - note: Phase D write alignment
+   - ms: 1774800110309
+   - iso: 2026-03-29T16:01:50.309Z
+   - note: remove processing drift from ingest; capture only
    ========================================================== */
 
 /* ------------------------------
@@ -13,7 +13,6 @@
 -------------------------------- */
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import type { SupabaseClient } from "@supabase/supabase-js";
 
 /* ------------------------------
    Types
@@ -45,8 +44,7 @@ type DbErrorLike = {
 export const runtime = "nodejs";
 
 const PROVIDER = "resend";
-const VERSION = "ingest-resend-v5-canonical-receipts";
-const DEFAULT_CURRENCY = "USD";
+const VERSION = "ingest-resend-v6-capture-only";
 
 /* ------------------------------
    Helpers
@@ -73,50 +71,53 @@ function isoNow(): string {
 }
 
 function pickReceivedAt(payload: ResendWebhookPayload): string {
-  if (payload?.created_at && typeof payload.created_at === "string") {
-    return payload.created_at;
+  if (typeof payload?.created_at === "string" && payload.created_at.trim()) {
+    return payload.created_at.trim();
   }
+
   return isoNow();
 }
 
 function extractEventId(payload: ResendWebhookPayload): string | null {
   const candidates = [payload?.id, payload?.data?.email_id];
+
   for (const c of candidates) {
-    if (typeof c === "string" && c.trim().length) return c.trim();
+    if (typeof c === "string" && c.trim().length) {
+      return c.trim();
+    }
   }
+
   return null;
 }
 
-function extractEmailId(payload: ResendWebhookPayload): string | null {
-  const v = payload?.data?.email_id;
-  if (typeof v === "string" && v.trim().length) return v.trim();
+function extractMessageId(payload: ResendWebhookPayload): string | null {
+  const candidates = [payload?.data?.message_id, payload?.data?.email_id];
+
+  for (const c of candidates) {
+    if (typeof c === "string" && c.trim().length) {
+      return c.trim();
+    }
+  }
+
   return null;
 }
 
 function extractAliasLocalPart(payload: ResendWebhookPayload): string | null {
   const to = payload?.data?.to;
-  if (!Array.isArray(to) || !to.length) return null;
+  if (!Array.isArray(to) || to.length === 0) return null;
 
   for (const addr of to) {
     if (typeof addr !== "string") continue;
-    const trimmed = addr.trim();
+
+    const trimmed = addr.trim().toLowerCase();
     const at = trimmed.indexOf("@");
     if (at <= 0) continue;
+
     const local = trimmed.slice(0, at).trim();
     if (local.length) return local;
   }
 
   return null;
-}
-
-function receivedAtToTsMs(received_at: string): number {
-  const ms = Date.parse(received_at);
-  if (Number.isFinite(ms)) return ms;
-  return Date.now();
-}
-
-function dollarsToMinor(amount: number): number {
-  return Math.round(amount * 100);
 }
 
 function supabaseService() {
@@ -147,51 +148,19 @@ function supabaseService() {
 }
 
 /* ------------------------------
-   Ensure Stub Creation
--------------------------------- */
-async function ensureReceiptStub(args: {
-  supabase: SupabaseClient<any>;
-  ingest_id: string;
-  user_id: string;
-  provider: string;
-  event_id: string;
-  message_id: string | null;
-  received_at: string;
-  payload: ResendWebhookPayload;
-}): Promise<{ ok: true } | { ok: false; message: string }> {
-  const {
-    supabase,
-    ingest_id,
-    user_id,
-    provider,
-    event_id,
-    message_id,
-    received_at,
-    payload,
-  } = args;
-
-  const moment_ms = receivedAtToTsMs(received_at);
-
-  const { error: markErr } = await supabase
-    .from("ingest_events")
-    .update({ processed_at: isoNow() } as any)
-    .eq("id", ingest_id);
-
-  if (markErr) {
-    return { ok: false, message: markErr.message };
-  }
-
-  return { ok: true };
-}
-
-/* ------------------------------
    Handler
 -------------------------------- */
 export async function POST(req: Request) {
   const svc = supabaseService();
+
   if (!svc.ok) {
     return NextResponse.json(
-      { ok: false, where: svc.where, message: svc.message, version: VERSION },
+      {
+        ok: false,
+        where: svc.where,
+        message: svc.message,
+        version: VERSION,
+      },
       { status: 500 }
     );
   }
@@ -200,9 +169,15 @@ export async function POST(req: Request) {
 
   const rawText = await req.text();
   const parsed = safeJsonParse<ResendWebhookPayload>(rawText);
+
   if (!parsed.ok) {
     return NextResponse.json(
-      { ok: false, where: "payload", message: parsed.error, version: VERSION },
+      {
+        ok: false,
+        where: "payload",
+        message: parsed.error,
+        version: VERSION,
+      },
       { status: 400 }
     );
   }
@@ -210,7 +185,7 @@ export async function POST(req: Request) {
   const payload = parsed.value;
 
   const event_id = extractEventId(payload);
-  const email_id = extractEmailId(payload);
+  const message_id = extractMessageId(payload);
   const local_part = extractAliasLocalPart(payload);
   const received_at = pickReceivedAt(payload);
 
@@ -226,62 +201,84 @@ export async function POST(req: Request) {
     );
   }
 
-  const { data: aliasRow } = await supabase
+  const { data: aliasRow, error: aliasErr } = await supabase
     .from("ingest_aliases")
     .select("user_id")
     .eq("local_part", local_part)
     .eq("is_active", true)
+    .order("created_at", { ascending: false })
+    .limit(1)
     .maybeSingle();
+
+  if (aliasErr) {
+    return NextResponse.json(
+      {
+        ok: false,
+        where: "db",
+        step: "lookup_alias",
+        local_part,
+        message: aliasErr.message,
+        version: VERSION,
+      },
+      { status: 500 }
+    );
+  }
 
   if (!aliasRow?.user_id) {
     return NextResponse.json(
-      { ok: false, where: "alias", message: "No active alias", version: VERSION },
+      {
+        ok: false,
+        where: "alias",
+        message: "No active alias",
+        local_part,
+        version: VERSION,
+      },
       { status: 404 }
     );
   }
 
   const user_id = aliasRow.user_id;
 
-  const { data: inserted, error: insErr } = await supabase
+  const { data: inserted, error: insertErr } = await supabase
     .from("ingest_events")
     .insert({
       provider: PROVIDER,
       event_id,
-      message_id: email_id,
+      message_id,
       received_at,
       raw: payload,
       user_id,
     })
-    .select("id")
+    .select("id, provider, event_id, message_id, received_at, user_id, processed_at, claimed_at")
     .single();
 
-  if (insErr) {
-    if ((insErr as DbErrorLike).code === "23505") {
-      return NextResponse.json({ ok: true, deduped: true, version: VERSION });
+  if (insertErr) {
+    const e = insertErr as DbErrorLike;
+
+    if (e.code === "23505") {
+      return NextResponse.json(
+        {
+          ok: true,
+          deduped: true,
+          provider: PROVIDER,
+          event_id,
+          message_id,
+          user_id,
+          version: VERSION,
+        },
+        { status: 200 }
+      );
     }
 
     return NextResponse.json(
-      { ok: false, where: "db", message: insErr.message, version: VERSION },
-      { status: 500 }
-    );
-  }
-
-  const ingest_id = inserted.id as string;
-
-  const stub = await ensureReceiptStub({
-    supabase,
-    ingest_id,
-    user_id,
-    provider: PROVIDER,
-    event_id,
-    message_id: email_id,
-    received_at,
-    payload,
-  });
-
-  if (!stub.ok) {
-    return NextResponse.json(
-      { ok: false, where: "stub", message: stub.message, version: VERSION },
+      {
+        ok: false,
+        where: "db",
+        step: "insert_ingest_event",
+        message: e.message || "Failed to insert ingest event",
+        code: e.code || null,
+        version: VERSION,
+      },
       { status: 500 }
     );
   }
@@ -289,10 +286,16 @@ export async function POST(req: Request) {
   return NextResponse.json(
     {
       ok: true,
-      receipt_id: ingest_id,
-      event_id,
-      user_id,
+      provider: PROVIDER,
+      ingest_event_id: inserted.id,
+      event_id: inserted.event_id,
+      message_id: inserted.message_id,
+      user_id: inserted.user_id,
+      received_at: inserted.received_at,
+      processed_at: inserted.processed_at,
+      claimed_at: inserted.claimed_at,
       version: VERSION,
+      note: "Capture only. Processing occurs in /api/admin/process-ingest.",
     },
     { status: 200 }
   );
