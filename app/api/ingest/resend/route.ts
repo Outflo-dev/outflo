@@ -1,11 +1,11 @@
 /* ==========================================================
    OUTFLO — RESEND INGEST WEBHOOK
    File: app/api/ingest/resend/route.ts
-   Scope: Receive Resend webhook, resolve ingest alias, persist canonical ingest_events row, and trigger non-blocking processing
+   Scope: Receive Resend webhook, resolve ingest alias, persist canonical ingest_events row, and await processing handoff
    Last Updated:
-   - ms: 1774820025083
-   - iso: 2026-03-29T21:33:45.083Z
-   - note: restore automatic non-blocking process trigger while preserving capture-only ingest boundary
+   - ms: 1774820880798
+   - iso: 2026-03-29T21:48:00.798Z
+   - note: replace unreliable fire-and-forget trigger with awaited processing handoff
    ========================================================== */
 
 /* ------------------------------
@@ -45,7 +45,7 @@ type DbErrorLike = {
 export const runtime = "nodejs";
 
 const PROVIDER = "resend";
-const VERSION = "ingest-resend-v7-capture-plus-trigger";
+const VERSION = "ingest-resend-v8-capture-plus-awaited-trigger";
 
 /* ------------------------------
    Helpers
@@ -170,24 +170,52 @@ function getBaseUrl(req: Request): string | null {
   }
 }
 
-async function triggerProcessing(req: Request): Promise<void> {
+async function triggerProcessing(req: Request) {
   const baseUrl = getBaseUrl(req);
   const vaultKey = envOrNull("OUTFLO_VAULT_KEY");
 
-  if (!baseUrl || !vaultKey) return;
+  if (!baseUrl || !vaultKey) {
+    return {
+      ok: false as const,
+      where: "trigger",
+      message: "Missing base URL or vault key",
+    };
+  }
 
   const target = `${baseUrl}/api/admin/process-ingest`;
 
   try {
-    await fetch(target, {
+    const res = await fetch(target, {
       method: "POST",
       headers: {
         "x-outflo-vault-key": vaultKey,
       },
       cache: "no-store",
     });
-  } catch {
-    // intentionally non-blocking
+
+    const text = await res.text().catch(() => "");
+
+    if (!res.ok) {
+      return {
+        ok: false as const,
+        where: "trigger",
+        message: `Processing trigger failed (${res.status})`,
+        status: res.status,
+        body: text || null,
+      };
+    }
+
+    return {
+      ok: true as const,
+      status: res.status,
+      body: text || null,
+    };
+  } catch (e: any) {
+    return {
+      ok: false as const,
+      where: "trigger",
+      message: e?.message || "Processing trigger request failed",
+    };
   }
 }
 
@@ -302,7 +330,7 @@ export async function POST(req: Request) {
     const e = insertErr as DbErrorLike;
 
     if (e.code === "23505") {
-      void triggerProcessing(req);
+      const trigger = await triggerProcessing(req);
 
       return NextResponse.json(
         {
@@ -312,8 +340,9 @@ export async function POST(req: Request) {
           event_id,
           message_id,
           user_id,
+          trigger_ok: trigger.ok,
+          trigger_message: trigger.ok ? "Processing trigger completed." : trigger.message,
           version: VERSION,
-          note: "Capture preserved; processing trigger fired non-blocking.",
         },
         { status: 200 }
       );
@@ -332,7 +361,7 @@ export async function POST(req: Request) {
     );
   }
 
-  void triggerProcessing(req);
+  const trigger = await triggerProcessing(req);
 
   return NextResponse.json(
     {
@@ -345,8 +374,10 @@ export async function POST(req: Request) {
       received_at: inserted.received_at,
       processed_at: inserted.processed_at,
       claimed_at: inserted.claimed_at,
+      trigger_ok: trigger.ok,
+      trigger_message: trigger.ok ? "Processing trigger completed." : trigger.message,
       version: VERSION,
-      note: "Capture complete; processing trigger fired non-blocking.",
+      note: "Capture complete; processing handoff awaited.",
     },
     { status: 200 }
   );
