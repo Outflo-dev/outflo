@@ -1,11 +1,11 @@
 /* ==========================================================
    OUTFLO — RESEND INGEST WEBHOOK
    File: app/api/ingest/resend/route.ts
-   Scope: Receive Resend webhook, resolve ingest alias, persist canonical ingest_events row only
+   Scope: Receive Resend webhook, resolve ingest alias, persist canonical ingest_events row, and trigger non-blocking processing
    Last Updated:
-   - ms: 1774800110309
-   - iso: 2026-03-29T16:01:50.309Z
-   - note: remove processing drift from ingest; capture only
+   - ms: 1774820025083
+   - iso: 2026-03-29T21:33:45.083Z
+   - note: restore automatic non-blocking process trigger while preserving capture-only ingest boundary
    ========================================================== */
 
 /* ------------------------------
@@ -23,6 +23,7 @@ type ResendWebhookPayload = {
   created_at?: string;
   data?: {
     email_id?: string;
+    message_id?: string;
     from?: string;
     to?: string[];
     subject?: string;
@@ -44,7 +45,7 @@ type DbErrorLike = {
 export const runtime = "nodejs";
 
 const PROVIDER = "resend";
-const VERSION = "ingest-resend-v6-capture-only";
+const VERSION = "ingest-resend-v7-capture-plus-trigger";
 
 /* ------------------------------
    Helpers
@@ -145,6 +146,49 @@ function supabaseService() {
     ok: true as const,
     client: createClient(url, key, { auth: { persistSession: false } }),
   };
+}
+
+function getBaseUrl(req: Request): string | null {
+  const envUrl =
+    envOrNull("APP_URL") ||
+    envOrNull("NEXT_PUBLIC_APP_URL") ||
+    envOrNull("VERCEL_PROJECT_PRODUCTION_URL") ||
+    envOrNull("VERCEL_URL");
+
+  if (envUrl) {
+    const normalized = envUrl.startsWith("http")
+      ? envUrl
+      : `https://${envUrl}`;
+    return normalized.replace(/\/+$/, "");
+  }
+
+  try {
+    const url = new URL(req.url);
+    return `${url.protocol}//${url.host}`;
+  } catch {
+    return null;
+  }
+}
+
+async function triggerProcessing(req: Request): Promise<void> {
+  const baseUrl = getBaseUrl(req);
+  const vaultKey = envOrNull("OUTFLO_VAULT_KEY");
+
+  if (!baseUrl || !vaultKey) return;
+
+  const target = `${baseUrl}/api/admin/process-ingest`;
+
+  try {
+    await fetch(target, {
+      method: "POST",
+      headers: {
+        "x-outflo-vault-key": vaultKey,
+      },
+      cache: "no-store",
+    });
+  } catch {
+    // intentionally non-blocking
+  }
 }
 
 /* ------------------------------
@@ -249,13 +293,17 @@ export async function POST(req: Request) {
       raw: payload,
       user_id,
     })
-    .select("id, provider, event_id, message_id, received_at, user_id, processed_at, claimed_at")
+    .select(
+      "id, provider, event_id, message_id, received_at, user_id, processed_at, claimed_at"
+    )
     .single();
 
   if (insertErr) {
     const e = insertErr as DbErrorLike;
 
     if (e.code === "23505") {
+      void triggerProcessing(req);
+
       return NextResponse.json(
         {
           ok: true,
@@ -265,6 +313,7 @@ export async function POST(req: Request) {
           message_id,
           user_id,
           version: VERSION,
+          note: "Capture preserved; processing trigger fired non-blocking.",
         },
         { status: 200 }
       );
@@ -283,6 +332,8 @@ export async function POST(req: Request) {
     );
   }
 
+  void triggerProcessing(req);
+
   return NextResponse.json(
     {
       ok: true,
@@ -295,7 +346,7 @@ export async function POST(req: Request) {
       processed_at: inserted.processed_at,
       claimed_at: inserted.claimed_at,
       version: VERSION,
-      note: "Capture only. Processing occurs in /api/admin/process-ingest.",
+      note: "Capture complete; processing trigger fired non-blocking.",
     },
     { status: 200 }
   );
