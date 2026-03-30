@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1774830366184
    - iso: 2026-03-30T00:26:06.184Z
-   - note: tighten profile hub for finish pass (global token usage, avatar matte, smaller edit action, expanded legal footer)
+   - note: pass 3 — left alignment, refined edit button, social row, footer alignment, sign-out placement
    ========================================================== */
 
 /* ------------------------------
@@ -34,6 +34,12 @@ const FOOTER_ITEMS = [
   { label: "References", href: "/account/profile/records" },
 ] as const;
 
+const SOCIAL_ITEMS = [
+  { label: "X", href: "#" },
+  { label: "Instagram", href: "#" },
+  { label: "GitHub", href: "#" },
+] as const;
+
 const UI = {
   pageTop: 24,
   sectionGap: 24,
@@ -44,10 +50,12 @@ const UI = {
   textPrimary: "var(--text-primary)",
   textSecondary: "rgba(255, 254, 250, 0.72)",
   textTertiary: "rgba(255, 254, 250, 0.52)",
-  borderStrong: "rgba(255, 254, 250, 0.10)",
   borderSoft: "rgba(255, 254, 250, 0.08)",
   borderRow: "rgba(255, 254, 250, 0.06)",
   surfaceSoft: "rgba(255, 254, 250, 0.04)",
+  dangerSoft: "rgba(255, 80, 80, 0.10)",
+  dangerBorder: "rgba(255, 80, 80, 0.25)",
+  dangerText: "rgba(255, 120, 120, 0.9)",
 } as const;
 
 /* ------------------------------
@@ -124,7 +132,7 @@ export default async function ProfilePage() {
         }}
       >
         {/* ------------------------------
-           UI: Profile — Identity Block
+           UI: Profile — Identity
         -------------------------------- */}
         <section
           style={{
@@ -144,7 +152,7 @@ export default async function ProfilePage() {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
+                alignItems: "flex-start",
                 gap: UI.tightGap,
                 flexShrink: 0,
               }}
@@ -153,18 +161,16 @@ export default async function ProfilePage() {
                 href="/account/profile/edit"
                 aria-label="Edit profile photo"
                 style={{
-                  width: 72,
-                  height: 72,
+                  width: 64,
+                  height: 64,
                   borderRadius: "50%",
                   display: "grid",
                   placeItems: "center",
                   textDecoration: "none",
                   color: UI.textPrimary,
                   background: avatarBackground,
-                  flexShrink: 0,
                   fontSize: 14,
                   fontWeight: 600,
-                  letterSpacing: "0.01em",
                 }}
               >
                 {initial}
@@ -173,13 +179,21 @@ export default async function ProfilePage() {
               <Link
                 href="/account/profile/edit"
                 style={{
-                  color: UI.textSecondary,
-                  fontSize: 11,
-                  lineHeight: 1.4,
+                  minHeight: 32,
+                  padding: "0 12px",
+                  borderRadius: 999,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   textDecoration: "none",
+                  color: UI.textPrimary,
+                  background: UI.surfaceSoft,
+                  border: `1px solid ${UI.borderSoft}`,
+                  fontSize: 12,
+                  lineHeight: 1,
                 }}
               >
-                Edit profile
+                Edit Profile
               </Link>
             </div>
 
@@ -189,7 +203,7 @@ export default async function ProfilePage() {
                 display: "flex",
                 flexDirection: "column",
                 gap: UI.tightGap,
-                paddingTop: 8,
+                paddingTop: 4,
               }}
             >
               <h1
@@ -197,8 +211,8 @@ export default async function ProfilePage() {
                   margin: 0,
                   color: UI.textPrimary,
                   fontSize: 14,
-                  lineHeight: 1.4,
                   fontWeight: 600,
+                  lineHeight: 1.4,
                 }}
               >
                 {displayName}
@@ -209,7 +223,6 @@ export default async function ProfilePage() {
                   margin: 0,
                   color: UI.textSecondary,
                   fontSize: 12,
-                  lineHeight: 1.4,
                 }}
               >
                 {username}
@@ -219,7 +232,7 @@ export default async function ProfilePage() {
         </section>
 
         {/* ------------------------------
-           UI: Profile — Hub Navigation
+           UI: Profile — Navigation
         -------------------------------- */}
         <section
           style={{
@@ -227,7 +240,7 @@ export default async function ProfilePage() {
             borderTop: `1px solid ${UI.borderSoft}`,
           }}
         >
-          <nav aria-label="Profile hub navigation">
+          <nav aria-label="Profile navigation">
             {HUB_ITEMS.map((item) => (
               <Link
                 key={item.href}
@@ -243,33 +256,72 @@ export default async function ProfilePage() {
                   borderBottom: `1px solid ${UI.borderRow}`,
                 }}
               >
-                <span
-                  style={{
-                    fontSize: 14,
-                    lineHeight: 1.4,
-                    fontWeight: 400,
-                  }}
-                >
-                  {item.label}
-                </span>
-
-                <span
-                  aria-hidden="true"
-                  style={{
-                    color: UI.textTertiary,
-                    fontSize: 12,
-                    lineHeight: 1,
-                  }}
-                >
-                  ›
-                </span>
+                <span style={{ fontSize: 14 }}>{item.label}</span>
+                <span style={{ fontSize: 12, color: UI.textTertiary }}>›</span>
               </Link>
             ))}
           </nav>
         </section>
 
         {/* ------------------------------
-           UI: Profile — Footer Note
+           UI: Profile — Social
+        -------------------------------- */}
+        <section
+          style={{
+            marginTop: UI.sectionGap,
+            padding: "0 16px",
+            display: "flex",
+            gap: 16,
+          }}
+        >
+          {SOCIAL_ITEMS.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              style={{
+                fontSize: 12,
+                color: UI.textSecondary,
+                textDecoration: "none",
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </section>
+
+        {/* ------------------------------
+           UI: Profile — Footer
+        -------------------------------- */}
+        <section
+          style={{
+            marginTop: UI.sectionGap,
+            padding: "0 16px",
+            color: UI.textTertiary,
+            fontSize: 11,
+            lineHeight: 1.6,
+          }}
+        >
+          <p style={{ margin: 0 }}>
+            Outflō is a personal telemetry system. It begins at a precise
+            moment, and records what leaves you across money, time, and
+            environment.
+          </p>
+
+          <p style={{ margin: `${UI.textGap}px 0 0` }}>
+            Outflō does not hold funds, is not a bank, does not manufacture
+            financial products, and does not execute transactions. It simply
+            records events as they occur.
+          </p>
+
+          <p style={{ margin: `${UI.textGap}px 0 0` }}>
+            <Link href={FOOTER_ITEMS[0].href}>{FOOTER_ITEMS[0].label}</Link> ·{" "}
+            <Link href={FOOTER_ITEMS[1].href}>{FOOTER_ITEMS[1].label}</Link> ·{" "}
+            <Link href={FOOTER_ITEMS[2].href}>{FOOTER_ITEMS[2].label}</Link>
+          </p>
+        </section>
+
+        {/* ------------------------------
+           UI: Profile — Sign Out
         -------------------------------- */}
         <section
           style={{
@@ -277,63 +329,23 @@ export default async function ProfilePage() {
             padding: "0 16px",
           }}
         >
-          <div
+          <Link
+            href="/logout"
             style={{
-              maxWidth: 520,
-              margin: "0 auto",
-              textAlign: "center",
-              color: UI.textTertiary,
-              fontSize: 11,
-              lineHeight: 1.6,
+              minHeight: 44,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 999,
+              textDecoration: "none",
+              fontSize: 13,
+              color: UI.dangerText,
+              background: UI.dangerSoft,
+              border: `1px solid ${UI.dangerBorder}`,
             }}
           >
-            <p style={{ margin: 0 }}>
-              Outflō is a personal telemetry system. It begins at a precise
-              moment, and records what leaves you across money, time, and
-              environment.
-            </p>
-
-            <p style={{ margin: `${UI.textGap}px 0 0` }}>
-              Outflō does not hold funds, is not a bank, does not manufacture
-              financial products, and does not execute transactions. It simply
-              records events as they occur.
-            </p>
-
-            <p style={{ margin: `${UI.textGap}px 0 0` }}>
-              <Link
-                href={FOOTER_ITEMS[0].href}
-                style={{
-                  color: UI.textSecondary,
-                  textDecoration: "underline",
-                  textUnderlineOffset: "0.12em",
-                }}
-              >
-                {FOOTER_ITEMS[0].label}
-              </Link>{" "}
-              ·{" "}
-              <Link
-                href={FOOTER_ITEMS[1].href}
-                style={{
-                  color: UI.textSecondary,
-                  textDecoration: "underline",
-                  textUnderlineOffset: "0.12em",
-                }}
-              >
-                {FOOTER_ITEMS[1].label}
-              </Link>{" "}
-              ·{" "}
-              <Link
-                href={FOOTER_ITEMS[2].href}
-                style={{
-                  color: UI.textSecondary,
-                  textDecoration: "underline",
-                  textUnderlineOffset: "0.12em",
-                }}
-              >
-                {FOOTER_ITEMS[2].label}
-              </Link>
-            </p>
-          </div>
+            Sign Out
+          </Link>
         </section>
       </div>
     </main>
