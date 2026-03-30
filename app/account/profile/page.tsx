@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1774830366184
    - iso: 2026-03-30T00:26:06.184Z
-   - note: rebuild profile hub to align with global UI contract
+   - note: tighten profile hub for finish pass (global token usage, avatar matte, smaller edit action, expanded legal footer)
    ========================================================== */
 
 /* ------------------------------
@@ -41,13 +41,13 @@ const UI = {
   textGap: 12,
   tightGap: 8,
   pageBottom: 40,
-  textPrimary: "#FFFEFA",
-  textSecondary: "rgba(255,254,250,0.72)",
-  textTertiary: "rgba(255,254,250,0.52)",
-  borderStrong: "rgba(255,254,250,0.10)",
-  borderSoft: "rgba(255,254,250,0.08)",
-  borderRow: "rgba(255,254,250,0.06)",
-  surfaceSoft: "rgba(255,254,250,0.04)",
+  textPrimary: "var(--text-primary)",
+  textSecondary: "rgba(255, 254, 250, 0.72)",
+  textTertiary: "rgba(255, 254, 250, 0.52)",
+  borderStrong: "rgba(255, 254, 250, 0.10)",
+  borderSoft: "rgba(255, 254, 250, 0.08)",
+  borderRow: "rgba(255, 254, 250, 0.06)",
+  surfaceSoft: "rgba(255, 254, 250, 0.04)",
 } as const;
 
 /* ------------------------------
@@ -136,31 +136,52 @@ export default async function ProfilePage() {
           <div
             style={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               gap: UI.stackGap,
             }}
           >
-            <Link
-              href="/account/profile/edit"
-              aria-label="Edit profile photo"
+            <div
               style={{
-                width: 72,
-                height: 72,
-                borderRadius: "50%",
-                display: "grid",
-                placeItems: "center",
-                textDecoration: "none",
-                color: UI.textPrimary,
-                background: avatarBackground,
-                border: `1px solid ${UI.borderStrong}`,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: UI.tightGap,
                 flexShrink: 0,
-                fontSize: 14,
-                fontWeight: 600,
-                letterSpacing: "0.01em",
               }}
             >
-              {initial}
-            </Link>
+              <Link
+                href="/account/profile/edit"
+                aria-label="Edit profile photo"
+                style={{
+                  width: 72,
+                  height: 72,
+                  borderRadius: "50%",
+                  display: "grid",
+                  placeItems: "center",
+                  textDecoration: "none",
+                  color: UI.textPrimary,
+                  background: avatarBackground,
+                  flexShrink: 0,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  letterSpacing: "0.01em",
+                }}
+              >
+                {initial}
+              </Link>
+
+              <Link
+                href="/account/profile/edit"
+                style={{
+                  color: UI.textSecondary,
+                  fontSize: 11,
+                  lineHeight: 1.4,
+                  textDecoration: "none",
+                }}
+              >
+                Edit profile
+              </Link>
+            </div>
 
             <div
               style={{
@@ -168,6 +189,7 @@ export default async function ProfilePage() {
                 display: "flex",
                 flexDirection: "column",
                 gap: UI.tightGap,
+                paddingTop: 8,
               }}
             >
               <h1
@@ -192,28 +214,6 @@ export default async function ProfilePage() {
               >
                 {username}
               </p>
-
-              <div>
-                <Link
-                  href="/account/profile/edit"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    minHeight: 44,
-                    padding: "0 16px",
-                    borderRadius: 999,
-                    textDecoration: "none",
-                    color: UI.textPrimary,
-                    background: UI.surfaceSoft,
-                    border: `1px solid ${UI.borderStrong}`,
-                    fontSize: 14,
-                    fontWeight: 500,
-                    lineHeight: 1,
-                  }}
-                >
-                  Edit Profile
-                </Link>
-              </div>
             </div>
           </div>
         </section>
@@ -291,6 +291,12 @@ export default async function ProfilePage() {
               Outflō is a personal telemetry system. It begins at a precise
               moment, and records what leaves you across money, time, and
               environment.
+            </p>
+
+            <p style={{ margin: `${UI.textGap}px 0 0` }}>
+              Outflō does not hold funds, is not a bank, does not manufacture
+              financial products, and does not execute transactions. It simply
+              records events as they occur.
             </p>
 
             <p style={{ margin: `${UI.textGap}px 0 0` }}>
