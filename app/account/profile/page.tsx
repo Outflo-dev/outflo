@@ -2,6 +2,10 @@
    OUTFLO — PROFILE HUB PAGE
    File: app/account/profile/page.tsx
    Scope: Render the canonical profile hub for account navigation
+   Last Updated:
+   - ms: 1774830366184
+   - iso: 2026-03-30T00:26:06.184Z
+   - note: rebuild profile hub to align with global UI contract
    ========================================================== */
 
 /* ------------------------------
@@ -29,6 +33,22 @@ const FOOTER_ITEMS = [
   { label: "Terms of Service", href: "/account/profile/support" },
   { label: "References", href: "/account/profile/records" },
 ] as const;
+
+const UI = {
+  pageTop: 24,
+  sectionGap: 24,
+  stackGap: 16,
+  textGap: 12,
+  tightGap: 8,
+  pageBottom: 40,
+  textPrimary: "#FFFEFA",
+  textSecondary: "rgba(255,254,250,0.72)",
+  textTertiary: "rgba(255,254,250,0.52)",
+  borderStrong: "rgba(255,254,250,0.10)",
+  borderSoft: "rgba(255,254,250,0.08)",
+  borderRow: "rgba(255,254,250,0.06)",
+  surfaceSoft: "rgba(255,254,250,0.04)",
+} as const;
 
 /* ------------------------------
    Helpers
@@ -68,7 +88,7 @@ function getGradientForLetter(letter: string) {
     "linear-gradient(135deg, #1f2937 0%, #14b8a6 100%)",
     "linear-gradient(135deg, #312e81 0%, #ec4899 100%)",
     "linear-gradient(135deg, #3f3f46 0%, #f59e0b 100%)",
-  ];
+  ] as const;
 
   const index = letter.charCodeAt(0) % gradients.length;
   return gradients[index];
@@ -82,6 +102,7 @@ export default async function ProfilePage() {
   const { data } = await supabase.auth.getUser();
 
   const user = data.user!;
+
   const displayName = getDisplayName(user);
   const username = getUsername(user);
   const initial = getInitial(displayName);
@@ -91,82 +112,71 @@ export default async function ProfilePage() {
     <main
       style={{
         minHeight: "100vh",
-        padding: "20px 20px 40px",
+        paddingTop: UI.pageTop,
+        paddingBottom: UI.pageBottom,
       }}
     >
       <div
         style={{
           width: "100%",
+          maxWidth: 640,
           margin: "0 auto",
         }}
       >
         {/* ------------------------------
-           UI — Profile Identity
+           UI: Profile — Identity Block
         -------------------------------- */}
         <section
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: 16,
+            gap: UI.stackGap,
           }}
         >
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 16,
+              gap: UI.stackGap,
             }}
           >
-            <div
+            <Link
+              href="/account/profile/edit"
+              aria-label="Edit profile photo"
               style={{
-                position: "relative",
-                width: 88,
-                height: 88,
+                width: 72,
+                height: 72,
                 borderRadius: "50%",
                 display: "grid",
                 placeItems: "center",
-                color: "#ffffff",
-                fontSize: 28,
-                fontWeight: 700,
+                textDecoration: "none",
+                color: UI.textPrimary,
                 background: avatarBackground,
-                border: "1px solid rgba(255,255,255,0.12)",
+                border: `1px solid ${UI.borderStrong}`,
                 flexShrink: 0,
+                fontSize: 14,
+                fontWeight: 600,
+                letterSpacing: "0.01em",
               }}
             >
               {initial}
+            </Link>
 
-              <Link
-                href="/account/profile/edit"
-                aria-label="Edit profile photo"
-                style={{
-                  position: "absolute",
-                  right: -2,
-                  bottom: -2,
-                  width: 28,
-                  height: 28,
-                  borderRadius: "50%",
-                  display: "grid",
-                  placeItems: "center",
-                  textDecoration: "none",
-                  color: "#ffffff",
-                  fontSize: 13,
-                  background: "rgba(255,255,255,0.14)",
-                  border: "1px solid rgba(255,255,255,0.16)",
-                  backdropFilter: "blur(8px)",
-                }}
-              >
-                ✎
-              </Link>
-            </div>
-
-            <div style={{ minWidth: 0 }}>
+            <div
+              style={{
+                minWidth: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: UI.tightGap,
+              }}
+            >
               <h1
                 style={{
                   margin: 0,
-                  color: "#ffffff",
-                  fontSize: 28,
-                  lineHeight: 1.1,
-                  fontWeight: 700,
+                  color: UI.textPrimary,
+                  fontSize: 14,
+                  lineHeight: 1.4,
+                  fontWeight: 600,
                 }}
               >
                 {displayName}
@@ -174,45 +184,47 @@ export default async function ProfilePage() {
 
               <p
                 style={{
-                  margin: "6px 0 0",
-                  color: "rgba(255,255,255,0.64)",
-                  fontSize: 15,
+                  margin: 0,
+                  color: UI.textSecondary,
+                  fontSize: 12,
+                  lineHeight: 1.4,
                 }}
               >
                 {username}
               </p>
-            </div>
-          </div>
 
-          <div>
-            <Link
-              href="/account/profile/edit"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                minHeight: 40,
-                padding: "0 14px",
-                borderRadius: 999,
-                textDecoration: "none",
-                color: "#ffffff",
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.10)",
-              }}
-            >
-              Edit Profile
-            </Link>
+              <div>
+                <Link
+                  href="/account/profile/edit"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    minHeight: 44,
+                    padding: "0 16px",
+                    borderRadius: 999,
+                    textDecoration: "none",
+                    color: UI.textPrimary,
+                    background: UI.surfaceSoft,
+                    border: `1px solid ${UI.borderStrong}`,
+                    fontSize: 14,
+                    fontWeight: 500,
+                    lineHeight: 1,
+                  }}
+                >
+                  Edit Profile
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* ------------------------------
-           UI — Profile Navigation
+           UI: Profile — Hub Navigation
         -------------------------------- */}
         <section
           style={{
-            marginTop: 28,
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            paddingTop: 12,
+            marginTop: UI.sectionGap,
+            borderTop: `1px solid ${UI.borderSoft}`,
           }}
         >
           <nav aria-label="Profile hub navigation">
@@ -221,83 +233,32 @@ export default async function ProfilePage() {
                 key={item.href}
                 href={item.href}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
                   minHeight: 56,
-                  textDecoration: "none",
-                  color: "#ffffff",
-                  borderBottom: "1px solid rgba(255,255,255,0.06)",
-                }}
-              >
-                <span style={{ fontSize: 16 }}>{item.label}</span>
-                <span
-                  style={{
-                    color: "rgba(255,255,255,0.42)",
-                    fontSize: 18,
-                  }}
-                >
-                  ›
-                </span>
-              </Link>
-            ))}
-          </nav>
-        </section>
-
-        {/* ------------------------------
-           UI — Profile Statement
-        -------------------------------- */}
-        <section
-          style={{
-            marginTop: 28,
-          }}
-        >
-          <p
-            style={{
-              margin: 0,
-              maxWidth: 620,
-              color: "rgba(255,255,255,0.60)",
-              fontSize: 14,
-              lineHeight: 1.65,
-            }}
-          >
-            Outflō is a personal telemetry system built around time. It records
-            events across money, time, and environment so patterns in what
-            leaves you can be seen more clearly. Outflō does not hold funds and
-            is not a bank.
-          </p>
-        </section>
-
-        {/* ------------------------------
-           UI — Profile Footer
-        -------------------------------- */}
-        <section
-          style={{
-            marginTop: 28,
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            paddingTop: 12,
-          }}
-        >
-          <nav aria-label="Institutional links">
-            {FOOTER_ITEMS.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                style={{
+                  padding: "0 16px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  minHeight: 48,
                   textDecoration: "none",
-                  color: "rgba(255,255,255,0.82)",
-                  borderBottom: "1px solid rgba(255,255,255,0.06)",
+                  color: UI.textPrimary,
+                  borderBottom: `1px solid ${UI.borderRow}`,
                 }}
               >
-                <span style={{ fontSize: 15 }}>{item.label}</span>
                 <span
                   style={{
-                    color: "rgba(255,255,255,0.42)",
-                    fontSize: 18,
+                    fontSize: 14,
+                    lineHeight: 1.4,
+                    fontWeight: 400,
+                  }}
+                >
+                  {item.label}
+                </span>
+
+                <span
+                  aria-hidden="true"
+                  style={{
+                    color: UI.textTertiary,
+                    fontSize: 12,
+                    lineHeight: 1,
                   }}
                 >
                   ›
@@ -305,20 +266,67 @@ export default async function ProfilePage() {
               </Link>
             ))}
           </nav>
+        </section>
 
+        {/* ------------------------------
+           UI: Profile — Footer Note
+        -------------------------------- */}
+        <section
+          style={{
+            marginTop: UI.sectionGap,
+            padding: "0 16px",
+          }}
+        >
           <div
             style={{
-              marginTop: 20,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 16,
-              color: "rgba(255,255,255,0.50)",
-              fontSize: 13,
+              maxWidth: 520,
+              margin: "0 auto",
+              textAlign: "center",
+              color: UI.textTertiary,
+              fontSize: 11,
+              lineHeight: 1.6,
             }}
           >
-            <span>Social</span>
-            <span>Version 0.1.0</span>
+            <p style={{ margin: 0 }}>
+              Outflō is a personal telemetry system. It begins at a precise
+              moment, and records what leaves you across money, time, and
+              environment.
+            </p>
+
+            <p style={{ margin: `${UI.textGap}px 0 0` }}>
+              <Link
+                href={FOOTER_ITEMS[0].href}
+                style={{
+                  color: UI.textSecondary,
+                  textDecoration: "underline",
+                  textUnderlineOffset: "0.12em",
+                }}
+              >
+                {FOOTER_ITEMS[0].label}
+              </Link>{" "}
+              ·{" "}
+              <Link
+                href={FOOTER_ITEMS[1].href}
+                style={{
+                  color: UI.textSecondary,
+                  textDecoration: "underline",
+                  textUnderlineOffset: "0.12em",
+                }}
+              >
+                {FOOTER_ITEMS[1].label}
+              </Link>{" "}
+              ·{" "}
+              <Link
+                href={FOOTER_ITEMS[2].href}
+                style={{
+                  color: UI.textSecondary,
+                  textDecoration: "underline",
+                  textUnderlineOffset: "0.12em",
+                }}
+              >
+                {FOOTER_ITEMS[2].label}
+              </Link>
+            </p>
           </div>
         </section>
       </div>

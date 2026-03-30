@@ -1,6 +1,6 @@
 ﻿OUTFLO - REPOSITORY TREE
-Generated: 2026-03-29 18:18:30
-Unix: 1774822710
+Generated: 2026-03-29 14:17:47
+Unix: 1774808267
 Root: C:\dev\Outflo
 
 app\
@@ -145,8 +145,6 @@ lib\
 |   +-- use-environment.ts
 +-- home\
 |   +-- use-home-environment.ts
-+-- ingest\
-|   +-- process-ingest.ts
 +-- location\
 |   +-- get-device-location.ts
 |   +-- resolve-location.ts
@@ -178,14 +176,12 @@ docs\
 |   +-- compute\
 |   |   +-- outflo-computation\
 |   |       +-- outflo-computation-v2__1774724352801__2026-03-28_18-59-12-801.md
-|   +-- environment\
-|   |   +-- environment-contract-v1__1774818390025__2026-03-29_21-06-30-025.md
 |   +-- ingest\
 |   |   +-- ingest-pipeline\
 |   |       +-- ingest-pipeline-v2__1774725263717__2026-03-28_19-14-23-717.md
 |   +-- storage\
 |   |   +-- database\
-|   |   |   +-- database-v4__1774819647127__2026-03-29_21-27-27-127.md
+|   |   |   +-- database-v3__1774304629401__2026-03-24_02-23-49-401.md
 |   |   +-- money-substrate\
 |   |       +-- money-substrate-v2__1774724352801__2026-03-28_18-59-12-801.md
 |   +-- system\
@@ -213,7 +209,6 @@ docs\
 |   |   +-- database\
 |   |   |   +-- database-v1.md
 |   |   |   +-- database-v2.md
-|   |   |   +-- database-v3__1774304629401__2026-03-24_02-23-49-401.md
 |   |   +-- ingest\
 |   |   |   +-- ingest-pipeline-v1__1774216629034__2026-03-22_21-57-09-034.md
 |   |   +-- locks\
@@ -297,7 +292,6 @@ docs\
 |   |   +-- 1774329276__2026-03-24_01-14.txt
 |   |   +-- 1774752375__2026-03-28_22-46.txt
 |   |   +-- 1774797053__2026-03-29_11-10.txt
-|   |   +-- 1774808267__2026-03-29_14-17.txt
 |   +-- README.md
 +-- README.md
 
