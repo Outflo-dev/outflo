@@ -3,9 +3,9 @@
    File: lib/ingest/process-single-event.ts
    Scope: Parse one ingest_events row into one canonical receipt immediately
    Last Updated:
-   - ms: 1774824638157
-   - iso: 2026-03-29T22:50:38.157Z
-   - note: extract direct single-event receipt creation for instant automatic ingest
+   - ms: 1775079336492
+   - iso: 2026-04-01T21:35:36.492Z
+   - note: restore verified receipt write path with explicit result contract and db error handling
    ========================================================== */
 
 /* ------------------------------
@@ -25,6 +25,8 @@ export type IngestEventRow = {
   user_id: string | null;
   claimed_at: string | null;
   processed_at: string | null;
+  receipt_id?: string | null;
+  process_error?: string | null;
   raw: any;
 };
 
@@ -41,6 +43,30 @@ type ReceiptInsert = {
   merchant_raw: string;
   raw: any;
 };
+
+export type ProcessSingleEventResult =
+  | {
+      ok: true;
+      status: "receipt_created";
+      receipt_id: string;
+      processed_at: string;
+    }
+  | {
+      ok: true;
+      status: "already_processed";
+      receipt_id: string | null;
+      processed_at: string | null;
+    }
+  | {
+      ok: true;
+      status: "non_spend";
+      processed_at: string;
+    }
+  | {
+      ok: false;
+      status: "missing_user" | "db_error";
+      process_error: string;
+    };
 
 /* ------------------------------
    Constants
@@ -64,9 +90,7 @@ function extractCashAppSpend(subject: string): {
 } | null {
   const s = subject.trim();
 
-  if (!s.startsWith("You spent $")) return null;
-
-  const match = s.match(/^You spent \$([0-9]+\.[0-9]{2}) at (.+)$/);
+  const match = s.match(/You spent \$([0-9]+\.[0-9]{2}) at (.+)/i);
   if (!match) return null;
 
   const dollars = Number.parseFloat(match[1]);
@@ -113,7 +137,7 @@ function buildReceiptFromEvent(
   }
 
   return {
-    id: ev.id,
+    id: crypto.randomUUID(),
     receipt_no: nextReceiptNo(),
     user_id: userId,
     moment_ms,
@@ -134,48 +158,141 @@ function buildReceiptFromEvent(
   };
 }
 
+async function writeProcessError(
+  supabase: SupabaseClient,
+  eventId: string,
+  process_error: string
+): Promise<void> {
+  await supabase
+    .from("ingest_events")
+    .update({
+      process_error,
+      claimed_at: null,
+    } as any)
+    .eq("id", eventId);
+}
+
 /* ------------------------------
    Main
 -------------------------------- */
 export async function processSingleEvent(params: {
   supabase: SupabaseClient;
   event: IngestEventRow;
-}) {
+}): Promise<ProcessSingleEventResult> {
   const { supabase, event } = params;
 
-  if (!event.user_id) {
-    await supabase
-      .from("ingest_events")
-      .update({ process_error: "Missing user_id" } as any)
-      .eq("id", event.id);
-
-    return;
+  if (event.processed_at) {
+    return {
+      ok: true,
+      status: "already_processed",
+      receipt_id: event.receipt_id ?? null,
+      processed_at: event.processed_at,
+    };
   }
 
-  const receipt = buildReceiptFromEvent(event, event.user_id);
+  if (!event.user_id) {
+    const process_error = "Missing user_id on ingest event";
+
+    await writeProcessError(supabase, event.id, process_error);
+
+    return {
+      ok: false,
+      status: "missing_user",
+      process_error,
+    };
+  }
+
+  let receipt: ReceiptInsert | null;
+
+  try {
+    receipt = buildReceiptFromEvent(event, event.user_id);
+  } catch (error: any) {
+    const process_error =
+      error?.message || "Failed to build receipt from ingest event";
+
+    await writeProcessError(supabase, event.id, process_error);
+
+    return {
+      ok: false,
+      status: "db_error",
+      process_error,
+    };
+  }
 
   if (!receipt) {
-    await supabase
+    const processed_at = isoNow();
+
+    const { error: finalizeErr } = await supabase
       .from("ingest_events")
       .update({
-        processed_at: new Date().toISOString(),
+        processed_at,
         claimed_at: null,
+        process_error: null,
+        receipt_id: null,
       } as any)
-      .eq("id", event.id);
+      .eq("id", event.id)
+      .is("processed_at", null);
 
-    return;
+    if (finalizeErr) {
+      return {
+        ok: false,
+        status: "db_error",
+        process_error: finalizeErr.message,
+      };
+    }
+
+    return {
+      ok: true,
+      status: "non_spend",
+      processed_at,
+    };
   }
 
-  await supabase
+  const { error: upsertErr } = await supabase
     .from("receipts")
     .upsert(receipt as any, { onConflict: "id" });
 
-  await supabase
+  if (upsertErr) {
+    await writeProcessError(supabase, event.id, upsertErr.message);
+
+    return {
+      ok: false,
+      status: "db_error",
+      process_error: upsertErr.message,
+    };
+  }
+
+  const processed_at = isoNow();
+
+  const { error: finalizeErr } = await supabase
     .from("ingest_events")
     .update({
-      processed_at: new Date().toISOString(),
+      processed_at,
       claimed_at: null,
+      process_error: null,
       receipt_id: receipt.id,
     } as any)
-    .eq("id", event.id);
+    .eq("id", event.id)
+    .is("processed_at", null);
+
+  if (finalizeErr) {
+    await writeProcessError(
+      supabase,
+      event.id,
+      `Receipt written but ingest finalization failed: ${finalizeErr.message}`
+    );
+
+    return {
+      ok: false,
+      status: "db_error",
+      process_error: finalizeErr.message,
+    };
+  }
+
+  return {
+    ok: true,
+    status: "receipt_created",
+    receipt_id: receipt.id,
+    processed_at,
+  };
 }

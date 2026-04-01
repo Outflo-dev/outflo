@@ -1,52 +1,29 @@
 /* ==========================================================
-   OUTFLO — PROCESS INGEST EVENTS
+   OUTFLO — PROCESS INGEST JOBS
    File: app/api/admin/process-ingest/route.ts
-   Scope: Claim ingest_events, bind user via ingest_aliases, create canonical receipts, mark processed_at
+   Scope: Claim queued ingest jobs, process events, and finalize job state
    Last Updated:
-   - ms: 1774797630902
-   - iso: 2026-03-29T15:20:30.902Z
-   - note: Cash App parsing + canonical receipt builder + alias fix (to[0]) + strict finalization accounting
+   - ms: <YOUR_MS>
+   - iso: <YOUR_ISO>
+   - note: convert admin process-ingest route into ingest worker endpoint
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { claimIngestJobs, type ClaimedIngestJob } from "@/lib/ingest/claim-ingest-jobs";
+import {
+  processSingleEvent,
+  type IngestEventRow,
+} from "@/lib/ingest/process-single-event";
 
 /* ------------------------------
    Types
 -------------------------------- */
-type IngestEventRow = {
-  id: string;
-  provider: string | null;
-  received_at: string | null;
-  message_id: string | null;
-  event_id: string | null;
-  user_id: string | null;
-  claimed_at: string | null;
-  processed_at: string | null;
-  raw: any;
-};
-
-type AliasRow = {
-  user_id: string;
-  is_active: boolean;
-  type: string | null;
-};
-
-type ReceiptInsert = {
-  id: string;
-  receipt_no: number;
-  user_id: string;
-  moment_ms: number;
-  amount_minor: number;
-  currency: string;
-  amount_base_minor: number;
-  base_currency: string;
-  fx_rate: number;
-  merchant_raw: string;
-  raw: any;
+type ProcessRequestBody = {
+  limit?: number;
 };
 
 /* ------------------------------
@@ -54,406 +31,279 @@ type ReceiptInsert = {
 -------------------------------- */
 export const runtime = "nodejs";
 
-const PROVIDER = "resend";
-const DEFAULT_LIMIT = 25;
-const DEFAULT_CURRENCY = "USD";
+const VERSION = "process-ingest-v1-worker";
+const DEFAULT_LIMIT = 10;
 
 /* ------------------------------
-   Helpers — Core
+   Helpers
 -------------------------------- */
+function envOrThrow(key: string): string {
+  const value = process.env[key]?.trim();
+
+  if (!value) {
+    throw new Error(`Missing environment variable: ${key}`);
+  }
+
+  return value;
+}
+
 function isoNow(): string {
   return new Date().toISOString();
 }
 
-function bad(status: number, payload: any) {
-  return NextResponse.json(payload, { status });
+function getWorkerId(): string {
+  return `worker:${process.env.VERCEL_REGION || "local"}:${Date.now()}`;
 }
 
-function mustInt(v: string | null, fallback: number): number {
-  if (!v) return fallback;
-  const n = parseInt(v, 10);
-  if (!Number.isFinite(n) || n <= 0) return fallback;
-  return n;
-}
-
-function getVaultKey(req: Request): string | null {
-  const h = req.headers.get("x-outflo-vault-key");
-  return h?.trim() || null;
-}
-
-function nextReceiptNo(): number {
-  return Math.floor(1000000000000 + Math.random() * 9000000000000);
-}
-
-/* ------------------------------
-   Helpers — Alias
--------------------------------- */
-function extractAliasLocalPartFromRaw(raw: any): string | null {
-  const to = raw?.data?.to;
-  if (!Array.isArray(to) || to.length === 0) return null;
-
-  const addr = String(to[0]).trim().toLowerCase();
-  const at = addr.indexOf("@");
-  if (at <= 0) return null;
-
-  const local = addr.slice(0, at).trim();
-  return local.length ? local : null;
-}
-
-/* ------------------------------
-   Helpers — Cash App Parsing
--------------------------------- */
-function extractCashAppSpend(subject: string): {
-  amount_minor: number;
-  merchant_raw: string;
-} | null {
-  const s = subject.trim();
-
-  if (!s.startsWith("You spent $")) return null;
-
-  const match = s.match(/^You spent \$([0-9]+\.[0-9]{2}) at (.+)$/);
-  if (!match) return null;
-
-  const dollars = Number.parseFloat(match[1]);
-  if (!Number.isFinite(dollars)) return null;
-
-  const amount_minor = Math.round(dollars * 100);
-  if (!Number.isInteger(amount_minor) || amount_minor <= 0) return null;
-
-  const merchant_raw = match[2].trim();
-  if (!merchant_raw) return null;
-
-  return { amount_minor, merchant_raw };
-}
-
-/* ------------------------------
-   Helpers — Time
--------------------------------- */
-function extractReceiptMomentMs(ev: IngestEventRow): number {
-  const rawCreatedAt = ev.raw?.data?.created_at;
-  if (typeof rawCreatedAt === "string") {
-    const ms = Date.parse(rawCreatedAt);
-    if (Number.isFinite(ms)) return ms;
+function safeLimit(value: unknown): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return DEFAULT_LIMIT;
   }
 
-  if (typeof ev.received_at === "string") {
-    const ms = Date.parse(ev.received_at);
-    if (Number.isFinite(ms)) return ms;
-  }
+  const rounded = Math.floor(value);
 
-  return Date.now();
+  if (rounded <= 0) return DEFAULT_LIMIT;
+  if (rounded > 100) return 100;
+
+  return rounded;
 }
 
-/* ------------------------------
-   Helpers — Receipt Builder
--------------------------------- */
-function buildReceiptFromEvent(
-  ev: IngestEventRow,
-  userId: string
-): ReceiptInsert | null {
-  const subject = ev.raw?.data?.subject;
-  if (typeof subject !== "string") return null;
+function nextRetryIso(attempts: number): string {
+  const delayMinutes = Math.min(Math.max(attempts, 1) * 5, 60);
+  return new Date(Date.now() + delayMinutes * 60 * 1000).toISOString();
+}
 
-  const parsed = extractCashAppSpend(subject);
-  if (!parsed) return null;
+async function finalizeSucceededJob(params: {
+  supabase: SupabaseClient;
+  jobId: string;
+}): Promise<string | null> {
+  const { supabase, jobId } = params;
 
-  const moment_ms = extractReceiptMomentMs(ev);
+  const { error } = await supabase
+    .from("ingest_jobs")
+    .update({
+      status: "succeeded",
+      claimed_at: null,
+      worker_id: null,
+      last_error: null,
+      updated_at: isoNow(),
+    })
+    .eq("id", jobId);
 
-  if (!Number.isFinite(moment_ms)) {
-    throw new Error("Invalid moment_ms during ingest processing");
-  }
+  return error?.message || null;
+}
 
-  return {
-    id: ev.id,
-    receipt_no: nextReceiptNo(),
-    user_id: userId,
-    moment_ms,
-    amount_minor: parsed.amount_minor,
-    currency: DEFAULT_CURRENCY,
-    amount_base_minor: parsed.amount_minor,
-    base_currency: DEFAULT_CURRENCY,
-    fx_rate: 1,
-    merchant_raw: parsed.merchant_raw,
-    raw: {
-      source: "ingest",
-      provider: ev.provider,
-      event_id: ev.event_id,
-      message_id: ev.message_id,
-      received_at: ev.received_at,
-      payload: ev.raw,
-    },
-  };
+async function finalizeFailedJob(params: {
+  supabase: SupabaseClient;
+  job: ClaimedIngestJob;
+  errorMessage: string;
+}): Promise<string | null> {
+  const { supabase, job, errorMessage } = params;
+
+  const nextAttempts = (job.attempts ?? 0) + 1;
+  const isDead = nextAttempts >= (job.max_attempts ?? 5);
+
+  const { error } = await supabase
+    .from("ingest_jobs")
+    .update({
+      status: isDead ? "dead" : "queued",
+      attempts: nextAttempts,
+      claimed_at: null,
+      worker_id: null,
+      last_error: errorMessage,
+      next_attempt_at: isDead ? job.next_attempt_at : nextRetryIso(nextAttempts),
+      updated_at: isoNow(),
+    })
+    .eq("id", job.id);
+
+  return error?.message || null;
 }
 
 /* ------------------------------
    Handler
 -------------------------------- */
 export async function POST(req: Request) {
-  const expectedVault = process.env.OUTFLO_VAULT_KEY;
-  const providedVault = getVaultKey(req);
+  try {
+    const url =
+      process.env.SUPABASE_URL?.trim() ||
+      process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
 
-  if (!expectedVault || providedVault !== expectedVault) {
-    return bad(401, {
-      ok: false,
-      where: "auth",
-      message: "Invalid vault key",
+    const key = envOrThrow("SUPABASE_SERVICE_ROLE_KEY");
+
+    if (!url) {
+      throw new Error("Missing environment variable: SUPABASE_URL");
+    }
+
+    const supabase = createClient(url, key, {
+      auth: { persistSession: false },
     });
-  }
 
-  const supabase = createAdminClient();
-
-  const url = new URL(req.url);
-  const limit = mustInt(url.searchParams.get("limit"), DEFAULT_LIMIT);
-
-  const { data: events, error: fetchErr } = await supabase
-    .from("ingest_events")
-    .select(
-      "id, provider, received_at, message_id, event_id, user_id, claimed_at, processed_at, raw"
-    )
-    .eq("provider", PROVIDER)
-    .is("processed_at", null)
-    .is("claimed_at", null)
-    .order("received_at", { ascending: true })
-    .limit(limit);
-
-  if (fetchErr) {
-    return bad(500, {
-      ok: false,
-      where: "db",
-      step: "fetch_events",
-      message: fetchErr.message,
-    });
-  }
-
-  const rows = (events || []) as IngestEventRow[];
-
-  let scanned = 0;
-  let claimed = 0;
-  let skipped_claimed = 0;
-  let bound = 0;
-  let skipped_no_user = 0;
-  let skipped_non_spend = 0;
-  let receipt_upserted = 0;
-  let marked_processed = 0;
-  let finalize_failed = 0;
-
-  for (const ev0 of rows) {
-    scanned += 1;
-
-    const claimAt = isoNow();
-
-    const { data: claimedRow, error: claimErr } = await supabase
-      .from("ingest_events")
-      .update({ claimed_at: claimAt } as any)
-      .eq("id", ev0.id)
-      .is("processed_at", null)
-      .is("claimed_at", null)
-      .select(
-        "id, provider, received_at, message_id, event_id, user_id, claimed_at, processed_at, raw"
-      )
-      .maybeSingle();
-
-    if (claimErr) {
-      return bad(500, {
-        ok: false,
-        where: "db",
-        step: "claim_event",
-        event_id: ev0.id,
-        message: claimErr.message,
-      });
+    let body: ProcessRequestBody = {};
+    try {
+      body = (await req.json()) as ProcessRequestBody;
+    } catch {
+      body = {};
     }
 
-    if (!claimedRow) {
-      skipped_claimed += 1;
-      continue;
-    }
+    const limit = safeLimit(body.limit);
+    const workerId = getWorkerId();
 
-    claimed += 1;
-
-    const ev = claimedRow as IngestEventRow;
-    let userId = ev.user_id;
-
-    if (!userId) {
-      const localPart = extractAliasLocalPartFromRaw(ev.raw);
-
-      if (localPart) {
-        const { data: alias, error: aliasErr } = await supabase
-          .from("ingest_aliases")
-          .select("user_id, is_active, type")
-          .eq("local_part", localPart)
-          .eq("is_active", true)
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        if (aliasErr) {
-          await supabase
-            .from("ingest_events")
-            .update({ claimed_at: null } as any)
-            .eq("id", ev.id);
-
-          return bad(500, {
-            ok: false,
-            where: "db",
-            step: "lookup_alias",
-            event_id: ev.id,
-            local_part: localPart,
-            message: aliasErr.message,
-          });
-        }
-
-        const a = alias as AliasRow | null;
-
-        if (a?.user_id) {
-          userId = a.user_id;
-
-          const { error: bindErr } = await supabase
-            .from("ingest_events")
-            .update({ user_id: userId } as any)
-            .eq("id", ev.id);
-
-          if (bindErr) {
-            await supabase
-              .from("ingest_events")
-              .update({ claimed_at: null } as any)
-              .eq("id", ev.id);
-
-            return bad(500, {
-              ok: false,
-              where: "db",
-              step: "bind_user",
-              event_id: ev.id,
-              message: bindErr.message,
-            });
-          }
-
-          bound += 1;
-        }
-      }
-    }
-
-    if (!userId) {
-      skipped_no_user += 1;
-
-      const { error: releaseErr } = await supabase
-        .from("ingest_events")
-        .update({ claimed_at: null } as any)
-        .eq("id", ev.id);
-
-      if (releaseErr) {
-        return bad(500, {
-          ok: false,
-          where: "db",
-          step: "release_unbound_event",
-          event_id: ev.id,
-          message: releaseErr.message,
-        });
-      }
-
-      continue;
-    }
-
-    const receipt = buildReceiptFromEvent(ev, userId);
-
-    if (!receipt) {
-      skipped_non_spend += 1;
-
-      const processedAt = isoNow();
-
-      const { error: skipFinalizeErr } = await supabase
-        .from("ingest_events")
-        .update({ processed_at: processedAt, claimed_at: null } as any)
-        .eq("id", ev.id)
-        .is("processed_at", null);
-
-      if (skipFinalizeErr) {
-        finalize_failed += 1;
-
-        return bad(500, {
-          ok: false,
-          where: "db",
-          step: "finalize_non_spend",
-          event_id: ev.id,
-          message: skipFinalizeErr.message,
-        });
-      }
-
-      marked_processed += 1;
-      continue;
-    }
-
-    const { error: upsertErr } = await supabase
-      .from("receipts")
-      .upsert(receipt as any, { onConflict: "id" });
-
-    if (upsertErr) {
-      const { error: releaseErr } = await supabase
-        .from("ingest_events")
-        .update({ claimed_at: null } as any)
-        .eq("id", ev.id);
-
-      if (releaseErr) {
-        return bad(500, {
-          ok: false,
-          where: "db",
-          step: "release_after_upsert_failure",
-          event_id: ev.id,
-          message: releaseErr.message,
-          upstream: upsertErr.message,
-        });
-      }
-
-      return bad(500, {
-        ok: false,
-        where: "db",
-        step: "upsert_receipt",
-        event_id: ev.id,
-        message: upsertErr.message,
-      });
-    }
-
-    receipt_upserted += 1;
-
-    const processedAt = isoNow();
-
-    const { error: finalizeErr } = await supabase
-      .from("ingest_events")
-      .update({ processed_at: processedAt, claimed_at: null } as any)
-      .eq("id", ev.id)
-      .is("processed_at", null);
-
-    if (finalizeErr) {
-      finalize_failed += 1;
-
-      return bad(500, {
-        ok: false,
-        where: "db",
-        step: "mark_processed",
-        event_id: ev.id,
-        message: finalizeErr.message,
-      });
-    }
-
-    marked_processed += 1;
-  }
-
-  return NextResponse.json(
-    {
-      ok: true,
-      provider: PROVIDER,
+    const claimResult = await claimIngestJobs({
+      supabase,
+      workerId,
       limit,
-      scanned,
-      claimed,
-      skipped_claimed,
-      bound,
-      skipped_no_user,
-      skipped_non_spend,
-      receipt_upserted,
-      marked_processed,
-      finalize_failed,
-      version: "process-ingest-v4-finalization",
-      note: "Strict finalization accounting enabled.",
-    },
-    { status: 200 }
-  );
+    });
+
+    if (!claimResult.ok) {
+      return NextResponse.json(
+        {
+          ok: false,
+          where: "claim_jobs",
+          message: claimResult.error,
+          version: VERSION,
+        },
+        { status: 500 }
+      );
+    }
+
+    const jobs = claimResult.jobs;
+
+    if (jobs.length === 0) {
+      return NextResponse.json(
+        {
+          ok: true,
+          version: VERSION,
+          worker_id: workerId,
+          claimed: 0,
+          processed: 0,
+          succeeded: 0,
+          failed: 0,
+          results: [],
+        },
+        { status: 200 }
+      );
+    }
+
+    const results: Array<Record<string, unknown>> = [];
+    let succeeded = 0;
+    let failed = 0;
+
+    for (const job of jobs) {
+      const { data: event, error: eventErr } = await supabase
+        .from("ingest_events")
+        .select(
+          "id, provider, received_at, message_id, event_id, user_id, claimed_at, processed_at, receipt_id, process_error, raw"
+        )
+        .eq("id", job.ingest_event_id)
+        .maybeSingle();
+
+      if (eventErr || !event) {
+        const errorMessage =
+          eventErr?.message || "Missing ingest event for claimed job";
+
+        await finalizeFailedJob({
+          supabase,
+          job,
+          errorMessage,
+        });
+
+        failed += 1;
+        results.push({
+          job_id: job.id,
+          ingest_event_id: job.ingest_event_id,
+          ok: false,
+          error: errorMessage,
+        });
+        continue;
+      }
+
+      const processing = await processSingleEvent({
+        supabase,
+        event: event as IngestEventRow,
+      });
+
+      if (!processing.ok) {
+        await finalizeFailedJob({
+          supabase,
+          job,
+          errorMessage: processing.process_error,
+        });
+
+        failed += 1;
+        results.push({
+          job_id: job.id,
+          ingest_event_id: job.ingest_event_id,
+          ok: false,
+          status: processing.status,
+          error: processing.process_error,
+        });
+        continue;
+      }
+
+      const finalizeSuccessError = await finalizeSucceededJob({
+        supabase,
+        jobId: job.id,
+      });
+
+      if (finalizeSuccessError) {
+        await finalizeFailedJob({
+          supabase,
+          job,
+          errorMessage: finalizeSuccessError,
+        });
+
+        failed += 1;
+        results.push({
+          job_id: job.id,
+          ingest_event_id: job.ingest_event_id,
+          ok: false,
+          error: finalizeSuccessError,
+        });
+        continue;
+      }
+
+      succeeded += 1;
+      results.push({
+        job_id: job.id,
+        ingest_event_id: job.ingest_event_id,
+        ok: true,
+        status: processing.status,
+        receipt_id:
+          processing.status === "receipt_created" ||
+          processing.status === "already_processed"
+            ? processing.receipt_id
+            : null,
+        processed_at:
+          processing.status === "receipt_created" ||
+          processing.status === "already_processed" ||
+          processing.status === "non_spend"
+            ? processing.processed_at
+            : null,
+      });
+    }
+
+    return NextResponse.json(
+      {
+        ok: true,
+        version: VERSION,
+        worker_id: workerId,
+        claimed: jobs.length,
+        processed: jobs.length,
+        succeeded,
+        failed,
+        results,
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      {
+        ok: false,
+        where: "handler",
+        message: error?.message || "Unknown worker failure",
+        version: VERSION,
+      },
+      { status: 500 }
+    );
+  }
 }
