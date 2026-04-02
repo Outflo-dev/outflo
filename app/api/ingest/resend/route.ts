@@ -327,6 +327,22 @@ export async function POST(req: Request) {
     );
   }
 
+/* ------------------------------
+   Immediate worker trigger
+-------------------------------- */
+try {
+  await fetch(`${req.url.replace("/api/ingest/resend", "/api/admin/process-ingest")}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ limit: 10 }),
+  });
+} catch (err) {
+  // do not fail ingest if worker trigger fails
+  console.error("Worker trigger failed", err);
+}
+
   return NextResponse.json(
     {
       ok: true,
