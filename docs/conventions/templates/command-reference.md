@@ -138,6 +138,14 @@ where tablename = 'receipts';
 
 ---
 
+## 16. Cron - Manual Trigger
+
+Cron file exists, however, not usable.  If needed we will manually enter the cron trigger:
+
+Invoke-RestMethod -Uri "https://outflo.xyz/api/cron/ingest-maintenance" -Headers @{Authorization="Bearer YOUR_SECRET"}
+
+---
+
 ## Rule
 
 Only add commands you actually reuse.
