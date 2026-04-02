@@ -12,6 +12,7 @@
    Imports
 -------------------------------- */
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { parseIngestEvent } from "@/lib/ingest/parsers";
 
 /* ------------------------------
    Types
@@ -84,27 +85,6 @@ function nextReceiptNo(): number {
   return Math.floor(1000000000000 + Math.random() * 9000000000000);
 }
 
-function extractCashAppSpend(subject: string): {
-  amount_minor: number;
-  merchant_raw: string;
-} | null {
-  const s = subject.trim();
-
-  const match = s.match(/You spent \$([0-9]+\.[0-9]{2}) at (.+)/i);
-  if (!match) return null;
-
-  const dollars = Number.parseFloat(match[1]);
-  if (!Number.isFinite(dollars)) return null;
-
-  const amount_minor = Math.round(dollars * 100);
-  if (!Number.isInteger(amount_minor) || amount_minor <= 0) return null;
-
-  const merchant_raw = match[2].trim();
-  if (!merchant_raw) return null;
-
-  return { amount_minor, merchant_raw };
-}
-
 function extractReceiptMomentMs(ev: IngestEventRow): number {
   const rawCreatedAt = ev.raw?.data?.created_at;
   if (typeof rawCreatedAt === "string") {
@@ -124,11 +104,8 @@ function buildReceiptFromEvent(
   ev: IngestEventRow,
   userId: string
 ): ReceiptInsert | null {
-  const subject = ev.raw?.data?.subject;
-  if (typeof subject !== "string") return null;
-
-  const parsed = extractCashAppSpend(subject);
-  if (!parsed) return null;
+  const parsed = parseIngestEvent(ev);
+  if (!parsed.ok) return null;
 
   const moment_ms = extractReceiptMomentMs(ev);
 
