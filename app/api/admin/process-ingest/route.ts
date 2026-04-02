@@ -14,10 +14,8 @@
 import { NextResponse } from "next/server";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { claimIngestJobs, type ClaimedIngestJob } from "@/lib/ingest/claim-ingest-jobs";
-import {
-  processSingleEvent,
-  type IngestEventRow,
-} from "@/lib/ingest/process-single-event";
+import { processSingleEvent, type IngestEventRow, } from "@/lib/ingest/process-single-event";
+import { getNextAttemptIso } from "@/lib/ingest/job-state";
 
 /* ------------------------------
    Types
@@ -68,11 +66,6 @@ function safeLimit(value: unknown): number {
   return rounded;
 }
 
-function nextRetryIso(attempts: number): string {
-  const delayMinutes = Math.min(Math.max(attempts, 1) * 5, 60);
-  return new Date(Date.now() + delayMinutes * 60 * 1000).toISOString();
-}
-
 async function finalizeSucceededJob(params: {
   supabase: SupabaseClient;
   jobId: string;
@@ -106,12 +99,14 @@ async function finalizeFailedJob(params: {
   const { error } = await supabase
     .from("ingest_jobs")
     .update({
-      status: isDead ? "dead" : "queued",
+      status: isDead ? "exhausted" : "queued",
       attempts: nextAttempts,
       claimed_at: null,
       worker_id: null,
       last_error: errorMessage,
-      next_attempt_at: isDead ? job.next_attempt_at : nextRetryIso(nextAttempts),
+      next_attempt_at: isDead ? null : getNextAttemptIso({attempts: nextAttempts, 
+        max_attempts: job.max_attempts ?? 5,   
+      }),
       updated_at: isoNow(),
     })
     .eq("id", job.id);
