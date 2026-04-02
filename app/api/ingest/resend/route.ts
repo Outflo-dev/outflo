@@ -330,17 +330,62 @@ export async function POST(req: Request) {
 /* ------------------------------
    Immediate worker trigger
 -------------------------------- */
+let workerTrigger: {
+  ok: boolean;
+  status: number | null;
+  body: string | null;
+  url: string | null;
+  error: string | null;
+} = {
+  ok: false,
+  status: null,
+  body: null,
+  url: null,
+  error: null,
+};
+
 try {
-  await fetch(`${req.url.replace("/api/ingest/resend", "/api/admin/process-ingest")}`, {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+    process.env.VERCEL_URL ||
+    "http://localhost:3000";
+
+  const normalizedBaseUrl = baseUrl.startsWith("http")
+    ? baseUrl
+    : `https://${baseUrl}`;
+
+  const workerUrl = `${normalizedBaseUrl}/api/admin/process-ingest`;
+
+  const workerRes = await fetch(workerUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ limit: 10 }),
   });
-} catch (err) {
-  // do not fail ingest if worker trigger fails
-  console.error("Worker trigger failed", err);
+
+  const workerBody = await workerRes.text();
+
+  workerTrigger = {
+    ok: workerRes.ok,
+    status: workerRes.status,
+    body: workerBody,
+    url: workerUrl,
+    error: null,
+  };
+
+  console.log("Immediate worker trigger result", workerTrigger);
+} catch (err: any) {
+  workerTrigger = {
+    ok: false,
+    status: null,
+    body: null,
+    url: null,
+    error: err?.message || "Unknown worker trigger failure",
+  };
+
+  console.error("Worker trigger failed", workerTrigger);
 }
 
   return NextResponse.json(
@@ -355,6 +400,7 @@ try {
       user_id,
       job_id: enqueueResult.jobId,
       job_status: enqueueResult.status,
+      worker_trigger: workerTrigger,
     },
     { status: 200 }
   );
