@@ -55,7 +55,8 @@ async function getIngestEventCounts(
   const failedPromise = supabase
     .from("ingest_events")
     .select("*", { count: "exact", head: true })
-    .not("process_error", "is", null);
+    .not("process_error", "is", null)
+    .is("processed_at", null);
 
   const pendingPromise = supabase
     .from("ingest_events")

@@ -74,8 +74,10 @@ export async function POST(req: Request) {
       .limit(limit);
 
     if (mode === "failed") {
-      query = query.not("process_error", "is", null);
-    }
+      query = query
+      .not("process_error", "is", null)
+      .is("processed_at", null);
+    }  
 
     if (mode === "unprocessed") {
       query = query
