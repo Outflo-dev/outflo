@@ -10,6 +10,7 @@
 -------------------------------- */
 import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
+import ScreenTimeMount from "./ScreenTimeMount";
 
 /* ------------------------------
    Layout Gate
@@ -27,5 +28,10 @@ export default async function AppLayout({
     redirect("/");
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <ScreenTimeMount />
+      {children}
+    </>
+  );
 }
