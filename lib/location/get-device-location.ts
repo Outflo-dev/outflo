@@ -2,6 +2,10 @@
    OUTFLO — DEVICE LOCATION
    File: lib/location/get-device-location.ts
    Scope: Promise-based wrapper for browser geolocation API
+   Last Updated:
+   - ms: 1775178432296
+   - iso: 2026-04-03T01:07:12.296Z
+   - note: preserve thin browser geolocation wrapper during environment system rewrite
    ========================================================== */
 
 /* ------------------------------
