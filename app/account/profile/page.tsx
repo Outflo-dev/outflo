@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1774830366184
    - iso: 2026-03-30T00:26:06.184Z
-   - note: pass 3 — left alignment, refined edit button, social row, footer alignment, sign-out placement
+   - note: wire identity block to user_identity_assets and align top profile actions
    ========================================================== */
 
 /* ------------------------------
@@ -59,29 +59,26 @@ const UI = {
 } as const;
 
 /* ------------------------------
+   Types
+-------------------------------- */
+type IdentityRow = {
+  first_name: string;
+  last_name: string | null;
+  username: string | null;
+  avatar_url: string | null;
+};
+
+/* ------------------------------
    Helpers
 -------------------------------- */
-function getDisplayName(user: {
-  email?: string | null;
-  user_metadata?: Record<string, unknown>;
-}) {
-  const metadataName =
-    typeof user.user_metadata?.display_name === "string"
-      ? user.user_metadata.display_name.trim()
-      : "";
-
-  if (metadataName) return metadataName;
-  if (user.email) return user.email.split("@")[0];
-  return "Outflo User";
+function getFullName(firstName: string, lastName: string | null) {
+  return [firstName, lastName].filter(Boolean).join(" ").trim();
 }
 
-function getUsername(user: { user_metadata?: Record<string, unknown> }) {
-  const raw =
-    typeof user.user_metadata?.username === "string"
-      ? user.user_metadata.username.trim().replace(/^@+/, "")
-      : "";
-
-  return raw ? `@${raw}` : "@username";
+function getUsername(username: string | null) {
+  if (!username) return null;
+  const clean = username.trim().replace(/^@+/, "");
+  return clean ? `@${clean}` : null;
 }
 
 function getInitial(name: string) {
@@ -107,13 +104,29 @@ function getGradientForLetter(letter: string) {
 -------------------------------- */
 export default async function ProfilePage() {
   const supabase = await supabaseServer();
-  const { data } = await supabase.auth.getUser();
 
-  const user = data.user!;
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
 
-  const displayName = getDisplayName(user);
-  const username = getUsername(user);
-  const initial = getInitial(displayName);
+  if (userError || !user) {
+    throw new Error("Unable to load authenticated user for profile page.");
+  }
+
+  const { data: identity, error: identityError } = await supabase
+    .from("user_identity_assets")
+    .select("first_name, last_name, username, avatar_url")
+    .eq("user_id", user.id)
+    .single<IdentityRow>();
+
+  if (identityError || !identity) {
+    throw new Error("Unable to load user identity assets for profile page.");
+  }
+
+  const fullName = getFullName(identity.first_name, identity.last_name);
+  const username = getUsername(identity.username);
+  const initial = getInitial(fullName);
   const avatarBackground = getGradientForLetter(initial);
 
   return (
@@ -139,95 +152,117 @@ export default async function ProfilePage() {
             display: "flex",
             flexDirection: "column",
             gap: UI.stackGap,
+            padding: "0 16px",
           }}
         >
+          <Link
+            href="/account/profile/edit"
+            aria-label="Edit profile"
+            style={{
+              width: 88,
+              height: 88,
+              borderRadius: "50%",
+              display: "grid",
+              placeItems: "center",
+              textDecoration: "none",
+              color: UI.textPrimary,
+              background: avatarBackground,
+              fontSize: 24,
+              fontWeight: 600,
+              overflow: "hidden",
+            }}
+          >
+            {identity.avatar_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={identity.avatar_url}
+                alt={fullName}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            ) : (
+              initial
+            )}
+          </Link>
+
           <div
             style={{
               display: "flex",
-              alignItems: "flex-start",
-              gap: UI.stackGap,
+              flexDirection: "column",
+              gap: 6,
             }}
           >
+            <h1
+              style={{
+                margin: 0,
+                color: UI.textPrimary,
+                fontSize: 14,
+                fontWeight: 600,
+                lineHeight: 1.4,
+              }}
+            >
+              {fullName}
+            </h1>
+
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: UI.tightGap,
-                flexShrink: 0,
+                alignItems: "center",
+                gap: 12,
+                flexWrap: "wrap",
               }}
             >
-              <Link
-                href="/account/profile/edit"
-                aria-label="Edit profile photo"
-                style={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: "50%",
-                  display: "grid",
-                  placeItems: "center",
-                  textDecoration: "none",
-                  color: UI.textPrimary,
-                  background: avatarBackground,
-                  fontSize: 14,
-                  fontWeight: 600,
-                }}
-              >
-                {initial}
-              </Link>
+              {username ? (
+                <p
+                  style={{
+                    margin: 0,
+                    color: UI.textSecondary,
+                    fontSize: 12,
+                    userSelect: "text",
+                    WebkitUserSelect: "text",
+                  }}
+                >
+                  {username}
+                </p>
+              ) : null}
 
               <Link
                 href="/account/profile/edit"
                 style={{
-                  minHeight: 32,
-                  padding: "0 12px",
-                  borderRadius: 999,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textDecoration: "none",
-                  color: UI.textPrimary,
-                  background: UI.surfaceSoft,
-                  border: `1px solid ${UI.borderSoft}`,
                   fontSize: 12,
-                  lineHeight: 1,
-                }}
-              >
-                Edit Profile
-              </Link>
-            </div>
-
-            <div
-              style={{
-                minWidth: 0,
-                display: "flex",
-                flexDirection: "column",
-                gap: UI.tightGap,
-                paddingTop: 4,
-              }}
-            >
-              <h1
-                style={{
-                  margin: 0,
-                  color: UI.textPrimary,
-                  fontSize: 14,
-                  fontWeight: 600,
-                  lineHeight: 1.4,
-                }}
-              >
-                {displayName}
-              </h1>
-
-              <p
-                style={{
-                  margin: 0,
                   color: UI.textSecondary,
-                  fontSize: 12,
+                  textDecoration: "none",
                 }}
               >
-                {username}
-              </p>
+                Edit profile
+              </Link>
             </div>
+
+            <Link
+              href="/account/profile/edit"
+              style={{
+                fontSize: 12,
+                color: UI.textSecondary,
+                textDecoration: "none",
+              }}
+            >
+              Add a profile photo
+            </Link>
+
+            <Link
+              href="/account/profile/invite"
+              style={{
+                fontSize: 12,
+                color: UI.textSecondary,
+                textDecoration: "none",
+              }}
+            >
+              Invite friends
+            </Link>
           </div>
         </section>
 

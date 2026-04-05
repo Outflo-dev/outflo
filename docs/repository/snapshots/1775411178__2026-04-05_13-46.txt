@@ -1,6 +1,6 @@
 ﻿OUTFLO - REPOSITORY TREE
-Generated: 2026-04-05 14:24:41
-Unix: 1775413481
+Generated: 2026-04-05 13:46:18
+Unix: 1775411178
 Root: C:\dev\Outflo
 
 app\
@@ -141,18 +141,12 @@ app\
 +-- page.tsx
 
 components\
-+-- navigation\
-|   +-- NavLayer.tsx
-|   +-- NavShell.tsx
 +-- ui\
 |   +-- Button.tsx
 |   +-- ButtonNav.tsx
 |   +-- Cardt.tsx
 |   +-- EntryTile.tsx
 |   +-- Hero.tsx
-|   +-- NavBackButton.tsx
-|   +-- NavCloseButton.tsx
-|   +-- RollingNumber.tsx
 |   +-- Section.tsx
 +-- Portal.tsx
 +-- SwipeShell.tsx
@@ -182,8 +176,6 @@ lib\
 |   +-- types.ts
 +-- location\
 |   +-- get-device-location.ts
-+-- navigation\
-|   +-- navigation.ts
 +-- supabase\
 |   +-- admin.ts
 |   +-- client.ts
@@ -345,7 +337,6 @@ docs\
 |   |   +-- 1775102220__2026-04-01_23-57.txt
 |   |   +-- 1775177187__2026-04-02_20-46.txt
 |   |   +-- 1775186293__2026-04-02_23-18.txt
-|   |   +-- 1775411178__2026-04-05_13-46.txt
 |   +-- README.md
 +-- README.md
 
