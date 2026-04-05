@@ -173,81 +173,86 @@ export default async function ProfilePage() {
         -------------------------------- */}
         <section
           style={{
-            padding: "0 16px",
+            padding: "0 8px",
             display: "flex",
             flexDirection: "column",
             gap: 18,
           }}
         >
           {/* ------------------------------
-             UI: Profile — Header Actions
-          -------------------------------- */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Link
-              href="/app/home"
-              aria-label="Close profile"
-              style={{
-                width: 52,
-                height: 52,
-                borderRadius: "50%",
-                display: "grid",
-                placeItems: "center",
-                textDecoration: "none",
-                color: UI.textPrimary,
-                background: UI.iconSurface,
-                fontSize: 28,
-                lineHeight: 1,
-              }}
-            >
-              ×
-            </Link>
+   UI: Profile — Header Bar
+-------------------------------- */}
+<div
+  style={{
+    height: 44,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 4,
+  }}
+>
+  <Link
+    href="/app/home"
+    aria-label="Close profile"
+    style={{
+      width: 40,
+      height: 40,
+      borderRadius: "50%",
+      display: "grid",
+      placeItems: "center",
+      textDecoration: "none",
+      color: UI.textPrimary,
+      background: UI.iconSurface,
+      fontSize: 22,
+      lineHeight: 1,
+      flexShrink: 0,
+    }}
+  >
+    ×
+  </Link>
 
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-              }}
-            >
-              <div
-                style={{
-                  width: 52,
-                  height: 52,
-                  borderRadius: "50%",
-                  display: "grid",
-                  placeItems: "center",
-                  background: UI.iconSurface,
-                  color: UI.textPrimary,
-                  fontSize: 22,
-                  lineHeight: 1,
-                }}
-              >
-                ⌁
-              </div>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+    }}
+  >
+    <div
+      style={{
+        width: 40,
+        height: 40,
+        borderRadius: "50%",
+        display: "grid",
+        placeItems: "center",
+        background: UI.iconSurface,
+        color: UI.textPrimary,
+        fontSize: 18,
+        lineHeight: 1,
+        flexShrink: 0,
+      }}
+    >
+      ⌁
+    </div>
 
-              <div
-                style={{
-                  width: 52,
-                  height: 52,
-                  borderRadius: "50%",
-                  display: "grid",
-                  placeItems: "center",
-                  background: UI.iconSurface,
-                  color: UI.textPrimary,
-                  fontSize: 24,
-                  lineHeight: 1,
-                }}
-              >
-                ↗
-              </div>
-            </div>
-          </div>
+    <div
+      style={{
+        width: 40,
+        height: 40,
+        borderRadius: "50%",
+        display: "grid",
+        placeItems: "center",
+        background: UI.iconSurface,
+        color: UI.textPrimary,
+        fontSize: 18,
+        lineHeight: 1,
+        flexShrink: 0,
+      }}
+    >
+      ↗
+    </div>
+  </div>
+</div>
 
 {/* ------------------------------
    UI: Profile — Avatar
