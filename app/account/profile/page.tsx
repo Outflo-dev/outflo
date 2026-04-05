@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1774830366184
    - iso: 2026-03-30T00:26:06.184Z
-   - note: wire identity block to user_identity_assets and align top profile actions
+   - note: rewrite page structure for readable section boundaries and precise top-block control
    ========================================================== */
 
 /* ------------------------------
@@ -13,6 +13,7 @@
 -------------------------------- */
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
+import type { ReactNode } from "react";
 
 /* ------------------------------
    Constants
@@ -24,7 +25,6 @@ const HUB_ITEMS = [
   { label: "Privacy", href: "/account/profile/privacy" },
   { label: "Notifications", href: "/account/profile/notifications" },
   { label: "Records", href: "/account/profile/records" },
-  { label: "Invite Friends", href: "/account/profile/invite" },
   { label: "Support", href: "/account/profile/support" },
 ] as const;
 
@@ -42,20 +42,30 @@ const SOCIAL_ITEMS = [
 
 const UI = {
   pageTop: 24,
+  pageBottom: 40,
   sectionGap: 24,
   stackGap: 16,
   textGap: 12,
-  tightGap: 8,
-  pageBottom: 40,
+  topBlockGap: 26,
+  actionRowGap: 18,
+
   textPrimary: "var(--text-primary)",
   textSecondary: "rgba(255, 254, 250, 0.72)",
   textTertiary: "rgba(255, 254, 250, 0.52)",
+
   borderSoft: "rgba(255, 254, 250, 0.08)",
   borderRow: "rgba(255, 254, 250, 0.06)",
+
   surfaceSoft: "rgba(255, 254, 250, 0.04)",
+  iconSurface: "rgba(255,255,255,0.08)",
+  pillSurface: "rgba(255,255,255,0.14)",
+
   dangerSoft: "rgba(255, 80, 80, 0.10)",
   dangerBorder: "rgba(255, 80, 80, 0.25)",
   dangerText: "rgba(255, 120, 120, 0.9)",
+
+  avatarYellow: "#F6D84C",
+  inviteGreen: "#00D54B",
 } as const;
 
 /* ------------------------------
@@ -85,18 +95,33 @@ function getInitial(name: string) {
   return name.trim().charAt(0).toUpperCase() || "O";
 }
 
-function getGradientForLetter(letter: string) {
-  const gradients = [
-    "linear-gradient(135deg, #0f172a 0%, #2563eb 100%)",
-    "linear-gradient(135deg, #111827 0%, #7c3aed 100%)",
-    "linear-gradient(135deg, #172554 0%, #0ea5e9 100%)",
-    "linear-gradient(135deg, #1f2937 0%, #14b8a6 100%)",
-    "linear-gradient(135deg, #312e81 0%, #ec4899 100%)",
-    "linear-gradient(135deg, #3f3f46 0%, #f59e0b 100%)",
-  ] as const;
-
-  const index = letter.charCodeAt(0) % gradients.length;
-  return gradients[index];
+function CircleIcon({
+  children,
+  size = 72,
+  background = UI.iconSurface,
+  color = UI.textPrimary,
+}: {
+  children: ReactNode;
+  size?: number;
+  background?: string;
+  color?: string;
+}) {
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        display: "grid",
+        placeItems: "center",
+        background,
+        color,
+        flexShrink: 0,
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 /* ------------------------------
@@ -127,7 +152,6 @@ export default async function ProfilePage() {
   const fullName = getFullName(identity.first_name, identity.last_name);
   const username = getUsername(identity.username);
   const initial = getInitial(fullName);
-  const avatarBackground = getGradientForLetter(initial);
 
   return (
     <main
@@ -145,129 +169,372 @@ export default async function ProfilePage() {
         }}
       >
         {/* ------------------------------
-           UI: Profile — Identity
+           UI: Profile — Top Shell
         -------------------------------- */}
         <section
           style={{
+            padding: "0 16px",
             display: "flex",
             flexDirection: "column",
-            gap: UI.stackGap,
-            padding: "0 16px",
+            gap: UI.topBlockGap,
           }}
         >
-          <Link
-            href="/account/profile/edit"
-            aria-label="Edit profile"
-            style={{
-              width: 88,
-              height: 88,
-              borderRadius: "50%",
-              display: "grid",
-              placeItems: "center",
-              textDecoration: "none",
-              color: UI.textPrimary,
-              background: avatarBackground,
-              fontSize: 24,
-              fontWeight: 600,
-              overflow: "hidden",
-            }}
-          >
-            {identity.avatar_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={identity.avatar_url}
-                alt={fullName}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
-            ) : (
-              initial
-            )}
-          </Link>
-
+          {/* ------------------------------
+             UI: Profile — Header Actions
+          -------------------------------- */}
           <div
             style={{
               display: "flex",
-              flexDirection: "column",
-              gap: 6,
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            <h1
+            <Link
+              href="/app/home"
+              aria-label="Close profile"
               style={{
-                margin: 0,
+                width: 52,
+                height: 52,
+                borderRadius: "50%",
+                display: "grid",
+                placeItems: "center",
+                textDecoration: "none",
                 color: UI.textPrimary,
-                fontSize: 14,
-                fontWeight: 600,
-                lineHeight: 1.4,
+                background: UI.iconSurface,
+                fontSize: 28,
+                lineHeight: 1,
               }}
             >
-              {fullName}
-            </h1>
+              ×
+            </Link>
 
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 12,
-                flexWrap: "wrap",
               }}
             >
-              {username ? (
-                <p
-                  style={{
-                    margin: 0,
-                    color: UI.textSecondary,
-                    fontSize: 12,
-                    userSelect: "text",
-                    WebkitUserSelect: "text",
-                  }}
-                >
-                  {username}
-                </p>
-              ) : null}
-
-              <Link
-                href="/account/profile/edit"
+              <div
                 style={{
-                  fontSize: 12,
-                  color: UI.textSecondary,
-                  textDecoration: "none",
+                  width: 52,
+                  height: 52,
+                  borderRadius: "50%",
+                  display: "grid",
+                  placeItems: "center",
+                  background: UI.iconSurface,
+                  color: UI.textPrimary,
+                  fontSize: 22,
+                  lineHeight: 1,
                 }}
               >
-                Edit profile
-              </Link>
+                ⌁
+              </div>
+
+              <div
+                style={{
+                  width: 52,
+                  height: 52,
+                  borderRadius: "50%",
+                  display: "grid",
+                  placeItems: "center",
+                  background: UI.iconSurface,
+                  color: UI.textPrimary,
+                  fontSize: 24,
+                  lineHeight: 1,
+                }}
+              >
+                ↗
+              </div>
             </div>
+          </div>
+
+          {/* ------------------------------
+             UI: Profile — Avatar
+          -------------------------------- */}
+          <div
+            style={{
+              position: "relative",
+              width: 112,
+              height: 112,
+            }}
+          >
+            <Link
+              href="/account/profile/edit"
+              aria-label="Edit profile photo"
+              style={{
+                width: 112,
+                height: 112,
+                borderRadius: "50%",
+                display: "grid",
+                placeItems: "center",
+                textDecoration: "none",
+                color: "#000",
+                background: UI.avatarYellow,
+                fontSize: 48,
+                fontWeight: 700,
+                overflow: "hidden",
+              }}
+            >
+              {identity.avatar_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={identity.avatar_url}
+                  alt={fullName}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              ) : (
+                initial
+              )}
+            </Link>
+
+            <Link
+              href="/account/profile/edit"
+              aria-label="Add a profile photo"
+              style={{
+                position: "absolute",
+                right: -4,
+                bottom: -4,
+                width: 42,
+                height: 42,
+                borderRadius: "50%",
+                display: "grid",
+                placeItems: "center",
+                textDecoration: "none",
+                color: UI.textPrimary,
+                background: "#1a1a1a",
+                fontSize: 20,
+                lineHeight: 1,
+              }}
+            >
+              📷
+            </Link>
+          </div>
+
+          {/* ------------------------------
+             UI: Profile — Name
+          -------------------------------- */}
+          <div>
+            <h1
+              style={{
+                margin: 0,
+                color: UI.textPrimary,
+                fontSize: 50,
+                fontWeight: 700,
+                letterSpacing: -2,
+                lineHeight: 1.02,
+              }}
+            >
+              {fullName}
+            </h1>
+          </div>
+
+          {/* ------------------------------
+             UI: Profile — Identity Pills
+          -------------------------------- */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              flexWrap: "wrap",
+            }}
+          >
+            {username ? (
+              <div
+                style={{
+                  minHeight: 46,
+                  padding: "0 20px",
+                  borderRadius: 999,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: UI.pillSurface,
+                  color: UI.textPrimary,
+                  fontSize: 17,
+                  fontWeight: 600,
+                  userSelect: "text",
+                  WebkitUserSelect: "text",
+                }}
+              >
+                {username}
+              </div>
+            ) : null}
 
             <Link
               href="/account/profile/edit"
               style={{
-                fontSize: 12,
-                color: UI.textSecondary,
+                minHeight: 46,
+                padding: "0 20px",
+                borderRadius: 999,
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
                 textDecoration: "none",
+                background: UI.pillSurface,
+                color: UI.textPrimary,
+                fontSize: 17,
+                fontWeight: 600,
               }}
             >
-              Add a profile photo
+              Edit profile
+            </Link>
+          </div>
+
+          {/* ------------------------------
+             UI: Profile — Primary Actions
+          -------------------------------- */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: UI.actionRowGap,
+              paddingTop: 12,
+            }}
+          >
+            <Link
+              href="/account/profile/edit"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 16,
+                textDecoration: "none",
+                color: UI.textPrimary,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  minWidth: 0,
+                }}
+              >
+                <CircleIcon size={72}>
+                  <span style={{ fontSize: 26, lineHeight: 1 }}>📷</span>
+                </CircleIcon>
+
+                <div
+                  style={{
+                    minWidth: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 4,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 600,
+                      color: UI.textPrimary,
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    Add a profile photo
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: 15,
+                      color: "rgba(255,255,255,0.6)",
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    Help people find you
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  color: UI.textPrimary,
+                  fontSize: 36,
+                  opacity: 0.8,
+                  lineHeight: 1,
+                  flexShrink: 0,
+                }}
+              >
+                ›
+              </div>
             </Link>
 
             <Link
               href="/account/profile/invite"
               style={{
-                fontSize: 12,
-                color: UI.textSecondary,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 16,
                 textDecoration: "none",
+                color: UI.textPrimary,
               }}
             >
-              Invite friends
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  minWidth: 0,
+                }}
+              >
+                <CircleIcon size={72} background={UI.inviteGreen} color="#000">
+                  <span style={{ fontSize: 36, lineHeight: 1 }}>+</span>
+                </CircleIcon>
+
+                <div
+                  style={{
+                    minWidth: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 4,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 600,
+                      color: UI.textPrimary,
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    Invite friends
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: 15,
+                      color: "rgba(255,255,255,0.6)",
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    Get $15
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  color: UI.textPrimary,
+                  fontSize: 36,
+                  opacity: 0.8,
+                  lineHeight: 1,
+                  flexShrink: 0,
+                }}
+              >
+                ›
+              </div>
             </Link>
           </div>
         </section>
 
         {/* ------------------------------
-           UI: Profile — Navigation
+           UI: Profile — Settings List
         -------------------------------- */}
         <section
           style={{
