@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1774830366184
    - iso: 2026-03-30T00:26:06.184Z
-   - note: wire identity block to user_identity_assets and align top profile actions
+   - note: rewrite page structure for readable section boundaries and precise top-block control
    ========================================================== */
 
 /* ------------------------------
@@ -42,23 +42,30 @@ const SOCIAL_ITEMS = [
 
 const UI = {
   pageTop: 24,
+  pageBottom: 40,
   sectionGap: 24,
   stackGap: 16,
   textGap: 12,
-  tightGap: 8,
-  pageBottom: 40,
+  topBlockGap: 26,
+  actionRowGap: 18,
+
   textPrimary: "var(--text-primary)",
   textSecondary: "rgba(255, 254, 250, 0.72)",
   textTertiary: "rgba(255, 254, 250, 0.52)",
+
   borderSoft: "rgba(255, 254, 250, 0.08)",
   borderRow: "rgba(255, 254, 250, 0.06)",
+
   surfaceSoft: "rgba(255, 254, 250, 0.04)",
-  pillSurface: "rgba(255, 254, 250, 0.10)",
-  pillBorder: "rgba(255, 254, 250, 0.10)",
-  iconSurface: "rgba(255, 254, 250, 0.08)",
+  iconSurface: "rgba(255,255,255,0.08)",
+  pillSurface: "rgba(255,255,255,0.14)",
+
   dangerSoft: "rgba(255, 80, 80, 0.10)",
   dangerBorder: "rgba(255, 80, 80, 0.25)",
   dangerText: "rgba(255, 120, 120, 0.9)",
+
+  avatarYellow: "#F6D84C",
+  inviteGreen: "#00D54B",
 } as const;
 
 /* ------------------------------
@@ -88,23 +95,16 @@ function getInitial(name: string) {
   return name.trim().charAt(0).toUpperCase() || "O";
 }
 
-function getGradientForLetter(letter: string) {
-  const gradients = [
-    "linear-gradient(135deg, #f5d94a 0%, #f5d94a 100%)",
-    "linear-gradient(135deg, #f5d94a 0%, #f5d94a 100%)",
-    "linear-gradient(135deg, #f5d94a 0%, #f5d94a 100%)",
-  ] as const;
-
-  const index = letter.charCodeAt(0) % gradients.length;
-  return gradients[index];
-}
-
 function CircleIcon({
   children,
-  size = 56,
+  size = 72,
+  background = UI.iconSurface,
+  color = UI.textPrimary,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   size?: number;
+  background?: string;
+  color?: string;
 }) {
   return (
     <div
@@ -114,9 +114,8 @@ function CircleIcon({
         borderRadius: "50%",
         display: "grid",
         placeItems: "center",
-        background: UI.iconSurface,
-        border: `1px solid ${UI.borderSoft}`,
-        color: UI.textPrimary,
+        background,
+        color,
         flexShrink: 0,
       }}
     >
@@ -153,7 +152,6 @@ export default async function ProfilePage() {
   const fullName = getFullName(identity.first_name, identity.last_name);
   const username = getUsername(identity.username);
   const initial = getInitial(fullName);
-  const avatarBackground = getGradientForLetter(initial);
 
   return (
     <main
@@ -170,17 +168,20 @@ export default async function ProfilePage() {
           margin: "0 auto",
         }}
       >
-               {/* ------------------------------
-           UI: Profile — Identity
+        {/* ------------------------------
+           UI: Profile — Top Shell
         -------------------------------- */}
         <section
           style={{
             padding: "0 16px",
             display: "flex",
             flexDirection: "column",
-            gap: 20,
+            gap: UI.topBlockGap,
           }}
         >
+          {/* ------------------------------
+             UI: Profile — Header Actions
+          -------------------------------- */}
           <div
             style={{
               display: "flex",
@@ -192,15 +193,14 @@ export default async function ProfilePage() {
               href="/app/home"
               aria-label="Close profile"
               style={{
-                width: 56,
-                height: 56,
+                width: 52,
+                height: 52,
                 borderRadius: "50%",
                 display: "grid",
                 placeItems: "center",
                 textDecoration: "none",
                 color: UI.textPrimary,
                 background: UI.iconSurface,
-                border: `1px solid ${UI.borderSoft}`,
                 fontSize: 28,
                 lineHeight: 1,
               }}
@@ -217,15 +217,15 @@ export default async function ProfilePage() {
             >
               <div
                 style={{
-                  width: 56,
-                  height: 56,
+                  width: 52,
+                  height: 52,
                   borderRadius: "50%",
                   display: "grid",
                   placeItems: "center",
                   background: UI.iconSurface,
-                  border: `1px solid ${UI.borderSoft}`,
                   color: UI.textPrimary,
                   fontSize: 22,
+                  lineHeight: 1,
                 }}
               >
                 ⌁
@@ -233,15 +233,15 @@ export default async function ProfilePage() {
 
               <div
                 style={{
-                  width: 56,
-                  height: 56,
+                  width: 52,
+                  height: 52,
                   borderRadius: "50%",
                   display: "grid",
                   placeItems: "center",
                   background: UI.iconSurface,
-                  border: `1px solid ${UI.borderSoft}`,
                   color: UI.textPrimary,
                   fontSize: 24,
+                  lineHeight: 1,
                 }}
               >
                 ↗
@@ -249,27 +249,30 @@ export default async function ProfilePage() {
             </div>
           </div>
 
+          {/* ------------------------------
+             UI: Profile — Avatar
+          -------------------------------- */}
           <div
             style={{
               position: "relative",
-              width: 104,
-              height: 104,
+              width: 112,
+              height: 112,
             }}
           >
             <Link
               href="/account/profile/edit"
               aria-label="Edit profile photo"
               style={{
-                width: 104,
-                height: 104,
+                width: 112,
+                height: 112,
                 borderRadius: "50%",
                 display: "grid",
                 placeItems: "center",
                 textDecoration: "none",
                 color: "#000",
-                background: avatarBackground,
-                fontSize: 44,
-                fontWeight: 600,
+                background: UI.avatarYellow,
+                fontSize: 48,
+                fontWeight: 700,
                 overflow: "hidden",
               }}
             >
@@ -295,18 +298,17 @@ export default async function ProfilePage() {
               aria-label="Add a profile photo"
               style={{
                 position: "absolute",
-                right: -2,
-                bottom: -2,
-                width: 36,
-                height: 36,
+                right: -4,
+                bottom: -4,
+                width: 42,
+                height: 42,
                 borderRadius: "50%",
                 display: "grid",
                 placeItems: "center",
                 textDecoration: "none",
                 color: UI.textPrimary,
-                background: "rgba(20,20,20,1)",
-                border: `1px solid ${UI.borderSoft}`,
-                fontSize: 18,
+                background: "#1a1a1a",
+                fontSize: 20,
                 lineHeight: 1,
               }}
             >
@@ -314,229 +316,253 @@ export default async function ProfilePage() {
             </Link>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 14,
-            }}
-          >
+          {/* ------------------------------
+             UI: Profile — Name
+          -------------------------------- */}
+          <div>
             <h1
               style={{
                 margin: 0,
                 color: UI.textPrimary,
-                fontSize: 44,
-                fontWeight: 600,
-                letterSpacing: -1.5,
-                lineHeight: 1.05,
+                fontSize: 50,
+                fontWeight: 700,
+                letterSpacing: -2,
+                lineHeight: 1.02,
               }}
             >
               {fullName}
             </h1>
+          </div>
 
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                flexWrap: "wrap",
-              }}
-            >
-              {username ? (
-                <div
-                  style={{
-                    minHeight: 44,
-                    padding: "0 18px",
-                    borderRadius: 999,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background: UI.pillSurface,
-                    border: `1px solid ${UI.pillBorder}`,
-                    color: UI.textPrimary,
-                    fontSize: 16,
-                    fontWeight: 600,
-                    userSelect: "text",
-                    WebkitUserSelect: "text",
-                  }}
-                >
-                  {username} <span style={{ marginLeft: 8, fontSize: 14 }}>⌄</span>
-                </div>
-              ) : null}
-
-              <Link
-                href="/account/profile/edit"
+          {/* ------------------------------
+             UI: Profile — Identity Pills
+          -------------------------------- */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              flexWrap: "wrap",
+            }}
+          >
+            {username ? (
+              <div
                 style={{
-                  minHeight: 44,
-                  padding: "0 18px",
+                  minHeight: 46,
+                  padding: "0 20px",
                   borderRadius: 999,
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  textDecoration: "none",
                   background: UI.pillSurface,
-                  border: `1px solid ${UI.pillBorder}`,
                   color: UI.textPrimary,
-                  fontSize: 16,
+                  fontSize: 17,
                   fontWeight: 600,
+                  userSelect: "text",
+                  WebkitUserSelect: "text",
                 }}
               >
-                Edit profile
-              </Link>
-            </div>
+                {username}
+              </div>
+            ) : null}
 
-            <div
+            <Link
+              href="/account/profile/edit"
               style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 18,
-                paddingTop: 8,
+                minHeight: 46,
+                padding: "0 20px",
+                borderRadius: 999,
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textDecoration: "none",
+                background: UI.pillSurface,
+                color: UI.textPrimary,
+                fontSize: 17,
+                fontWeight: 600,
               }}
             >
-              <Link
-                href="/account/profile/edit"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 16,
-                  textDecoration: "none",
-                  color: UI.textPrimary,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 16,
-                    minWidth: 0,
-                  }}
-                >
-                  <CircleIcon size={64}>
-                    <span style={{ fontSize: 24 }}>📷</span>
-                  </CircleIcon>
-
-                  <div
-                    style={{
-                      minWidth: 0,
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 4,
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: 18,
-                        fontWeight: 600,
-                        color: UI.textPrimary,
-                        lineHeight: 1.2,
-                      }}
-                    >
-                      Add a profile photo
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 14,
-                        color: UI.textSecondary,
-                        lineHeight: 1.35,
-                      }}
-                    >
-                      Help people find you
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    color: UI.textPrimary,
-                    fontSize: 30,
-                    lineHeight: 1,
-                    flexShrink: 0,
-                  }}
-                >
-                  ›
-                </div>
-              </Link>
-
-              <Link
-                href="/account/profile/invite"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 16,
-                  textDecoration: "none",
-                  color: UI.textPrimary,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 16,
-                    minWidth: 0,
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 64,
-                      height: 64,
-                      borderRadius: "50%",
-                      display: "grid",
-                      placeItems: "center",
-                      background: "#19ff19",
-                      color: "#000",
-                      fontSize: 34,
-                      lineHeight: 1,
-                      flexShrink: 0,
-                    }}
-                  >
-                    +
-                  </div>
-
-                  <div
-                    style={{
-                      minWidth: 0,
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 4,
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: 18,
-                        fontWeight: 600,
-                        color: UI.textPrimary,
-                        lineHeight: 1.2,
-                      }}
-                    >
-                      Invite friends
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 14,
-                        color: UI.textSecondary,
-                        lineHeight: 1.35,
-                      }}
-                    >
-                      Get $15
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    color: UI.textPrimary,
-                    fontSize: 30,
-                    lineHeight: 1,
-                    flexShrink: 0,
-                  }}
-                >
-                  ›
-                </div>
-              </Link>
-            </div>
+              Edit profile
+            </Link>
           </div>
+
+          {/* ------------------------------
+             UI: Profile — Primary Actions
+          -------------------------------- */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: UI.actionRowGap,
+              paddingTop: 12,
+            }}
+          >
+            <Link
+              href="/account/profile/edit"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 16,
+                textDecoration: "none",
+                color: UI.textPrimary,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  minWidth: 0,
+                }}
+              >
+                <CircleIcon size={72}>
+                  <span style={{ fontSize: 26, lineHeight: 1 }}>📷</span>
+                </CircleIcon>
+
+                <div
+                  style={{
+                    minWidth: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 4,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 600,
+                      color: UI.textPrimary,
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    Add a profile photo
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: 15,
+                      color: "rgba(255,255,255,0.6)",
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    Help people find you
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  color: UI.textPrimary,
+                  fontSize: 36,
+                  opacity: 0.8,
+                  lineHeight: 1,
+                  flexShrink: 0,
+                }}
+              >
+                ›
+              </div>
+            </Link>
+
+            <Link
+              href="/account/profile/invite"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 16,
+                textDecoration: "none",
+                color: UI.textPrimary,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  minWidth: 0,
+                }}
+              >
+                <CircleIcon size={72} background={UI.inviteGreen} color="#000">
+                  <span style={{ fontSize: 36, lineHeight: 1 }}>+</span>
+                </CircleIcon>
+
+                <div
+                  style={{
+                    minWidth: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 4,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 600,
+                      color: UI.textPrimary,
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    Invite friends
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: 15,
+                      color: "rgba(255,255,255,0.6)",
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    Get $15
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  color: UI.textPrimary,
+                  fontSize: 36,
+                  opacity: 0.8,
+                  lineHeight: 1,
+                  flexShrink: 0,
+                }}
+              >
+                ›
+              </div>
+            </Link>
+          </div>
+        </section>
+
+        {/* ------------------------------
+           UI: Profile — Settings List
+        -------------------------------- */}
+        <section
+          style={{
+            marginTop: UI.sectionGap,
+            borderTop: `1px solid ${UI.borderSoft}`,
+          }}
+        >
+          <nav aria-label="Profile navigation">
+            {HUB_ITEMS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                style={{
+                  minHeight: 56,
+                  padding: "0 16px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  textDecoration: "none",
+                  color: UI.textPrimary,
+                  borderBottom: `1px solid ${UI.borderRow}`,
+                }}
+              >
+                <span style={{ fontSize: 14 }}>{item.label}</span>
+                <span style={{ fontSize: 12, color: UI.textTertiary }}>›</span>
+              </Link>
+            ))}
+          </nav>
         </section>
 
         {/* ------------------------------
