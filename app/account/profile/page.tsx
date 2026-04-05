@@ -176,7 +176,7 @@ export default async function ProfilePage() {
             padding: "0 16px",
             display: "flex",
             flexDirection: "column",
-            gap: UI.topBlockGap,
+            gap: 18,
           }}
         >
           {/* ------------------------------
@@ -249,142 +249,151 @@ export default async function ProfilePage() {
             </div>
           </div>
 
-          {/* ------------------------------
-             UI: Profile — Avatar
-          -------------------------------- */}
-          <div
-            style={{
-              position: "relative",
-              width: 112,
-              height: 112,
-            }}
-          >
-            <Link
-              href="/account/profile/edit"
-              aria-label="Edit profile photo"
-              style={{
-                width: 112,
-                height: 112,
-                borderRadius: "50%",
-                display: "grid",
-                placeItems: "center",
-                textDecoration: "none",
-                color: "#000",
-                background: UI.avatarYellow,
-                fontSize: 48,
-                fontWeight: 700,
-                overflow: "hidden",
-              }}
-            >
-              {identity.avatar_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={identity.avatar_url}
-                  alt={fullName}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    display: "block",
-                  }}
-                />
-              ) : (
-                initial
-              )}
-            </Link>
+{/* ------------------------------
+   UI: Profile — Avatar
+-------------------------------- */}
+<div
+  style={{
+    position: "relative",
+    width: 92,
+    height: 92,
+  }}
+>
+  <Link
+    href="/account/profile/edit"
+    aria-label="Edit profile photo"
+    style={{
+      width: 88,
+      height: 88,
+      borderRadius: "50%",
+      display: "grid",
+      placeItems: "center",
+      textDecoration: "none",
+      color: "#fff",
+      background: "linear-gradient(135deg, #5b21b6 0%, #7c3aed 45%, #c084fc 100%)",
+      fontSize: 34,
+      fontWeight: 700,
+      letterSpacing: -0.8,
+      overflow: "hidden",
+      flexShrink: 0,
+    }}
+  >
+    {identity.avatar_url ? (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={identity.avatar_url}
+        alt={fullName}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          display: "block",
+        }}
+      />
+    ) : (
+      initial
+    )}
+  </Link>
 
-            <Link
-              href="/account/profile/edit"
-              aria-label="Add a profile photo"
-              style={{
-                position: "absolute",
-                right: -4,
-                bottom: -4,
-                width: 42,
-                height: 42,
-                borderRadius: "50%",
-                display: "grid",
-                placeItems: "center",
-                textDecoration: "none",
-                color: UI.textPrimary,
-                background: "#1a1a1a",
-                fontSize: 20,
-                lineHeight: 1,
-              }}
-            >
-              📷
-            </Link>
-          </div>
+  <Link
+    href="/account/profile/edit"
+    aria-label="Add a profile photo"
+    style={{
+      position: "absolute",
+      right: 0,
+      bottom: 0,
+      width: 30,
+      height: 30,
+      borderRadius: "50%",
+      display: "grid",
+      placeItems: "center",
+      textDecoration: "none",
+      color: UI.textPrimary,
+      background: "#111111",
+      border: "1px solid #000",
+      fontSize: 13,
+      fontWeight: 700,
+      lineHeight: 1,
+      zIndex: 1,
+    }}
+  >
+    +
+  </Link>
+</div>
 
-          {/* ------------------------------
-             UI: Profile — Name
-          -------------------------------- */}
-          <div>
-            <h1
-              style={{
-                margin: 0,
-                color: UI.textPrimary,
-                fontSize: 50,
-                fontWeight: 700,
-                letterSpacing: -2,
-                lineHeight: 1.02,
-              }}
-            >
-              {fullName}
-            </h1>
-          </div>
+         {/* ------------------------------
+              UI: Profile — Name
+            -------------------------------- */}
+<div>
+  <h1
+    style={{
+      margin: 0,
+      color: UI.textPrimary,
+      fontSize: 26,
+      fontWeight: 700,
+      letterSpacing: -1.4,
+      lineHeight: 0.98,
+    }}
+  >
+    {fullName}
+  </h1>
+</div>
 
-          {/* ------------------------------
-             UI: Profile — Identity Pills
-          -------------------------------- */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              flexWrap: "wrap",
-            }}
-          >
-            {username ? (
-              <div
-                style={{
-                  minHeight: 46,
-                  padding: "0 20px",
-                  borderRadius: 999,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: UI.pillSurface,
-                  color: UI.textPrimary,
-                  fontSize: 17,
-                  fontWeight: 600,
-                  userSelect: "text",
-                  WebkitUserSelect: "text",
-                }}
-              >
-                {username}
-              </div>
-            ) : null}
+{/* ------------------------------
+   UI: Profile — Identity Pills
+-------------------------------- */}
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    flexWrap: "wrap",
+  }}
+>
+  {username ? (
+    <div
+      style={{
+        height: 32,
+        padding: "0 16px",
+        borderRadius: 999,
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(255,255,255,0.10)",
+        color: UI.textPrimary,
+        fontSize: 12,
+        fontWeight: 600,
+        letterSpacing: -0.2,
+        lineHeight: 1,
+        userSelect: "text",
+        WebkitUserSelect: "text",
+      }}
+    >
+      {username}
+    </div>
+  ) : null}
 
-            <Link
-              href="/account/profile/edit"
-              style={{
-                minHeight: 46,
-                padding: "0 20px",
-                borderRadius: 999,
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                textDecoration: "none",
-                background: UI.pillSurface,
-                color: UI.textPrimary,
-                fontSize: 17,
-                fontWeight: 600,
-              }}
-            >
-              Edit profile
-            </Link>
-          </div>
+  <Link
+    href="/account/profile/edit"
+    style={{
+      height: 32,
+      padding: "0 16px",
+      borderRadius: 999,
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      textDecoration: "none",
+      background: "rgba(255,255,255,0.10)",
+      color: UI.textPrimary,
+      fontSize: 12,
+      fontWeight: 600,
+      letterSpacing: -0.2,
+      lineHeight: 1,
+    }}
+  >
+    Edit
+  </Link>
+</div>
 
           {/* ------------------------------
              UI: Profile — Primary Actions
@@ -393,8 +402,8 @@ export default async function ProfilePage() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: UI.actionRowGap,
-              paddingTop: 12,
+              gap: 12,
+              paddingTop: 6,
             }}
           >
             <Link
