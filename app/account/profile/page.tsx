@@ -422,7 +422,7 @@ export default async function ProfilePage() {
                 href={item.href}
                 style={{
                   minHeight: 56,
-                  padding: "0 16px",
+                  padding: "0 8px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
