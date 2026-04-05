@@ -184,10 +184,14 @@ export default async function ProfilePage() {
 -------------------------------- */}
 <div
   style={{
+    position: "sticky",
+    top: 0,
+    zIndex: 10,
     height: 44,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    background: "black",
     marginBottom: 4,
   }}
 >
