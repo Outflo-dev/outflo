@@ -1,0 +1,355 @@
+﻿OUTFLO - REPOSITORY TREE
+Generated: 2026-04-05 14:24:41
+Unix: 1775413481
+Root: C:\dev\Outflo
+
+app\
++-- 365\
+|   +-- [...slug]\
+|   |   +-- page.tsx
+|   +-- page.tsx
++-- account\
+|   +-- email-mirror\
+|   |   +-- EmailMirrorClient.tsx
+|   |   +-- page.tsx
+|   +-- profile\
+|   |   +-- account\
+|   |   |   +-- page.tsx
+|   |   +-- edit\
+|   |   |   +-- page.tsx
+|   |   +-- environment\
+|   |   |   +-- page.tsx
+|   |   +-- invite\
+|   |   |   +-- page.tsx
+|   |   +-- money\
+|   |   |   +-- page.tsx
+|   |   +-- notifications\
+|   |   |   +-- page.tsx
+|   |   +-- privacy\
+|   |   |   +-- page.tsx
+|   |   +-- records\
+|   |   |   +-- page.tsx
+|   |   +-- support\
+|   |   |   +-- page.tsx
+|   |   +-- EnableEmailMirrorButton.tsx
+|   |   +-- page.tsx
+|   |   +-- ProfileClient.tsx
+|   +-- layout.tsx
++-- admin\
+|   +-- layout.tsx
+|   +-- page.tsx
++-- api\
+|   +-- admin\
+|   |   +-- hard-reset\
+|   |   |   +-- route.ts
+|   |   +-- ingest-status\
+|   |   |   +-- route.ts
+|   |   +-- process-ingest\
+|   |   |   +-- route.ts
+|   |   +-- replay-ingest\
+|   |   |   +-- route.ts
+|   |   +-- requeue-stale-ingest-jobs\
+|   |       +-- route.ts
+|   +-- attention\
+|   |   +-- screen-session\
+|   |       +-- route.ts
+|   +-- auth-test\
+|   |   +-- route.ts
+|   +-- cron\
+|   |   +-- ingest-maintenance.ts
+|   +-- email-mirror\
+|   |   +-- close\
+|   |   |   +-- route.ts
+|   |   +-- open\
+|   |   |   +-- route.ts
+|   |   +-- poll\
+|   |       +-- route.ts
+|   +-- ingest\
+|   |   +-- resend\
+|   |       +-- route.ts
+|   +-- outflows\
+|   |   +-- route.ts
+|   +-- profile\
+|   |   +-- route.ts
+|   +-- receipts\
+|   |   +-- [id]\
+|   |   |   +-- route.ts
+|   |   +-- route.ts
+|   +-- time\
+|       +-- summary\
+|           +-- route.ts
++-- app\
+|   +-- home\
+|   |   +-- page.tsx
+|   +-- money\
+|   |   +-- about\
+|   |   |   +-- page.tsx
+|   |   +-- day\
+|   |   |   +-- [key]\
+|   |   |       +-- page.tsx
+|   |   +-- engine\
+|   |   |   +-- page.tsx
+|   |   +-- place\
+|   |   |   +-- [slug]\
+|   |   |       +-- page.tsx
+|   |   +-- receipts\
+|   |   |   +-- [id]\
+|   |   |   |   +-- page.tsx
+|   |   |   +-- page.tsx
+|   |   +-- page.tsx
+|   +-- profile\
+|   |   +-- page.tsx
+|   +-- systems\
+|   |   +-- page.tsx
+|   +-- time\
+|   |   +-- page.tsx
+|   |   +-- TimeClient.tsx
+|   +-- layout.tsx
+|   +-- page.tsx
+|   +-- ScreenTimeMount.tsx
++-- auth\
+|   +-- callback\
+|       +-- route.ts
++-- calculate\
+|   +-- page.tsx
++-- login\
+|   +-- LoginClient.tsx
+|   +-- page.tsx
++-- logout\
+|   +-- route.ts
++-- merchant\
+|   +-- page.tsx
++-- reset\
+|   +-- page.tsx
++-- state\
+|   +-- page.tsx
++-- systems\
+|   +-- page.tsx
++-- time\
+|   +-- page.tsx
++-- tools\
+|   +-- compression\
+|   |   +-- page.tsx
+|   +-- gain\
+|   |   +-- page.tsx
+|   +-- layout.tsx
+|   +-- page.tsx
++-- globals.css
++-- HomeClient.tsx
++-- icon.jpg
++-- layout.tsx
++-- page.tsx
+
+components\
++-- navigation\
+|   +-- NavLayer.tsx
+|   +-- NavShell.tsx
++-- ui\
+|   +-- Button.tsx
+|   +-- ButtonNav.tsx
+|   +-- Cardt.tsx
+|   +-- EntryTile.tsx
+|   +-- Hero.tsx
+|   +-- NavBackButton.tsx
+|   +-- NavCloseButton.tsx
+|   +-- RollingNumber.tsx
+|   +-- Section.tsx
++-- Portal.tsx
++-- SwipeShell.tsx
+
+hooks\
++-- use-swipe.ts
+
+lib\
++-- attention\
+|   +-- screen-time-engine.ts
+|   +-- use-screen-time.ts
++-- environment\
+|   +-- baseline-place.ts
+|   +-- environment-engine.ts
+|   +-- use-environment.ts
++-- home\
+|   +-- use-home-environment.ts
++-- ingest\
+|   +-- parsers\
+|   |   +-- cashapp.ts
+|   |   +-- index.ts
+|   +-- claim-ingest-jobs.ts
+|   +-- enqueue-ingest-job.ts
+|   +-- job-state.ts
+|   +-- process-single-event.ts
+|   +-- retry-policy.ts
+|   +-- types.ts
++-- location\
+|   +-- get-device-location.ts
++-- navigation\
+|   +-- navigation.ts
++-- supabase\
+|   +-- admin.ts
+|   +-- client.ts
+|   +-- server.ts
++-- time\
+|   +-- aggregation.ts
+|   +-- bounds.ts
+|   +-- summary.ts
+|   +-- user-epoch.ts
++-- weather\
+|   +-- get-weather.ts
++-- epoch.ts
++-- time.ts
+
+public\
++-- apple-touch-icon.png
++-- favicon.png
++-- file.svg
++-- globe.svg
++-- icon-192.png
++-- icon-512.png
++-- manifest.json
++-- outflo.jpg
++-- vercel.svg
++-- window.svg
+
+docs\
++-- architecture\
+|   +-- attention\
+|   |   +-- outflo-screen-time-contract-v1__1775185749429__2026-04-03_03-09-09-429.md
+|   +-- compute\
+|   |   +-- outflo-computation\
+|   |       +-- outflo-computation-v2__1774724352801__2026-03-28_18-59-12-801.md
+|   +-- environment\
+|   |   +-- environment-contract-v1__1774818390025__2026-03-29_21-06-30-025.md
+|   |   +-- environment-contract-v2__1775183865380__2026-04-03_02-37-45-380.md
+|   |   +-- environment-system-map-v2__1775181005607__2026-04-03_01-50-05-607.md
+|   +-- ingest\
+|   |   +-- ingest-pipeline\
+|   |   |   +-- ingest-pipeline-v2__1774725263717__2026-03-28_19-14-23-717.md
+|   |   +-- ingest-system-map-v1.md
+|   +-- storage\
+|   |   +-- database\
+|   |   |   +-- database-v4__1774819647127__2026-03-29_21-27-27-127.md
+|   |   +-- money-substrate\
+|   |       +-- money-substrate-v2__1774724352801__2026-03-28_18-59-12-801.md
+|   +-- system\
+|   |   +-- outflo-system\
+|   |   |   +-- outflo-system-v2__1774729338123__2026-03-28_20-22-18-123.md
+|   |   +-- routes\
+|   |       +-- routes-v1__1774732215252__2026-03-28_21-10-15-252.md
+|   +-- time\
+|       +-- time-contract\
+|           +-- time-contract-v1__1774244458590__2026-03-23_04-20-58-590.md
++-- archive\
+|   +-- architecture\
+|   |   +-- ai\
+|   |   |   +-- thread-transition\
+|   |   |       +-- thread-transition-sop-v1.md
+|   |   |       +-- thread-transition-sop-v2.md
+|   |   +-- compute\
+|   |   |   +-- outflo-computation-v1__1774216381422__2026-03-22_21-53-01-422.md
+|   |   +-- conventions\
+|   |   |   +-- code-style\
+|   |   |   |   +-- code-style-v1.md
+|   |   |   +-- naming\
+|   |   |       +-- naming-cannon-locked-v1.md
+|   |   |       +-- naming-cannon-locked-v2.md
+|   |   +-- database\
+|   |   |   +-- database-v1.md
+|   |   |   +-- database-v2.md
+|   |   |   +-- database-v3__1774304629401__2026-03-24_02-23-49-401.md
+|   |   +-- ingest\
+|   |   |   +-- ingest-pipeline-v1__1774216629034__2026-03-22_21-57-09-034.md
+|   |   +-- locks\
+|   |   |   +-- architecture\
+|   |   |       +-- architecture-pass-lock-v1__1774204230127__2026-03-22_14-30.md
+|   |   +-- money-substrate\
+|   |   |   +-- money-substrate-v1.md
+|   |   +-- outflo-ledger\
+|   |   |   +-- outflo-ledger-v1.md
+|   |   +-- system\
+|   |       +-- outflo-system-v1.md
+|   +-- conventions\
+|   |   +-- ai\
+|   |   |   +-- thread-transition\
+|   |   |       +-- thread-transition-sop-v3__1774219026148__2026-03-22_22-37-06-148.md
+|   |   |       +-- thread-transition-sop-v4__1774733974979__2026-03-28_21-39-34-979.md
+|   |   +-- code\
+|   |       +-- code-style-v2.md
+|   +-- environment-engine\
+|   |   +-- environment-engine-v1.md
+|   +-- home-environment\
+|   |   +-- home-environment-v1.md
+|   +-- home-integration-flow\
+|   |   +-- home-integration-flow-v1.md
+|   +-- product\
+|       +-- domains\
+|           +-- profile\
+|           |   +-- profile-v1.md
+|           +-- receipts\
+|               +-- receipts-v1.md
++-- conventions\
+|   +-- ai\
+|   |   +-- thread-transition\
+|   |       +-- thread-transition-sop-v5__1774804792769__2026-03-29_17-19-52-769.md
+|   +-- canon\
+|   |   +-- code\
+|   |   |   +-- code-style-sop-v3__1774806144569__2026-03-29_17-42-24-569.md
+|   |   +-- naming\
+|   |       +-- naming-canon-locked-v3__1774217305123__2026-03-22_22-08-25-123.md
+|   +-- templates\
+|   |   +-- architecture-contract-template-v2__1774805494735__2026-03-29_17-31-34-735.md
+|   |   +-- command-reference.md
+|   |   +-- convention-contract-template.md
+|   |   +-- placeholder-readme-template.md
+|   |   +-- ui-contract-template.md
+|   +-- README.md
++-- philosophy\
+|   +-- outflo-way.md
++-- product\
+|   +-- domains\
+|   |   +-- profile\
+|   |   |   +-- profile-v2__1774728285164__2026-03-28_20-04-45-164.md
+|   |   +-- receipts\
+|   |       +-- receipts-v2__1774725724327__2026-03-28_19-22-04-327.md
+|   +-- ui\
+|       +-- contract\
+|       |   +-- ui-system-v2__1775410402598__2026-04-05_17-33-22-598.md.md
+|       +-- profile\
+|       |   +-- page\
+|       |       +-- profile-page-v1.md
+|       +-- receipts\
+|       |   +-- detail\
+|       |   |   +-- receipts-detail-v1.md
+|       |   +-- tiles\
+|       +-- weather\
+|       +-- README.md
++-- repository\
+|   +-- current\
+|   |   +-- repository-tree.txt
+|   +-- snapshots\
+|   |   +-- 1773766949__2026-03-17_13-02.txt
+|   |   +-- 1773767482__2026-03-17_13-11.txt
+|   |   +-- 1773768565__2026-03-17_13-29.txt
+|   |   +-- 1773776319__2026-03-17_15-38.txt
+|   |   +-- 1773794482__2026-03-17_20-41.txt
+|   |   +-- 1773806048__2026-03-17_23-54.txt
+|   |   +-- 1774204230__2026-03-22_14-30.txt
+|   |   +-- 1774219907__2026-03-22_18-51.txt
+|   |   +-- 1774314943__2026-03-23_21-15.txt
+|   |   +-- 1774324332__2026-03-23_23-52.txt
+|   |   +-- 1774329276__2026-03-24_01-14.txt
+|   |   +-- 1774752375__2026-03-28_22-46.txt
+|   |   +-- 1774797053__2026-03-29_11-10.txt
+|   |   +-- 1774808267__2026-03-29_14-17.txt
+|   |   +-- 1774822710__2026-03-29_18-18.txt
+|   |   +-- 1775080585__2026-04-01_17-56.txt
+|   |   +-- 1775102220__2026-04-01_23-57.txt
+|   |   +-- 1775177187__2026-04-02_20-46.txt
+|   |   +-- 1775186293__2026-04-02_23-18.txt
+|   |   +-- 1775411178__2026-04-05_13-46.txt
+|   +-- README.md
++-- README.md
+
+scripts\
++-- print-repo-tree.ps1
++-- README.MD
+
