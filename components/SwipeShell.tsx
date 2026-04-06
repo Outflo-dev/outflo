@@ -52,7 +52,7 @@ export default function SwipeShell({ children }: { children: ReactNode }) {
       style={{
         minHeight: "100dvh",
         width: "100%",
-        overflowX: "hidden",
+        overflowX: "clip",
         touchAction: "pan-y",
         position: "relative",
       }}
