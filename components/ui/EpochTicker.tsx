@@ -13,7 +13,7 @@
 -------------------------------- */
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 /* ------------------------------
    Types
@@ -57,7 +57,7 @@ function DigitColumn({ digit, index }: DigitColumnProps) {
     <span
       style={{
         position: "relative",
-        width: "0.68ch",
+        width: "0.72ch",
         height: DIGIT_HEIGHT,
         overflow: "hidden",
         display: "inline-flex",
@@ -93,11 +93,12 @@ function DigitColumn({ digit, index }: DigitColumnProps) {
 }
 
 export default function EpochTicker({ epochMs }: EpochTickerProps) {
-  const [nowMs, setNowMs] = useState(() => Date.now());
-  const hasMountedRef = useRef(false);
+  const [nowMs, setNowMs] = useState(epochMs);
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    hasMountedRef.current = true;
+    setHasMounted(true);
+    setNowMs(Date.now());
 
     const interval = window.setInterval(() => {
       setNowMs(Date.now());
@@ -124,14 +125,14 @@ export default function EpochTicker({ epochMs }: EpochTickerProps) {
         color: "#FFFEFA",
         fontSize: 11,
         lineHeight: `${DIGIT_HEIGHT}px`,
-        letterSpacing: "0.35em",
+        letterSpacing: "0.16em",
         fontVariantNumeric: "tabular-nums",
         fontFeatureSettings: '"tnum" 1, "lnum" 1',
         userSelect: "none",
       }}
     >
       {formatted.split("").map((digit, index) => {
-        if (!hasMountedRef.current) {
+        if (!hasMounted) {
           return (
             <span
               key={`${index}-${digit}`}
