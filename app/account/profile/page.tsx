@@ -11,6 +11,8 @@
 /* ------------------------------
    Imports
 -------------------------------- */
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
 import ProfileSecretActions from "./ProfileSecretActions";
