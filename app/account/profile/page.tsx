@@ -15,6 +15,7 @@ import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
 import ProfileSecretActions from "./ProfileSecretActions";
 import ProfileSecretTrigger from "./ProfileSecretTrigger";
+import { FaXTwitter, FaInstagram, FaGithub } from "react-icons/fa6";
 import type { ReactNode } from "react";
 
 /* ------------------------------
@@ -187,18 +188,19 @@ export default async function ProfilePage() {
 <div
   style={{
   position: "sticky",
-  top: -1,
-  zIndex: 10,
-  height: 40,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  background: "black",
-  marginLeft: -8,
-  marginRight: -8,
-  paddingLeft: 8,
-  paddingRight: 8,
-  marginBottom: 4,
+    top: -1,
+    zIndex: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    background: "black",
+    marginLeft: -8,
+    marginRight: -8,
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingTop: 10,
+    paddingBottom: 12, 
+    marginBottom: 6, 
 }}
 >
   <Link
@@ -405,61 +407,134 @@ export default async function ProfilePage() {
         </section>
 
         {/* ------------------------------
-           UI: Profile — Social
-        -------------------------------- */}
-        <section
-          style={{
-            marginTop: UI.sectionGap,
-            padding: "0 16px",
-            display: "flex",
-            gap: 16,
-          }}
-        >
-          {SOCIAL_ITEMS.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              style={{
-                fontSize: 12,
-                color: UI.textSecondary,
-                textDecoration: "none",
-              }}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </section>
+   UI: Profile — Orbit Message
+-------------------------------- */}
+<section
+  style={{
+    marginTop: UI.sectionGap,
+    padding: "0 8px",
+    color: UI.textSecondary,
+    fontSize: 13,
+    lineHeight: 1.5,
+  }}
+>
+  <div style={{ marginBottom: 12 }}>
+    Outflō is a telemetry lens on your flow through time. It begins
+    from a precise moment — connecting you to your{" "}
+    <Link
+      href="/app/time"
+      style={{
+        color: UI.textPrimary,
+        textDecoration: "underline",
+        textUnderlineOffset: "2px",
+      }}
+    >
+      orbit
+    </Link>
+    .
+  </div>
 
-        {/* ------------------------------
-           UI: Profile — Footer
-        -------------------------------- */}
-        <section
-          style={{
-            marginTop: UI.sectionGap,
-            padding: "0 16px",
-            color: UI.textTertiary,
-            fontSize: 11,
-            lineHeight: 1.6,
-          }}
-        >
-          <p style={{ margin: 0 }}>
-            Outflō is a personal telemetry system. It begins at a precise
-            moment, and records what leaves you across money, time, and
-            environment.
-          </p>
+  <div style={{ marginBottom: 12 }}>
+    Outflō does not hold funds or execute transactions.
+  </div>
 
-          <p style={{ margin: `${UI.textGap}px 0 0` }}>
-            Outflō does not hold funds, is not a bank, does not manufacture
-            financial products, and does not execute transactions. It simply
-            records events as they occur.
-          </p>
+  <div
+    style={{
+      fontSize: 12,
+      color: UI.textPrimary,
+    }}
+  >
+    <Link
+      href={FOOTER_ITEMS[0].href}
+      style={{ textDecoration: "underline", color: "inherit" }}
+    >
+      {FOOTER_ITEMS[0].label}
+    </Link>
+    {" · "}
+    <Link
+      href={FOOTER_ITEMS[1].href}
+      style={{ textDecoration: "underline", color: "inherit" }}
+    >
+      {FOOTER_ITEMS[1].label}
+    </Link>
+    {" · "}
+    <Link
+      href={FOOTER_ITEMS[2].href}
+      style={{ textDecoration: "underline", color: "inherit" }}
+    >
+      {FOOTER_ITEMS[2].label}
+    </Link>
+  </div>
+</section>
+{/* ------------------------------
+   UI: Profile — Social
+-------------------------------- */}
+<section
+  style={{
+    marginTop: UI.sectionGap * 1.5,
+    padding: "0 16px",
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: 20,
+    }}
+  >
+    <Link
+      href="https://x.com"
+      target="_blank"
+      style={{
+        color: UI.textPrimary,
+        display: "inline-flex",
+      }}
+    >
+      <FaXTwitter size={18} />
+    </Link>
 
-          <p style={{ margin: `${UI.textGap}px 0 0` }}>
-            <Link href={FOOTER_ITEMS[0].href}>{FOOTER_ITEMS[0].label}</Link> ·{" "}
-            <Link href={FOOTER_ITEMS[1].href}>{FOOTER_ITEMS[1].label}</Link> ·{" "}
-            <Link href={FOOTER_ITEMS[2].href}>{FOOTER_ITEMS[2].label}</Link>
-          </p>
-        </section>
+    <Link
+      href="https://instagram.com"
+      target="_blank"
+      style={{
+        color: UI.textPrimary,
+        display: "inline-flex",
+      }}
+    >
+      <FaInstagram size={18} />
+    </Link>
+
+    <Link
+      href="https://github.com"
+      target="_blank"
+      style={{
+        color: UI.textPrimary,
+        display: "inline-flex",
+      }}
+    >
+      <FaGithub size={18} />
+    </Link>
+  </div>
+</section>
+
+{/* ------------------------------
+   UI: Profile — Copywrite
+-------------------------------- */}
+<div
+  style={{
+    marginTop: UI.sectionGap,
+    textAlign: "center",
+    padding: "0 16px",
+    fontSize: 12,
+    color: "rgba(255,255,255,0.4)",
+  }}
+>
+  © {new Date().getFullYear()} Outflō
+</div>
+
+
+
+
       </div>
     </main>
   );
