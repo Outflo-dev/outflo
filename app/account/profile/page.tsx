@@ -13,6 +13,8 @@
 -------------------------------- */
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
+import ProfileSecretActions from "./ProfileSecretActions";
+import ProfileSecretTrigger from "./ProfileSecretTrigger";
 import type { ReactNode } from "react";
 
 /* ------------------------------
@@ -308,6 +310,8 @@ export default async function ProfilePage() {
     )}
   </Link>
 
+    <ProfileSecretTrigger />
+
   <Link
     href="/account/profile/edit"
     aria-label="Add a profile photo"
@@ -355,58 +359,12 @@ export default async function ProfilePage() {
 {/* ------------------------------
    UI: Profile — Identity Pills
 -------------------------------- */}
-<div
-  style={{
-    display: "flex",
-    alignItems: "center",
-    gap: 6,
-    flexWrap: "wrap",
-  }}
->
-  {username ? (
-    <div
-      style={{
-        height: 32,
-        padding: "0 16px",
-        borderRadius: 999,
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(255,255,255,0.10)",
-        color: UI.textPrimary,
-        fontSize: 12,
-        fontWeight: 600,
-        letterSpacing: -0.2,
-        lineHeight: 1,
-        userSelect: "text",
-        WebkitUserSelect: "text",
-      }}
-    >
-      {username}
-    </div>
-  ) : null}
-
-  <Link
-    href="/account/profile/edit"
-    style={{
-      height: 32,
-      padding: "0 16px",
-      borderRadius: 999,
-      display: "inline-flex",
-      alignItems: "center",
-      justifyContent: "center",
-      textDecoration: "none",
-      background: "rgba(255,255,255,0.10)",
-      color: UI.textPrimary,
-      fontSize: 12,
-      fontWeight: 600,
-      letterSpacing: -0.2,
-      lineHeight: 1,
-    }}
-  >
-    Edit
-  </Link>
-</div>
+<ProfileSecretActions
+  username={username}
+  editHref="/account/profile/edit"
+  logoutHref="/logout"
+  textPrimary={UI.textPrimary}
+/>
 
           {/* ------------------------------
              UI: Profile — Primary Actions
@@ -501,34 +459,6 @@ export default async function ProfilePage() {
             <Link href={FOOTER_ITEMS[1].href}>{FOOTER_ITEMS[1].label}</Link> ·{" "}
             <Link href={FOOTER_ITEMS[2].href}>{FOOTER_ITEMS[2].label}</Link>
           </p>
-        </section>
-
-        {/* ------------------------------
-           UI: Profile — Sign Out
-        -------------------------------- */}
-        <section
-          style={{
-            marginTop: UI.sectionGap,
-            padding: "0 16px",
-          }}
-        >
-          <Link
-            href="/logout"
-            style={{
-              minHeight: 44,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 999,
-              textDecoration: "none",
-              fontSize: 13,
-              color: UI.dangerText,
-              background: UI.dangerSoft,
-              border: `1px solid ${UI.dangerBorder}`,
-            }}
-          >
-            Sign Out
-          </Link>
         </section>
       </div>
     </main>
