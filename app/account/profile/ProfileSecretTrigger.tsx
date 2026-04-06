@@ -59,7 +59,7 @@ export default function ProfileSecretTrigger() {
         margin: 0,
         cursor: "pointer",
         borderRadius: "50%",
-        zIndex: 0,
+        touchAction: "manipulation",
       }}
     />
   );
