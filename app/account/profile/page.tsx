@@ -184,16 +184,20 @@ export default async function ProfilePage() {
 -------------------------------- */}
 <div
   style={{
-    position: "sticky",
-    top: 0,
-    zIndex: 10,
-    height: 44,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    background: "black",
-    marginBottom: 4,
-  }}
+  position: "sticky",
+  top: -1,
+  zIndex: 10,
+  height: 44,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  background: "black",
+  marginLeft: -8,
+  marginRight: -8,
+  paddingLeft: 8,
+  paddingRight: 8,
+  marginBottom: 4,
+}}
 >
   <Link
     href="/app/home"
