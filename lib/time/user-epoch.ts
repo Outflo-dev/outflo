@@ -7,7 +7,7 @@
 
 import { supabaseServer } from "@/lib/supabase/server";
 
-export async function getOrCreateUserEpochMs(): Promise<number | null> {
+export async function getOrCreateUserEpochMs(): Promise<number> {
   const supabase = await supabaseServer();
 
   const {
@@ -16,7 +16,9 @@ export async function getOrCreateUserEpochMs(): Promise<number | null> {
   } = await supabase.auth.getUser();
 
   if (userErr) throw userErr;
-  if (!user) return null;
+  if (!user) {
+    throw new Error("User must be authenticated to resolve epoch.");
+  }
 
   // Read existing epoch
   const { data: existing, error: readErr } = await supabase
@@ -46,7 +48,15 @@ export async function getOrCreateUserEpochMs(): Promise<number | null> {
       .single();
 
     if (againErr) throw againErr;
+    if (again?.epoch_ms == null) {
+      throw new Error("Epoch missing after retry read.");
+    }
+
     return Number(again.epoch_ms);
+  }
+
+  if (inserted?.epoch_ms == null) {
+    throw new Error("Epoch insert succeeded without epoch_ms.");
   }
 
   return Number(inserted.epoch_ms);

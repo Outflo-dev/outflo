@@ -16,6 +16,8 @@ import { supabaseServer } from "@/lib/supabase/server";
 import ProfileSecretActions from "./ProfileSecretActions";
 import ProfileSecretTrigger from "./ProfileSecretTrigger";
 import { FaXTwitter, FaInstagram, FaGithub } from "react-icons/fa6";
+import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
+import EpochTicker from "@/components/ui/EpochTicker";
 import type { ReactNode } from "react";
 
 /* ------------------------------
@@ -70,6 +72,8 @@ const UI = {
   avatarYellow: "#F6D84C",
   inviteGreen: "#00D54B",
 } as const;
+
+const epochMs = await getOrCreateUserEpochMs();
 
 /* ------------------------------
    Types
@@ -471,7 +475,7 @@ export default async function ProfilePage() {
 -------------------------------- */}
 <section
   style={{
-    marginTop: UI.sectionGap * 1.5,
+    marginTop: UI.sectionGap * 1.1,
     padding: "0 16px",
   }}
 >
@@ -518,23 +522,18 @@ export default async function ProfilePage() {
 </section>
 
 {/* ------------------------------
-   UI: Profile — Copywrite
+   UI: Profile — Epoch Clock
 -------------------------------- */}
-<div
+<section
   style={{
-    marginTop: UI.sectionGap,
-    textAlign: "center",
-    padding: "0 16px",
-    fontSize: 12,
-    color: "rgba(255,255,255,0.4)",
+    paddingTop: UI.sectionGap * 1.75,
+    paddingLeft: 16,
+    paddingRight: 16,
+    textAlign: "left",
   }}
 >
-  © {new Date().getFullYear()} Outflō
-</div>
-
-
-
-
+  <EpochTicker epochMs={epochMs} />
+</section>
       </div>
     </main>
   );
