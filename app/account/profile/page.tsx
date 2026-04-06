@@ -41,7 +41,7 @@ const SOCIAL_ITEMS = [
 ] as const;
 
 const UI = {
-  pageTop: 24,
+  pageTop: 16,
   pageBottom: 40,
   sectionGap: 24,
   stackGap: 16,
@@ -176,7 +176,7 @@ export default async function ProfilePage() {
             padding: "0 8px",
             display: "flex",
             flexDirection: "column",
-            gap: 18,
+            gap: 12,
           }}
         >
           {/* ------------------------------
@@ -187,7 +187,7 @@ export default async function ProfilePage() {
   position: "sticky",
   top: -1,
   zIndex: 10,
-  height: 44,
+  height: 40,
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",

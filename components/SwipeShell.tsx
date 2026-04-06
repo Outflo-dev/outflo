@@ -35,7 +35,10 @@ export default function SwipeShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   // Hide bottom nav on drill-down pages (e.g. receipt detail)
-  const hideNav = pathname.startsWith("/app/money/receipts/");
+  const hideNav =
+  pathname.startsWith("/app/money/receipts/") ||
+  pathname.startsWith("/account/profile");
+  
 
   const { left, right } = useMemo(() => {
     const i = idxOf(pathname);
