@@ -7,25 +7,35 @@
    ========================================================== */
 
 /* ------------------------------
+   Imports
+-------------------------------- */
+import { useRef } from "react";
+
+/* ------------------------------
+   Constants
+-------------------------------- */
+const TAP_WINDOW_MS = 500;
+
+/* ------------------------------
    Component
 -------------------------------- */
 export default function ProfileSecretTrigger() {
-  let tapCount = 0;
-  let lastTap = 0;
+  const tapCountRef = useRef(0);
+  const lastTapRef = useRef(0);
 
   function handleTap() {
     const now = Date.now();
 
-    if (now - lastTap <= 500) {
-      tapCount += 1;
+    if (now - lastTapRef.current <= TAP_WINDOW_MS) {
+      tapCountRef.current += 1;
     } else {
-      tapCount = 1;
+      tapCountRef.current = 1;
     }
 
-    lastTap = now;
+    lastTapRef.current = now;
 
-    if (tapCount >= 3) {
-      tapCount = 0;
+    if (tapCountRef.current >= 3) {
+      tapCountRef.current = 0;
 
       window.dispatchEvent(new CustomEvent("outflo:profile-secret-reveal"));
 
@@ -49,6 +59,7 @@ export default function ProfileSecretTrigger() {
         margin: 0,
         cursor: "pointer",
         borderRadius: "50%",
+        zIndex: 0,
       }}
     />
   );
