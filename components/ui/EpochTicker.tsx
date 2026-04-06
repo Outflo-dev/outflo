@@ -20,7 +20,7 @@ export default function EpochTicker({ epochMs }: { epochMs: number }) {
         style={{
           fontSize: 11,
           color: "#FFFEFA",
-          letterSpacing: "0.16em",
+          letterSpacing: "0.08em",
         }}
       >
         0000000000000
@@ -36,7 +36,7 @@ export default function EpochTicker({ epochMs }: { epochMs: number }) {
       style={{
         fontSize: 11,
         color: "#FFFEFA",
-        letterSpacing: "0.16em",
+        letterSpacing: "0.08em",
       }}
     >
       {formatted}

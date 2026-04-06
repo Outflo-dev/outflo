@@ -476,7 +476,7 @@ export default async function ProfilePage() {
 <section
   style={{
     marginTop: UI.sectionGap * 1.1,
-    padding: "0 16px",
+    padding: "0 8px",
   }}
 >
   <div
@@ -526,8 +526,8 @@ export default async function ProfilePage() {
 -------------------------------- */}
 <section
   style={{
-    paddingTop: UI.sectionGap * 1.75,
-    paddingLeft: 16,
+    paddingTop: UI.sectionGap * 2.5,
+    paddingLeft: 8,
     paddingRight: 16,
     textAlign: "left",
   }}
