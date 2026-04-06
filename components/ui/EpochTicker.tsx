@@ -121,10 +121,10 @@ export default function EpochTicker({ epochMs }: EpochTickerProps) {
         justifyContent: "center",
         gap: 0,
         minHeight: DIGIT_HEIGHT,
-        color: "rgba(255,255,255,0.40)",
+        color: "#FFFEFA",
         fontSize: 11,
         lineHeight: `${DIGIT_HEIGHT}px`,
-        letterSpacing: "0.08em",
+        letterSpacing: "0.35em",
         fontVariantNumeric: "tabular-nums",
         fontFeatureSettings: '"tnum" 1, "lnum" 1',
         userSelect: "none",
@@ -136,7 +136,7 @@ export default function EpochTicker({ epochMs }: EpochTickerProps) {
             <span
               key={`${index}-${digit}`}
               style={{
-                width: "0.68ch",
+                width: "0.72ch",
                 height: DIGIT_HEIGHT,
                 lineHeight: `${DIGIT_HEIGHT}px`,
                 display: "inline-flex",

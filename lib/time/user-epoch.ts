@@ -20,7 +20,6 @@ export async function getOrCreateUserEpochMs(): Promise<number> {
     throw new Error("User must be authenticated to resolve epoch.");
   }
 
-  // Read existing epoch
   const { data: existing, error: readErr } = await supabase
     .from("user_epochs")
     .select("epoch_ms")
@@ -30,7 +29,6 @@ export async function getOrCreateUserEpochMs(): Promise<number> {
   if (readErr) throw readErr;
   if (existing?.epoch_ms != null) return Number(existing.epoch_ms);
 
-  // Create once if missing
   const now = Date.now();
 
   const { data: inserted, error: insertErr } = await supabase
@@ -40,7 +38,6 @@ export async function getOrCreateUserEpochMs(): Promise<number> {
     .single();
 
   if (insertErr) {
-    // Race condition fallback
     const { data: again, error: againErr } = await supabase
       .from("user_epochs")
       .select("epoch_ms")
