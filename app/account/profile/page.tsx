@@ -440,37 +440,6 @@ export default async function ProfilePage() {
     .
   </div>
 
-  <div style={{ marginBottom: 12 }}>
-    Outflō does not hold funds or execute transactions.
-  </div>
-
-  <div
-    style={{
-      fontSize: 12,
-      color: UI.textPrimary,
-    }}
-  >
-    <Link
-      href={FOOTER_ITEMS[0].href}
-      style={{ textDecoration: "underline", color: "inherit" }}
-    >
-      {FOOTER_ITEMS[0].label}
-    </Link>
-    {" · "}
-    <Link
-      href={FOOTER_ITEMS[1].href}
-      style={{ textDecoration: "underline", color: "inherit" }}
-    >
-      {FOOTER_ITEMS[1].label}
-    </Link>
-    {" · "}
-    <Link
-      href={FOOTER_ITEMS[2].href}
-      style={{ textDecoration: "underline", color: "inherit" }}
-    >
-      {FOOTER_ITEMS[2].label}
-    </Link>
-  </div>
 </section>
 {/* ------------------------------
    UI: Profile — Social
@@ -528,7 +497,7 @@ export default async function ProfilePage() {
 -------------------------------- */}
 <section
   style={{
-    paddingTop: UI.sectionGap * 2.5,
+    paddingTop: UI.sectionGap * 3.5,
     paddingLeft: 8,
     paddingRight: 16,
     textAlign: "left",
