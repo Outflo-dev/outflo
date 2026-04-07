@@ -75,7 +75,6 @@ const UI = {
   inviteGreen: "#00D54B",
 } as const;
 
-const epochMs = await getOrCreateUserEpochMs();
 
 /* ------------------------------
    Types
@@ -138,6 +137,7 @@ function CircleIcon({
 -------------------------------- */
 export default async function ProfilePage() {
   const supabase = await supabaseServer();
+  const epochMs = await getOrCreateUserEpochMs();
 
   const {
     data: { user },
