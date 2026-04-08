@@ -3,11 +3,11 @@
 /* ==========================================================
    OUTFLŌ — PROFILE SURFACE
    File: components/navigation/profile/ProfileSurface.tsx
-   Scope: Mount profile UI into shell layer root as a true overlay surface
+   Scope: Mount profile UI into shell layer root as a true overlay surface (fixed + scroll owner)
    Last Updated:
    - ms: 1775672111393
    - iso: 2026-04-08T18:15:11.393Z
-   - note: convert profile from route-rendered page to shell-layer surface via portal
+   - note: fix scroll ownership — surface owns fixed + overflow, motion is visual only
    ========================================================== */
 
 /* ------------------------------
@@ -39,10 +39,25 @@ export default function ProfileSurface({
       style={{
         position: "fixed",
         inset: 0,
+        zIndex: 100,
         pointerEvents: "auto",
+
+        // 🔥 SCROLL OWNER
+        overflowY: "auto",
+        WebkitOverflowScrolling: "touch",
+
+        background: "black",
       }}
     >
-      <ProfileMotion>{children}</ProfileMotion>
+      <ProfileMotion>
+        <div
+          style={{
+            minHeight: "100%",
+          }}
+        >
+          {children}
+        </div>
+      </ProfileMotion>
     </div>,
     root
   );
