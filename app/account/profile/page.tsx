@@ -20,6 +20,7 @@ import ProfileSecretTrigger from "./ProfileSecretTrigger";
 import { FaXTwitter, FaInstagram, FaGithub } from "react-icons/fa6";
 import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
 import EpochTicker from "@/components/ui/EpochTicker";
+import ProfileMotion from "@/components/navigation/profile/ProfileMotion";
 import type { ReactNode } from "react";
 
 /* ------------------------------
@@ -163,6 +164,7 @@ export default async function ProfilePage() {
   const initial = getInitial(fullName);
 
   return (
+    <ProfileMotion>
     <main
       style={{
         minHeight: "100vh",
@@ -188,29 +190,29 @@ export default async function ProfilePage() {
             gap: 12,
           }}
         >
-          {/* ------------------------------
-   UI: Profile — Header Bar
--------------------------------- */}
-<div
-  style={{
-  position: "sticky",
-    top: -1,
-    zIndex: 10,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    background: "black",
-    marginLeft: -8,
-    marginRight: -8,
-    paddingLeft: 8,
-    paddingRight: 8,
-    paddingTop: 10,
-    paddingBottom: 12, 
-    marginBottom: 6, 
-}}
+        {/* ------------------------------
+           UI: Profile — Header Bar
+        -------------------------------- */}
+      <div
+        style={{
+          position: "sticky",
+          top: -1,
+          zIndex: 10,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          background: "black",
+          marginLeft: -8,
+          marginRight: -8,
+          paddingLeft: 8,
+          paddingRight: 8,
+          paddingTop: 10,
+          paddingBottom: 12, 
+          marginBottom: 6, 
+        }}
 >
-  <Link
-    href="/app/home"
+  <a
+    href="javascript:history.back()"
     aria-label="Close profile"
     style={{
       width: 40,
@@ -227,7 +229,7 @@ export default async function ProfilePage() {
     }}
   >
     ×
-  </Link>
+  </a>
 
   <div
     style={{
@@ -236,13 +238,16 @@ export default async function ProfilePage() {
       gap: 8,
     }}
   >
-    <div
+    <Link
+      href="/account/profile/invite"
+      aria-label="Open invite"
       style={{
         width: 40,
         height: 40,
         borderRadius: "50%",
         display: "grid",
         placeItems: "center",
+        textDecoration: "none",
         background: UI.iconSurface,
         color: UI.textPrimary,
         fontSize: 18,
@@ -251,15 +256,18 @@ export default async function ProfilePage() {
       }}
     >
       ⌁
-    </div>
+    </Link>
 
-    <div
+    <Link
+      href="/"
+      aria-label="Go to portal"
       style={{
         width: 40,
         height: 40,
         borderRadius: "50%",
         display: "grid",
         placeItems: "center",
+        textDecoration: "none",
         background: UI.iconSurface,
         color: UI.textPrimary,
         fontSize: 18,
@@ -268,7 +276,7 @@ export default async function ProfilePage() {
       }}
     >
       ↗
-    </div>
+    </Link>
   </div>
 </div>
 
@@ -425,8 +433,8 @@ export default async function ProfilePage() {
   }}
 >
   <div style={{ marginBottom: 12 }}>
-    Outflō is a telemetry lens on your flow through time. It begins
-    from a precise moment — connecting you to your{" "}
+    Ourflo is a lens on your flow through time. Beginning from a precise
+    moment, choose a lens to explore your {" "}
     <Link
       href="/app/time"
       style={{
@@ -507,5 +515,6 @@ export default async function ProfilePage() {
 </section>
       </div>
     </main>
+    </ProfileMotion>
   );
 }

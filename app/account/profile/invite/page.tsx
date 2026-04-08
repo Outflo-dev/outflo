@@ -1,7 +1,13 @@
 /* ==========================================================
-   OUTFLO — PROFILE INVITE PAGE
+   OUTFLO — PROFILE INVITE PAGE (v1)
    File: app/account/profile/invite/page.tsx
    Scope: Render the invite drill-down placeholder page
+
+   Last Touched:
+   - unix_ms: 1775666271526
+   - iso_utc: 2026-04-08T16:37:51.526Z
+   - human: 2026-04-08 16:37:51.526 UTC
+   - reason: initial invite surface (profile header wiring)
    ========================================================== */
 
 /* ------------------------------
@@ -36,7 +42,7 @@ export default function ProfileInvitePage() {
             color: "#ffffff",
           }}
         >
-          Invite Friends
+          Invite
         </h1>
 
         <p
@@ -48,8 +54,8 @@ export default function ProfileInvitePage() {
             color: "rgba(255,255,255,0.68)",
           }}
         >
-          Invite tools will allow you to share Outflō with others through simple links,
-          referrals, and onboarding pathways.
+          Invite someone into Outflō. This surface will hold simple sharing and
+          referral flows as the account layer expands.
         </p>
 
         <div style={{ marginTop: 24 }}>
