@@ -91,6 +91,8 @@ export default function AppShell({ children }: AppShellProps) {
     pathname.startsWith("/app/money/receipts/") ||
     pathname.startsWith("/account/profile");
 
+  const disableRouteSwipe = pathname.startsWith("/app/money/receipts/");
+
   const showNav = !hideNav;
 
   const { left, right } = useMemo(() => {
