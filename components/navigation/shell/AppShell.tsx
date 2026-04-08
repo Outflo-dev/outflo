@@ -1,21 +1,22 @@
+"use client";
+
 /* ==========================================================
-   OUTFLO — APP SHELL
+   OUTFLŌ — APP SHELL
    File: components/navigation/shell/AppShell.tsx
-   Scope: Global shell owning frame navigation visibility and layered surface root
+   Scope: Global shell owning frame navigation visibility layered surface root and route swipe
    Last Updated:
    - ms: 1775672111393
    - iso: 2026-04-08T18:15:11.393Z
-   - note: stabilize shell by preserving legacy nav visibility while keeping layer root
+   - note: stabilize shell and restore route swipe inside new shell architecture
    ========================================================== */
-
-"use client";
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import Link from "next/link";
-import { ReactNode } from "react";
-import { usePathname } from "next/navigation";
+import { ReactNode, useMemo } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useSwipe } from "@/hooks/use-swipe";
 
 /* ------------------------------
    Types
@@ -23,6 +24,11 @@ import { usePathname } from "next/navigation";
 type AppShellProps = {
   children: ReactNode;
 };
+
+/* ------------------------------
+   Routes
+-------------------------------- */
+const ROUTES = ["/", "/app/systems", "/app/time"] as const;
 
 /* ------------------------------
    Constants
@@ -67,9 +73,18 @@ const LAYER_ROOT_STYLE: React.CSSProperties = {
 };
 
 /* ------------------------------
+   Helpers
+-------------------------------- */
+function idxOf(pathname: string) {
+  const i = ROUTES.indexOf(pathname as (typeof ROUTES)[number]);
+  return i === -1 ? 0 : i;
+}
+
+/* ------------------------------
    Component
 -------------------------------- */
 export default function AppShell({ children }: AppShellProps) {
+  const router = useRouter();
   const pathname = usePathname();
 
   const hideNav =
@@ -78,13 +93,31 @@ export default function AppShell({ children }: AppShellProps) {
 
   const showNav = !hideNav;
 
+  const { left, right } = useMemo(() => {
+    const i = idxOf(pathname);
+    const left = ROUTES[Math.min(i + 1, ROUTES.length - 1)];
+    const right = ROUTES[Math.max(i - 1, 0)];
+    return { left, right };
+  }, [pathname]);
+
+  const swipe = useSwipe(
+    () => {
+      if (!hideNav && pathname !== left) router.push(left);
+    },
+    () => {
+      if (!hideNav && pathname !== right) router.push(right);
+    }
+  );
+
   return (
     <div
+      {...swipe}
       style={{
         minHeight: "100dvh",
         width: "100%",
         overflowX: "clip",
         position: "relative",
+        touchAction: "pan-y",
       }}
     >
       <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
