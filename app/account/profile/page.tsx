@@ -212,7 +212,8 @@ export default async function ProfilePage() {
         }}
 >
   <a
-    href="javascript:history.back()"
+    href="#"
+    data-profile-dismiss
     aria-label="Close profile"
     style={{
       width: 40,

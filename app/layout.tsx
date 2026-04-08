@@ -2,6 +2,10 @@
    OUTFLO — ROOT LAYOUT
    File: app/layout.tsx
    Scope: Global frame, metadata, and viewport contract
+   Last Updated:
+   - ms: 1775672111393
+   - iso: 2026-04-08T18:15:11.393Z
+   - note: replace legacy swipe shell with app shell ownership
    ========================================================== */
 
 /* ------------------------------
@@ -9,8 +13,8 @@
 -------------------------------- */
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
+import AppShell from "@/components/navigation/shell/AppShell";
 import "./globals.css";
-import SwipeShell from "@/components/SwipeShell";
 
 /* ------------------------------
    Fonts
@@ -88,12 +92,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={ibmPlexSans.className}>
       <body style={BODY_STYLE}>
-        <SwipeShell>
-          {/* GLOBAL FRAME CONTRACT */}
+        <AppShell>
           <div style={FRAME_STYLE}>
             <main style={MAIN_STYLE}>{children}</main>
           </div>
-        </SwipeShell>
+        </AppShell>
       </body>
     </html>
   );

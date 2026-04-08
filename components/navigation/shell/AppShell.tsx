@@ -1,0 +1,150 @@
+/* ==========================================================
+   OUTFLO — APP SHELL
+   File: components/navigation/shell/AppShell.tsx
+   Scope: Global shell owning frame navigation visibility and layered surface root
+   Last Updated:
+   - ms: 1775672111393
+   - iso: 2026-04-08T18:15:11.393Z
+   - note: stabilize shell by preserving legacy nav visibility while keeping layer root
+   ========================================================== */
+
+"use client";
+
+/* ------------------------------
+   Imports
+-------------------------------- */
+import Link from "next/link";
+import { ReactNode } from "react";
+import { usePathname } from "next/navigation";
+
+/* ------------------------------
+   Types
+-------------------------------- */
+type AppShellProps = {
+  children: ReactNode;
+};
+
+/* ------------------------------
+   Constants
+-------------------------------- */
+const NAV_WRAP_STYLE: React.CSSProperties = {
+  position: "fixed",
+  left: 0,
+  right: 0,
+  bottom: "calc(18px + env(safe-area-inset-bottom))",
+  zIndex: 50,
+  display: "flex",
+  justifyContent: "center",
+  pointerEvents: "none",
+};
+
+const NAV_INNER_STYLE: React.CSSProperties = {
+  width: "100%",
+  maxWidth: 520,
+  paddingLeft: "calc(16px + env(safe-area-inset-left))",
+  paddingRight: "calc(16px + env(safe-area-inset-right))",
+  boxSizing: "border-box",
+  display: "flex",
+  justifyContent: "center",
+};
+
+const PILL_GROUP_STYLE: React.CSSProperties = {
+  pointerEvents: "auto",
+  display: "flex",
+  gap: 10,
+  padding: "10px 12px",
+  borderRadius: 999,
+  border: "1px solid rgba(255,255,255,0.10)",
+  background: "rgba(0,0,0,0.55)",
+  backdropFilter: "blur(10px)",
+};
+
+const LAYER_ROOT_STYLE: React.CSSProperties = {
+  position: "fixed",
+  inset: 0,
+  zIndex: 40,
+  pointerEvents: "none",
+};
+
+/* ------------------------------
+   Component
+-------------------------------- */
+export default function AppShell({ children }: AppShellProps) {
+  const pathname = usePathname();
+
+  const hideNav =
+    pathname.startsWith("/app/money/receipts/") ||
+    pathname.startsWith("/account/profile");
+
+  const showNav = !hideNav;
+
+  return (
+    <div
+      style={{
+        minHeight: "100dvh",
+        width: "100%",
+        overflowX: "clip",
+        position: "relative",
+      }}
+    >
+      <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
+
+      <div id="surface-layer-root" style={LAYER_ROOT_STYLE} />
+
+      {showNav ? (
+        <nav style={NAV_WRAP_STYLE}>
+          <div style={NAV_INNER_STYLE}>
+            <div style={PILL_GROUP_STYLE}>
+              <Pill href="/" active={pathname === "/"} label="Portal" />
+
+              <Pill
+                href="/app/systems"
+                active={pathname === "/app/systems"}
+                label="Systems"
+              />
+
+              <Pill
+                href="/app/time"
+                active={pathname === "/app/time"}
+                label="Time"
+              />
+            </div>
+          </div>
+        </nav>
+      ) : null}
+    </div>
+  );
+}
+
+/* ------------------------------
+   Subcomponents
+-------------------------------- */
+function Pill({
+  href,
+  label,
+  active,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      style={{
+        textDecoration: "none",
+        color: "#FFFEFA",
+        fontSize: 12,
+        opacity: active ? 1 : 0.55,
+        padding: "8px 12px",
+        borderRadius: 999,
+        border: active
+          ? "1px solid rgba(255,255,255,0.20)"
+          : "1px solid transparent",
+        background: active ? "rgba(255,255,255,0.06)" : "transparent",
+      }}
+    >
+      {label}
+    </Link>
+  );
+}

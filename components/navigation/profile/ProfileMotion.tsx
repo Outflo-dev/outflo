@@ -13,7 +13,6 @@
 /* ------------------------------
    Imports
 -------------------------------- */
-
 import type { MouseEvent, ReactNode } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -69,7 +68,7 @@ export default function ProfileMotion({
             return;
           }
 
-          if (target.closest('a[href="javascript:history.back()"]')) {
+          if (target.closest("[data-profile-dismiss]")) {
             e.preventDefault();
             handleBack();
           }
