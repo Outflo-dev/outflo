@@ -1,5 +1,5 @@
 /* ==========================================================
-   OUTFLO — PROFILE HUB PAGE
+   OUTFLŌ — PROFILE HUB PAGE
    File: app/account/profile/page.tsx
    Scope: Render the canonical profile hub for account navigation
    Last Updated:
@@ -20,7 +20,7 @@ import ProfileSecretTrigger from "./ProfileSecretTrigger";
 import { FaXTwitter, FaInstagram, FaGithub } from "react-icons/fa6";
 import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
 import EpochTicker from "@/components/ui/EpochTicker";
-import ProfileMotion from "@/components/navigation/profile/ProfileMotion";
+import ProfileSurface from "@/components/navigation/profile/ProfileSurface";
 import type { ReactNode } from "react";
 
 /* ------------------------------
@@ -164,7 +164,7 @@ export default async function ProfilePage() {
   const initial = getInitial(fullName);
 
   return (
-    <ProfileMotion>
+    <ProfileSurface>
     <main
       style={{
         minHeight: "100vh",
@@ -434,7 +434,7 @@ export default async function ProfilePage() {
   }}
 >
   <div style={{ marginBottom: 12 }}>
-    Ourflo is a lens on your flow through time. Beginning from a precise
+    Outflō is a lens on your flow through time. Beginning from a precise
     moment, choose a lens to explore your {" "}
     <Link
       href="/app/time"
@@ -516,6 +516,6 @@ export default async function ProfilePage() {
 </section>
       </div>
     </main>
-    </ProfileMotion>
+    </ProfileSurface>
   );
 }
