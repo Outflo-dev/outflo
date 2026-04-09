@@ -407,9 +407,9 @@ export default async function ProfilePage() {
         <section
           style={{
             marginTop: UI.sectionGap,
-            paddingLeft: 8,
-            paddingRight: 8,
-            borderTop: `1px solid ${UI.borderSoft}`,
+            paddingLeft: 16,
+            paddingRight: 16,
+            boxSizing: "border-box",
           }}
         >
           <nav aria-label="Profile navigation">
