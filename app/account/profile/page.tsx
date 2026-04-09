@@ -239,56 +239,58 @@ export default async function ProfilePage() {
 
   {/* RIGHT — UP */}
   <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+  }}
+>
+  <Link
+    href="/account/profile/invite"
     data-motion="up"
+    aria-label="Open invite"
     style={{
-      display: "flex",
-      alignItems: "center",
-      gap: 8,
-
-      transition: "transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+      width: 40,
+      height: 40,
+      borderRadius: "50%",
+      display: "grid",
+      placeItems: "center",
+      textDecoration: "none",
+      background: UI.iconSurface,
+      color: UI.textPrimary,
+      fontSize: 18,
+      lineHeight: 1,
+      flexShrink: 0,
+      transition: "transform 180ms cubic-bezier(0.22, 1, 0.36, 1)",
       willChange: "transform",
     }}
   >
-    <Link
-      href="/account/profile/invite"
-      aria-label="Open invite"
-      style={{
-        width: 40,
-        height: 40,
-        borderRadius: "50%",
-        display: "grid",
-        placeItems: "center",
-        textDecoration: "none",
-        background: UI.iconSurface,
-        color: UI.textPrimary,
-        fontSize: 18,
-        lineHeight: 1,
-        flexShrink: 0,
-      }}
-    >
-      ⌁
-    </Link>
+    ⌁
+  </Link>
 
-    <Link
-      href="/"
-      aria-label="Go to portal"
-      style={{
-        width: 40,
-        height: 40,
-        borderRadius: "50%",
-        display: "grid",
-        placeItems: "center",
-        textDecoration: "none",
-        background: UI.iconSurface,
-        color: UI.textPrimary,
-        fontSize: 18,
-        lineHeight: 1,
-        flexShrink: 0,
-      }}
-    >
-      ↗
-    </Link>
-  </div>
+  <Link
+    href="/"
+    data-motion="up"
+    aria-label="Go to portal"
+    style={{
+      width: 40,
+      height: 40,
+      borderRadius: "50%",
+      display: "grid",
+      placeItems: "center",
+      textDecoration: "none",
+      background: UI.iconSurface,
+      color: UI.textPrimary,
+      fontSize: 18,
+      lineHeight: 1,
+      flexShrink: 0,
+      transition: "transform 180ms cubic-bezier(0.22, 1, 0.36, 1)",
+      willChange: "transform",
+    }}
+  >
+    ↗
+  </Link>
+ </div>
 </div>
 
 {/* ------------------------------
