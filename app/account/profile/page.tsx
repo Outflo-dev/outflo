@@ -407,8 +407,8 @@ export default async function ProfilePage() {
         <section
           style={{
             marginTop: UI.sectionGap,
-            paddingLeft: 16,
-            paddingRight: 16,
+            paddingLeft: 8,
+            paddingRight: 8,
             boxSizing: "border-box",
           }}
         >
@@ -419,7 +419,7 @@ export default async function ProfilePage() {
                 href={item.href}
                 style={{
                   minHeight: 56,
-                  padding: "0 16px",
+                  padding: "0 8px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
