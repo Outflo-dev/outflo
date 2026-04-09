@@ -184,7 +184,7 @@ export default async function ProfilePage() {
         -------------------------------- */}
         <section
           style={{
-            padding: "0 8px",
+            padding: "0 16px",
             display: "flex",
             flexDirection: "column",
             gap: 12,
@@ -377,7 +377,7 @@ export default async function ProfilePage() {
       color: UI.textPrimary,
       fontSize: 26,
       fontWeight: 700,
-      letterSpacing: -1.4,
+      letterSpacing: -.8,
       lineHeight: 0.98,
     }}
   >
@@ -417,7 +417,7 @@ export default async function ProfilePage() {
                 href={item.href}
                 style={{
                   minHeight: 56,
-                  padding: "0 8px",
+                  padding: "0 16px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
@@ -439,7 +439,7 @@ export default async function ProfilePage() {
 <section
   style={{
     marginTop: UI.sectionGap,
-    padding: "0 8px",
+    padding: "0 16px",
     color: UI.textSecondary,
     fontSize: 13,
     lineHeight: 1.5,
@@ -468,7 +468,7 @@ export default async function ProfilePage() {
 <section
   style={{
     marginTop: UI.sectionGap * 1.1,
-    padding: "0 8px",
+    padding: "0 16px",
   }}
 >
   <div

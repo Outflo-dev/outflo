@@ -128,8 +128,8 @@ export default function AppShell({ children }: AppShellProps) {
         width: "100%",
         maxWidth: 640,
         margin: "0 auto",
-        paddingLeft: 16,
-        paddingRight: 16,
+        paddingLeft: 8,
+        paddingRight: 8,
         boxSizing: "border-box",
       }}
         >
