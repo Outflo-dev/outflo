@@ -425,6 +425,7 @@ export default async function ProfilePage() {
                   justifyContent: "space-between",
                   textDecoration: "none",
                   color: UI.textPrimary,
+                  borderTop: `1px solid ${UI.borderSoft}`,
                   borderBottom: `1px solid ${UI.borderRow}`,
                 }}
               >
