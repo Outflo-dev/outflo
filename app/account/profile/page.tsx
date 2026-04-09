@@ -190,30 +190,32 @@ export default async function ProfilePage() {
             gap: 12,
           }}
         >
-        {/* ------------------------------
-           UI: Profile — Header Bar
-        -------------------------------- */}
-      <div
-        style={{
-          position: "sticky",
-          top: -1,
-          zIndex: 10,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          background: "black",
-          marginLeft: -8,
-          marginRight: -8,
-          paddingLeft: 8,
-          paddingRight: 8,
-          paddingTop: 10,
-          paddingBottom: 12, 
-          marginBottom: 6, 
-        }}
+  {/* ------------------------------
+   UI: Profile — Header Bar
+   -------------------------------- */}
+<div
+  style={{
+    position: "sticky",
+    top: -1,
+    zIndex: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    background: "black",
+    marginLeft: -8,
+    marginRight: -8,
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingTop: 10,
+    paddingBottom: 12,
+    marginBottom: 6,
+  }}
 >
+  {/* X — DOWN */}
   <a
     href="#"
     data-profile-dismiss
+    data-motion="down"
     aria-label="Close profile"
     style={{
       width: 40,
@@ -227,16 +229,24 @@ export default async function ProfilePage() {
       fontSize: 22,
       lineHeight: 1,
       flexShrink: 0,
+
+      transition: "transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+      willChange: "transform",
     }}
   >
     ×
   </a>
 
+  {/* RIGHT — UP */}
   <div
+    data-motion="up"
     style={{
       display: "flex",
       alignItems: "center",
       gap: 8,
+
+      transition: "transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+      willChange: "transform",
     }}
   >
     <Link

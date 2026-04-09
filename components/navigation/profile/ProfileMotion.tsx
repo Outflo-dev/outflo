@@ -1,20 +1,20 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — PROFILE MOTION
+   OUTFLŌ — PROFILE MOTION
    File: components/navigation/profile/ProfileMotion.tsx
-   Scope: Animate profile dismissal down and portal exit up without changing page structure
+   Scope: Animate profile surface exit (up/down) and expose direction state for UI micro-motion
    Last Updated:
-   - ms: 1775666271526
-   - iso: 2026-04-08T16:37:51.526Z
-   - note: add local motion wrapper for profile header exit actions
+   - ms: 1775692290000
+   - iso: 2026-04-08T19:51:30.000Z
+   - note: separate surface motion from header micro-motion and align to system ownership model
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type { MouseEvent, ReactNode } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 /* ------------------------------
@@ -47,35 +47,59 @@ export default function ProfileMotion({
     }, 180);
   }
 
-  return (
+  const direction = closingDown ? "down" : leavingUp ? "up" : "idle";
+
+/* ------------------------------
+   Effects — Header Micro Motion
+-------------------------------- */
+useEffect(() => {
+  const root = document.querySelector("[data-profile-direction]");
+  if (!root) return;
+
+  const down = root.querySelectorAll('[data-motion="down"]');
+  const up = root.querySelectorAll('[data-motion="up"]');
+
+  down.forEach((el) => {
+    (el as HTMLElement).style.transform =
+      direction === "down" ? "translateY(14px)" : "translateY(0)";
+  });
+
+  up.forEach((el) => {
+    (el as HTMLElement).style.transform =
+      direction !== "idle" ? "translateY(-12px)" : "translateY(0)";
+  });
+}, [direction]);
+
+return (
+  <div
+    style={{
+      transform: closingDown
+        ? "translateY(100%)"
+        : leavingUp
+        ? "translateY(-100%)"
+        : "translateY(0)",
+      transition: "transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
+      willChange: "transform",
+    }}
+  >
     <div
-      style={{
-        transform: closingDown
-          ? "translateY(100%)"
-          : leavingUp
-          ? "translateY(-100%)"
-          : "translateY(0)",
-        transition: "transform 180ms ease",
-        willChange: "transform",
+      data-profile-direction={direction}
+      onClick={(e) => {
+        const target = e.target as HTMLElement;
+
+        if (target.closest('a[href="/"]')) {
+          handlePortal(e);
+          return;
+        }
+
+        if (target.closest("[data-profile-dismiss]")) {
+          e.preventDefault();
+          handleBack();
+        }
       }}
     >
-      <div
-        onClick={(e) => {
-          const target = e.target as HTMLElement;
-
-          if (target.closest('a[href="/"]')) {
-            handlePortal(e);
-            return;
-          }
-
-          if (target.closest("[data-profile-dismiss]")) {
-            e.preventDefault();
-            handleBack();
-          }
-        }}
-      >
-        {children}
-      </div>
+      {children}
     </div>
-  );
+  </div>
+ );
 }
