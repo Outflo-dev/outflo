@@ -407,6 +407,8 @@ export default async function ProfilePage() {
         <section
           style={{
             marginTop: UI.sectionGap,
+            paddingLeft: 8,
+            paddingRight: 8,
             borderTop: `1px solid ${UI.borderSoft}`,
           }}
         >
@@ -519,7 +521,7 @@ export default async function ProfilePage() {
 <section
   style={{
     paddingTop: UI.sectionGap * 3.5,
-    paddingLeft: 8,
+    paddingLeft: 16,
     paddingRight: 16,
     textAlign: "left",
   }}
