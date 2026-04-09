@@ -122,7 +122,19 @@ export default function AppShell({ children }: AppShellProps) {
         touchAction: "pan-y",
       }}
     >
-      <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
+     <div style={{
+        position: "relative",
+        zIndex: 1,
+        width: "100%",
+        maxWidth: 640,
+        margin: "0 auto",
+        paddingLeft: 16,
+        paddingRight: 16,
+        boxSizing: "border-box",
+      }}
+        >
+          {children}
+      </div>
 
       <div id="surface-layer-root" style={LAYER_ROOT_STYLE} />
 
