@@ -129,3 +129,42 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ ok: true });
 }
+
+/* ------------------------------
+   PATCH — avatar_mode (additive)
+-------------------------------- */
+export async function PATCH(req: Request) {
+  const supabase = await supabaseServer();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = await req.json();
+  const avatar_mode = body.avatar_mode;
+
+  if (!["image", "initial"].includes(avatar_mode)) {
+    return NextResponse.json(
+      { error: "Invalid avatar_mode" },
+      { status: 400 }
+    );
+  }
+
+  const { error } = await supabase
+    .from("user_identity_assets")
+    .update({
+      avatar_mode,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("user_id", user.id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
+}
