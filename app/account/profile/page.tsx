@@ -15,12 +15,12 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
-import ProfileSecretActions from "./ProfileSecretActions";
-import ProfileSecretTrigger from "./ProfileSecretTrigger";
+import ProfileSecretActions from "@/components/domains/profile/internal/ProfileSecretActions";
+import ProfileSecretTrigger from "@/components/domains/profile/internal/ProfileSecretTrigger";
 import { FaXTwitter, FaInstagram, FaGithub } from "react-icons/fa6";
 import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
-import EpochTicker from "@/components/ui/EpochTicker";
-import ProfileSurface from "@/components/navigation/profile/ProfileSurface";
+import EpochTicker from "@/components/system/primitives/display/EpochTicker";
+import ProfileSurface from "@/components/domains/profile/surfaces/ProfileSurface";
 import type { ReactNode } from "react";
 
 /* ------------------------------

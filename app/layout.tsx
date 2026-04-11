@@ -13,7 +13,7 @@
 -------------------------------- */
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
-import AppShell from "@/components/navigation/shell/AppShell";
+import AppShell from "@/components/system/shell/AppShell";
 import "./globals.css";
 
 /* ------------------------------
