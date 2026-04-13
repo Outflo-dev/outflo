@@ -8,6 +8,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import CardSheet from "@/components/system/surfaces/card/CardSheet";
 
 /* ------------------------------
    Types
@@ -45,6 +46,7 @@ export default function ProfileClient({
 
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string>("");
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const manualCityVisible = preferences.location_mode === "manual_city";
 

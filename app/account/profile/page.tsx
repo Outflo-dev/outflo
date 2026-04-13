@@ -15,12 +15,12 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
-import ProfileSecretActions from "@/components/domains/profile/internal/ProfileSecretActions";
-import ProfileSecretTrigger from "@/components/domains/profile/internal/ProfileSecretTrigger";
+import ProfileSecretActions from "@/components/domains/profile/internal/secrets/ProfileSecretActions";
+import ProfileSecretTrigger from "@/components/domains/profile/internal/secrets/ProfileSecretTrigger";
 import { FaXTwitter, FaInstagram, FaGithub } from "react-icons/fa6";
 import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
 import EpochTicker from "@/components/system/primitives/display/EpochTicker";
-import ProfileSurface from "@/components/domains/profile/surfaces/ProfileSurface";
+import ProfileRoute from "@/components/domains/profile/internal/route/ProfileRoute";
 import type { ReactNode } from "react";
 
 /* ------------------------------
@@ -164,7 +164,7 @@ export default async function ProfilePage() {
   const initial = getInitial(fullName);
 
   return (
-    <ProfileSurface>
+    <ProfileRoute>
     <main
       style={{
         minHeight: "100vh",
@@ -212,30 +212,27 @@ export default async function ProfilePage() {
   }}
 >
   {/* X — DOWN */}
-  <a
-    href="#"
-    data-profile-dismiss
-    data-motion="down"
-    aria-label="Close profile"
-    style={{
-      width: 40,
-      height: 40,
-      borderRadius: "50%",
-      display: "grid",
-      placeItems: "center",
-      textDecoration: "none",
-      color: UI.textPrimary,
-      background: UI.iconSurface,
-      fontSize: 22,
-      lineHeight: 1,
-      flexShrink: 0,
-
-      transition: "transform 220ms cubic-bezier(0.22, 1, 0.36, 1)",
-      willChange: "transform",
-    }}
-  >
-    ×
-  </a>
+<a
+  href="#"
+  data-profile-dismiss
+  aria-label="Close profile"
+  style={{
+    width: 40,
+    height: 40,
+    borderRadius: "50%",
+    display: "grid",
+    placeItems: "center",
+    textDecoration: "none",
+    color: UI.textPrimary,
+    background: UI.iconSurface,
+    fontSize: 22,
+    lineHeight: 1,
+    flexShrink: 0,
+    transition: "opacity 120ms ease",
+  }}
+>
+  ×
+</a>
 
   {/* RIGHT — UP */}
   <div
@@ -245,51 +242,50 @@ export default async function ProfilePage() {
     gap: 8,
   }}
 >
-  <Link
-    href="/account/profile/invite"
-    data-motion="up"
-    aria-label="Open invite"
-    style={{
-      width: 40,
-      height: 40,
-      borderRadius: "50%",
-      display: "grid",
-      placeItems: "center",
-      textDecoration: "none",
-      background: UI.iconSurface,
-      color: UI.textPrimary,
-      fontSize: 18,
-      lineHeight: 1,
-      flexShrink: 0,
-      transition: "transform 180ms cubic-bezier(0.22, 1, 0.36, 1)",
-      willChange: "transform",
-    }}
-  >
-    ⌁
-  </Link>
+ <Link
+  href="/account/profile/invite"
+  data-profile-invite
+  aria-label="Open invite"
+  style={{
+    width: 40,
+    height: 40,
+    borderRadius: "50%",
+    display: "grid",
+    placeItems: "center",
+    textDecoration: "none",
+    background: UI.iconSurface,
+    color: UI.textPrimary,
+    fontSize: 18,
+    lineHeight: 1,
+    flexShrink: 0,
+    transition: "opacity 120ms ease",
+  }}
+>
+  ⌁
+</Link>
 
-  <Link
-    href="/"
-    data-motion="up"
-    aria-label="Go to portal"
-    style={{
-      width: 40,
-      height: 40,
-      borderRadius: "50%",
-      display: "grid",
-      placeItems: "center",
-      textDecoration: "none",
-      background: UI.iconSurface,
-      color: UI.textPrimary,
-      fontSize: 18,
-      lineHeight: 1,
-      flexShrink: 0,
-      transition: "transform 180ms cubic-bezier(0.22, 1, 0.36, 1)",
-      willChange: "transform",
-    }}
-  >
-    ↗
-  </Link>
+<Link
+  href="/"
+  data-profile-portal
+  aria-label="Go to portal"
+  style={{
+    width: 40,
+    height: 40,
+    borderRadius: "50%",
+    display: "grid",
+    placeItems: "center",
+    textDecoration: "none",
+    background: UI.iconSurface,
+    color: UI.textPrimary,
+    fontSize: 18,
+    lineHeight: 1,
+    flexShrink: 0,
+
+    transition: "opacity 120ms ease",
+  }}
+>
+  ↗
+</Link>
  </div>
 </div>
 
@@ -531,6 +527,6 @@ export default async function ProfilePage() {
 </section>
       </div>
     </main>
-    </ProfileSurface>
+    </ProfileRoute>
   );
 }
