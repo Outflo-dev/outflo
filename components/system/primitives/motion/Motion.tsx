@@ -30,7 +30,7 @@ type MotionProps = {
 /* ------------------------------
    Constants (LOCKED)
 -------------------------------- */
-const DURATION = 260;
+export const MOTION_DURATION_MS = 340;
 const EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
 
 /* ------------------------------
@@ -98,7 +98,7 @@ export default function Motion({
         height: "100%",
         transform: active ? "translateX(0) translateY(0)" : getOffsetTransform(direction),
         opacity: active ? 1 : 0,
-        transition: `transform ${DURATION}ms ${EASING}, opacity ${DURATION}ms ${EASING}`,
+        transition: `transform ${MOTION_DURATION_MS}ms ${EASING}, opacity ${MOTION_DURATION_MS}ms ${EASING}`,
         willChange: "transform, opacity",
       }}
       onTransitionEnd={() => {

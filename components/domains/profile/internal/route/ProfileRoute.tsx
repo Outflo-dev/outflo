@@ -16,6 +16,7 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import ProfileSurface from "@/components/domains/profile/surfaces/ProfileSurface";
+import { MOTION_DURATION_MS } from "@/components/system/primitives/motion/Motion";
 
 /* ------------------------------
    Component
@@ -38,7 +39,7 @@ export default function ProfileRoute({
 
     window.setTimeout(() => {
       window.history.back();
-    }, 260);
+    }, MOTION_DURATION_MS);
   }
 
   function handlePortal() {
@@ -47,7 +48,7 @@ export default function ProfileRoute({
 
     window.setTimeout(() => {
       window.location.href = "/";
-    }, 260);
+    }, MOTION_DURATION_MS);
   }
 
   /* ------------------------------
