@@ -53,36 +53,45 @@ export default function ProfileSurface({
   if (!root) return null;
 
   return createPortal(
-    <Motion show={show} direction={direction}>
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 100,
-          pointerEvents: "auto",
-          overflowY: "auto",
-          WebkitOverflowScrolling: "touch",
-          background: "black",
-        }}
-      >
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 100,
+        pointerEvents: "auto",
+        background: "black",
+        overflow: "hidden",
+      }}
+    >
+      <Motion show={show} direction={direction}>
         <div
           style={{
-            minHeight: "100%",
+            width: "100%",
+            height: "100%",
+            overflowY: "auto",
+            WebkitOverflowScrolling: "touch",
+            background: "black",
           }}
         >
-          {children}
-        </div>
-
-        <CardSheet show={sheetOpen} onClose={() => setSheetOpen(false)}>
-          <div style={{ padding: 20 }}>
-            <h3 style={{ margin: 0, marginBottom: 12 }}>Card Sheet</h3>
-            <p style={{ margin: 0, opacity: 0.8 }}>
-              This is the first live system sheet on profile.
-            </p>
+          <div
+            style={{
+              minHeight: "100%",
+            }}
+          >
+            {children}
           </div>
-        </CardSheet>
-      </div>
-    </Motion>,
+        </div>
+      </Motion>
+
+      <CardSheet show={sheetOpen} onClose={() => setSheetOpen(false)}>
+        <div style={{ padding: 20 }}>
+          <h3 style={{ margin: 0, marginBottom: 12 }}>Card Sheet</h3>
+          <p style={{ margin: 0, opacity: 0.8 }}>
+            This is the first live system sheet on profile.
+          </p>
+        </div>
+      </CardSheet>
+    </div>,
     root
   );
 }
