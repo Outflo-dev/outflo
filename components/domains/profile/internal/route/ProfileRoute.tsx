@@ -15,8 +15,8 @@
 -------------------------------- */
 import { useState } from "react";
 import type { ReactNode } from "react";
-import ProfileSurface from "@/components/domains/profile/surfaces/ProfileSurface";
 import { MOTION_DURATION_MS } from "@/components/system/primitives/motion/Motion";
+import ProfileController from "../controller/ProfileController";
 
 /* ------------------------------
    Component
@@ -56,7 +56,7 @@ export default function ProfileRoute({
   -------------------------------- */
 
   return (
-    <ProfileSurface show={show} direction={direction}>
+    <ProfileController show={show} direction={direction}>
       <div
         onClick={(e) => {
           const target = e.target as HTMLElement;
@@ -75,6 +75,6 @@ export default function ProfileRoute({
       >
         {children}
       </div>
-    </ProfileSurface>
+    </ProfileController>
   );
 }

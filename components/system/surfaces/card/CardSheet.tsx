@@ -34,13 +34,16 @@ const WRAP_STYLE: React.CSSProperties = {
   position: "fixed",
   inset: 0,
   zIndex: 120,
-  pointerEvents: "auto",
 };
 
 const BACKDROP_STYLE: React.CSSProperties = {
   position: "absolute",
   inset: 0,
   background: "rgba(0, 0, 0, 0.38)",
+  border: 0,
+  padding: 0,
+  margin: 0,
+  cursor: "default",
 };
 
 const FRAME_STYLE: React.CSSProperties = {
@@ -54,6 +57,7 @@ const FRAME_STYLE: React.CSSProperties = {
   paddingLeft: 8,
   paddingRight: 8,
   boxSizing: "border-box",
+  pointerEvents: "none",
 };
 
 const SHEET_STYLE: React.CSSProperties = {
@@ -64,6 +68,7 @@ const SHEET_STYLE: React.CSSProperties = {
   overflow: "hidden",
   display: "flex",
   flexDirection: "column",
+  pointerEvents: "auto",
 };
 
 const HANDLE_WRAP_STYLE: React.CSSProperties = {
@@ -97,23 +102,19 @@ export default function CardSheet({
   onClose,
   children,
 }: CardSheetProps) {
-  return (
-    <Motion show={show} direction="up">
-      <div
-        style={{
-          ...WRAP_STYLE,
-          pointerEvents: show ? "auto" : "none",
-        }}
-        aria-hidden={!show}
-      >
-        <button
-          type="button"
-          aria-label="Close sheet"
-          onClick={onClose}
-          style={BACKDROP_STYLE}
-        />
+  if (!show) return null;
 
-        <div style={FRAME_STYLE}>
+  return (
+    <div style={WRAP_STYLE} aria-hidden={!show}>
+      <button
+        type="button"
+        aria-label="Close sheet"
+        onClick={onClose}
+        style={BACKDROP_STYLE}
+      />
+
+      <div style={FRAME_STYLE}>
+        <Motion show={show} direction="up">
           <Card
             role="dialog"
             aria-modal="true"
@@ -125,8 +126,8 @@ export default function CardSheet({
 
             <div style={CONTENT_STYLE}>{children}</div>
           </Card>
-        </div>
+        </Motion>
       </div>
-    </Motion>
+    </div>
   );
 }

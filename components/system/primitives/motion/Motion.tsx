@@ -93,10 +93,7 @@ export default function Motion({
   return (
     <div
       style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        transform: active ? "translateX(0) translateY(0)" : getOffsetTransform(direction),
+        transform: active ? "translate3d(0,0,0)" : getOffsetTransform(direction),
         opacity: active ? 1 : 0,
         transition: `transform ${MOTION_DURATION_MS}ms ${EASING}, opacity ${MOTION_DURATION_MS}ms ${EASING}`,
         willChange: "transform, opacity",

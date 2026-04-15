@@ -3,11 +3,11 @@
 /* ==========================================================
    OUTFLŌ — PROFILE SURFACE
    File: components/domains/profile/surfaces/ProfileSurface.tsx
-   Scope: Mount profile UI into shell layer root as a true overlay surface (fixed + scroll owner)
+   Scope: Page surface owning portal mount, root layer, scroll, and motion
    Last Updated:
-   - ms: 1775672111393
-   - iso: 2026-04-08T18:15:11.393Z
-   - note: fix scroll ownership — surface owns fixed + overflow, motion is visual only
+   - ms: 1776181621000
+   - iso: 2026-04-14T15:47:01.000Z
+   - note: strip controller + overlay ownership; enforce pure page surface
    ========================================================== */
 
 /* ------------------------------
@@ -17,7 +17,6 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import type { ReactNode } from "react";
 import Motion from "@/components/system/primitives/motion/Motion";
-import CardSheet from "@/components/system/surfaces/card/CardSheet";
 
 /* ------------------------------
    Component
@@ -32,22 +31,9 @@ export default function ProfileSurface({
   direction: "up" | "down";
 }) {
   const [root, setRoot] = useState<HTMLElement | null>(null);
-  const [sheetOpen, setSheetOpen] = useState(false);
 
   useEffect(() => {
     setRoot(document.getElementById("surface-layer-root"));
-  }, []);
-
-  useEffect(() => {
-    function handleOpen() {
-      setSheetOpen(true);
-    }
-
-    window.addEventListener("outflo:profile-sheet-open", handleOpen);
-
-    return () => {
-      window.removeEventListener("outflo:profile-sheet-open", handleOpen);
-    };
   }, []);
 
   if (!root) return null;
@@ -82,15 +68,6 @@ export default function ProfileSurface({
           </div>
         </div>
       </Motion>
-
-      <CardSheet show={sheetOpen} onClose={() => setSheetOpen(false)}>
-        <div style={{ padding: 20 }}>
-          <h3 style={{ margin: 0, marginBottom: 12 }}>Card Sheet</h3>
-          <p style={{ margin: 0, opacity: 0.8 }}>
-            This is the first live system sheet on profile.
-          </p>
-        </div>
-      </CardSheet>
     </div>,
     root
   );
