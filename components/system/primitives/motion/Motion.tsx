@@ -97,9 +97,6 @@ export default function Motion({
           : getOffsetTransform(direction),
         opacity: active ? 1 : 0,
 
-        // 🔒 critical: do not block interaction during transition
-        pointerEvents: active ? "auto" : "none",
-
         transition: `transform ${MOTION_DURATION_MS}ms ${EASING}, opacity ${MOTION_DURATION_MS}ms ${EASING}`,
         willChange: "transform, opacity",
       }}
