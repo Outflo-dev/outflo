@@ -1,14 +1,13 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — MOTION PRIMITIVE (v1)
+   OUTFLO — MOTION PRIMITIVE (v2)
    File: components/system/primitives/motion/Motion.tsx
-   Scope: Single system motion primitive for directional presence
-
+   Scope: Pure motion primitive for directional presence (no layout, no interaction ownership)
    Last Updated:
-   - ms: 1775965053801
-   - iso: 2026-04-12T03:37:33.801Z
-   - note: initial system motion primitive (up, down, left, right)
+   - ms: 1776222056208
+   - iso: 2026-04-15T03:00:56.208Z
+   - note: remove layout ownership and enforce non-blocking interaction during transition
    ========================================================== */
 
 /* ------------------------------
@@ -93,8 +92,14 @@ export default function Motion({
   return (
     <div
       style={{
-        transform: active ? "translate3d(0,0,0)" : getOffsetTransform(direction),
+        transform: active
+          ? "translate3d(0,0,0)"
+          : getOffsetTransform(direction),
         opacity: active ? 1 : 0,
+
+        // 🔒 critical: do not block interaction during transition
+        pointerEvents: active ? "auto" : "none",
+
         transition: `transform ${MOTION_DURATION_MS}ms ${EASING}, opacity ${MOTION_DURATION_MS}ms ${EASING}`,
         willChange: "transform, opacity",
       }}
