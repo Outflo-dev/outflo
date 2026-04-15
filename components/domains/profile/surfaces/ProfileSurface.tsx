@@ -1,13 +1,13 @@
 "use client";
 
 /* ==========================================================
-   OUTFLŌ — PROFILE SURFACE
+   OUTFLO — PROFILE SURFACE
    File: components/domains/profile/surfaces/ProfileSurface.tsx
    Scope: Page surface owning portal mount, root layer, scroll, and motion
    Last Updated:
-   - ms: 1776181621000
-   - iso: 2026-04-14T15:47:01.000Z
-   - note: strip controller + overlay ownership; enforce pure page surface
+   - ms: 1776222056208
+   - iso: 2026-04-15T03:00:56.208Z
+   - note: enforce scroll as interaction layer; motion inside scroll
    ========================================================== */
 
 /* ------------------------------
@@ -44,21 +44,22 @@ export default function ProfileSurface({
         position: "fixed",
         inset: 0,
         zIndex: 100,
-        pointerEvents: "auto",
         background: "black",
         overflow: "hidden",
       }}
     >
-      <Motion show={show} direction={direction}>
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            overflowY: "auto",
-            WebkitOverflowScrolling: "touch",
-            background: "black",
-          }}
-        >
+      {/* Scroll owns interaction */}
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          overflowY: "auto",
+          WebkitOverflowScrolling: "touch",
+          background: "black",
+        }}
+      >
+        {/* Motion is visual only */}
+        <Motion show={show} direction={direction}>
           <div
             style={{
               minHeight: "100%",
@@ -66,8 +67,8 @@ export default function ProfileSurface({
           >
             {children}
           </div>
-        </div>
-      </Motion>
+        </Motion>
+      </div>
     </div>,
     root
   );
