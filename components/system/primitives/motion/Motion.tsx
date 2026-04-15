@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1776222056208
    - iso: 2026-04-15T03:00:56.208Z
-   - note: remove layout ownership and enforce non-blocking interaction during transition
+   - note: remove layout ownership and keep motion purely visual
    ========================================================== */
 
 /* ------------------------------
@@ -92,11 +92,8 @@ export default function Motion({
   return (
     <div
       style={{
-        transform: active
-          ? "translate3d(0,0,0)"
-          : getOffsetTransform(direction),
+        transform: active ? "translate3d(0,0,0)" : getOffsetTransform(direction),
         opacity: active ? 1 : 0,
-
         transition: `transform ${MOTION_DURATION_MS}ms ${EASING}, opacity ${MOTION_DURATION_MS}ms ${EASING}`,
         willChange: "transform, opacity",
       }}

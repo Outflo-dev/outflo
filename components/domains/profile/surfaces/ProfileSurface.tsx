@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1776222056208
    - iso: 2026-04-15T03:00:56.208Z
-   - note: enforce scroll as interaction layer; motion inside scroll
+   - note: restore last known good profile surface layering after scroll regression
    ========================================================== */
 
 /* ------------------------------
@@ -44,22 +44,21 @@ export default function ProfileSurface({
         position: "fixed",
         inset: 0,
         zIndex: 100,
+        pointerEvents: "auto",
         background: "black",
         overflow: "hidden",
       }}
     >
-      {/* Scroll owns interaction */}
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          overflowY: "auto",
-          WebkitOverflowScrolling: "touch",
-          background: "black",
-        }}
-      >
-        {/* Motion is visual only */}
-        <Motion show={show} direction={direction}>
+      <Motion show={show} direction={direction}>
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            overflowY: "auto",
+            WebkitOverflowScrolling: "touch",
+            background: "black",
+          }}
+        >
           <div
             style={{
               minHeight: "100%",
@@ -67,8 +66,8 @@ export default function ProfileSurface({
           >
             {children}
           </div>
-        </Motion>
-      </div>
+        </div>
+      </Motion>
     </div>,
     root
   );
