@@ -112,7 +112,7 @@ export default function ProfileSurface({
         zIndex: 100,
         pointerEvents: "auto",
         background: "black",
-        overflow: "hidden",
+        overflow: "visible",
       }}
     >
       <Motion show={show} direction={direction}>
