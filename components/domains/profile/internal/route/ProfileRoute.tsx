@@ -2,36 +2,27 @@
 
 /* ==========================================================
    OUTFLO — PROFILE ROUTE (MOTION OWNER)
-   File: components/domains/profile/internal/route/ProfileRoute.tsx
-   Scope: Own route-level motion state (show, direction) and navigation intent for profile surface
-   Last Updated:
-   - ms: 1776039946425
-   - iso: 2026-04-13T00:25:46.425Z
-   - note: establish single motion owner and remove domain motion drift
    ========================================================== */
 
-/* ------------------------------
-   Imports
--------------------------------- */
 import { useState } from "react";
-import type { ReactNode } from "react";
 import { MOTION_DURATION_MS } from "@/components/system/primitives/motion/Motion";
 import ProfileController from "../controller/ProfileController";
 
-/* ------------------------------
-   Component
--------------------------------- */
 export default function ProfileRoute({
-  children,
+  fullName,
+  username,
+  avatarUrl,
+  initial,
+  epochMs,
 }: {
-  children: ReactNode;
+  fullName: string;
+  username: string | null;
+  avatarUrl: string | null;
+  initial: string;
+  epochMs: number;
 }) {
   const [show, setShow] = useState(true);
   const [direction, setDirection] = useState<"up" | "down">("up");
-
-  /* ------------------------------
-     Handlers
-  -------------------------------- */
 
   function handleDismiss() {
     setDirection("down");
@@ -51,30 +42,32 @@ export default function ProfileRoute({
     }, MOTION_DURATION_MS);
   }
 
-  /* ------------------------------
-     Render
-  -------------------------------- */
-
   return (
-    <ProfileController show={show} direction={direction}>
-      <div
-        onClick={(e) => {
-          const target = e.target as HTMLElement;
+    <div
+      onClick={(e) => {
+        const target = e.target as HTMLElement;
 
-          if (target.closest("[data-profile-dismiss]")) {
-            e.preventDefault();
-            handleDismiss();
-            return;
-          }
+        if (target.closest("[data-profile-dismiss]")) {
+          e.preventDefault();
+          handleDismiss();
+          return;
+        }
 
-          if (target.closest('a[href="/"]')) {
-            e.preventDefault();
-            handlePortal();
-          }
-        }}
-      >
-        {children}
-      </div>
-    </ProfileController>
+        if (target.closest('a[href="/"]')) {
+          e.preventDefault();
+          handlePortal();
+        }
+      }}
+    >
+      <ProfileController
+        show={show}
+        direction={direction}
+        fullName={fullName}
+        username={username}
+        avatarUrl={avatarUrl}
+        initial={initial}
+        epochMs={epochMs}
+      />
+    </div>
   );
 }

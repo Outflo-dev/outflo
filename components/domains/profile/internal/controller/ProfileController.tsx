@@ -2,33 +2,28 @@
 
 /* ==========================================================
    OUTFLO — PROFILE CONTROLLER
-   File: components/domains/profile/internal/controller/ProfileController.tsx
-   Scope: Own local profile UI orchestration (sheet state + event wiring)
-   Last Updated:
-   - ms: 1776222056208
-   - iso: 2026-04-15T03:00:56.208Z
-   - note: extract controller from surface; enforce ownership boundaries
    ========================================================== */
 
-/* ------------------------------
-   Imports
--------------------------------- */
 import { useEffect, useState } from "react";
-import type { ReactNode } from "react";
 import ProfileSurface from "@/components/domains/profile/surfaces/ProfileSurface";
 import CardSheet from "@/components/system/surfaces/card/CardSheet";
 
-/* ------------------------------
-   Component
--------------------------------- */
 export default function ProfileController({
-  children,
   show,
   direction,
+  fullName,
+  username,
+  avatarUrl,
+  initial,
+  epochMs,
 }: {
-  children: ReactNode;
   show: boolean;
   direction: "up" | "down";
+  fullName: string;
+  username: string | null;
+  avatarUrl: string | null;
+  initial: string;
+  epochMs: number;
 }) {
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -46,9 +41,15 @@ export default function ProfileController({
 
   return (
     <>
-      <ProfileSurface show={show} direction={direction}>
-        {children}
-      </ProfileSurface>
+      <ProfileSurface
+        show={show}
+        direction={direction}
+        fullName={fullName}
+        username={username}
+        avatarUrl={avatarUrl}
+        initial={initial}
+        epochMs={epochMs}
+      />
 
       <CardSheet show={sheetOpen} onClose={() => setSheetOpen(false)}>
         <div style={{ padding: 20 }}>
