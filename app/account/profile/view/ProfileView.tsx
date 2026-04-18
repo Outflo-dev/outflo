@@ -110,7 +110,7 @@ export default function ProfileView({
           >
             <section
               style={{
-                padding: "0 16px",
+                padding: "0 8px",
                 display: "flex",
                 flexDirection: "column",
                 gap: 12,
