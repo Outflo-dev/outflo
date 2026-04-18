@@ -96,7 +96,7 @@ export default function ProfileView({
         <main
           style={{
             minHeight: "100vh",
-            paddingTop: UI.pageTop,
+            paddingTop: 0,
             paddingBottom: UI.pageBottom,
             background: "black",
           }}
@@ -122,6 +122,17 @@ export default function ProfileView({
                 onDismiss={onDismiss}
                 onOpenPortal={onOpenPortal}
               />
+              <section
+                style={{
+                 padding: "0 8px",
+                 display: "flex",
+                 flexDirection: "column",
+                gap: 12,
+               }}
+            ></section>
+
+
+
 
               <ProfileIdentitySection
                 fullName={fullName}
