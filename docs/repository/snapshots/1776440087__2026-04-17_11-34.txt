@@ -1,6 +1,6 @@
 ﻿OUTFLO - REPOSITORY TREE
-Generated: 2026-04-17 19:06:00
-Unix: 1776467160
+Generated: 2026-04-17 11:34:47
+Unix: 1776440087
 Root: C:\dev\Outflo
 
 app\
@@ -160,9 +160,6 @@ components\
     +-- actions\
     +-- primitives\
     |   +-- display\
-    |   |   +-- avatar\
-    |   |   |   +-- Avatar.tsx
-    |   |   |   +-- AvatarGradient.ts
     |   |   +-- EpochTicker.tsx
     |   |   +-- RollingNumber.tsx
     |   +-- marks\
@@ -180,17 +177,9 @@ components\
     |   |   |   +-- ButtonBase.tsx
     |   |   +-- types\
     |   |       +-- icon\
-    |   |       |   +-- IconButton.tsx
-    |   |       |   +-- IconButtonFrame.tsx
-    |   |       |   +-- IconButtonLink.tsx
-    |   |       +-- pill\
-    |   |       |   +-- PillButton.tsx
-    |   |       |   +-- PillButtonFrame.tsx
-    |   |       |   +-- PillButtonLink.tsx
-    |   |       +-- text\
-    |   |           +-- TextButton.tsx
-    |   |           +-- TextButtonFrame.tsx
-    |   |           +-- TextButtonLink.tsx
+    |   |           +-- IconButton.tsx
+    |   |           +-- IconButtonFrame.tsx
+    |   |           +-- IconButtonLink.tsx
     |   +-- card\
     +-- surfaces\
         +-- card\
@@ -407,7 +396,6 @@ docs\
 |   |   +-- 1776176444__2026-04-14_10-20.txt
 |   |   +-- 1776225842__2026-04-15_00-04.txt
 |   |   +-- 1776299863__2026-04-15_20-37.txt
-|   |   +-- 1776440087__2026-04-17_11-34.txt
 |   +-- README.md
 +-- README.md
 

@@ -1,12 +1,22 @@
 /* ==========================================================
    OUTFLO — PROFILE PAGE (ENTRY)
+   File: app/account/profile/page.tsx
+   Scope: Server route entry for authenticated profile data handoff
+   Last Updated:
+   - ms: 1776471084070
+   - iso: 2026-04-18T00:11:24.070Z
+   - note: initial profile spine entry aligned to local page ownership
    ========================================================== */
 
 export const dynamic = "force-dynamic";
 
+/* ------------------------------
+   Imports
+-------------------------------- */
 import { supabaseServer } from "@/lib/supabase/server";
 import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
-import ProfileRoute from "@/components/domains/profile/internal/route/ProfileRoute";
+import ProfileRoute from "./internal/ProfileRoute";
+import { getFullName, getInitial, getUsername } from "./internal/profile.selectors";
 
 /* ------------------------------
    Types
@@ -17,23 +27,6 @@ type IdentityRow = {
   username: string | null;
   avatar_url: string | null;
 };
-
-/* ------------------------------
-   Helpers
--------------------------------- */
-function getFullName(firstName: string, lastName: string | null) {
-  return [firstName, lastName].filter(Boolean).join(" ").trim();
-}
-
-function getUsername(username: string | null) {
-  if (!username) return null;
-  const clean = username.trim().replace(/^@+/, "");
-  return clean ? `@${clean}` : null;
-}
-
-function getInitial(name: string) {
-  return name.trim().charAt(0).toUpperCase() || "O";
-}
 
 /* ------------------------------
    Component
