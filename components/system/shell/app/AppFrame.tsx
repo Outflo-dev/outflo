@@ -14,6 +14,7 @@
    Imports
 -------------------------------- */
 import type { ReactNode } from "react";
+import { APP_SHELL } from "./app-shell.constants";
 
 /* ------------------------------
    Types
@@ -27,10 +28,10 @@ type AppFrameProps = {
 -------------------------------- */
 const FRAME_STYLE: React.CSSProperties = {
   width: "100%",
-  maxWidth: "min(100%, 720px)",
+  maxWidth: APP_SHELL.maxWidth,
   margin: "0 auto",
-  paddingLeft: "calc(8px + env(safe-area-inset-left))",
-  paddingRight: "calc(8px + env(safe-area-inset-right))",
+  paddingLeft: `calc(${APP_SHELL.gutterX}px + env(safe-area-inset-left))`,
+  paddingRight: `calc(${APP_SHELL.gutterX}px + env(safe-area-inset-right))`,
   boxSizing: "border-box",
 };
 

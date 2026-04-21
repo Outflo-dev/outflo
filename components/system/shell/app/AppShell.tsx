@@ -17,6 +17,7 @@ import Link from "next/link";
 import { ReactNode, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useSwipe } from "@/hooks/use-swipe";
+import { APP_SHELL } from "./app-shell.constants";
 
 /* ------------------------------
    Types
@@ -33,10 +34,6 @@ const ROUTES = ["/", "/app/systems", "/app/time"] as const;
 /* ------------------------------
    Constants
 -------------------------------- */
-const SHELL = {
-  maxWidth: "min(100%, 720px)",
-  gutterX: 8,
-} as const;
 
 const NAV_WRAP_STYLE: React.CSSProperties = {
   position: "fixed",
@@ -51,9 +48,9 @@ const NAV_WRAP_STYLE: React.CSSProperties = {
 
 const NAV_INNER_STYLE: React.CSSProperties = {
   width: "100%",
-  maxWidth: "min(100%, 720px)",
-  paddingLeft: `calc(${SHELL.gutterX}px + env(safe-area-inset-left))`,
-  paddingRight: `calc(${SHELL.gutterX}px + env(safe-area-inset-right))`,
+  maxWidth: APP_SHELL.maxWidth,
+  paddingLeft: `calc(${APP_SHELL.gutterX}px + env(safe-area-inset-left))`,
+  paddingRight: `calc(${APP_SHELL.gutterX}px + env(safe-area-inset-right))`,
   boxSizing: "border-box",
   display: "flex",
   justifyContent: "center",

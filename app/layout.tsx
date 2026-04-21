@@ -13,7 +13,6 @@
 -------------------------------- */
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
-import AppShell from "@/components/system/shell/app/AppShell";
 import "./globals.css";
 
 /* ------------------------------
@@ -62,25 +61,6 @@ const BODY_STYLE: React.CSSProperties = {
   color: "#FFFEFA",
 };
 
-const FRAME_STYLE: React.CSSProperties = {
-  minHeight: "100dvh",
-  width: "100%",
-  background: "#000000",
-};
-
-const MAIN_STYLE: React.CSSProperties = {
-  width: "100%",
-  maxWidth: 520,
-  margin: "0 auto",
-  paddingTop: 16,
-  paddingBottom: 16,
-  paddingLeft: "calc(16px + env(safe-area-inset-left))",
-  paddingRight: "calc(16px + env(safe-area-inset-right))",
-  boxSizing: "border-box",
-  background: "#000000",
-  color: "#FFFEFA",
-};
-
 /* ------------------------------
    Layout
 -------------------------------- */
@@ -91,13 +71,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={ibmPlexSans.className}>
-      <body style={BODY_STYLE}>
-        <AppShell>
-          <div style={FRAME_STYLE}>
-            <main style={MAIN_STYLE}>{children}</main>
-          </div>
-        </AppShell>
-      </body>
+      <body style={BODY_STYLE}>{children}</body>
     </html>
   );
 }
