@@ -16,6 +16,7 @@
 import type React from "react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import AppShell from "@/components/system/shell/app/AppShell";
 
 /* ------------------------------
    Types
