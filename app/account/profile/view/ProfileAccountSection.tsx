@@ -47,9 +47,6 @@ export default function ProfileAccountSection({
     <section
       style={{
         marginTop: sectionGap,
-        paddingLeft: 8,
-        paddingRight: 8,
-        boxSizing: "border-box",
       }}
     >
       <nav aria-label="Profile navigation">

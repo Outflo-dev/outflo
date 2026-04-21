@@ -36,7 +36,6 @@ export default function ProfileOrbitSection({
     <section
       style={{
         marginTop: sectionGap,
-        padding: "0 16px",
         color: textSecondary,
         fontSize: 13,
         lineHeight: 1.5,

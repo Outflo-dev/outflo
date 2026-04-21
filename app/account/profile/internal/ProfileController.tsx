@@ -14,6 +14,7 @@ import { useState } from "react";
 import { MOTION_DURATION_MS } from "@/components/system/primitives/motion/Motion";
 import ProfileView from "../view/ProfileView";
 import type { ProfileDirection, ProfileRouteProps } from "./profile.types";
+import AppFrame from "@/components/system/shell/app/AppFrame";
 
 export default function ProfileController(props: ProfileRouteProps) {
   const [show, setShow] = useState(true);
@@ -47,6 +48,7 @@ export default function ProfileController(props: ProfileRouteProps) {
   }
 
   return (
+   <AppFrame>
     <ProfileView
       {...props}
       show={show}
@@ -57,5 +59,6 @@ export default function ProfileController(props: ProfileRouteProps) {
       onOpenPhotoSheet={handleOpenPhotoSheet}
       onClosePhotoSheet={handleClosePhotoSheet}
     />
+    </AppFrame> 
   );
 }

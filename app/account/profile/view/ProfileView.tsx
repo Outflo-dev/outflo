@@ -101,16 +101,12 @@ export default function ProfileView({
             background: "black",
           }}
         >
-          <div
-            style={{
-              width: "100%",
-              maxWidth: "min(100%, 760px)",
-              margin: "0 auto",
-            }}
-          >
+          <div style={{ width: "100%" }}
+          
+       >
+
             <section
               style={{
-                padding: "0 8px",
                 display: "flex",
                 flexDirection: "column",
                 gap: 12,
@@ -122,18 +118,7 @@ export default function ProfileView({
                 onDismiss={onDismiss}
                 onOpenPortal={onOpenPortal}
               />
-              <section
-                style={{
-                 padding: "0 8px",
-                 display: "flex",
-                 flexDirection: "column",
-                gap: 12,
-               }}
-            ></section>
-
-
-
-
+      
               <ProfileIdentitySection
                 fullName={fullName}
                 username={username}

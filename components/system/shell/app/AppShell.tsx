@@ -33,6 +33,11 @@ const ROUTES = ["/", "/app/systems", "/app/time"] as const;
 /* ------------------------------
    Constants
 -------------------------------- */
+const SHELL = {
+  maxWidth: "min(100%, 720px)",
+  gutterX: 8,
+} as const;
+
 const NAV_WRAP_STYLE: React.CSSProperties = {
   position: "fixed",
   left: 0,
@@ -46,9 +51,9 @@ const NAV_WRAP_STYLE: React.CSSProperties = {
 
 const NAV_INNER_STYLE: React.CSSProperties = {
   width: "100%",
-  maxWidth: 520,
-  paddingLeft: "calc(16px + env(safe-area-inset-left))",
-  paddingRight: "calc(16px + env(safe-area-inset-right))",
+  maxWidth: "min(100%, 720px)",
+  paddingLeft: `calc(${SHELL.gutterX}px + env(safe-area-inset-left))`,
+  paddingRight: `calc(${SHELL.gutterX}px + env(safe-area-inset-right))`,
   boxSizing: "border-box",
   display: "flex",
   justifyContent: "center",
@@ -122,22 +127,8 @@ export default function AppShell({ children }: AppShellProps) {
         touchAction: "pan-y",
       }}
     >
-     <div style={{
-        position: "relative",
-        zIndex: 1,
-        width: "100%",
-        maxWidth: 640,
-        margin: "0 auto",
-        paddingLeft: 8,
-        paddingRight: 8,
-        boxSizing: "border-box",
-      }}
-        >
-          {children}
-      </div>
-
       <div id="surface-layer-root" style={LAYER_ROOT_STYLE} />
-
+      {children}
       {showNav ? (
         <nav style={NAV_WRAP_STYLE}>
           <div style={NAV_INNER_STYLE}>

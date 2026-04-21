@@ -35,7 +35,6 @@ export default function ProfileSocialSection({
     <section
       style={{
         marginTop: sectionGap * 1.1,
-        padding: "0 16px",
       }}
     >
       <div

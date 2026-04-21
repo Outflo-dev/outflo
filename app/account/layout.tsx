@@ -10,6 +10,7 @@
 -------------------------------- */
 import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
+import AppShell from "@/components/system/shell/app/AppShell";
 
 /* ------------------------------
    Layout Gate
@@ -27,5 +28,5 @@ export default async function AccountLayout({
     redirect("/");
   }
 
-  return <>{children}</>;
+  return <AppShell>{children}</AppShell>;
 }

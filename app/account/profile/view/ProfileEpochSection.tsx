@@ -34,8 +34,6 @@ export default function ProfileEpochSection({
     <section
       style={{
         paddingTop: sectionGap * 3.5,
-        paddingLeft: 16,
-        paddingRight: 16,
         textAlign: "left",
       }}
     >
