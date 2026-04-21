@@ -10,5 +10,5 @@
 
 export const APP_SHELL = {
   maxWidth: "min(100%, 600px)",
-  gutterX: 8,
+  gutterX: 24,
 } as const;
