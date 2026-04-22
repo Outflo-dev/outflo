@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 import { supabaseServer } from "@/lib/supabase/server";
 import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
 import ProfileRoute from "./internal/ProfileRoute";
-import { getFullName, getInitial, getUsername } from "./internal/profile.selectors";
+import { getFullName, getUsername } from "./internal/profile.selectors";
 
 /* ------------------------------
    Types
@@ -56,14 +56,12 @@ export default async function ProfilePage() {
 
   const fullName = getFullName(identity.first_name, identity.last_name);
   const username = getUsername(identity.username);
-  const initial = getInitial(fullName);
 
   return (
     <ProfileRoute
       fullName={fullName}
       username={username}
       avatarUrl={identity.avatar_url}
-      initial={initial}
       epochMs={epochMs}
     />
   );

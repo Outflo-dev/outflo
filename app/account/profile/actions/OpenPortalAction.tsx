@@ -40,11 +40,11 @@ export default function OpenPortalAction({
       style={{
         background: iconSurface,
         color: textPrimary,
-        transition: "opacity 120ms ease",
       }}
     >
-      <Motion show={true} direction="up">
+      <Motion show direction="up">
         <span
+          aria-hidden="true"
           style={{
             display: "block",
             fontSize: 18,

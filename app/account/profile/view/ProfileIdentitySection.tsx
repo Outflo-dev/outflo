@@ -15,6 +15,7 @@
 -------------------------------- */
 import ProfileSecretTrigger from "../actions/ProfileSecretTrigger";
 import ProfileSecretActions from "../internal/ProfileSecretActions";
+import Avatar from "@/components/system/primitives/display/avatar/Avatar";
 
 /* ------------------------------
    Types
@@ -23,7 +24,6 @@ type ProfileIdentitySectionProps = {
   fullName: string;
   username: string | null;
   avatarUrl: string | null;
-  initial: string;
   textPrimary: string;
   onOpenPhotoSheet: () => void;
 };
@@ -35,7 +35,6 @@ export default function ProfileIdentitySection({
   fullName,
   username,
   avatarUrl,
-  initial,
   textPrimary,
   onOpenPhotoSheet,
 }: ProfileIdentitySectionProps) {
@@ -57,43 +56,26 @@ export default function ProfileIdentitySection({
         }}
       >
         <button
-          type="button"
-          aria-label="Edit profile photo"
-          onClick={onOpenPhotoSheet}
-          style={{
-            width: 88,
-            height: 88,
-            borderRadius: "50%",
-            display: "grid",
-            placeItems: "center",
-            color: "#fff",
-            background:
-              "linear-gradient(135deg, #5b21b6 0%, #7c3aed 45%, #c084fc 100%)",
-            fontSize: 34,
-            fontWeight: 700,
-            letterSpacing: -0.8,
-            overflow: "hidden",
-            flexShrink: 0,
-            border: "none",
-            padding: 0,
-            cursor: "pointer",
-          }}
-        >
-          {avatarUrl ? (
-            <img
-              src={avatarUrl}
-              alt={fullName}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-              }}
-            />
-          ) : (
-            initial
-          )}
-        </button>
+  type="button"
+  aria-label="Edit profile photo"
+  onClick={onOpenPhotoSheet}
+  style={{
+    width: 88,
+    height: 88,
+    borderRadius: "50%",
+    border: "none",
+    padding: 0,
+    background: "transparent",
+    cursor: "pointer",
+    flexShrink: 0,
+  }}
+>
+  <Avatar
+    value={fullName}
+    src={avatarUrl}
+    alt={fullName}
+  />
+</button>
 
         <ProfileSecretTrigger />
 

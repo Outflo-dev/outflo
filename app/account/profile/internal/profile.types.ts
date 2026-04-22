@@ -23,7 +23,6 @@ export type ProfileRouteProps = {
   fullName: string;
   username: string | null;
   avatarUrl: string | null;
-  initial: string;
   epochMs: number;
 };
 

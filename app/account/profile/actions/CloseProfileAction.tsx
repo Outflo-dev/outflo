@@ -41,7 +41,6 @@ export default function CloseProfileAction({
       style={{
         background: iconSurface,
         color: textPrimary,
-        transition: "opacity 120ms ease",
       }}
     >
       <Motion show direction="down">

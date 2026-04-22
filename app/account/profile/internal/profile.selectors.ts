@@ -17,7 +17,3 @@ export function getUsername(username: string | null) {
   const clean = username.trim().replace(/^@+/, "");
   return clean ? `@${clean}` : null;
 }
-
-export function getInitial(name: string) {
-  return name.trim().charAt(0).toUpperCase() || "O";
-}

@@ -60,7 +60,6 @@ type ProfileViewProps = {
   fullName: string;
   username: string | null;
   avatarUrl: string | null;
-  initial: string;
   epochMs: number;
 
   show: boolean;
@@ -80,7 +79,6 @@ export default function ProfileView({
   fullName,
   username,
   avatarUrl,
-  initial,
   epochMs,
   show,
   direction,
@@ -123,7 +121,6 @@ export default function ProfileView({
                 fullName={fullName}
                 username={username}
                 avatarUrl={avatarUrl}
-                initial={initial}
                 textPrimary={UI.textPrimary}
                 onOpenPhotoSheet={onOpenPhotoSheet}
               />
