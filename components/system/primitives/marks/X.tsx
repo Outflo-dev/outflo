@@ -9,8 +9,8 @@ type XProps = {
 };
 
 export default function X({
-  size = 14,
-  strokeWidth = 1.8,
+  size = 18,
+  strokeWidth = 2,
   style,
 }: XProps) {
   return (
@@ -23,17 +23,18 @@ export default function X({
       style={{
         display: "block",
         flexShrink: 0,
+        transform: "translateY(10px)",
         ...style,
       }}
     >
       <path
-        d="M6 6L18 18"
+        d="M7.5 7.5L16.5 16.5"
         stroke="currentColor"
         strokeWidth={strokeWidth}
         strokeLinecap="round"
       />
       <path
-        d="M18 6L6 18"
+        d="M16.5 7.5L7.5 16.5"
         stroke="currentColor"
         strokeWidth={strokeWidth}
         strokeLinecap="round"

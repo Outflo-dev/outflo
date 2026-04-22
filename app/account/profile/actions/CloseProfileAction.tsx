@@ -13,7 +13,9 @@
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CSSProperties } from "react";
+import IconButton from "@/components/system/shell/buttons/types/icon/IconButton";
+import Motion from "@/components/system/primitives/motion/Motion";
+import X from "@/components/system/primitives/marks/X";
 
 /* ------------------------------
    Types
@@ -25,25 +27,6 @@ type CloseProfileActionProps = {
 };
 
 /* ------------------------------
-   Constants
--------------------------------- */
-const BUTTON_STYLE: CSSProperties = {
-  width: 40,
-  height: 40,
-  borderRadius: "50%",
-  display: "grid",
-  placeItems: "center",
-  textDecoration: "none",
-  fontSize: 22,
-  lineHeight: 1,
-  flexShrink: 0,
-  transition: "opacity 120ms ease",
-  border: "none",
-  cursor: "pointer",
-  font: "inherit",
-};
-
-/* ------------------------------
    Component
 -------------------------------- */
 export default function CloseProfileAction({
@@ -52,17 +35,18 @@ export default function CloseProfileAction({
   onDismiss,
 }: CloseProfileActionProps) {
   return (
-    <button
-      type="button"
-      aria-label="Close profile"
+    <IconButton
+      ariaLabel="Close profile"
       onClick={onDismiss}
       style={{
-        ...BUTTON_STYLE,
-        color: textPrimary,
         background: iconSurface,
+        color: textPrimary,
+        transition: "opacity 120ms ease",
       }}
     >
-      ×
-    </button>
+      <Motion show direction="down">
+        <X />
+      </Motion>
+    </IconButton>
   );
 }
