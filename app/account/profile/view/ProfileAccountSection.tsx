@@ -14,6 +14,7 @@
    Imports
 -------------------------------- */
 import Link from "next/link";
+import Chevron from "@/components/system/primitives/navigation/Chevron";
 
 /* ------------------------------
    Types
@@ -67,7 +68,7 @@ export default function ProfileAccountSection({
             }}
           >
             <span style={{ fontSize: 14 }}>{item.label}</span>
-            <span style={{ fontSize: 12, color: textTertiary }}>›</span>
+            <Chevron direction="right" />
           </Link>
         ))}
       </nav>

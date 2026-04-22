@@ -12,12 +12,12 @@
   --bg-primary: #000000;
   --text-primary: #FFFEFA;
   --text-secondary: #7A7A7A;
+  --text-tertiary: rgba(255, 254, 250, 0.52);
   --border-subtle: rgba(255, 255, 255, 0.08);
   --glow-primary: rgba(255, 254, 250, 0.08);
 
   /* Typography */
   --font-family-base: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
-  --font-family-mono: "Ubuntu Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-family-mono: "Ubuntu Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --font-weight-regular: 400;

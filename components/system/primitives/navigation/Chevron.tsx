@@ -26,8 +26,8 @@ type ChevronProps = {
 -------------------------------- */
 export default function Chevron({
   direction = "right",
-  size = 10,
-  color = "currentColor",
+  size = 4.5,
+  color = "var(--text-tertiary)",
   strokeWidth = 1.5,
   opacity = 1,
 }: ChevronProps) {
