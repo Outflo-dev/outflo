@@ -23,7 +23,6 @@ export default function X({
       style={{
         display: "block",
         flexShrink: 0,
-        transform: "translateY(10px)",
         ...style,
       }}
     >

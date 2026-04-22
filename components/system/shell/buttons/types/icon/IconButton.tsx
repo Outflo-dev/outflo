@@ -19,15 +19,18 @@ export default function IconButton({
   style,
 }: IconButtonProps) {
   return (
-    <button
-      onClick={onClick}
-      aria-label={ariaLabel}
-      style={{
-        all: "unset",
-        cursor: "pointer",
-        display: "inline-flex",
-      }}
-    >
+ <button
+  onClick={onClick}
+  aria-label={ariaLabel}
+  style={{
+    all: "unset",
+    cursor: "pointer",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    lineHeight: 0,
+  }}
+>
       <IconButtonShell size={size} style={style}>
         {children}
       </IconButtonShell>

@@ -13,7 +13,8 @@
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CSSProperties } from "react";
+import IconButton from "@/components/system/shell/buttons/types/icon/IconButton";
+import Motion from "@/components/system/primitives/motion/Motion";
 
 /* ------------------------------
    Types
@@ -25,25 +26,6 @@ type OpenPortalActionProps = {
 };
 
 /* ------------------------------
-   Constants
--------------------------------- */
-const BUTTON_STYLE: CSSProperties = {
-  width: 40,
-  height: 40,
-  borderRadius: "50%",
-  display: "grid",
-  placeItems: "center",
-  textDecoration: "none",
-  fontSize: 18,
-  lineHeight: 1,
-  flexShrink: 0,
-  transition: "opacity 120ms ease",
-  border: "none",
-  cursor: "pointer",
-  font: "inherit",
-};
-
-/* ------------------------------
    Component
 -------------------------------- */
 export default function OpenPortalAction({
@@ -52,17 +34,27 @@ export default function OpenPortalAction({
   onOpenPortal,
 }: OpenPortalActionProps) {
   return (
-    <button
-      type="button"
-      aria-label="Go to portal"
+    <IconButton
+      ariaLabel="Go to portal"
       onClick={onOpenPortal}
       style={{
-        ...BUTTON_STYLE,
         background: iconSurface,
         color: textPrimary,
+        transition: "opacity 120ms ease",
       }}
     >
-      ↗
-    </button>
+      <Motion show={true} direction="up">
+        <span
+          style={{
+            display: "block",
+            fontSize: 18,
+            lineHeight: 1,
+            flexShrink: 0,
+          }}
+        >
+          ↗
+        </span>
+      </Motion>
+    </IconButton>
   );
 }

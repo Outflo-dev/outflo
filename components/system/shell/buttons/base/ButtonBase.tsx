@@ -73,6 +73,7 @@ export default function ButtonShell({
         gap,
         flexShrink,
         boxSizing: "border-box",
+        lineHeight: 0,
         ...style,
       }}
     >

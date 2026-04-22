@@ -13,8 +13,8 @@
 /* ------------------------------
    Imports
 -------------------------------- */
-import Link from "next/link";
-import type { CSSProperties } from "react";
+import IconButtonLink from "@/components/system/shell/buttons/types/icon/IconButtonLink";
+import Motion from "@/components/system/primitives/motion/Motion";
 
 /* ------------------------------
    Types
@@ -25,22 +25,6 @@ type OpenInviteActionProps = {
 };
 
 /* ------------------------------
-   Constants
--------------------------------- */
-const LINK_STYLE: CSSProperties = {
-  width: 40,
-  height: 40,
-  borderRadius: "50%",
-  display: "grid",
-  placeItems: "center",
-  textDecoration: "none",
-  fontSize: 18,
-  lineHeight: 1,
-  flexShrink: 0,
-  transition: "opacity 120ms ease",
-};
-
-/* ------------------------------
    Component
 -------------------------------- */
 export default function OpenInviteAction({
@@ -48,16 +32,27 @@ export default function OpenInviteAction({
   iconSurface,
 }: OpenInviteActionProps) {
   return (
-    <Link
+    <IconButtonLink
       href="/account/profile/invite"
-      aria-label="Open invite"
+      ariaLabel="Open invite"
       style={{
-        ...LINK_STYLE,
         background: iconSurface,
         color: textPrimary,
+        transition: "opacity 120ms ease",
       }}
     >
-      ⌁
-    </Link>
+      <Motion show={true} direction="up">
+        <span
+          style={{
+            display: "block",
+            fontSize: 18,
+            lineHeight: 1,
+            flexShrink: 0,
+          }}
+        >
+          ⌁
+        </span>
+      </Motion>
+    </IconButtonLink>
   );
 }
