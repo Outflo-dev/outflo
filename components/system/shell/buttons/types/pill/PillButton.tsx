@@ -1,16 +1,30 @@
+"use client";
+
 /* ==========================================================
    OUTFLO — PILL BUTTON
+   File: components/system/shell/buttons/types/pill/PillButton.tsx
+   Scope: Interactive pill button built from PillButtonFrame (action owner, no navigation ownership)
+   Last Updated:
+   - ms: 1776994676754
+   - iso: 2026-04-24T01:37:56.754Z
+   - note: align to system-level pill variants (soft, muted, danger) and remove domain leakage
    ========================================================== */
 
+/* ------------------------------
+   Imports
+-------------------------------- */
 import type { CSSProperties, ReactNode } from "react";
 import PillButtonFrame from "./PillButtonFrame";
 
-type Variant = "default" | "signOut";
+/* ------------------------------
+   Types
+-------------------------------- */
+type PillVariant = "soft" | "muted" | "danger";
 
 type Props = {
   children: ReactNode;
   onClick: () => void;
-  variant?: Variant;
+  variant?: PillVariant;
   disabled?: boolean;
   ariaLabel?: string;
   title?: string;
@@ -18,6 +32,9 @@ type Props = {
   style?: CSSProperties;
 };
 
+/* ------------------------------
+   Constants
+-------------------------------- */
 const RESET: CSSProperties = {
   appearance: "none",
   border: "none",
@@ -27,10 +44,13 @@ const RESET: CSSProperties = {
   cursor: "pointer",
 };
 
+/* ------------------------------
+   Component
+-------------------------------- */
 export default function PillButton({
   children,
   onClick,
-  variant = "default",
+  variant = "soft",
   disabled = false,
   ariaLabel,
   title,
