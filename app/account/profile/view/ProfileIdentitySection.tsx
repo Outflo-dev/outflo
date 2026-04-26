@@ -18,6 +18,8 @@ import ProfileIdentityActions from "../internal/ProfileIdentityActions";
 import Avatar from "@/components/system/primitives/display/avatar/Avatar";
 import IconButton from "@/components/system/shell/buttons/types/icon/IconButton";
 import Plus from "@/components/system/primitives/marks/Plus";
+import Text from "@/components/system/primitives/display/type/Text";
+import { COLOR } from "@/components/system/primitives/color/color.config";
 
 /* ------------------------------
    Types
@@ -26,7 +28,6 @@ type ProfileIdentitySectionProps = {
   fullName: string;
   username: string | null;
   avatarUrl: string | null;
-  textPrimary: string;
   onOpenPhotoSheet: () => void;
 };
 
@@ -37,7 +38,6 @@ export default function ProfileIdentitySection({
   fullName,
   username,
   avatarUrl,
-  textPrimary,
   onOpenPhotoSheet,
 }: ProfileIdentitySectionProps) {
   return (
@@ -90,24 +90,14 @@ export default function ProfileIdentitySection({
         </IconButton>
       </div>
 
-      <h1
-        style={{
-          margin: 0,
-          color: textPrimary,
-          fontSize: 26,
-          fontWeight: 700,
-          letterSpacing: -0.8,
-          lineHeight: 0.96,
-        }}
-      >
+      <Text as="h1" type="display" style={{ color: COLOR.text.primary }}>
         {fullName}
-      </h1>
+      </Text>
 
       <div style={{ marginTop: -1 }}>
         <ProfileIdentityActions
           username={username}
           logoutHref="/logout"
-          textPrimary={textPrimary}
         />
       </div>
     </div>

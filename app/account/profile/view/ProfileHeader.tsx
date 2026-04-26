@@ -16,13 +16,12 @@
 import CloseProfileAction from "../actions/CloseProfileAction";
 import OpenInviteAction from "../actions/OpenInviteAction";
 import OpenPortalAction from "../actions/OpenPortalAction";
+import { COLOR } from "@/components/system/primitives/color/color.config";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type ProfileHeaderProps = {
-  textPrimary: string;
-  iconSurface: string;
   onDismiss: () => void;
   onOpenPortal: () => void;
 };
@@ -31,8 +30,6 @@ type ProfileHeaderProps = {
    Component
 -------------------------------- */
 export default function ProfileHeader({
-  textPrimary,
-  iconSurface,
   onDismiss,
   onOpenPortal,
 }: ProfileHeaderProps) {
@@ -45,15 +42,15 @@ export default function ProfileHeader({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        background: "black",
+        background: COLOR.surface.base,
         paddingTop: 10,
         paddingBottom: 12,
         marginBottom: 6,
       }}
     >
       <CloseProfileAction
-        textPrimary={textPrimary}
-        iconSurface={iconSurface}
+        textPrimary={COLOR.text.primary}
+        iconSurface={COLOR.surface.icon}
         onDismiss={onDismiss}
       />
 
@@ -65,13 +62,13 @@ export default function ProfileHeader({
         }}
       >
         <OpenInviteAction
-          textPrimary={textPrimary}
-          iconSurface={iconSurface}
+        textPrimary={COLOR.text.primary}
+        iconSurface={COLOR.surface.icon}
         />
 
         <OpenPortalAction
-          textPrimary={textPrimary}
-          iconSurface={iconSurface}
+         textPrimary={COLOR.text.primary}
+         iconSurface={COLOR.surface.icon}
           onOpenPortal={onOpenPortal}
         />
       </div>

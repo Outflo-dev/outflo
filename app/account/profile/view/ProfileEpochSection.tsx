@@ -13,7 +13,7 @@
 /* ------------------------------
    Imports
 -------------------------------- */
-import EpochTicker from "@/components/system/primitives/display/EpochTicker";
+import EpochTicker from "@/components/system/primitives/display/clocks/EpochTicker";
 
 /* ------------------------------
    Types

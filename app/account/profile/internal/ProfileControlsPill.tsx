@@ -14,12 +14,13 @@
    Imports
 -------------------------------- */
 import PillButton from "@/components/system/shell/buttons/types/pill/PillButton";
+import Text from "@/components/system/primitives/display/type/Text";
+import { COLOR } from "@/components/system/primitives/color/color.config";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type Props = {
-  textPrimary: string;
   onClick: () => void;
 };
 
@@ -27,7 +28,6 @@ type Props = {
    Component
 -------------------------------- */
 export default function ProfileControlsPill({
-  textPrimary,
   onClick,
 }: Props) {
   return (
@@ -36,13 +36,9 @@ export default function ProfileControlsPill({
       onClick={onClick}
       ariaLabel="Open profile controls"
     >
-      <span
-        style={{
-          color: textPrimary,
-        }}
-      >
+      <Text type="pill" style={{ color: COLOR.text.primary }}>
         Controls
-      </span>
+      </Text>
     </PillButton>
   );
 }

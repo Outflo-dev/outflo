@@ -23,7 +23,6 @@ import ProfileControlsSheet from "./ProfileControlsSheet";
 type Props = {
   username: string | null;
   logoutHref: string;
-  textPrimary: string;
 };
 
 /* ------------------------------
@@ -32,7 +31,6 @@ type Props = {
 export default function ProfileIdentityActions({
   username,
   logoutHref,
-  textPrimary,
 }: Props) {
   const {
     showControls,
@@ -46,12 +44,10 @@ export default function ProfileIdentityActions({
       <ProfileIdentityActionsRow
         username={username}
         logoutHref={logoutHref}
-        textPrimary={textPrimary}
       />
 
       {showControls ? (
         <ProfileControlsSheet
-          textPrimary={textPrimary}
           closing={closingControls}
           onClose={closeControls}
           onUseImage={() => updateAvatarMode("image")}

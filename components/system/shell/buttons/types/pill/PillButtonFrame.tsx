@@ -37,24 +37,21 @@ const BASE: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: 14,
-  fontWeight: 500,
-  lineHeight: 1,
 };
 
 const VARIANTS: Record<PillVariant, CSSProperties> = {
   soft: {
-    background: "rgba(255,255,255,0.08)",
+    background: "var(--surface-soft)",
     color: "var(--text-primary)",
   },
   muted: {
-    background: "rgba(255,255,255,0.04)",
-    color: "rgba(255,255,255,0.72)",
+    background: "var(--surface-muted)",
+    color: "var(--text-secondary)",
   },
   danger: {
-    background: "rgba(255, 80, 80, 0.10)",
-    color: "rgba(255, 120, 120, 0.9)",
-    border: "1px solid rgba(255, 80, 80, 0.25)",
+    background: "var(--danger-surface)",
+    color: "var(--danger-text)",
+    border: "1px solid var(--danger-border)",
   },
 };
 

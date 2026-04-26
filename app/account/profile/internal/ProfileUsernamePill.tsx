@@ -14,6 +14,7 @@
    Imports
 -------------------------------- */
 import PillLabel from "@/components/system/shell/buttons/types/pill/PillLabel";
+import Text from "@/components/system/primitives/display/type/Text";
 
 /* ------------------------------
    Types
@@ -38,13 +39,7 @@ export default function ProfileUsernamePill({ username }: Props) {
 
   return (
     <PillLabel variant="muted">
-      <span
-        style={{
-          letterSpacing: -0.2,
-        }}
-      >
-        {label}
-      </span>
+      <Text type="pill">{label}</Text>
     </PillLabel>
   );
 }

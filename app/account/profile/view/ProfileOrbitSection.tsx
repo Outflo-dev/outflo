@@ -14,14 +14,14 @@
    Imports
 -------------------------------- */
 import Link from "next/link";
+import Text from "@/components/system/primitives/display/type/Text";
+import { COLOR } from "@/components/system/primitives/color/color.config";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type ProfileOrbitSectionProps = {
   sectionGap: number;
-  textPrimary: string;
-  textSecondary: string;
 };
 
 /* ------------------------------
@@ -29,32 +29,29 @@ type ProfileOrbitSectionProps = {
 -------------------------------- */
 export default function ProfileOrbitSection({
   sectionGap,
-  textPrimary,
-  textSecondary,
 }: ProfileOrbitSectionProps) {
   return (
     <section
       style={{
         marginTop: sectionGap,
-        color: textSecondary,
-        fontSize: 13,
-        lineHeight: 1.5,
       }}
     >
       <div style={{ marginBottom: 12 }}>
-        Outflō is a lens on your flow through time. Beginning from a precise
-        moment, choose a lens to explore your{" "}
-        <Link
-          href="/app/time"
-          style={{
-            color: textPrimary,
-            textDecoration: "underline",
-            textUnderlineOffset: "2px",
-          }}
-        >
-          orbit
-        </Link>
-        .
+        <Text type="meta" style={{ color: COLOR.text.secondary }}>
+          Outflō is a lens on your flow through time. Beginning from a precise
+          moment, choose a lens to explore your{" "}
+          <Link
+            href="/app/time"
+            style={{
+              color: COLOR.text.primary,
+              textDecoration: "underline",
+              textUnderlineOffset: "2px",
+            }}
+          >
+            orbit
+          </Link>
+          .
+        </Text>
       </div>
     </section>
   );

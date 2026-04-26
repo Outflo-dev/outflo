@@ -5,16 +5,30 @@
    ========================================================== */
 
 /* ------------------------------
-   ROOT TOKENS (Dark — Locked)
+   ROOT TOKENS (Theme - Dark)
 -------------------------------- */
 :root {
   /* Core Identity */
   --bg-primary: #000000;
   --text-primary: #FFFEFA;
-  --text-secondary: #7A7A7A;
+  --text-secondary: rgba(255, 254, 250, 0.72);
   --text-tertiary: rgba(255, 254, 250, 0.52);
-  --border-subtle: rgba(255, 255, 255, 0.08);
   --glow-primary: rgba(255, 254, 250, 0.08);
+
+  /* Surfaces */
+  --surface-soft: rgba(255, 255, 255, 0.08);
+  --surface-muted: rgba(255, 255, 255, 0.04);
+  --surface-icon: rgba(255, 255, 255, 0.08);
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 254, 250, 0.08);
+  --border-row: rgba(255, 254, 250, 0.06);
+
+  /* Danger */
+  --danger-surface: rgba(255, 80, 80, 0.10);
+  --danger-text: rgba(255, 120, 120, 0.9);
+  --danger-border: rgba(255, 80, 80, 0.25);
 
   /* Typography */
   --font-family-base: "IBM Plex Sans", system-ui, -apple-system, sans-serif;

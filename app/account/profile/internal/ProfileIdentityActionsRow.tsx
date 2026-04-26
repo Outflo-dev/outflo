@@ -24,7 +24,6 @@ import ProfileLogoutReveal from "./ProfileLogoutReveal";
 type Props = {
   username: string | null;
   logoutHref: string;
-  textPrimary: string;
 };
 
 /* ------------------------------
@@ -33,7 +32,6 @@ type Props = {
 export default function ProfileIdentityActionsRow({
   username,
   logoutHref,
-  textPrimary,
 }: Props) {
   const {
     showSecret,
@@ -56,7 +54,6 @@ export default function ProfileIdentityActionsRow({
       <ProfileUsernamePill username={username} />
 
       <ProfileControlsPill
-        textPrimary={textPrimary}
         onClick={openControls}
       />
 

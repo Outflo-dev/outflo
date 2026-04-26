@@ -11,10 +11,14 @@
    ========================================================== */
 
 /* ------------------------------
+   Imports
+-------------------------------- */
+import { COLOR } from "@/components/system/primitives/color/color.config";
+
+/* ------------------------------
    Types
 -------------------------------- */
 type Props = {
-  textPrimary: string;
   closing: boolean;
   onClose: () => void;
   onUseImage: () => void;
@@ -25,7 +29,6 @@ type Props = {
    Component
 -------------------------------- */
 export default function ProfileControlsSheet({
-  textPrimary,
   closing,
   onClose,
   onUseImage,
@@ -40,7 +43,7 @@ export default function ProfileControlsSheet({
         position: "fixed",
         inset: 0,
         zIndex: 120,
-        background: "rgba(0, 0, 0, 0.42)",
+        background: "rgba(0, 0, 0, 0.42)", // keep for now (overlay)
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "center",
@@ -53,8 +56,8 @@ export default function ProfileControlsSheet({
           width: "100%",
           maxWidth: 640,
           borderRadius: 28,
-          background: "#0f0f10",
-          border: "1px solid rgba(255,255,255,0.08)",
+          background: COLOR.surface.base,
+          border: `1px solid ${COLOR.border.soft}`,
           padding: "14px 14px 18px",
           transform: closing ? "translateY(16px)" : "translateY(0px)",
           opacity: closing ? 0 : 1,
@@ -67,14 +70,14 @@ export default function ProfileControlsSheet({
             width: 36,
             height: 4,
             borderRadius: 999,
-            background: "rgba(255,255,255,0.16)",
+            background: COLOR.surface.soft,
             margin: "0 auto 14px",
           }}
         />
 
         <div
           style={{
-            color: textPrimary,
+            color: COLOR.text.primary,
             fontSize: 14,
             fontWeight: 600,
             letterSpacing: -0.2,
@@ -97,9 +100,9 @@ export default function ProfileControlsSheet({
             style={{
               minHeight: 48,
               borderRadius: 16,
-              border: "1px solid rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.04)",
-              color: textPrimary,
+              border: `1px solid ${COLOR.border.soft}`,
+              background: COLOR.surface.muted,
+              color: COLOR.text.primary,
               fontSize: 14,
               textAlign: "left",
               padding: "0 14px",
@@ -115,9 +118,9 @@ export default function ProfileControlsSheet({
             style={{
               minHeight: 48,
               borderRadius: 16,
-              border: "1px solid rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.04)",
-              color: textPrimary,
+              border: `1px solid ${COLOR.border.soft}`,
+              background: COLOR.surface.muted,
+              color: COLOR.text.primary,
               fontSize: 14,
               textAlign: "left",
               padding: "0 14px",
@@ -133,9 +136,9 @@ export default function ProfileControlsSheet({
             style={{
               minHeight: 48,
               borderRadius: 16,
-              border: "1px solid rgba(255,255,255,0.08)",
+              border: `1px solid ${COLOR.border.soft}`,
               background: "transparent",
-              color: "rgba(255, 254, 250, 0.72)",
+              color: COLOR.text.secondary,
               fontSize: 14,
               textAlign: "left",
               padding: "0 14px",

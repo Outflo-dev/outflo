@@ -24,6 +24,7 @@ import ProfileEpochSection from "./ProfileEpochSection";
 import ProfileFooter from "./ProfileFooter";
 import ProfilePhotoSheet from "./ProfilePhotoSheet";
 import type { ProfileDirection } from "../internal/profile.types";
+import { COLOR } from "@/components/system/primitives/color/color.config";
 
 /* ------------------------------
    Constants
@@ -42,15 +43,6 @@ const UI = {
   pageTop: 16,
   pageBottom: 40,
   sectionGap: 24,
-
-  textPrimary: "var(--text-primary)",
-  textSecondary: "rgba(255, 254, 250, 0.72)",
-  textTertiary: "rgba(255, 254, 250, 0.52)",
-
-  borderSoft: "rgba(255, 254, 250, 0.08)",
-  borderRow: "rgba(255, 254, 250, 0.06)",
-
-  iconSurface: "rgba(255,255,255,0.08)",
 } as const;
 
 /* ------------------------------
@@ -96,12 +88,10 @@ export default function ProfileView({
             minHeight: "100vh",
             paddingTop: 0,
             paddingBottom: UI.pageBottom,
-            background: "black",
+            background: COLOR.surface.base,
           }}
         >
-          <div style={{ width: "100%" }}
-          
-       >
+          <div style={{ width: "100%" }}>
 
             <section
               style={{
@@ -111,8 +101,6 @@ export default function ProfileView({
               }}
             >
               <ProfileHeader
-                textPrimary={UI.textPrimary}
-                iconSurface={UI.iconSurface}
                 onDismiss={onDismiss}
                 onOpenPortal={onOpenPortal}
               />
@@ -121,7 +109,6 @@ export default function ProfileView({
                 fullName={fullName}
                 username={username}
                 avatarUrl={avatarUrl}
-                textPrimary={UI.textPrimary}
                 onOpenPhotoSheet={onOpenPhotoSheet}
               />
             </section>
@@ -129,23 +116,16 @@ export default function ProfileView({
             <ProfileAccountSection
               items={HUB_ITEMS}
               sectionGap={UI.sectionGap}
-              textPrimary={UI.textPrimary}
-              textTertiary={UI.textTertiary}
-              borderSoft={UI.borderSoft}
-              borderRow={UI.borderRow}
             />
 
             <ProfileEnvironmentSection />
 
             <ProfileOrbitSection
               sectionGap={UI.sectionGap}
-              textPrimary={UI.textPrimary}
-              textSecondary={UI.textSecondary}
             />
 
             <ProfileSocialSection
               sectionGap={UI.sectionGap}
-              textPrimary={UI.textPrimary}
             />
 
             <ProfileEpochSection

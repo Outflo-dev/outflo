@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Text from "@/components/system/primitives/display/type/Text";
 
 export default function EpochTicker({ epochMs }: { epochMs: number }) {
   const [nowMs, setNowMs] = useState(0);
@@ -8,23 +9,22 @@ export default function EpochTicker({ epochMs }: { epochMs: number }) {
   useEffect(() => {
     const update = () => setNowMs(Date.now());
 
-    update(); // run once immediately
-
+    update();
     const interval = setInterval(update, 50);
     return () => clearInterval(interval);
   }, []);
 
   if (nowMs === 0) {
     return (
-      <div
+      <Text
+        type="clock"
         style={{
-          fontSize: 11,
-          color: "#FFFEFA",
-          letterSpacing: "0.08em",
+          color: "var(--text-primary)",
+          letterSpacing: "0.08em", // temporary override (we’ll move this)
         }}
       >
         0000000000000
-      </div>
+      </Text>
     );
   }
 
@@ -32,14 +32,13 @@ export default function EpochTicker({ epochMs }: { epochMs: number }) {
   const formatted = String(value).padStart(13, "0");
 
   return (
-    <div
+    <Text
+      type="clock"
       style={{
-        fontSize: 11,
-        color: "#FFFEFA",
-        letterSpacing: "0.08em",
+        color: "var(--text-primary)",
       }}
     >
       {formatted}
-    </div>
+    </Text>
   );
 }

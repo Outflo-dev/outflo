@@ -15,6 +15,8 @@
 -------------------------------- */
 import Link from "next/link";
 import Chevron from "@/components/system/primitives/navigation/Chevron";
+import Text from "@/components/system/primitives/display/type/Text";
+import { COLOR } from "@/components/system/primitives/color/color.config";
 
 /* ------------------------------
    Types
@@ -27,10 +29,6 @@ type ProfileAccountItem = {
 type ProfileAccountSectionProps = {
   items: readonly ProfileAccountItem[];
   sectionGap: number;
-  textPrimary: string;
-  textTertiary: string;
-  borderSoft: string;
-  borderRow: string;
 };
 
 /* ------------------------------
@@ -39,10 +37,6 @@ type ProfileAccountSectionProps = {
 export default function ProfileAccountSection({
   items,
   sectionGap,
-  textPrimary,
-  textTertiary,
-  borderSoft,
-  borderRow,
 }: ProfileAccountSectionProps) {
   return (
     <section
@@ -62,12 +56,12 @@ export default function ProfileAccountSection({
               alignItems: "center",
               justifyContent: "space-between",
               textDecoration: "none",
-              color: textPrimary,
-              borderTop: `1px solid ${borderSoft}`,
-              borderBottom: `1px solid ${borderRow}`,
+              color: COLOR.text.primary,
+              borderTop: `1px solid ${COLOR.border.soft}`,
+              borderBottom: `1px solid ${COLOR.border.row}`,
             }}
           >
-            <span style={{ fontSize: 14 }}>{item.label}</span>
+            <Text type="label">{item.label}</Text>
             <Chevron direction="right" />
           </Link>
         ))}

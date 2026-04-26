@@ -15,13 +15,13 @@
 -------------------------------- */
 import Link from "next/link";
 import { FaGithub, FaInstagram, FaXTwitter } from "react-icons/fa6";
+import { COLOR } from "@/components/system/primitives/color/color.config";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type ProfileSocialSectionProps = {
   sectionGap: number;
-  textPrimary: string;
 };
 
 /* ------------------------------
@@ -29,7 +29,6 @@ type ProfileSocialSectionProps = {
 -------------------------------- */
 export default function ProfileSocialSection({
   sectionGap,
-  textPrimary,
 }: ProfileSocialSectionProps) {
   return (
     <section
@@ -48,7 +47,7 @@ export default function ProfileSocialSection({
           href="https://x.com"
           target="_blank"
           style={{
-            color: textPrimary,
+            color: COLOR.text.primary,
             display: "inline-flex",
           }}
         >
@@ -59,7 +58,7 @@ export default function ProfileSocialSection({
           href="https://instagram.com"
           target="_blank"
           style={{
-            color: textPrimary,
+            color: COLOR.text.primary,
             display: "inline-flex",
           }}
         >
@@ -70,7 +69,7 @@ export default function ProfileSocialSection({
           href="https://github.com"
           target="_blank"
           style={{
-            color: textPrimary,
+            color: COLOR.text.primary,
             display: "inline-flex",
           }}
         >

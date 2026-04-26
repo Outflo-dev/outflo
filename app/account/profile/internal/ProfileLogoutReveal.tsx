@@ -14,6 +14,7 @@
    Imports
 -------------------------------- */
 import PillButtonLink from "@/components/system/shell/buttons/types/pill/PillButtonLink";
+import Text from "@/components/system/primitives/display/type/Text";
 
 /* ------------------------------
    Types
@@ -43,7 +44,7 @@ export default function ProfileLogoutReveal({
       }}
     >
       <PillButtonLink href={href} variant="danger">
-        Log out
+        <Text type="pill">Log out</Text>
       </PillButtonLink>
     </div>
   );
