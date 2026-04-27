@@ -225,7 +225,7 @@
   --danger-border: rgba(255, 100, 120, 0.28);
 
    /* Card */
-  --card-bg: var(--surface-muted);
+  --card-bg: var(--bg-primary);
   --card-border: var(--border-soft);
   --card-radius: 28px;
   --card-padding: 20px;
@@ -262,7 +262,7 @@
   --danger-border: rgba(255, 90, 90, 0.24);
 
   /* Card */
-  --card-bg: var(--surface-soft);
+  --card-bg: var(--bg-primary);
   --card-border: var(--border-soft);
   --card-radius: 28px;
   --card-padding: 20px;
