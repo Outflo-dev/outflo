@@ -57,8 +57,8 @@ const BODY_STYLE: React.CSSProperties = {
   minHeight: "100dvh",
   width: "100%",
   overflowX: "hidden",
-  background: "#000000",
-  color: "#FFFEFA",
+  background: "var(--bg-primary)",
+  color: "var(--text-primary)",
 };
 
 /* ------------------------------

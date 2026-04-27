@@ -20,48 +20,48 @@ import type { TextType } from "./type.types";
 export const TYPE_STYLES: Record<TextType, CSSProperties> = {
   display: {
     fontFamily: "var(--font-family-base)",
-    fontSize: 26,
-    fontWeight: 700,
+    fontSize: "var(--header-lg)",
+    fontWeight: "var(--font-weight-bold)",
     lineHeight: 0.96,
     letterSpacing: -0.8,
   },
 
   label: {
     fontFamily: "var(--font-family-base)",
-    fontSize: 14,
-    fontWeight: 400,
+    fontSize: "var(--text-sm)",
+    fontWeight: "var(--font-weight-regular)",
     lineHeight: 1.2,
     letterSpacing: -0.1,
   },
 
   meta: {
     fontFamily: "var(--font-family-base)",
-    fontSize: 13,
-    fontWeight: 400,
+    fontSize: "var(--text-xs)",
+    fontWeight: "var(--font-weight-regular)",
     lineHeight: 1.5,
     letterSpacing: -0.1,
   },
 
   pill: {
     fontFamily: "var(--font-family-base)",
-    fontSize: 14,
-    fontWeight: 500,
+    fontSize: "var(--text-sm)",
+    fontWeight: "var(--font-weight-medium)",
     lineHeight: 1,
     letterSpacing: -0.2,
   },
 
   numeric: {
     fontFamily: "var(--font-family-mono)",
-    fontSize: 14,
-    fontWeight: 400,
+    fontSize: "var(--text-sm)",
+    fontWeight: "var(--font-weight-regular)",
     lineHeight: 1,
     letterSpacing: 0,
   },
 
   clock: {
     fontFamily: "var(--font-family-mono)",
-    fontSize: 12,
-    fontWeight: 400,
+    fontSize: "var(--text-xs)",
+    fontWeight: "var(--font-weight-regular)",
     lineHeight: 1,
     letterSpacing: 0.8,
   },

@@ -14,6 +14,7 @@
    Imports
 -------------------------------- */
 import { COLOR } from "@/components/system/primitives/color/color.config";
+import Text from "@/components/system/primitives/display/type/Text";
 
 /* ------------------------------
    Types

@@ -24,7 +24,6 @@ export type TextType =
   | "numeric"
   | "clock";
 
-
 export type TextElement =
   | "h1"
   | "h2"

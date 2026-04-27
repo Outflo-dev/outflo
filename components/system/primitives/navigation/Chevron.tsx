@@ -15,7 +15,7 @@
 -------------------------------- */
 type ChevronProps = {
   direction?: "right" | "left" | "up" | "down";
-  size?: number;
+  size?: number | string;
   color?: string;
   strokeWidth?: number;
   opacity?: number;
@@ -26,7 +26,7 @@ type ChevronProps = {
 -------------------------------- */
 export default function Chevron({
   direction = "right",
-  size = 4.5,
+  size = "var(--chevron-size)",
   color = "var(--text-tertiary)",
   strokeWidth = 1.5,
   opacity = 1,

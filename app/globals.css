@@ -5,9 +5,10 @@
    ========================================================== */
 
 /* ------------------------------
-   ROOT TOKENS (Theme - Dark)
+   ROOT TOKENS (Theme — Dark)
 -------------------------------- */
-:root {
+:root,
+:root[data-theme="dark"] {
   /* Core Identity */
   --bg-primary: #000000;
   --text-primary: #FFFEFA;
@@ -30,14 +31,185 @@
   --danger-text: rgba(255, 120, 120, 0.9);
   --danger-border: rgba(255, 80, 80, 0.25);
 
-  /* Typography */
+  color-scheme: dark;
+}
+
+/* ------------------------------
+   THEME TOKENS — Light
+-------------------------------- */
+:root[data-theme="light"] {
+  /* Core Identity */
+  --bg-primary: #FFFEFA;
+  --text-primary: #050505;
+  --text-secondary: rgba(5, 5, 5, 0.68);
+  --text-tertiary: rgba(5, 5, 5, 0.48);
+  --glow-primary: rgba(5, 5, 5, 0.06);
+
+  /* Surfaces */
+  --surface-soft: rgba(5, 5, 5, 0.07);
+  --surface-muted: rgba(5, 5, 5, 0.035);
+  --surface-icon: rgba(5, 5, 5, 0.08);
+
+  /* Borders */
+  --border-subtle: rgba(5, 5, 5, 0.08);
+  --border-soft: rgba(5, 5, 5, 0.08);
+  --border-row: rgba(5, 5, 5, 0.06);
+
+  /* Danger */
+  --danger-surface: rgba(180, 20, 20, 0.08);
+  --danger-text: rgba(150, 20, 20, 0.92);
+  --danger-border: rgba(180, 20, 20, 0.20);
+
+  color-scheme: light;
+}
+
+/* ------------------------------
+   THEME TOKENS — Funky
+-------------------------------- */
+:root[data-theme="funky"] {
+  /* Core Identity */
+  --bg-primary: #070012;
+  --text-primary: #FFF7D6;
+  --text-secondary: rgba(255, 247, 214, 0.74);
+  --text-tertiary: rgba(255, 247, 214, 0.52);
+  --glow-primary: rgba(199, 125, 255, 0.16);
+
+  /* Surfaces */
+  --surface-soft: rgba(199, 125, 255, 0.14);
+  --surface-muted: rgba(255, 247, 214, 0.06);
+  --surface-icon: rgba(0, 245, 212, 0.16);
+
+  /* Borders */
+  --border-subtle: rgba(255, 247, 214, 0.10);
+  --border-soft: rgba(199, 125, 255, 0.18);
+  --border-row: rgba(0, 245, 212, 0.12);
+
+  /* Danger */
+  --danger-surface: rgba(255, 80, 120, 0.14);
+  --danger-text: rgba(255, 150, 180, 0.94);
+  --danger-border: rgba(255, 80, 120, 0.28);
+
+  color-scheme: dark;
+}
+
+/* ------------------------------
+   THEME TOKENS — Dawn
+-------------------------------- */
+:root[data-theme="dawn"] {
+  --bg-primary: #1a0f2e;
+  --text-primary: #ffe9d6;
+  --text-secondary: rgba(255, 233, 214, 0.72);
+  --text-tertiary: rgba(255, 233, 214, 0.52);
+  --glow-primary: rgba(255, 140, 80, 0.18);
+
+  --surface-soft: rgba(255, 140, 80, 0.14);
+  --surface-muted: rgba(255, 233, 214, 0.06);
+  --surface-icon: rgba(255, 180, 120, 0.18);
+
+  --border-subtle: rgba(255, 233, 214, 0.10);
+  --border-soft: rgba(255, 140, 80, 0.18);
+  --border-row: rgba(255, 180, 120, 0.12);
+
+  --danger-surface: rgba(255, 90, 90, 0.14);
+  --danger-text: rgba(255, 150, 150, 0.92);
+  --danger-border: rgba(255, 90, 90, 0.28);
+
+  color-scheme: dark;
+}
+
+/* ------------------------------
+   THEME TOKENS — Day
+-------------------------------- */
+:root[data-theme="day"] {
+  --bg-primary: #f7fbff;
+  --text-primary: #0b1a2b;
+  --text-secondary: rgba(11, 26, 43, 0.68);
+  --text-tertiary: rgba(11, 26, 43, 0.48);
+  --glow-primary: rgba(0, 120, 255, 0.10);
+
+  --surface-soft: rgba(0, 120, 255, 0.10);
+  --surface-muted: rgba(11, 26, 43, 0.04);
+  --surface-icon: rgba(0, 120, 255, 0.12);
+
+  --border-subtle: rgba(11, 26, 43, 0.08);
+  --border-soft: rgba(11, 26, 43, 0.08);
+  --border-row: rgba(11, 26, 43, 0.06);
+
+  --danger-surface: rgba(200, 40, 40, 0.10);
+  --danger-text: rgba(160, 30, 30, 0.92);
+  --danger-border: rgba(200, 40, 40, 0.20);
+
+  color-scheme: light;
+}
+
+/* ------------------------------
+   THEME TOKENS — Dusk
+-------------------------------- */
+:root[data-theme="dusk"] {
+  --bg-primary: #120b1f;
+  --text-primary: #f3e8ff;
+  --text-secondary: rgba(243, 232, 255, 0.72);
+  --text-tertiary: rgba(243, 232, 255, 0.52);
+  --glow-primary: rgba(140, 90, 255, 0.16);
+
+  --surface-soft: rgba(140, 90, 255, 0.14);
+  --surface-muted: rgba(243, 232, 255, 0.06);
+  --surface-icon: rgba(200, 160, 255, 0.18);
+
+  --border-subtle: rgba(243, 232, 255, 0.10);
+  --border-soft: rgba(140, 90, 255, 0.18);
+  --border-row: rgba(200, 160, 255, 0.12);
+
+  --danger-surface: rgba(255, 100, 120, 0.14);
+  --danger-text: rgba(255, 160, 180, 0.92);
+  --danger-border: rgba(255, 100, 120, 0.28);
+
+  color-scheme: dark;
+}
+
+/* ------------------------------
+   THEME TOKENS — Night
+-------------------------------- */
+:root[data-theme="night"] {
+  --bg-primary: #000000;
+  --text-primary: #dbeafe;
+  --text-secondary: rgba(219, 234, 254, 0.70);
+  --text-tertiary: rgba(219, 234, 254, 0.50);
+  --glow-primary: rgba(80, 160, 255, 0.14);
+
+  --surface-soft: rgba(80, 160, 255, 0.12);
+  --surface-muted: rgba(219, 234, 254, 0.04);
+  --surface-icon: rgba(120, 180, 255, 0.14);
+
+  --border-subtle: rgba(219, 234, 254, 0.10);
+  --border-soft: rgba(80, 160, 255, 0.16);
+  --border-row: rgba(120, 180, 255, 0.10);
+
+  --danger-surface: rgba(255, 90, 90, 0.12);
+  --danger-text: rgba(255, 140, 140, 0.90);
+  --danger-border: rgba(255, 90, 90, 0.24);
+
+  color-scheme: dark;
+}
+
+/* ------------------------------
+   TYPOGRAPHY TOKENS
+-------------------------------- */
+:root {
   --font-family-base: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
   --font-family-mono: "Ubuntu Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
 
+/* ------------------------------
+   TEXT SCALE — Compact (default)
+-------------------------------- */
+:root,
+:root[data-text-scale="compact"] {
   --text-xs: 12px;
   --text-sm: 14px;
   --text-md: 16px;
@@ -45,8 +217,52 @@
   --header-sm: 18px;
   --header-md: 22px;
   --header-lg: 28px;
+}
 
-  color-scheme: dark;
+/* ------------------------------
+   TEXT SCALE — Standard
+-------------------------------- */
+:root[data-text-scale="standard"] {
+  --text-xs: 13px;
+  --text-sm: 15px;
+  --text-md: 17px;
+
+  --header-sm: 19px;
+  --header-md: 24px;
+  --header-lg: 30px;
+}
+
+/* ------------------------------
+   TEXT SCALE — Large
+-------------------------------- */
+:root[data-text-scale="large"] {
+  --text-xs: 14px;
+  --text-sm: 16px;
+  --text-md: 18px;
+
+  --header-sm: 20px;
+  --header-md: 26px;
+  --header-lg: 32px;
+}
+
+/* ------------------------------
+   CHEVRON TOKENS
+-------------------------------- */
+
+/* Compact (default) */
+:root,
+:root[data-text-scale="compact"] {
+  --chevron-size: 4.5px;
+}
+
+/* Standard */
+:root[data-text-scale="standard"] {
+  --chevron-size: 5px;
+}
+
+/* Large */
+:root[data-text-scale="large"] {
+  --chevron-size: 5.5px;
 }
 
 /* ------------------------------
