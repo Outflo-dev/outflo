@@ -4,10 +4,6 @@
    OUTFLO — PROFILE CONTROLLER
    File: app/account/profile/internal/ProfileController.tsx
    Scope: Own local profile orchestration, motion state, and sheet state
-   Last Updated:
-   - ms: 1776471084070
-   - iso: 2026-04-18T00:11:24.070Z
-   - note: consolidated route logic and state into single controller
    ========================================================== */
 
 import { useState } from "react";
@@ -19,7 +15,10 @@ import AppFrame from "@/components/system/shell/app/AppFrame";
 export default function ProfileController(props: ProfileRouteProps) {
   const [show, setShow] = useState(true);
   const [direction, setDirection] = useState<ProfileDirection>("up");
-  const [sheetOpen, setSheetOpen] = useState(false);
+
+  // ✅ NEW — split sheet state
+  const [photoSheetOpen, setPhotoSheetOpen] = useState(false);
+  const [controlsSheetOpen, setControlsSheetOpen] = useState(false);
 
   function handleDismiss() {
     setDirection("down");
@@ -39,26 +38,45 @@ export default function ProfileController(props: ProfileRouteProps) {
     }, MOTION_DURATION_MS);
   }
 
+  // ✅ photo sheet
   function handleOpenPhotoSheet() {
-    setSheetOpen(true);
+    setPhotoSheetOpen(true);
   }
 
   function handleClosePhotoSheet() {
-    setSheetOpen(false);
+    setPhotoSheetOpen(false);
+  }
+
+  // ✅ controls sheet
+  function handleOpenControlsSheet() {
+    setControlsSheetOpen(true);
+  }
+
+  function handleCloseControlsSheet() {
+    setControlsSheetOpen(false);
   }
 
   return (
-   <AppFrame>
-    <ProfileView
-      {...props}
-      show={show}
-      direction={direction}
-      sheetOpen={sheetOpen}
-      onDismiss={handleDismiss}
-      onOpenPortal={handleOpenPortal}
-      onOpenPhotoSheet={handleOpenPhotoSheet}
-      onClosePhotoSheet={handleClosePhotoSheet}
-    />
-    </AppFrame> 
+    <AppFrame>
+      <ProfileView
+        {...props}
+        show={show}
+        direction={direction}
+
+        // ✅ pass both states
+        photoSheetOpen={photoSheetOpen}
+        controlsSheetOpen={controlsSheetOpen}
+
+        onDismiss={handleDismiss}
+        onOpenPortal={handleOpenPortal}
+
+        onOpenPhotoSheet={handleOpenPhotoSheet}
+        onClosePhotoSheet={handleClosePhotoSheet}
+
+        // ✅ new controls handlers
+        onOpenControlsSheet={handleOpenControlsSheet}
+        onCloseControlsSheet={handleCloseControlsSheet}
+      />
+    </AppFrame>
   );
 }

@@ -1,20 +1,19 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — CARD SURFACE (v1)
+   OUTFLO — CARD
    File: components/system/surfaces/card/Card.tsx
-   Scope: Canonical reusable surface shell for contained content
-
+   Scope: Canonical card surface boundary for contained system content
    Last Updated:
-   - ms: 1775965829511
-   - iso: 2026-04-12T03:50:29.511Z
-   - note: initial system card shell for reusable contained surfaces
+   - ms: 1777251655
+   - iso: 2026-04-26T21:00:55.000Z
+   - note: rewrite card as token-only system surface primitive
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CSSProperties, ElementType, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 
 /* ------------------------------
    Types
@@ -22,26 +21,25 @@ import type { CSSProperties, ElementType, ReactNode } from "react";
 type CardProps<T extends ElementType = "div"> = {
   as?: T;
   children: ReactNode;
-  style?: CSSProperties;
   className?: string;
 };
 
 type CardComponent = <T extends ElementType = "div">(
   props: CardProps<T> &
-    Omit<React.ComponentPropsWithoutRef<T>, keyof CardProps<T>>
+    Omit<ComponentPropsWithoutRef<T>, keyof CardProps<T>>
 ) => React.ReactElement | null;
 
 /* ------------------------------
    Constants
 -------------------------------- */
-const CARD_STYLE: CSSProperties = {
+const CARD_STYLE = {
   width: "100%",
-  borderRadius: 20,
-  border: "1px solid rgba(255,255,255,0.08)",
-  background: "#000000",
-  padding: 20,
   boxSizing: "border-box",
-};
+  borderRadius: "var(--card-radius)",
+  border: "1px solid var(--card-border)",
+  background: "var(--card-bg)",
+  padding: "var(--card-padding)",
+} as const;
 
 /* ------------------------------
    Component
@@ -49,7 +47,6 @@ const CARD_STYLE: CSSProperties = {
 const Card: CardComponent = ({
   as,
   children,
-  style,
   className,
   ...rest
 }) => {
@@ -58,10 +55,7 @@ const Card: CardComponent = ({
   return (
     <Component
       className={className}
-      style={{
-        ...CARD_STYLE,
-        ...style,
-      }}
+      style={CARD_STYLE}
       {...rest}
     >
       {children}

@@ -3,11 +3,11 @@
 /* ==========================================================
    OUTFLO — PROFILE IDENTITY ACTIONS ROW
    File: app/account/profile/internal/ProfileIdentityActionsRow.tsx
-   Scope: Layout owner for profile identity pills (username, controls, logout reveal)
+   Scope: Layout owner for profile identity pills
    Last Updated:
    - ms: 1776994863515
    - iso: 2026-04-24T01:41:03.515Z
-   - note: extract layout and secret runtime from legacy ProfileSecretActions
+   - note: route controls pill through controller-owned sheet state
    ========================================================== */
 
 /* ------------------------------
@@ -24,6 +24,7 @@ import ProfileLogoutReveal from "./ProfileLogoutReveal";
 type Props = {
   username: string | null;
   logoutHref: string;
+  onOpenControlsSheet: () => void;
 };
 
 /* ------------------------------
@@ -32,11 +33,11 @@ type Props = {
 export default function ProfileIdentityActionsRow({
   username,
   logoutHref,
+  onOpenControlsSheet,
 }: Props) {
   const {
     showSecret,
     revealed,
-    openControls,
     resetHideTimer,
   } = useProfileSecretState();
 
@@ -53,9 +54,7 @@ export default function ProfileIdentityActionsRow({
     >
       <ProfileUsernamePill username={username} />
 
-      <ProfileControlsPill
-        onClick={openControls}
-      />
+      <ProfileControlsPill onClick={onOpenControlsSheet} />
 
       <ProfileLogoutReveal
         show={showSecret}

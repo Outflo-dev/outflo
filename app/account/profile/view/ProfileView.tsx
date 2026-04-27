@@ -23,6 +23,7 @@ import ProfileSocialSection from "./ProfileSocialSection";
 import ProfileEpochSection from "./ProfileEpochSection";
 import ProfileFooter from "./ProfileFooter";
 import ProfilePhotoSheet from "./ProfilePhotoSheet";
+import ProfileControlsSheet from "../internal/ProfileControlsSheet";
 import type { ProfileDirection } from "../internal/profile.types";
 import { COLOR } from "@/components/system/primitives/color/color.config";
 
@@ -56,12 +57,15 @@ type ProfileViewProps = {
 
   show: boolean;
   direction: ProfileDirection;
-  sheetOpen: boolean;
+  photoSheetOpen: boolean;
+  controlsSheetOpen: boolean;
 
   onDismiss: () => void;
   onOpenPortal: () => void;
   onOpenPhotoSheet: () => void;
   onClosePhotoSheet: () => void;
+  onOpenControlsSheet: () => void;
+  onCloseControlsSheet: () => void;
 };
 
 /* ------------------------------
@@ -74,11 +78,14 @@ export default function ProfileView({
   epochMs,
   show,
   direction,
-  sheetOpen,
+  photoSheetOpen,
+  controlsSheetOpen,
   onDismiss,
   onOpenPortal,
   onOpenPhotoSheet,
   onClosePhotoSheet,
+  onOpenControlsSheet,
+  onCloseControlsSheet,
 }: ProfileViewProps) {
   return (
     <>
@@ -92,7 +99,6 @@ export default function ProfileView({
           }}
         >
           <div style={{ width: "100%" }}>
-
             <section
               style={{
                 display: "flex",
@@ -104,12 +110,13 @@ export default function ProfileView({
                 onDismiss={onDismiss}
                 onOpenPortal={onOpenPortal}
               />
-      
+
               <ProfileIdentitySection
                 fullName={fullName}
                 username={username}
                 avatarUrl={avatarUrl}
                 onOpenPhotoSheet={onOpenPhotoSheet}
+                onOpenControlsSheet={onOpenControlsSheet}
               />
             </section>
 
@@ -120,13 +127,9 @@ export default function ProfileView({
 
             <ProfileEnvironmentSection />
 
-            <ProfileOrbitSection
-              sectionGap={UI.sectionGap}
-            />
+            <ProfileOrbitSection sectionGap={UI.sectionGap} />
 
-            <ProfileSocialSection
-              sectionGap={UI.sectionGap}
-            />
+            <ProfileSocialSection sectionGap={UI.sectionGap} />
 
             <ProfileEpochSection
               epochMs={epochMs}
@@ -138,8 +141,12 @@ export default function ProfileView({
         </main>
       </Motion>
 
-      {sheetOpen ? (
+      {photoSheetOpen ? (
         <ProfilePhotoSheet onClose={onClosePhotoSheet} />
+      ) : null}
+
+      {controlsSheetOpen ? (
+        <ProfileControlsSheet onClose={onCloseControlsSheet} />
       ) : null}
     </>
   );

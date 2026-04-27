@@ -29,6 +29,7 @@ type ProfileIdentitySectionProps = {
   username: string | null;
   avatarUrl: string | null;
   onOpenPhotoSheet: () => void;
+  onOpenControlsSheet: () => void; 
 };
 
 /* ------------------------------
@@ -39,6 +40,7 @@ export default function ProfileIdentitySection({
   username,
   avatarUrl,
   onOpenPhotoSheet,
+  onOpenControlsSheet,
 }: ProfileIdentitySectionProps) {
   return (
     <div
@@ -98,6 +100,7 @@ export default function ProfileIdentitySection({
         <ProfileIdentityActions
           username={username}
           logoutHref="/logout"
+          onOpenControlsSheet={onOpenControlsSheet}
         />
       </div>
     </div>

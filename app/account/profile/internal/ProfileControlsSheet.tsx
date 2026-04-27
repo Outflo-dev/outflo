@@ -1,155 +1,112 @@
 "use client";
 
-/* ==========================================================
-   OUTFLO — PROFILE CONTROLS SHEET
-   File: app/account/profile/internal/ProfileControlsSheet.tsx
-   Scope: Local overlay surface for profile controls actions
-   Last Updated:
-   - ms: 1776997406742
-   - iso: 2026-04-24T02:23:26.742Z
-   - note: extract profile controls overlay from legacy ProfileSecretActions
-   ========================================================== */
+import { useEffect, useState } from "react";
+import CardSheet from "@/components/system/surfaces/card/CardSheet";
 
-/* ------------------------------
-   Imports
--------------------------------- */
-import { COLOR } from "@/components/system/primitives/color/color.config";
-import Text from "@/components/system/primitives/display/type/Text";
-
-/* ------------------------------
-   Types
--------------------------------- */
 type Props = {
-  closing: boolean;
   onClose: () => void;
-  onUseImage: () => void;
-  onUseInitial: () => void;
 };
 
-/* ------------------------------
-   Component
--------------------------------- */
-export default function ProfileControlsSheet({
-  closing,
-  onClose,
-  onUseImage,
-  onUseInitial,
-}: Props) {
+type ThemeName = "dark" | "light" | "funky" | "dawn" | "day" | "dusk" | "night";
+type TextScale = "compact" | "standard" | "large";
+
+const THEMES: ThemeName[] = ["dark", "light", "funky", "dawn", "day", "dusk", "night"];
+const TEXT_SCALES: TextScale[] = ["compact", "standard", "large"];
+
+function applyTheme(theme: ThemeName) {
+  document.documentElement.dataset.theme = theme;
+  window.localStorage.setItem("outflo-theme", theme);
+}
+
+function applyTextScale(scale: TextScale) {
+  document.documentElement.dataset.textScale = scale;
+  window.localStorage.setItem("outflo-text-scale", scale);
+}
+
+export default function ProfileControlsSheet({ onClose }: Props) {
+  const [activeTheme, setActiveTheme] = useState<ThemeName>("dark");
+  const [activeScale, setActiveScale] = useState<TextScale>("compact");
+
+  useEffect(() => {
+    const theme =
+      document.documentElement.dataset.theme ||
+      window.localStorage.getItem("outflo-theme") ||
+      "dark";
+
+    const scale =
+      document.documentElement.dataset.textScale ||
+      window.localStorage.getItem("outflo-text-scale") ||
+      "compact";
+
+    if (THEMES.includes(theme as ThemeName)) setActiveTheme(theme as ThemeName);
+    if (TEXT_SCALES.includes(scale as TextScale)) setActiveScale(scale as TextScale);
+  }, []);
+
   return (
-    <div
-      role="dialog"
-      aria-label="Profile controls"
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 120,
-        background: "rgba(0, 0, 0, 0.42)", // keep for now (overlay)
-        display: "flex",
-        alignItems: "flex-end",
-        justifyContent: "center",
-        padding: 16,
-      }}
-    >
-      <div
-        onClick={(event) => event.stopPropagation()}
-        style={{
-          width: "100%",
-          maxWidth: 640,
-          borderRadius: 28,
-          background: COLOR.surface.base,
-          border: `1px solid ${COLOR.border.soft}`,
-          padding: "14px 14px 18px",
-          transform: closing ? "translateY(16px)" : "translateY(0px)",
-          opacity: closing ? 0 : 1,
-          transition:
-            "transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease",
-        }}
-      >
-        <div
-          style={{
-            width: 36,
-            height: 4,
-            borderRadius: 999,
-            background: COLOR.surface.soft,
-            margin: "0 auto 14px",
-          }}
-        />
-
-        <div
-          style={{
-            color: COLOR.text.primary,
-            fontSize: 14,
-            fontWeight: 600,
-            letterSpacing: -0.2,
-            marginBottom: 12,
-          }}
-        >
-          Profile controls
+    <CardSheet show={true} onClose={onClose}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div style={{ color: "var(--text-primary)", fontSize: "var(--text-md)", fontWeight: 600 }}>
+          Theme
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-          }}
-        >
+        {THEMES.map((theme) => (
           <button
+            key={theme}
             type="button"
-            onClick={onUseImage}
+            onClick={() => {
+              applyTheme(theme);
+              setActiveTheme(theme);
+            }}
             style={{
+              width: "100%",
               minHeight: 48,
               borderRadius: 16,
-              border: `1px solid ${COLOR.border.soft}`,
-              background: COLOR.surface.muted,
-              color: COLOR.text.primary,
-              fontSize: 14,
+              border: "1px solid var(--border-soft)",
+              background:
+                theme === activeTheme
+                  ? "var(--surface-soft)"
+                  : "var(--surface-muted)",
+              color: "var(--text-primary)",
               textAlign: "left",
               padding: "0 14px",
               cursor: "pointer",
             }}
           >
-            Use profile image
+            {theme}
           </button>
+        ))}
 
-          <button
-            type="button"
-            onClick={onUseInitial}
-            style={{
-              minHeight: 48,
-              borderRadius: 16,
-              border: `1px solid ${COLOR.border.soft}`,
-              background: COLOR.surface.muted,
-              color: COLOR.text.primary,
-              fontSize: 14,
-              textAlign: "left",
-              padding: "0 14px",
-              cursor: "pointer",
-            }}
-          >
-            Use initial
-          </button>
-
-          <button
-            type="button"
-            onClick={onClose}
-            style={{
-              minHeight: 48,
-              borderRadius: 16,
-              border: `1px solid ${COLOR.border.soft}`,
-              background: "transparent",
-              color: COLOR.text.secondary,
-              fontSize: 14,
-              textAlign: "left",
-              padding: "0 14px",
-              cursor: "pointer",
-            }}
-          >
-            Close
-          </button>
+        <div style={{ color: "var(--text-primary)", fontSize: "var(--text-md)", fontWeight: 600, marginTop: 10 }}>
+          Text scale
         </div>
+
+        {TEXT_SCALES.map((scale) => (
+          <button
+            key={scale}
+            type="button"
+            onClick={() => {
+              applyTextScale(scale);
+              setActiveScale(scale);
+            }}
+            style={{
+              width: "100%",
+              minHeight: 48,
+              borderRadius: 16,
+              border: "1px solid var(--border-soft)",
+              background:
+                scale === activeScale
+                  ? "var(--surface-soft)"
+                  : "var(--surface-muted)",
+              color: "var(--text-primary)",
+              textAlign: "left",
+              padding: "0 14px",
+              cursor: "pointer",
+            }}
+          >
+            {scale}
+          </button>
+        ))}
       </div>
-    </div>
+    </CardSheet>
   );
 }
