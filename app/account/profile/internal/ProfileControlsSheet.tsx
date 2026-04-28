@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import CardSheet from "@/components/system/surfaces/card/CardSheet";
+import BottomCard from "@/components/system/surfaces/card/types/bottom/BottomCard";
 
 type Props = {
   onClose: () => void;
@@ -43,7 +43,7 @@ export default function ProfileControlsSheet({ onClose }: Props) {
   }, []);
 
   return (
-    <CardSheet show={true} onClose={onClose}>
+    <BottomCard show={true} onClose={onClose}>
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div style={{ color: "var(--text-primary)", fontSize: "var(--text-md)", fontWeight: 600 }}>
           Theme
@@ -107,6 +107,6 @@ export default function ProfileControlsSheet({ onClose }: Props) {
           </button>
         ))}
       </div>
-    </CardSheet>
+    </BottomCard>
   );
 }
