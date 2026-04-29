@@ -38,6 +38,7 @@ const BACKDROP_STYLE: React.CSSProperties = {
   margin: 0,
   padding: 0,
   background: "var(--bottom-card-backdrop)",
+  pointerEvents: "auto",
 };
 
 const FRAME_STYLE: React.CSSProperties = {
