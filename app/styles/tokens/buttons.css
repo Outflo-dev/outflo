@@ -1,0 +1,27 @@
+/* ==========================================================
+   OUTFLO — BUTTON TOKENS
+   File: styles/tokens/buttons.css
+   Scope: Button sizing, spacing, and visual tokens
+   Last Updated:
+   - unix_ms: 1777409000000
+   - iso_utc: 2026-04-28T16:43:20.000Z
+   - human: 2026-04-28 16:43:20 UTC
+   ========================================================== */
+
+:root {
+  /* Icon */
+  --button-icon-size: 40px;
+  --button-icon-radius: 999px;
+  --button-icon-bg: var(--surface-icon);
+
+  /* Pill */
+  --button-pill-height: 40px;
+  --button-pill-padding-x: 16px;
+  --button-pill-radius: 999px;
+
+  /* Text */
+  --button-text-height: 40px;
+  --button-text-padding-x: 14px;
+  --button-text-radius: 999px;
+  --button-text-gap: 8px;
+}

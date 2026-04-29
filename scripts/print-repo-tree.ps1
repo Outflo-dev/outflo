@@ -34,7 +34,8 @@ $IncludeRoots = @(
   "lib",
   "public",
   "docs",
-  "scripts"
+  "scripts",
+  "styles"
 )
 
 $ExcludeDirs = @(
@@ -157,16 +158,19 @@ function Build-TreeLines {
 # ------------------------------
 # Build Output
 # ------------------------------
-$Now = Get-Date
-$UnixSeconds = ([DateTimeOffset]$Now).ToUnixTimeSeconds()
-$HumanStamp = $Now.ToString("yyyy-MM-dd_HH-mm")
-$SnapshotFileName = "$UnixSeconds" + "__" + "$HumanStamp.txt"
+# ------------------------------
+# Build Output
+# ------------------------------
+$Now = (Get-Date).ToUniversalTime()
+$UnixMs = ([DateTimeOffset]$Now).ToUnixTimeMilliseconds()
+$HumanStamp = $Now.ToString("yyyy-MM-dd_HH-mm-ss-fff")
+$SnapshotFileName = "$UnixMs" + "__" + "$HumanStamp.txt"
 $SnapshotOutPath = Join-Path $SnapshotsDir $SnapshotFileName
 
 $Lines = @()
 $Lines += "OUTFLO - REPOSITORY TREE"
-$Lines += ("Generated: " + $Now.ToString("yyyy-MM-dd HH:mm:ss"))
-$Lines += ("Unix: " + $UnixSeconds)
+$Lines += ("Generated: " + $Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + " UTC")
+$Lines += ("Unix: " + $UnixMs)
 $Lines += ("Root: " + $RepoRoot)
 $Lines += ""
 

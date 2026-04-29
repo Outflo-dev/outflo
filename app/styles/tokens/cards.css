@@ -1,0 +1,24 @@
+/* ==========================================================
+   OUTFLO — CARD TOKENS
+   File: styles/tokens/cards.css
+   Scope: Bottom card / sheet surface tokens
+   Last Updated:
+   - unix_ms: 1777409000000
+   - iso_utc: 2026-04-28T16:43:20.000Z
+   - human: 2026-04-28 16:43:20 UTC
+   ========================================================== */
+
+:root {
+  --card-bg: var(--bg-primary);
+  --card-border: var(--border-soft);
+  --card-radius: 28px;
+
+  --card-sheet-backdrop: rgba(0, 0, 0, 0.38);
+  --card-sheet-height: 65vh;
+
+  --card-sheet-handle-bg: var(--border-soft);
+  --card-sheet-handle-width: 44px;
+  --card-sheet-handle-height: 4px;
+
+  --card-sheet-padding: 14px 14px 18px;
+}

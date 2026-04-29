@@ -1,0 +1,31 @@
+/* ==========================================================
+   OUTFLO — DUSK THEME
+   File: styles/themes/dusk.css
+   Scope: Dusk theme color tokens only
+   Last Updated:
+   - unix_ms: 1777409000000
+   - iso_utc: 2026-04-28T16:43:20.000Z
+   - human: 2026-04-28 16:43:20 UTC
+   ========================================================== */
+
+:root[data-theme="dusk"] {
+  --bg-primary: #120b1f;
+  --text-primary: #f3e8ff;
+  --text-secondary: rgba(243, 232, 255, 0.72);
+  --text-tertiary: rgba(243, 232, 255, 0.52);
+  --glow-primary: rgba(140, 90, 255, 0.16);
+
+  --surface-soft: rgba(140, 90, 255, 0.14);
+  --surface-muted: rgba(243, 232, 255, 0.06);
+  --surface-icon: rgba(200, 160, 255, 0.18);
+
+  --border-subtle: rgba(243, 232, 255, 0.10);
+  --border-soft: rgba(140, 90, 255, 0.18);
+  --border-row: rgba(200, 160, 255, 0.12);
+
+  --danger-surface: rgba(255, 100, 120, 0.14);
+  --danger-text: rgba(255, 160, 180, 0.92);
+  --danger-border: rgba(255, 100, 120, 0.28);
+
+  color-scheme: dark;
+}

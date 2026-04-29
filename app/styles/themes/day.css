@@ -1,0 +1,31 @@
+/* ==========================================================
+   OUTFLO — DAY THEME
+   File: styles/themes/day.css
+   Scope: Day theme color tokens only
+   Last Updated:
+   - unix_ms: 1777409000000
+   - iso_utc: 2026-04-28T16:43:20.000Z
+   - human: 2026-04-28 16:43:20 UTC
+   ========================================================== */
+
+:root[data-theme="day"] {
+  --bg-primary: #f7fbff;
+  --text-primary: #0b1a2b;
+  --text-secondary: rgba(11, 26, 43, 0.68);
+  --text-tertiary: rgba(11, 26, 43, 0.48);
+  --glow-primary: rgba(0, 120, 255, 0.10);
+
+  --surface-soft: rgba(0, 120, 255, 0.10);
+  --surface-muted: rgba(11, 26, 43, 0.04);
+  --surface-icon: rgba(0, 120, 255, 0.12);
+
+  --border-subtle: rgba(11, 26, 43, 0.08);
+  --border-soft: rgba(11, 26, 43, 0.08);
+  --border-row: rgba(11, 26, 43, 0.06);
+
+  --danger-surface: rgba(200, 40, 40, 0.10);
+  --danger-text: rgba(160, 30, 30, 0.92);
+  --danger-border: rgba(200, 40, 40, 0.20);
+
+  color-scheme: light;
+}

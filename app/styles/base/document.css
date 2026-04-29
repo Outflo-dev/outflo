@@ -1,0 +1,27 @@
+/* ==========================================================
+   OUTFLO — DOCUMENT BASE
+   File: styles/base/document.css
+   Scope: html/body defaults
+   Last Updated:
+   - unix_ms: 1777409000000
+   - iso_utc: 2026-04-28T16:43:20.000Z
+   - human: 2026-04-28 16:43:20 UTC
+   ========================================================== */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

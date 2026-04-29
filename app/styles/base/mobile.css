@@ -1,0 +1,17 @@
+/* ==========================================================
+   OUTFLO — MOBILE FIXES
+   File: styles/base/mobile.css
+   Scope: Mobile input behavior normalization
+   Last Updated:
+   - unix_ms: 1777409000000
+   - iso_utc: 2026-04-28T16:43:20.000Z
+   - human: 2026-04-28 16:43:20 UTC
+   ========================================================== */
+
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}

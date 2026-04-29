@@ -1,0 +1,32 @@
+/* ==========================================================
+   OUTFLO — DARK THEME
+   File: styles/themes/dark.css
+   Scope: Dark theme color tokens only
+   Last Updated:
+   - unix_ms: 1777409000000
+   - iso_utc: 2026-04-28T16:43:20.000Z
+   - human: 2026-04-28 16:43:20 UTC
+   ========================================================== */
+
+:root,
+:root[data-theme="dark"] {
+  --bg-primary: #000000;
+  --text-primary: #FFFEFA;
+  --text-secondary: rgba(255, 254, 250, 0.72);
+  --text-tertiary: rgba(255, 254, 250, 0.52);
+  --glow-primary: rgba(255, 254, 250, 0.08);
+
+  --surface-soft: rgba(255, 255, 255, 0.08);
+  --surface-muted: rgba(255, 255, 255, 0.04);
+  --surface-icon: rgba(255, 255, 255, 0.08);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 254, 250, 0.08);
+  --border-row: rgba(255, 254, 250, 0.06);
+
+  --danger-surface: rgba(255, 80, 80, 0.10);
+  --danger-text: rgba(255, 120, 120, 0.9);
+  --danger-border: rgba(255, 80, 80, 0.25);
+
+  color-scheme: dark;
+}

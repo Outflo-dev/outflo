@@ -1,0 +1,31 @@
+/* ==========================================================
+   OUTFLO — FUNKY THEME
+   File: styles/themes/funky.css
+   Scope: Funky theme color tokens only
+   Last Updated:
+   - unix_ms: 1777409000000
+   - iso_utc: 2026-04-28T16:43:20.000Z
+   - human: 2026-04-28 16:43:20 UTC
+   ========================================================== */
+
+:root[data-theme="funky"] {
+  --bg-primary: #070012;
+  --text-primary: #FFF7D6;
+  --text-secondary: rgba(255, 247, 214, 0.74);
+  --text-tertiary: rgba(255, 247, 214, 0.52);
+  --glow-primary: rgba(199, 125, 255, 0.16);
+
+  --surface-soft: rgba(199, 125, 255, 0.14);
+  --surface-muted: rgba(255, 247, 214, 0.06);
+  --surface-icon: rgba(0, 245, 212, 0.16);
+
+  --border-subtle: rgba(255, 247, 214, 0.10);
+  --border-soft: rgba(199, 125, 255, 0.18);
+  --border-row: rgba(0, 245, 212, 0.12);
+
+  --danger-surface: rgba(255, 80, 120, 0.14);
+  --danger-text: rgba(255, 150, 180, 0.94);
+  --danger-border: rgba(255, 80, 120, 0.28);
+
+  color-scheme: dark;
+}
