@@ -1,6 +1,6 @@
 ﻿OUTFLO - REPOSITORY TREE
-Generated: 2026-04-28 22:57:57.198 UTC
-Unix: 1777417077198
+Generated: 2026-04-28 18:47:12
+Unix: 1777416432
 Root: C:\dev\Outflo
 
 app\
@@ -145,8 +145,6 @@ app\
 |   +-- route.ts
 +-- reset\
 |   +-- page.tsx
-+-- styles\
-|   +-- tokens\
 +-- systems\
 |   +-- page.tsx
 +-- tools\
@@ -438,31 +436,10 @@ docs\
 |   |   +-- 1777244045__2026-04-26_18-54.txt
 |   |   +-- 1777251655__2026-04-26_21-00.txt
 |   |   +-- 1777405819__2026-04-28_15-50.txt
-|   |   +-- 1777416432__2026-04-28_18-47.txt
 |   +-- README.md
 +-- README.md
 
 scripts\
 +-- print-repo-tree.ps1
 +-- README.MD
-
-styles\
-+-- base\
-|   +-- document.css
-|   +-- elements.css
-|   +-- mobile.css
-|   +-- reset.css
-+-- themes\
-|   +-- dark.css
-|   +-- dawn.css
-|   +-- day.css
-|   +-- dusk.css
-|   +-- funky.css
-|   +-- light.css
-|   +-- night.css
-+-- tokens\
-    +-- buttons.css
-    +-- cards.css
-    +-- typography.css
-    +-- zoom.css
 

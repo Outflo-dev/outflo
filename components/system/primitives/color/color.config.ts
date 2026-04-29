@@ -1,15 +1,15 @@
 /* ==========================================================
-   OUTFLO — COLOR CONFIG
-   File: components/system/primitives/color/color.config.ts
+   OUTFLO — COLORS CONFIG
+   File: components/system/primitives/colors/colors.config.ts
    Scope: Semantic color mapping layer over global CSS tokens
    Last Updated:
-   - ms: 1777217175814
-   - iso: 2026-04-26T15:26:15.814Z
-   - note: add semantic color mapping for system-wide usage
+   - ms: 1777409000000
+   - iso: 2026-04-28T16:43:20.000Z
+   - note: rename color primitive to colors and align semantic export naming
    ========================================================== */
 
 /* ------------------------------
-   COLOR (Semantic Mapping)
+   Colors
 -------------------------------- */
 export const COLOR = {
   text: {
@@ -26,13 +26,14 @@ export const COLOR = {
   },
 
   border: {
+    subtle: "var(--border-subtle)",
     soft: "var(--border-soft)",
     row: "var(--border-row)",
   },
 
   accent: {
     danger: {
-      bg: "var(--danger-surface)",
+      surface: "var(--danger-surface)",
       text: "var(--danger-text)",
       border: "var(--danger-border)",
     },
