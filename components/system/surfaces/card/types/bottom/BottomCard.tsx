@@ -13,6 +13,7 @@ import type { ReactNode } from "react";
 import { APP_SHELL } from "@/components/system/shell/app/app-shell.constants";
 import BottomCardFrame from "./BottomCardFrame";
 import { useBottomCardDrag } from "./useBottomCardDrag";
+import { useBottomCardScrollLock } from "./useBottomCardScrollLock";
 
 /* ------------------------------
    Types
@@ -30,6 +31,9 @@ const WRAP_STYLE: React.CSSProperties = {
   position: "fixed",
   inset: 0,
   zIndex: 120,
+  overflow: "hidden",
+  overscrollBehavior: "contain",
+  touchAction: "none",
 };
 
 const BACKDROP_STYLE: React.CSSProperties = {
@@ -76,6 +80,8 @@ const CONTENT_STYLE: React.CSSProperties = {
   flex: 1,
   overflowY: "auto",
   WebkitOverflowScrolling: "touch",
+  overscrollBehavior: "contain",
+  touchAction: "pan-y",
 };
 
 /* ------------------------------
@@ -87,6 +93,7 @@ export default function BottomCard({
   children,
 }: Props) {
   const { dragStyle, dragHandlers } = useBottomCardDrag(onClose);
+  useBottomCardScrollLock(show);
 
   if (!show) return null;
 
