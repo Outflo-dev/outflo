@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1777500224257
    - iso: 2026-04-29T22:03:44.257Z
-   - note: add reusable media crop surface for avatar upload
+   - note: refine crop frame into full-width square crop surface
    ========================================================== */
 
 /* ------------------------------
@@ -31,54 +31,56 @@ type MediaCropFrameProps = {
 const ROOT_STYLE: CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  gap: 16,
+  gap: 14,
   width: "100%",
 };
 
 const HEADER_STYLE: CSSProperties = {
-  display: "flex",
+  display: "grid",
+  gridTemplateColumns: "72px 1fr 72px",
   alignItems: "center",
-  justifyContent: "space-between",
-  gap: 12,
+  gap: 8,
 };
 
 const TITLE_STYLE: CSSProperties = {
   margin: 0,
   color: "var(--text-primary)",
-  fontSize: 17,
+  fontSize: 15,
   fontWeight: 600,
   letterSpacing: "-0.01em",
+  textAlign: "center",
 };
 
-const CROP_AREA_STYLE: CSSProperties = {
-  position: "relative",
-  width: "100%",
-  height: 320,
-  overflow: "hidden",
-  borderRadius: "var(--card-radius)",
-  background: "var(--surface-muted)",
-};
-
-const ACTIONS_STYLE: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: 10,
-};
-
-const BUTTON_STYLE: CSSProperties = {
-  minHeight: 44,
-  border: "1px solid var(--border-soft)",
-  borderRadius: 999,
-  background: "var(--surface-muted)",
+const BAR_ACTION_STYLE: CSSProperties = {
+  minHeight: 38,
+  border: 0,
+  background: "transparent",
   color: "var(--text-primary)",
   fontSize: 14,
   fontWeight: 500,
   cursor: "pointer",
 };
 
-const PRIMARY_BUTTON_STYLE: CSSProperties = {
-  ...BUTTON_STYLE,
-  background: "var(--surface-soft)",
+const LEFT_ACTION_STYLE: CSSProperties = {
+  ...BAR_ACTION_STYLE,
+  textAlign: "left",
+  color: "var(--text-secondary)",
+};
+
+const RIGHT_ACTION_STYLE: CSSProperties = {
+  ...BAR_ACTION_STYLE,
+  textAlign: "right",
+};
+
+const CROP_AREA_STYLE: CSSProperties = {
+  position: "relative",
+  width: "100%",
+  aspectRatio: "1 / 1",
+  minHeight: 320,
+  maxHeight: "min(62vh, 520px)",
+  overflow: "hidden",
+  borderRadius: "var(--card-radius)",
+  background: "var(--surface-muted)",
 };
 
 /* ------------------------------
@@ -93,20 +95,18 @@ export default function MediaCropFrame({
   return (
     <div style={ROOT_STYLE}>
       <div style={HEADER_STYLE}>
-        <h2 style={TITLE_STYLE}>{title}</h2>
-      </div>
-
-      <div style={CROP_AREA_STYLE}>{children}</div>
-
-      <div style={ACTIONS_STYLE}>
-        <button type="button" style={BUTTON_STYLE} onClick={onCancel}>
+        <button type="button" style={LEFT_ACTION_STYLE} onClick={onCancel}>
           Cancel
         </button>
 
-        <button type="button" style={PRIMARY_BUTTON_STYLE} onClick={onSave}>
-          Save
+        <h2 style={TITLE_STYLE}>{title}</h2>
+
+        <button type="button" style={RIGHT_ACTION_STYLE} onClick={onSave}>
+          Done
         </button>
       </div>
+
+      <div style={CROP_AREA_STYLE}>{children}</div>
     </div>
   );
 }
