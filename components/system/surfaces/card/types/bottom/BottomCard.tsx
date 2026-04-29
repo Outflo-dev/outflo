@@ -37,7 +37,7 @@ const BACKDROP_STYLE: React.CSSProperties = {
   border: 0,
   margin: 0,
   padding: 0,
-  background: "var(--card-sheet-backdrop)",
+  background: "var(--bottom-card-backdrop)",
 };
 
 const FRAME_STYLE: React.CSSProperties = {
@@ -48,8 +48,8 @@ const FRAME_STYLE: React.CSSProperties = {
   width: "100%",
   maxWidth: APP_SHELL.maxWidth,
   margin: "0 auto",
-  paddingLeft: `calc(${APP_SHELL.gutterX}px + env(safe-area-inset-left))`,
-  paddingRight: `calc(${APP_SHELL.gutterX}px + env(safe-area-inset-right))`,
+  paddingLeft: "env(safe-area-inset-left)",
+  paddingRight: "env(safe-area-inset-right)",
   boxSizing: "border-box",
 };
 
@@ -63,10 +63,10 @@ const HANDLE_WRAP_STYLE: React.CSSProperties = {
 };
 
 const HANDLE_STYLE: React.CSSProperties = {
-  width: "var(--card-sheet-handle-width)",
-  height: "var(--card-sheet-handle-height)",
+  width: "var(--bottom-card-handle-width)",
+  height: "var(--bottom-card-handle-height)",
   borderRadius: 999,
-  background: "var(--card-sheet-handle-bg)",
+  background: "var(--bottom-card-handle-bg)",
 };
 
 const CONTENT_STYLE: React.CSSProperties = {
