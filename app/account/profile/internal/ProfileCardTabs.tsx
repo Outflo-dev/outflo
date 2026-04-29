@@ -52,7 +52,6 @@ const TAB_STYLE: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   border: 0,
-  borderRadius: 18,
   background: "transparent",
   color: "var(--text-tertiary)",
   cursor: "pointer",
@@ -65,8 +64,6 @@ const TAB_STYLE: React.CSSProperties = {
 const ACTIVE_TAB_STYLE: React.CSSProperties = {
   color: "var(--text-primary)",
   opacity: 1,
-  transform: "translateY(-1px)",
-  background: "var(--surface-muted)",
 };
 
 const ACTIVE_UNDERLINE_STYLE: React.CSSProperties = {

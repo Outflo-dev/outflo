@@ -146,7 +146,15 @@ export default function ProfileView({
         </main>
       </Motion>
 
-      <BottomCard show={cardOpen} onClose={onCloseCard}>
+      <BottomCard 
+         show={cardOpen} 
+         onClose={onCloseCard}
+         swipePanels={{
+         active: cardPanel,
+         order: ["avatar", "controls", "theme"] as const,
+         onChange: onChangeCardPanel,
+       }}
+    >
        <ProfileCardTabs
          activePanel={cardPanel}
          fullName={fullName}

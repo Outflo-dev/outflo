@@ -14,14 +14,22 @@ import { APP_SHELL } from "@/components/system/shell/app/app-shell.constants";
 import BottomCardFrame from "./BottomCardFrame";
 import { useBottomCardDrag } from "./useBottomCardDrag";
 import { useBottomCardScrollLock } from "./useBottomCardScrollLock";
+import { useBottomCardPanelSwipe } from "./useBottomCardPanelSwipe";
 
 /* ------------------------------
    Types
 -------------------------------- */
-type Props = {
+type SwipePanelsConfig<T extends string> = {
+  active: T | null;
+  order: readonly T[];
+  onChange: (panel: T) => void;
+};
+
+type Props<T extends string = string> = {
   show: boolean;
   onClose: () => void;
   children: ReactNode;
+  swipePanels?: SwipePanelsConfig<T>;
 };
 
 /* ------------------------------
@@ -87,12 +95,15 @@ const CONTENT_STYLE: React.CSSProperties = {
 /* ------------------------------
    Component
 -------------------------------- */
-export default function BottomCard({
+export default function BottomCard<T extends string = string>({
   show,
   onClose,
   children,
-}: Props) {
+  swipePanels,
+}: Props<T>) {
   const { dragStyle, dragHandlers } = useBottomCardDrag(onClose);
+  const panelSwipeHandlers = useBottomCardPanelSwipe(swipePanels);
+
   useBottomCardScrollLock(show);
 
   if (!show) return null;
@@ -134,7 +145,7 @@ export default function BottomCard({
             <div style={HANDLE_STYLE} />
           </div>
 
-          <div style={CONTENT_STYLE}>{children}</div>
+          <div style={CONTENT_STYLE} {...panelSwipeHandlers} >{children}</div>
         </BottomCardFrame>
       </div>
     </div>
