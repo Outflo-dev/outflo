@@ -22,7 +22,7 @@ import ProfileOrbitSection from "./ProfileOrbitSection";
 import ProfileSocialSection from "./ProfileSocialSection";
 import ProfileEpochSection from "./ProfileEpochSection";
 import ProfileFooter from "./ProfileFooter";
-import ProfileAvatarPanel from "../internal/ProfileAvatarPanel";
+import ProfileAvatarPanel from "../internal/avatar/ProfileAvatarPanel";
 import ProfileControlsPanel from "../internal/ProfileControlsPanel";
 import ProfileThemePanel from "../internal/ProfileThemePanel";
 import type { ProfileDirection } from "../internal/profile.types";

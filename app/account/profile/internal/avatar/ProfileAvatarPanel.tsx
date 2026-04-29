@@ -17,8 +17,8 @@ import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import MediaCropper from "@/components/system/surfaces/media-crop/MediaCropper";
 import type { MediaCropResult } from "@/components/system/surfaces/media-crop/media-crop.types";
-import ProfileAvatarActions from "./avatar/ProfileAvatarActions";
-import ProfileAvatarPreview from "./avatar/ProfileAvatarPreview";
+import ProfileAvatarActions from "./ProfileAvatarActions";
+import ProfileAvatarPreview from "./ProfileAvatarPreview";
 
 /* ------------------------------
    Types
