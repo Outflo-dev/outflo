@@ -22,10 +22,11 @@ import ProfileOrbitSection from "./ProfileOrbitSection";
 import ProfileSocialSection from "./ProfileSocialSection";
 import ProfileEpochSection from "./ProfileEpochSection";
 import ProfileFooter from "./ProfileFooter";
-import ProfilePhotoSheet from "./ProfilePhotoSheet";
-import ProfileControlsSheet from "../internal/ProfileControlsSheet";
+import ProfilePhotoPanel from "./ProfilePhotoPanel";
+import ProfileControlsPanel from "../internal/ProfileControlsPanel";
 import type { ProfileDirection } from "../internal/profile.types";
 import { COLOR } from "@/components/system/primitives/color/color.config";
+import BottomCard from "@/components/system/surfaces/card/types/bottom/BottomCard";
 
 /* ------------------------------
    Constants
@@ -41,7 +42,6 @@ const HUB_ITEMS = [
 ] as const;
 
 const UI = {
-  pageTop: 16,
   pageBottom: 40,
   sectionGap: 24,
 } as const;
@@ -49,6 +49,8 @@ const UI = {
 /* ------------------------------
    Types
 -------------------------------- */
+type ProfileSheetPanel = "photo" | "controls" | "theme";
+
 type ProfileViewProps = {
   fullName: string;
   username: string | null;
@@ -57,15 +59,16 @@ type ProfileViewProps = {
 
   show: boolean;
   direction: ProfileDirection;
-  photoSheetOpen: boolean;
-  controlsSheetOpen: boolean;
+
+  sheetPanel: ProfileSheetPanel | null;
+  sheetOpen: boolean;
 
   onDismiss: () => void;
   onOpenPortal: () => void;
   onOpenPhotoSheet: () => void;
-  onClosePhotoSheet: () => void;
   onOpenControlsSheet: () => void;
-  onCloseControlsSheet: () => void;
+  onOpenThemeSheet: () => void;
+  onCloseSheet: () => void;
 };
 
 /* ------------------------------
@@ -78,14 +81,13 @@ export default function ProfileView({
   epochMs,
   show,
   direction,
-  photoSheetOpen,
-  controlsSheetOpen,
+  sheetPanel,
+  sheetOpen,
   onDismiss,
   onOpenPortal,
   onOpenPhotoSheet,
-  onClosePhotoSheet,
   onOpenControlsSheet,
-  onCloseControlsSheet,
+  onCloseSheet,
 }: ProfileViewProps) {
   return (
     <>
@@ -141,13 +143,10 @@ export default function ProfileView({
         </main>
       </Motion>
 
-      {photoSheetOpen ? (
-        <ProfilePhotoSheet onClose={onClosePhotoSheet} />
-      ) : null}
-
-      {controlsSheetOpen ? (
-        <ProfileControlsSheet onClose={onCloseControlsSheet} />
-      ) : null}
+      <BottomCard show={sheetOpen} onClose={onCloseSheet}>
+         {sheetPanel === "photo" && <ProfilePhotoPanel />}
+         {sheetPanel === "controls" && <ProfileControlsPanel />}
+      </BottomCard>
     </>
   );
 }

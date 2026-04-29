@@ -12,13 +12,12 @@ import ProfileView from "../view/ProfileView";
 import type { ProfileDirection, ProfileRouteProps } from "./profile.types";
 import AppFrame from "@/components/system/shell/app/AppFrame";
 
+type ProfileSheetPanel = "photo" | "controls" | "theme";
+
 export default function ProfileController(props: ProfileRouteProps) {
   const [show, setShow] = useState(true);
   const [direction, setDirection] = useState<ProfileDirection>("up");
-
-  // ✅ NEW — split sheet state
-  const [photoSheetOpen, setPhotoSheetOpen] = useState(false);
-  const [controlsSheetOpen, setControlsSheetOpen] = useState(false);
+  const [sheetPanel, setSheetPanel] = useState<ProfileSheetPanel | null>(null);
 
   function handleDismiss() {
     setDirection("down");
@@ -38,22 +37,20 @@ export default function ProfileController(props: ProfileRouteProps) {
     }, MOTION_DURATION_MS);
   }
 
-  // ✅ photo sheet
   function handleOpenPhotoSheet() {
-    setPhotoSheetOpen(true);
+    setSheetPanel("photo");
   }
 
-  function handleClosePhotoSheet() {
-    setPhotoSheetOpen(false);
-  }
-
-  // ✅ controls sheet
   function handleOpenControlsSheet() {
-    setControlsSheetOpen(true);
+    setSheetPanel("controls");
   }
 
-  function handleCloseControlsSheet() {
-    setControlsSheetOpen(false);
+  function handleOpenThemeSheet() {
+    setSheetPanel("theme");
+  }
+
+  function handleCloseSheet() {
+    setSheetPanel(null);
   }
 
   return (
@@ -62,20 +59,14 @@ export default function ProfileController(props: ProfileRouteProps) {
         {...props}
         show={show}
         direction={direction}
-
-        // ✅ pass both states
-        photoSheetOpen={photoSheetOpen}
-        controlsSheetOpen={controlsSheetOpen}
-
+        sheetPanel={sheetPanel}
+        sheetOpen={sheetPanel !== null}
         onDismiss={handleDismiss}
         onOpenPortal={handleOpenPortal}
-
         onOpenPhotoSheet={handleOpenPhotoSheet}
-        onClosePhotoSheet={handleClosePhotoSheet}
-
-        // ✅ new controls handlers
         onOpenControlsSheet={handleOpenControlsSheet}
-        onCloseControlsSheet={handleCloseControlsSheet}
+        onOpenThemeSheet={handleOpenThemeSheet}
+        onCloseSheet={handleCloseSheet}
       />
     </AppFrame>
   );

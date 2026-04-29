@@ -1,18 +1,28 @@
 "use client";
 
+/* ==========================================================
+   OUTFLO — PROFILE CONTROLS PANEL
+   File: app/account/profile/internal/ProfileControlsPanel.tsx
+   Scope: Controls content rendered inside BottomCard
+   ========================================================== */
+
 import { useEffect, useState } from "react";
-import BottomCard from "@/components/system/surfaces/card/types/bottom/BottomCard";
 
-type Props = {
-  onClose: () => void;
-};
-
+/* ------------------------------
+   Types
+-------------------------------- */
 type ThemeName = "dark" | "light" | "funky" | "dawn" | "day" | "dusk" | "night";
 type TextScale = "compact" | "standard" | "large";
 
+/* ------------------------------
+   Constants
+-------------------------------- */
 const THEMES: ThemeName[] = ["dark", "light", "funky", "dawn", "day", "dusk", "night"];
 const TEXT_SCALES: TextScale[] = ["compact", "standard", "large"];
 
+/* ------------------------------
+   Helpers
+-------------------------------- */
 function applyTheme(theme: ThemeName) {
   document.documentElement.dataset.theme = theme;
   window.localStorage.setItem("outflo-theme", theme);
@@ -23,7 +33,10 @@ function applyTextScale(scale: TextScale) {
   window.localStorage.setItem("outflo-text-scale", scale);
 }
 
-export default function ProfileControlsSheet({ onClose }: Props) {
+/* ------------------------------
+   Component
+-------------------------------- */
+export default function ProfileControlsPanel() {
   const [activeTheme, setActiveTheme] = useState<ThemeName>("dark");
   const [activeScale, setActiveScale] = useState<TextScale>("compact");
 
@@ -43,70 +56,81 @@ export default function ProfileControlsSheet({ onClose }: Props) {
   }, []);
 
   return (
-    <BottomCard show={true} onClose={onClose}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <div style={{ color: "var(--text-primary)", fontSize: "var(--text-md)", fontWeight: 600 }}>
-          Theme
-        </div>
-
-        {THEMES.map((theme) => (
-          <button
-            key={theme}
-            type="button"
-            onClick={() => {
-              applyTheme(theme);
-              setActiveTheme(theme);
-            }}
-            style={{
-              width: "100%",
-              minHeight: 48,
-              borderRadius: 16,
-              border: "1px solid var(--border-soft)",
-              background:
-                theme === activeTheme
-                  ? "var(--surface-soft)"
-                  : "var(--surface-muted)",
-              color: "var(--text-primary)",
-              textAlign: "left",
-              padding: "0 14px",
-              cursor: "pointer",
-            }}
-          >
-            {theme}
-          </button>
-        ))}
-
-        <div style={{ color: "var(--text-primary)", fontSize: "var(--text-md)", fontWeight: 600, marginTop: 10 }}>
-          Text scale
-        </div>
-
-        {TEXT_SCALES.map((scale) => (
-          <button
-            key={scale}
-            type="button"
-            onClick={() => {
-              applyTextScale(scale);
-              setActiveScale(scale);
-            }}
-            style={{
-              width: "100%",
-              minHeight: 48,
-              borderRadius: 16,
-              border: "1px solid var(--border-soft)",
-              background:
-                scale === activeScale
-                  ? "var(--surface-soft)"
-                  : "var(--surface-muted)",
-              color: "var(--text-primary)",
-              textAlign: "left",
-              padding: "0 14px",
-              cursor: "pointer",
-            }}
-          >
-            {scale}
-          </button>
-        ))}
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div
+        style={{
+          color: "var(--text-primary)",
+          fontSize: "var(--text-md)",
+          fontWeight: 600,
+        }}
+      >
+        Theme
       </div>
-    </BottomCard>
+
+      {THEMES.map((theme) => (
+        <button
+          key={theme}
+          type="button"
+          onClick={() => {
+            applyTheme(theme);
+            setActiveTheme(theme);
+          }}
+          style={{
+            width: "100%",
+            minHeight: 48,
+            borderRadius: 16,
+            border: "1px solid var(--border-soft)",
+            background:
+              theme === activeTheme
+                ? "var(--surface-soft)"
+                : "var(--surface-muted)",
+            color: "var(--text-primary)",
+            textAlign: "left",
+            padding: "0 14px",
+            cursor: "pointer",
+          }}
+        >
+          {theme}
+        </button>
+      ))}
+
+      <div
+        style={{
+          color: "var(--text-primary)",
+          fontSize: "var(--text-md)",
+          fontWeight: 600,
+          marginTop: 10,
+        }}
+      >
+        Text scale
+      </div>
+
+      {TEXT_SCALES.map((scale) => (
+        <button
+          key={scale}
+          type="button"
+          onClick={() => {
+            applyTextScale(scale);
+            setActiveScale(scale);
+          }}
+          style={{
+            width: "100%",
+            minHeight: 48,
+            borderRadius: 16,
+            border: "1px solid var(--border-soft)",
+            background:
+              scale === activeScale
+                ? "var(--surface-soft)"
+                : "var(--surface-muted)",
+            color: "var(--text-primary)",
+            textAlign: "left",
+            padding: "0 14px",
+            cursor: "pointer",
+          }}
+        >
+          {scale}
+        </button>
+      ))}
+    </div>
   );
 }
