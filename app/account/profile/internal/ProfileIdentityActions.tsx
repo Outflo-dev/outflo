@@ -12,7 +12,7 @@ import ProfileIdentityActionsRow from "./ProfileIdentityActionsRow";
 type Props = {
   username: string | null;
   logoutHref: string;
-  onOpenControlsSheet: () => void;
+  onOpenControlsPanel: () => void;
 };
 
 /* ------------------------------
@@ -21,13 +21,13 @@ type Props = {
 export default function ProfileIdentityActions({
   username,
   logoutHref,
-  onOpenControlsSheet,
+  onOpenControlsPanel,
 }: Props) {
   return (
     <ProfileIdentityActionsRow
       username={username}
       logoutHref={logoutHref}
-      onOpenControlsSheet={onOpenControlsSheet}
+      onOpenControlsPanel={onOpenControlsPanel}
     />
   );
 }

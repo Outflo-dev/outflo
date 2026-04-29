@@ -5,9 +5,9 @@
    File: app/account/profile/view/ProfileIdentitySection.tsx
    Scope: Render the profile identity block with avatar, name, secret trigger, and identity actions
    Last Updated:
-   - ms: 1776998190769
-   - iso: 2026-04-24T02:36:30.769Z
-   - note: replace ProfileSecretActions with ProfileIdentityActions (no runtime leakage)
+   - ms: 1777481701125
+   - iso: 2026-04-29T16:55:01.125Z
+   - note: rename profile card entry handlers from sheet to panel
    ========================================================== */
 
 /* ------------------------------
@@ -28,8 +28,8 @@ type ProfileIdentitySectionProps = {
   fullName: string;
   username: string | null;
   avatarUrl: string | null;
-  onOpenPhotoSheet: () => void;
-  onOpenControlsSheet: () => void; 
+  onOpenAvatarPanel: () => void;
+  onOpenControlsPanel: () => void;
 };
 
 /* ------------------------------
@@ -39,8 +39,8 @@ export default function ProfileIdentitySection({
   fullName,
   username,
   avatarUrl,
-  onOpenPhotoSheet,
-  onOpenControlsSheet,
+  onOpenAvatarPanel,
+  onOpenControlsPanel,
 }: ProfileIdentitySectionProps) {
   return (
     <div
@@ -61,8 +61,8 @@ export default function ProfileIdentitySection({
       >
         <button
           type="button"
-          aria-label="Edit profile photo"
-          onClick={onOpenPhotoSheet}
+          aria-label="Edit profile avatar"
+          onClick={onOpenAvatarPanel}
           style={{
             width: 88,
             height: 88,
@@ -74,14 +74,14 @@ export default function ProfileIdentitySection({
             flexShrink: 0,
           }}
         >
-          <Avatar value={fullName} src={avatarUrl} alt={fullName} />
+          <Avatar size="lg" value={fullName} src={avatarUrl} alt={fullName} />
         </button>
 
         <ProfileSecretTrigger />
 
         <IconButton
-          onClick={onOpenPhotoSheet}
-          ariaLabel="Add a profile photo"
+          onClick={onOpenAvatarPanel}
+          ariaLabel="Add a profile avatar"
           style={{
             position: "absolute",
             right: 0,
@@ -100,7 +100,7 @@ export default function ProfileIdentitySection({
         <ProfileIdentityActions
           username={username}
           logoutHref="/logout"
-          onOpenControlsSheet={onOpenControlsSheet}
+          onOpenControlsPanel={onOpenControlsPanel}
         />
       </div>
     </div>

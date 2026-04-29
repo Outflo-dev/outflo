@@ -3,21 +3,25 @@
 /* ==========================================================
    OUTFLO — PROFILE CONTROLLER
    File: app/account/profile/internal/ProfileController.tsx
-   Scope: Own local profile orchestration, motion state, and sheet state
+   Scope: Own local profile orchestration, motion state, and card panel state
+   Last Updated:
+   - ms: 1777481701125
+   - iso: 2026-04-29T16:55:01.125Z
+   - note: remove stale sheet naming from profile card panel orchestration
    ========================================================== */
 
 import { useState } from "react";
 import { MOTION_DURATION_MS } from "@/components/system/primitives/motion/Motion";
+import AppFrame from "@/components/system/shell/app/AppFrame";
 import ProfileView from "../view/ProfileView";
 import type { ProfileDirection, ProfileRouteProps } from "./profile.types";
-import AppFrame from "@/components/system/shell/app/AppFrame";
 
-type ProfileSheetPanel = "photo" | "controls" | "theme";
+type ProfileCardPanel = "avatar" | "controls" | "theme";
 
 export default function ProfileController(props: ProfileRouteProps) {
   const [show, setShow] = useState(true);
   const [direction, setDirection] = useState<ProfileDirection>("up");
-  const [sheetPanel, setSheetPanel] = useState<ProfileSheetPanel | null>(null);
+  const [cardPanel, setCardPanel] = useState<ProfileCardPanel | null>(null);
 
   function handleDismiss() {
     setDirection("down");
@@ -37,20 +41,20 @@ export default function ProfileController(props: ProfileRouteProps) {
     }, MOTION_DURATION_MS);
   }
 
-  function handleOpenPhotoSheet() {
-    setSheetPanel("photo");
+  function handleOpenAvatarPanel() {
+    setCardPanel("avatar");
   }
 
-  function handleOpenControlsSheet() {
-    setSheetPanel("controls");
+  function handleOpenControlsPanel() {
+    setCardPanel("controls");
   }
 
-  function handleOpenThemeSheet() {
-    setSheetPanel("theme");
+  function handleChangeCardPanel(panel: ProfileCardPanel) {
+    setCardPanel(panel);
   }
 
-  function handleCloseSheet() {
-    setSheetPanel(null);
+  function handleCloseCard() {
+    setCardPanel(null);
   }
 
   return (
@@ -59,14 +63,14 @@ export default function ProfileController(props: ProfileRouteProps) {
         {...props}
         show={show}
         direction={direction}
-        sheetPanel={sheetPanel}
-        sheetOpen={sheetPanel !== null}
+        cardPanel={cardPanel}
+        cardOpen={cardPanel !== null}
         onDismiss={handleDismiss}
         onOpenPortal={handleOpenPortal}
-        onOpenPhotoSheet={handleOpenPhotoSheet}
-        onOpenControlsSheet={handleOpenControlsSheet}
-        onOpenThemeSheet={handleOpenThemeSheet}
-        onCloseSheet={handleCloseSheet}
+        onOpenAvatarPanel={handleOpenAvatarPanel}
+        onOpenControlsPanel={handleOpenControlsPanel}
+        onChangeCardPanel={handleChangeCardPanel}
+        onCloseCard={handleCloseCard}
       />
     </AppFrame>
   );

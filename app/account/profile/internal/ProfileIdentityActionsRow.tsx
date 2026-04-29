@@ -5,9 +5,9 @@
    File: app/account/profile/internal/ProfileIdentityActionsRow.tsx
    Scope: Layout owner for profile identity pills
    Last Updated:
-   - ms: 1776994863515
-   - iso: 2026-04-24T01:41:03.515Z
-   - note: route controls pill through controller-owned sheet state
+   - ms: 1777481701125
+   - iso: 2026-04-29T16:55:01.125Z
+   - note: remove stale sheet naming → controls panel
    ========================================================== */
 
 /* ------------------------------
@@ -24,7 +24,7 @@ import ProfileLogoutReveal from "./ProfileLogoutReveal";
 type Props = {
   username: string | null;
   logoutHref: string;
-  onOpenControlsSheet: () => void;
+  onOpenControlsPanel: () => void;
 };
 
 /* ------------------------------
@@ -33,7 +33,7 @@ type Props = {
 export default function ProfileIdentityActionsRow({
   username,
   logoutHref,
-  onOpenControlsSheet,
+  onOpenControlsPanel,
 }: Props) {
   const {
     showSecret,
@@ -54,7 +54,7 @@ export default function ProfileIdentityActionsRow({
     >
       <ProfileUsernamePill username={username} />
 
-      <ProfileControlsPill onClick={onOpenControlsSheet} />
+      <ProfileControlsPill onClick={onOpenControlsPanel} />
 
       <ProfileLogoutReveal
         show={showSecret}

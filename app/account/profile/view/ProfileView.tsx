@@ -3,11 +3,11 @@
 /* ==========================================================
    OUTFLO — PROFILE VIEW
    File: app/account/profile/view/ProfileView.tsx
-   Scope: Compose the full profile page surface from route-owned view sections
+   Scope: Compose the full profile page surface and profile card panels
    Last Updated:
-   - ms: 1776475194844
-   - iso: 2026-04-18T01:19:54.844Z
-   - note: align profile view props to controller-owned motion and sheet orchestration
+   - ms: 1777481701125
+   - iso: 2026-04-29T16:55:01.125Z
+   - note: replace sheet/photo naming with single card panel system
    ========================================================== */
 
 /* ------------------------------
@@ -22,10 +22,12 @@ import ProfileOrbitSection from "./ProfileOrbitSection";
 import ProfileSocialSection from "./ProfileSocialSection";
 import ProfileEpochSection from "./ProfileEpochSection";
 import ProfileFooter from "./ProfileFooter";
-import ProfilePhotoPanel from "./ProfilePhotoPanel";
+import ProfileAvatarPanel from "../internal/ProfileAvatarPanel";
 import ProfileControlsPanel from "../internal/ProfileControlsPanel";
+import ProfileThemePanel from "../internal/ProfileThemePanel";
 import type { ProfileDirection } from "../internal/profile.types";
 import { COLOR } from "@/components/system/primitives/color/color.config";
+import ProfileCardTabs from "../internal/ProfileCardTabs";
 import BottomCard from "@/components/system/surfaces/card/types/bottom/BottomCard";
 
 /* ------------------------------
@@ -49,7 +51,7 @@ const UI = {
 /* ------------------------------
    Types
 -------------------------------- */
-type ProfileSheetPanel = "photo" | "controls" | "theme";
+type ProfileCardPanel = "avatar" | "controls" | "theme";
 
 type ProfileViewProps = {
   fullName: string;
@@ -60,15 +62,15 @@ type ProfileViewProps = {
   show: boolean;
   direction: ProfileDirection;
 
-  sheetPanel: ProfileSheetPanel | null;
-  sheetOpen: boolean;
+  cardPanel: ProfileCardPanel | null;
+  cardOpen: boolean;
 
   onDismiss: () => void;
   onOpenPortal: () => void;
-  onOpenPhotoSheet: () => void;
-  onOpenControlsSheet: () => void;
-  onOpenThemeSheet: () => void;
-  onCloseSheet: () => void;
+  onOpenAvatarPanel: () => void;
+  onOpenControlsPanel: () => void;
+  onChangeCardPanel: (panel: ProfileCardPanel) => void;
+  onCloseCard: () => void;
 };
 
 /* ------------------------------
@@ -81,13 +83,14 @@ export default function ProfileView({
   epochMs,
   show,
   direction,
-  sheetPanel,
-  sheetOpen,
+  cardPanel,
+  cardOpen,
   onDismiss,
   onOpenPortal,
-  onOpenPhotoSheet,
-  onOpenControlsSheet,
-  onCloseSheet,
+  onOpenAvatarPanel,
+  onOpenControlsPanel,
+  onChangeCardPanel,
+  onCloseCard,
 }: ProfileViewProps) {
   return (
     <>
@@ -117,8 +120,8 @@ export default function ProfileView({
                 fullName={fullName}
                 username={username}
                 avatarUrl={avatarUrl}
-                onOpenPhotoSheet={onOpenPhotoSheet}
-                onOpenControlsSheet={onOpenControlsSheet}
+                onOpenAvatarPanel={onOpenAvatarPanel}
+                onOpenControlsPanel={onOpenControlsPanel}
               />
             </section>
 
@@ -143,9 +146,17 @@ export default function ProfileView({
         </main>
       </Motion>
 
-      <BottomCard show={sheetOpen} onClose={onCloseSheet}>
-         {sheetPanel === "photo" && <ProfilePhotoPanel />}
-         {sheetPanel === "controls" && <ProfileControlsPanel />}
+      <BottomCard show={cardOpen} onClose={onCloseCard}>
+       <ProfileCardTabs
+         activePanel={cardPanel}
+         fullName={fullName}
+         avatarUrl={avatarUrl}
+         onChangePanel={onChangeCardPanel}
+        />
+
+        {cardPanel === "avatar" && <ProfileAvatarPanel />}
+        {cardPanel === "controls" && <ProfileControlsPanel />}
+        {cardPanel === "theme" && <ProfileThemePanel />}
       </BottomCard>
     </>
   );
