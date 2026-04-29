@@ -7,12 +7,13 @@
    Last Updated:
    - ms: 1777481701125
    - iso: 2026-04-29T16:55:01.125Z
-   - note: extract profile card tab controls from ProfileView
+   - note: refine profile card tab feel and icon balance
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
+import type { ReactNode } from "react";
 import Avatar from "@/components/system/primitives/display/avatar/Avatar";
 
 /* ------------------------------
@@ -27,19 +28,26 @@ type ProfileCardTabsProps = {
   onChangePanel: (panel: ProfileCardPanel) => void;
 };
 
+type TabButtonProps = {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+  children: ReactNode;
+};
+
 /* ------------------------------
    Constants
 -------------------------------- */
 const TAB_BAR_STYLE: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(3, 1fr)",
-  gap: 10,
+  gap: 8,
   marginBottom: 18,
 };
 
 const TAB_STYLE: React.CSSProperties = {
   position: "relative",
-  minHeight: 58,
+  minHeight: 54,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -48,17 +56,24 @@ const TAB_STYLE: React.CSSProperties = {
   background: "transparent",
   color: "var(--text-tertiary)",
   cursor: "pointer",
+  opacity: 0.72,
+  transform: "translateY(0)",
+  transition:
+    "opacity 180ms ease, color 180ms ease, transform 180ms ease, background 180ms ease",
 };
 
 const ACTIVE_TAB_STYLE: React.CSSProperties = {
   color: "var(--text-primary)",
+  opacity: 1,
+  transform: "translateY(-1px)",
+  background: "var(--surface-muted)",
 };
 
 const ACTIVE_UNDERLINE_STYLE: React.CSSProperties = {
   position: "absolute",
   left: "50%",
-  bottom: 0,
-  width: 28,
+  bottom: 3,
+  width: 26,
   height: 2,
   borderRadius: 999,
   background: "var(--text-primary)",
@@ -81,7 +96,7 @@ function ControlsIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.8"
+      strokeWidth="1.75"
       strokeLinecap="round"
       style={ICON_STYLE}
     >
@@ -104,15 +119,20 @@ function ThemeIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.8"
+      strokeWidth="1.75"
       strokeLinecap="round"
       strokeLinejoin="round"
       style={ICON_STYLE}
     >
-      <path d="M12 3.5a8.5 8.5 0 0 0 0 17h1.2a2.1 2.1 0 0 0 1.4-3.7 1.8 1.8 0 0 1 1.2-3.2h.7A4.1 4.1 0 0 0 20.5 9.5C20.5 6.2 16.8 3.5 12 3.5Z" />
-      <circle cx="8.2" cy="9" r="0.8" fill="currentColor" stroke="none" />
-      <circle cx="11.2" cy="7.2" r="0.8" fill="currentColor" stroke="none" />
-      <circle cx="14.2" cy="8.8" r="0.8" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="4.5" />
+      <path d="M12 2.75v2.5" />
+      <path d="M12 18.75v2.5" />
+      <path d="M21.25 12h-2.5" />
+      <path d="M5.25 12h-2.5" />
+      <path d="m18.55 5.45-1.75 1.75" />
+      <path d="m7.2 16.8-1.75 1.75" />
+      <path d="m18.55 18.55-1.75-1.75" />
+      <path d="m7.2 7.2-1.75-1.75" />
     </svg>
   );
 }
@@ -120,16 +140,37 @@ function ThemeIcon() {
 /* ------------------------------
    Helpers
 -------------------------------- */
-function getTabStyle(isActive: boolean): React.CSSProperties {
+function getTabStyle(active: boolean): React.CSSProperties {
   return {
     ...TAB_STYLE,
-    ...(isActive ? ACTIVE_TAB_STYLE : null),
+    ...(active ? ACTIVE_TAB_STYLE : null),
   };
 }
 
 /* ------------------------------
-   Component
+   Components
 -------------------------------- */
+function TabButton({
+  label,
+  active,
+  onClick,
+  children,
+}: TabButtonProps) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-pressed={active}
+      onClick={onClick}
+      style={getTabStyle(active)}
+    >
+      {children}
+
+      {active && <div style={ACTIVE_UNDERLINE_STYLE} />}
+    </button>
+  );
+}
+
 export default function ProfileCardTabs({
   activePanel,
   fullName,
@@ -138,42 +179,29 @@ export default function ProfileCardTabs({
 }: ProfileCardTabsProps) {
   return (
     <div style={TAB_BAR_STYLE}>
-      <button
-        type="button"
-        aria-label="Avatar"
-        aria-pressed={activePanel === "avatar"}
+      <TabButton
+        label="Avatar"
+        active={activePanel === "avatar"}
         onClick={() => onChangePanel("avatar")}
-        style={getTabStyle(activePanel === "avatar")}
       >
-        
-    <Avatar size="sm" value={fullName} src={avatarUrl} alt={fullName} />
+        <Avatar size="sm" value={fullName} src={avatarUrl} alt={fullName} />
+      </TabButton>
 
-        {activePanel === "avatar" && <div style={ACTIVE_UNDERLINE_STYLE} />}
-      </button>
-
-      <button
-        type="button"
-        aria-label="Controls"
-        aria-pressed={activePanel === "controls"}
+      <TabButton
+        label="Controls"
+        active={activePanel === "controls"}
         onClick={() => onChangePanel("controls")}
-        style={getTabStyle(activePanel === "controls")}
       >
         <ControlsIcon />
+      </TabButton>
 
-        {activePanel === "controls" && <div style={ACTIVE_UNDERLINE_STYLE} />}
-      </button>
-
-      <button
-        type="button"
-        aria-label="Theme"
-        aria-pressed={activePanel === "theme"}
+      <TabButton
+        label="Theme"
+        active={activePanel === "theme"}
         onClick={() => onChangePanel("theme")}
-        style={getTabStyle(activePanel === "theme")}
       >
         <ThemeIcon />
-
-        {activePanel === "theme" && <div style={ACTIVE_UNDERLINE_STYLE} />}
-      </button>
+      </TabButton>
     </div>
   );
 }
