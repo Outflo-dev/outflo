@@ -162,7 +162,9 @@ export default function ProfileView({
          onChangePanel={onChangeCardPanel}
         />
 
-        {cardPanel === "avatar" && <ProfileAvatarPanel />}
+        {cardPanel === "avatar" && (
+        <ProfileAvatarPanel fullName={fullName} avatarUrl={avatarUrl} />
+        )}
         {cardPanel === "controls" && <ProfileControlsPanel />}
         {cardPanel === "theme" && <ProfileThemePanel />}
       </BottomCard>
