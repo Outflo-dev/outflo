@@ -23,19 +23,19 @@ type Props = {
    Constants
 -------------------------------- */
 const FRAME_STYLE: React.CSSProperties = {
-  height: "65vh",
-  maxHeight: "65vh",
+  height: "var(--bottom-card-height)",
+  maxHeight: "var(--bottom-card-height)",
   display: "flex",
   flexDirection: "column",
   overflow: "hidden",
-  borderTopLeftRadius: "var(--card-radius)",
-  borderTopRightRadius: "var(--card-radius)",
+  borderTopLeftRadius: "var(--bottom-card-radius)",
+  borderTopRightRadius: "var(--bottom-card-radius)",
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
-  border: "1px solid var(--card-border)",
+  border: "1px solid var(--bottom-card-border)",
   borderBottom: 0,
-  background: "var(--card-bg)",
-  padding: "14px 14px 18px",
+  background: "var(--bottom-card-bg)",
+  padding: "var(--bottom-card-padding)",
   boxSizing: "border-box",
 };
 

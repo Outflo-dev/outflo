@@ -19,5 +19,7 @@
 
 @import "./styles/tokens/typography.css";
 @import "./styles/tokens/buttons.css";
-@import "./styles/tokens/cards.css";
 @import "./styles/tokens/zoom.css";
+
+
+@import "../components/system/surfaces/card/types/bottom/bottom-card.tokens.css";
