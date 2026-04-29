@@ -12,6 +12,7 @@
 import type { ReactNode } from "react";
 import { APP_SHELL } from "@/components/system/shell/app/app-shell.constants";
 import BottomCardFrame from "./BottomCardFrame";
+import { useBottomCardDrag } from "./useBottomCardDrag";
 
 /* ------------------------------
    Types
@@ -85,6 +86,8 @@ export default function BottomCard({
   onClose,
   children,
 }: Props) {
+  const { dragStyle, dragHandlers } = useBottomCardDrag(onClose);
+
   if (!show) return null;
 
   return (
@@ -115,11 +118,12 @@ export default function BottomCard({
       <div
         style={{
           ...FRAME_STYLE,
+          ...dragStyle,
           animation: "outfloBottomCardIn 340ms cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
         <BottomCardFrame>
-          <div style={HANDLE_WRAP_STYLE}>
+          <div style={HANDLE_WRAP_STYLE} {...dragHandlers}>
             <div style={HANDLE_STYLE} />
           </div>
 
