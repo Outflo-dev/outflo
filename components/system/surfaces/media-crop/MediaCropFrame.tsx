@@ -34,11 +34,9 @@ const ROOT_STYLE: CSSProperties = {
   zIndex: 1000,
   display: "flex",
   flexDirection: "column",
-  gap: 14,
-  width: "100%",
-  minHeight: "100dvh",
-  padding:
-    "max(14px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom))",
+  width: "100vw",
+  height: "100dvh",
+  padding: 0,
   background: "var(--bg-primary)",
 };
 
@@ -47,6 +45,8 @@ const HEADER_STYLE: CSSProperties = {
   gridTemplateColumns: "72px 1fr 72px",
   alignItems: "center",
   gap: 8,
+  padding:
+    "max(14px, env(safe-area-inset-top)) 14px 8px",
 };
 
 const TITLE_STYLE: CSSProperties = {
@@ -81,7 +81,7 @@ const RIGHT_ACTION_STYLE: CSSProperties = {
 
 const CROP_AREA_STYLE: CSSProperties = {
   position: "relative",
-  width: "100%",
+  width: "100vw",
   flex: 1,
   minHeight: 0,
   overflow: "hidden",
