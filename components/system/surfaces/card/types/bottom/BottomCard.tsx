@@ -102,7 +102,8 @@ export default function BottomCard<T extends string = string>({
   swipePanels,
 }: Props<T>) {
   const { dragStyle, dragHandlers } = useBottomCardDrag(onClose);
-  const panelSwipeHandlers = useBottomCardPanelSwipe(swipePanels);
+  const { panelSwipeStyle, panelSwipeHandlers } =
+  useBottomCardPanelSwipe(swipePanels);
 
   useBottomCardScrollLock(show);
 
@@ -145,7 +146,15 @@ export default function BottomCard<T extends string = string>({
             <div style={HANDLE_STYLE} />
           </div>
 
-          <div style={CONTENT_STYLE} {...panelSwipeHandlers} >{children}</div>
+          <div
+             style={{
+              ...CONTENT_STYLE,
+              ...panelSwipeStyle,
+       }}
+           {...panelSwipeHandlers}
+     >
+           {children}
+         </div>
         </BottomCardFrame>
       </div>
     </div>
