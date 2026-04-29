@@ -7,12 +7,13 @@
    Last Updated:
    - ms: 1777481701125
    - iso: 2026-04-29T16:55:01.125Z
-   - note: replace sheet/photo naming with single card panel system
+   - note: lift avatar crop surface outside bottom card
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
+import { useState } from "react";
 import Motion from "@/components/system/primitives/motion/Motion";
 import ProfileHeader from "./ProfileHeader";
 import ProfileIdentitySection from "./ProfileIdentitySection";
@@ -29,6 +30,8 @@ import type { ProfileDirection } from "../internal/profile.types";
 import { COLOR } from "@/components/system/primitives/color/color.config";
 import ProfileCardTabs from "../internal/ProfileCardTabs";
 import BottomCard from "@/components/system/surfaces/card/types/bottom/BottomCard";
+import MediaCropper from "@/components/system/surfaces/media-crop/MediaCropper";
+import type { MediaCropResult } from "@/components/system/surfaces/media-crop/media-crop.types";
 
 /* ------------------------------
    Constants
@@ -92,6 +95,34 @@ export default function ProfileView({
   onChangeCardPanel,
   onCloseCard,
 }: ProfileViewProps) {
+  const [cropSourceUrl, setCropSourceUrl] = useState<string | null>(null);
+
+  function handleSelectAvatarFile(file: File) {
+    if (cropSourceUrl) {
+      URL.revokeObjectURL(cropSourceUrl);
+    }
+
+    setCropSourceUrl(URL.createObjectURL(file));
+  }
+
+  function handleCancelCrop() {
+    if (cropSourceUrl) {
+      URL.revokeObjectURL(cropSourceUrl);
+    }
+
+    setCropSourceUrl(null);
+  }
+
+  function handleSaveCrop(result: MediaCropResult) {
+    if (cropSourceUrl) {
+      URL.revokeObjectURL(cropSourceUrl);
+    }
+
+    console.log("Avatar crop result:", result);
+
+    setCropSourceUrl(null);
+  }
+
   return (
     <>
       <Motion show={show} direction={direction}>
@@ -146,28 +177,42 @@ export default function ProfileView({
         </main>
       </Motion>
 
-      <BottomCard 
-         show={cardOpen} 
-         onClose={onCloseCard}
-         swipePanels={{
-         active: cardPanel,
-         order: ["avatar", "controls", "theme"] as const,
-         onChange: onChangeCardPanel,
-       }}
-    >
-       <ProfileCardTabs
-         activePanel={cardPanel}
-         fullName={fullName}
-         avatarUrl={avatarUrl}
-         onChangePanel={onChangeCardPanel}
+      <BottomCard
+        show={cardOpen}
+        onClose={onCloseCard}
+        swipePanels={{
+          active: cardPanel,
+          order: ["avatar", "controls", "theme"] as const,
+          onChange: onChangeCardPanel,
+        }}
+      >
+        <ProfileCardTabs
+          activePanel={cardPanel}
+          fullName={fullName}
+          avatarUrl={avatarUrl}
+          onChangePanel={onChangeCardPanel}
         />
 
         {cardPanel === "avatar" && (
-        <ProfileAvatarPanel fullName={fullName} avatarUrl={avatarUrl} />
+          <ProfileAvatarPanel
+            fullName={fullName}
+            avatarUrl={avatarUrl}
+            onSelectAvatarFile={handleSelectAvatarFile}
+          />
         )}
         {cardPanel === "controls" && <ProfileControlsPanel />}
         {cardPanel === "theme" && <ProfileThemePanel />}
       </BottomCard>
+
+      {cropSourceUrl && (
+        <MediaCropper
+          title="Adjust photo"
+          sourceUrl={cropSourceUrl}
+          shape="round"
+          onCancel={handleCancelCrop}
+          onSave={handleSaveCrop}
+        />
+      )}
     </>
   );
 }

@@ -3,20 +3,18 @@
 /* ==========================================================
    OUTFLO — PROFILE AVATAR PANEL
    File: app/account/profile/internal/ProfileAvatarPanel.tsx
-   Scope: Orchestrate profile avatar preview, picker actions, and crop flow
+   Scope: Orchestrate profile avatar preview and picker actions
    Last Updated:
    - ms: 1777500224257
    - iso: 2026-04-29T22:03:44.257Z
-   - note: add reusable media crop surface for avatar upload
+   - note: lift crop surface out of avatar panel
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type { CSSProperties } from "react";
-import { useEffect, useState } from "react";
-import MediaCropper from "@/components/system/surfaces/media-crop/MediaCropper";
-import type { MediaCropResult } from "@/components/system/surfaces/media-crop/media-crop.types";
+import { useState } from "react";
 import ProfileAvatarActions from "./ProfileAvatarActions";
 import ProfileAvatarPreview from "./ProfileAvatarPreview";
 
@@ -26,6 +24,7 @@ import ProfileAvatarPreview from "./ProfileAvatarPreview";
 type Props = {
   fullName: string;
   avatarUrl: string | null;
+  onSelectAvatarFile: (file: File) => void;
 };
 
 /* ------------------------------
@@ -41,8 +40,11 @@ const ROOT_STYLE: CSSProperties = {
 /* ------------------------------
    Component
 -------------------------------- */
-export default function ProfileAvatarPanel({ fullName, avatarUrl }: Props) {
-  const [cropSourceUrl, setCropSourceUrl] = useState<string | null>(null);
+export default function ProfileAvatarPanel({
+  fullName,
+  avatarUrl,
+  onSelectAvatarFile,
+}: Props) {
   const [pendingAvatarUrl, setPendingAvatarUrl] = useState<string | null>(null);
   const [avatarRemoved, setAvatarRemoved] = useState(false);
 
@@ -51,36 +53,8 @@ export default function ProfileAvatarPanel({ fullName, avatarUrl }: Props) {
     : pendingAvatarUrl ?? avatarUrl;
 
   function handleSelectFile(file: File) {
-    if (cropSourceUrl) {
-      URL.revokeObjectURL(cropSourceUrl);
-    }
-
-    const nextSourceUrl = URL.createObjectURL(file);
-
     setAvatarRemoved(false);
-    setCropSourceUrl(nextSourceUrl);
-  }
-
-  function handleCancelCrop() {
-    if (cropSourceUrl) {
-      URL.revokeObjectURL(cropSourceUrl);
-    }
-
-    setCropSourceUrl(null);
-  }
-
-  function handleSaveCrop(result: MediaCropResult) {
-    if (cropSourceUrl) {
-      URL.revokeObjectURL(cropSourceUrl);
-    }
-
-    if (pendingAvatarUrl) {
-      URL.revokeObjectURL(pendingAvatarUrl);
-    }
-
-    setPendingAvatarUrl(result.objectUrl);
-    setAvatarRemoved(false);
-    setCropSourceUrl(null);
+    onSelectAvatarFile(file);
   }
 
   function handleRemove() {
@@ -88,37 +62,8 @@ export default function ProfileAvatarPanel({ fullName, avatarUrl }: Props) {
       URL.revokeObjectURL(pendingAvatarUrl);
     }
 
-    if (cropSourceUrl) {
-      URL.revokeObjectURL(cropSourceUrl);
-    }
-
     setPendingAvatarUrl(null);
-    setCropSourceUrl(null);
     setAvatarRemoved(true);
-  }
-
-  useEffect(() => {
-    return () => {
-      if (cropSourceUrl) {
-        URL.revokeObjectURL(cropSourceUrl);
-      }
-
-      if (pendingAvatarUrl) {
-        URL.revokeObjectURL(pendingAvatarUrl);
-      }
-    };
-  }, [cropSourceUrl, pendingAvatarUrl]);
-
-  if (cropSourceUrl) {
-    return (
-      <MediaCropper
-        title="Adjust photo"
-        sourceUrl={cropSourceUrl}
-        shape="round"
-        onCancel={handleCancelCrop}
-        onSave={handleSaveCrop}
-      />
-    );
   }
 
   return (
