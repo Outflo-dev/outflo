@@ -17,6 +17,7 @@ import CardBase from "../../base/CardBase";
 -------------------------------- */
 type Props = {
   children: ReactNode;
+  height?: string;
 };
 
 /* ------------------------------
@@ -44,12 +45,16 @@ const FRAME_STYLE: React.CSSProperties = {
 /* ------------------------------
    Component
 -------------------------------- */
-export default function BottomCardFrame({ children }: Props) {
+export default function BottomCardFrame({ children, height }: Props) {
   return (
     <CardBase
       role="dialog"
       aria-modal="true"
-      style={FRAME_STYLE}
+      style={{
+        ...FRAME_STYLE,
+        height: height ?? FRAME_STYLE.height,
+        maxHeight: height ?? FRAME_STYLE.maxHeight,
+      }}
     >
       {children}
     </CardBase>

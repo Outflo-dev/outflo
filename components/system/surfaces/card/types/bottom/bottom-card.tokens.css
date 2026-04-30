@@ -5,20 +5,24 @@
    ========================================================== */
 
 :root {
-  --bottom-card-bg: var(--bg-primary);
-  --bottom-card-border: var(--border-subtle);
-  --bottom-card-radius: 28px;
-  --bottom-card-height: 60vh;
-  --bottom-card-padding: 14px 14px 18px;
+    --bottom-card-bg: var(--bg-primary);
+    --bottom-card-border: var(--border-subtle);
+    --bottom-card-radius: 28px;
 
-  --bottom-card-backdrop: rgba(0, 0, 0, 0.38);
+    --bottom-card-height: 60vh;
+    --bottom-card-height-compact: 45vh;
+    --bottom-card-height-medium: 60vh;
 
-  --bottom-card-handle-bg: var(--border-soft);
-  --bottom-card-handle-width: 44px;
-  --bottom-card-handle-height: 4px;
+    --bottom-card-padding: 14px 14px 18px;
 
-  --bottom-card-border-top: 1px solid var(--bottom-card-border);
-  --bottom-card-border-left: 0;
-  --bottom-card-border-right: 0;
-  --bottom-card-border-bottom: 0;
+    --bottom-card-backdrop: rgba(0, 0, 0, 0.38);
+
+    --bottom-card-handle-bg: var(--border-soft);
+    --bottom-card-handle-width: 44px;
+    --bottom-card-handle-height: 4px;
+
+    --bottom-card-border-top: 1px solid var(--bottom-card-border);
+    --bottom-card-border-left: 0;
+    --bottom-card-border-right: 0;
+    --bottom-card-border-bottom: 0;
 }

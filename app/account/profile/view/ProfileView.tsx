@@ -116,60 +116,60 @@ export default function ProfileView({
     setCropSourceUrl(null);
   }
 
- async function handleSaveCrop(result: MediaCropResult) {
-  const supabase = supabaseBrowser();
+  async function handleSaveCrop(result: MediaCropResult) {
+    const supabase = supabaseBrowser();
 
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-  if (userError || !user) {
-    console.error("Unable to load authenticated user.", userError);
-    return;
-  }
+    if (userError || !user) {
+      console.error("Unable to load authenticated user.", userError);
+      return;
+    }
 
-  const filePath = `${user.id}/avatar-${Date.now()}.jpg`;
+    const filePath = `${user.id}/avatar-${Date.now()}.jpg`;
 
-  const { error: uploadError } = await supabase.storage
-    .from("avatars")
-    .upload(filePath, result.blob, {
-      contentType: "image/jpeg",
-      upsert: true,
+    const { error: uploadError } = await supabase.storage
+      .from("avatars")
+      .upload(filePath, result.blob, {
+        contentType: "image/jpeg",
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error("Unable to upload avatar.", uploadError);
+      return;
+    }
+
+    const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
+
+    const response = await fetch("/api/profile", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        avatar_url: data.publicUrl,
+        avatar_mode: "image",
+      }),
     });
 
-  if (uploadError) {
-    console.error("Unable to upload avatar.", uploadError);
-    return;
+    if (!response.ok) {
+      console.error("Unable to save avatar.", await response.json());
+      return;
+    }
+
+    if (cropSourceUrl) {
+      URL.revokeObjectURL(cropSourceUrl);
+    }
+
+    URL.revokeObjectURL(result.objectUrl);
+
+    setCropSourceUrl(null);
+    router.refresh();
   }
-
-  const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
-
-  const response = await fetch("/api/profile", {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      avatar_url: data.publicUrl,
-      avatar_mode: "image",
-    }),
-  });
-
-  if (!response.ok) {
-    console.error("Unable to save avatar.", await response.json());
-    return;
-  }
-
-  if (cropSourceUrl) {
-    URL.revokeObjectURL(cropSourceUrl);
-  }
-
-  URL.revokeObjectURL(result.objectUrl);
-
-  setCropSourceUrl(null);
-  router.refresh();
-}
 
   return (
     <>
@@ -232,6 +232,11 @@ export default function ProfileView({
           active: cardPanel,
           order: ["avatar", "controls", "theme"] as const,
           onChange: onChangeCardPanel,
+        }}
+        panelPostures={{
+          avatar: "compact",
+          controls: "medium",
+          theme: "medium",
         }}
       >
         <ProfileCardTabs

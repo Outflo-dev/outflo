@@ -25,11 +25,16 @@ type SwipePanelsConfig<T extends string> = {
   onChange: (panel: T) => void;
 };
 
+type BottomCardPosture = "compact" | "medium";
+
+type PanelPostureConfig<T extends string> = Partial<Record<T, BottomCardPosture>>;
+
 type Props<T extends string = string> = {
   show: boolean;
   onClose: () => void;
   children: ReactNode;
   swipePanels?: SwipePanelsConfig<T>;
+  panelPostures?: PanelPostureConfig<T>;
 };
 
 /* ------------------------------
@@ -41,7 +46,6 @@ const WRAP_STYLE: React.CSSProperties = {
   zIndex: 120,
   overflow: "hidden",
   overscrollBehavior: "contain",
-  touchAction: "none",
 };
 
 const BACKDROP_STYLE: React.CSSProperties = {
@@ -83,14 +87,26 @@ const HANDLE_STYLE: React.CSSProperties = {
   background: "var(--bottom-card-handle-bg)",
 };
 
-const CONTENT_STYLE: React.CSSProperties = {
+const PANEL_VIEWPORT_STYLE: React.CSSProperties = {
   minHeight: 0,
   flex: 1,
+  overflow: "hidden",
+};
+
+const PANEL_TRACK_STYLE: React.CSSProperties = {
+  minHeight: 0,
+  height: "100%",
+};
+
+const PANEL_SCROLL_STYLE: React.CSSProperties = {
+  minHeight: 0,
+  height: "100%",
   overflowY: "auto",
   WebkitOverflowScrolling: "touch",
   overscrollBehavior: "contain",
   touchAction: "pan-y",
 };
+
 
 /* ------------------------------
    Component
@@ -100,14 +116,26 @@ export default function BottomCard<T extends string = string>({
   onClose,
   children,
   swipePanels,
+  panelPostures,
 }: Props<T>) {
   const { dragStyle, dragHandlers } = useBottomCardDrag(onClose);
-  const { panelSwipeHandlers } =
-  useBottomCardPanelSwipe(swipePanels);
+  const { panelSwipeStyle, panelSwipeHandlers } =
+    useBottomCardPanelSwipe(swipePanels);
 
   useBottomCardScrollLock(show);
 
   if (!show) return null;
+
+  const activePosture =
+    swipePanels?.active && panelPostures?.[swipePanels.active]
+      ? panelPostures[swipePanels.active]
+      : "medium";
+
+  const cardHeight =
+    activePosture === "compact"
+      ? "var(--bottom-card-height-compact)"
+      : "var(--bottom-card-height-medium)";
+
 
   return (
     <div style={WRAP_STYLE}>
@@ -141,19 +169,23 @@ export default function BottomCard<T extends string = string>({
           animation: "outfloBottomCardIn 340ms cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
-        <BottomCardFrame>
+        <BottomCardFrame height={cardHeight}>
           <div style={HANDLE_WRAP_STYLE} {...dragHandlers}>
             <div style={HANDLE_STYLE} />
           </div>
 
-          <div
-            style={{
-             ...CONTENT_STYLE,
-            }}
-            {...panelSwipeHandlers}
-          >
-            {children}
-         </div>
+          <div style={PANEL_VIEWPORT_STYLE} {...panelSwipeHandlers}>
+            <div
+              style={{
+                ...PANEL_TRACK_STYLE,
+                ...panelSwipeStyle,
+              }}
+            >
+              <div style={PANEL_SCROLL_STYLE}>
+                {children}
+              </div>
+            </div>
+          </div>
         </BottomCardFrame>
       </div>
     </div>
