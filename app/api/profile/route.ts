@@ -131,7 +131,7 @@ export async function POST(req: Request) {
 }
 
 /* ------------------------------
-   PATCH — avatar_mode (additive)
+   PATCH — avatar identity fields
 -------------------------------- */
 export async function PATCH(req: Request) {
   const supabase = await supabaseServer();
@@ -145,21 +145,45 @@ export async function PATCH(req: Request) {
   }
 
   const body = await req.json();
-  const avatar_mode = body.avatar_mode;
 
-  if (!["image", "initial"].includes(avatar_mode)) {
+  const avatarMode = body.avatar_mode;
+  const hasAvatarUrl = Object.prototype.hasOwnProperty.call(body, "avatar_url");
+
+  if (!["image", "initial"].includes(avatarMode)) {
     return NextResponse.json(
       { error: "Invalid avatar_mode" },
       { status: 400 }
     );
   }
 
+  const avatarUrl =
+    typeof body.avatar_url === "string" && body.avatar_url.trim()
+      ? body.avatar_url.trim()
+      : null;
+
+  if (avatarMode === "image" && !avatarUrl) {
+    return NextResponse.json(
+      { error: "Avatar URL is required for image mode." },
+      { status: 400 }
+    );
+  }
+
+  const updatePayload: {
+    avatar_mode: "image" | "initial";
+    avatar_url?: string | null;
+    updated_at: string;
+  } = {
+    avatar_mode: avatarMode,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (hasAvatarUrl) {
+    updatePayload.avatar_url = avatarUrl;
+  }
+
   const { error } = await supabase
     .from("user_identity_assets")
-    .update({
-      avatar_mode,
-      updated_at: new Date().toISOString(),
-    })
+    .update(updatePayload)
     .eq("user_id", user.id);
 
   if (error) {

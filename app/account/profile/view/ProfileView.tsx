@@ -14,6 +14,8 @@
    Imports
 -------------------------------- */
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabaseBrowser } from "@/lib/supabase/client";
 import Motion from "@/components/system/primitives/motion/Motion";
 import ProfileHeader from "./ProfileHeader";
 import ProfileIdentitySection from "./ProfileIdentitySection";
@@ -95,6 +97,7 @@ export default function ProfileView({
   onChangeCardPanel,
   onCloseCard,
 }: ProfileViewProps) {
+  const router = useRouter();
   const [cropSourceUrl, setCropSourceUrl] = useState<string | null>(null);
 
   function handleSelectAvatarFile(file: File) {
@@ -113,15 +116,60 @@ export default function ProfileView({
     setCropSourceUrl(null);
   }
 
-  function handleSaveCrop(result: MediaCropResult) {
-    if (cropSourceUrl) {
-      URL.revokeObjectURL(cropSourceUrl);
-    }
+ async function handleSaveCrop(result: MediaCropResult) {
+  const supabase = supabaseBrowser();
 
-    console.log("Avatar crop result:", result);
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
 
-    setCropSourceUrl(null);
+  if (userError || !user) {
+    console.error("Unable to load authenticated user.", userError);
+    return;
   }
+
+  const filePath = `${user.id}/avatar-${Date.now()}.jpg`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("avatars")
+    .upload(filePath, result.blob, {
+      contentType: "image/jpeg",
+      upsert: true,
+    });
+
+  if (uploadError) {
+    console.error("Unable to upload avatar.", uploadError);
+    return;
+  }
+
+  const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
+
+  const response = await fetch("/api/profile", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      avatar_url: data.publicUrl,
+      avatar_mode: "image",
+    }),
+  });
+
+  if (!response.ok) {
+    console.error("Unable to save avatar.", await response.json());
+    return;
+  }
+
+  if (cropSourceUrl) {
+    URL.revokeObjectURL(cropSourceUrl);
+  }
+
+  URL.revokeObjectURL(result.objectUrl);
+
+  setCropSourceUrl(null);
+  router.refresh();
+}
 
   return (
     <>
