@@ -9,9 +9,9 @@
     --bottom-card-border: var(--border-subtle);
     --bottom-card-radius: 28px;
 
-    --bottom-card-height: 60vh;
-    --bottom-card-height-compact: 45vh;
-    --bottom-card-height-medium: 60vh;
+    --bottom-card-height: 75vh;
+    --bottom-card-height-compact: 60vh;
+    --bottom-card-height-medium: 75vh;
 
     --bottom-card-padding: 14px 14px 18px;
 
