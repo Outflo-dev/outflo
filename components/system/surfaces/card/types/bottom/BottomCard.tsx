@@ -9,7 +9,7 @@
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { APP_SHELL } from "@/components/system/shell/app/app-shell.constants";
 import BottomCardFrame from "./BottomCardFrame";
 import { useBottomCardDrag } from "./useBottomCardDrag";
@@ -118,24 +118,35 @@ export default function BottomCard<T extends string = string>({
   swipePanels,
   panelPostures,
 }: Props<T>) {
-  const { dragStyle, dragHandlers } = useBottomCardDrag(onClose);
+  const activeTargetPosture: BottomCardPosture =
+    swipePanels?.active
+      ? panelPostures?.[swipePanels.active] ?? "medium"
+      : "medium";
+
+  const [resolvedPosture, setResolvedPosture] =
+    useState<BottomCardPosture>("compact");
+
+  const { dragStyle, dragHandlers } = useBottomCardDrag({
+    posture: resolvedPosture,
+    targetPosture: activeTargetPosture,
+    onChangePosture: setResolvedPosture,
+  });
+
   const { panelSwipeStyle, panelSwipeHandlers } =
     useBottomCardPanelSwipe(swipePanels);
 
   useBottomCardScrollLock(show);
 
+  useEffect(() => {
+    setResolvedPosture("compact");
+  }, [swipePanels?.active]);
+
   if (!show) return null;
 
-  const activePosture =
-    swipePanels?.active && panelPostures?.[swipePanels.active]
-      ? panelPostures[swipePanels.active]
-      : "medium";
-
   const cardHeight =
-    activePosture === "compact"
+    resolvedPosture === "compact"
       ? "var(--bottom-card-height-compact)"
       : "var(--bottom-card-height-medium)";
-
 
   return (
     <div style={WRAP_STYLE}>
