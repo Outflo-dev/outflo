@@ -16,6 +16,14 @@ import type { ReactNode } from "react";
 -------------------------------- */
 type Props = {
     children: ReactNode;
+    swipeHandlers?: React.PointerEventHandler<HTMLDivElement> extends never
+    ? never
+    : {
+        onPointerDown?: React.PointerEventHandler<HTMLDivElement>;
+        onPointerMove?: React.PointerEventHandler<HTMLDivElement>;
+        onPointerUp?: React.PointerEventHandler<HTMLDivElement>;
+        onPointerCancel?: React.PointerEventHandler<HTMLDivElement>;
+    };
 };
 
 /* ------------------------------
@@ -30,9 +38,12 @@ const VIEWPORT_STYLE: React.CSSProperties = {
 /* ------------------------------
    Component
 -------------------------------- */
-export default function ProfileCardPanelViewport({ children }: Props) {
+export default function ProfileCardPanelViewport({
+    children,
+    swipeHandlers,
+}: Props) {
     return (
-        <div style={VIEWPORT_STYLE}>
+        <div style={VIEWPORT_STYLE} {...swipeHandlers}>
             {children}
         </div>
     );

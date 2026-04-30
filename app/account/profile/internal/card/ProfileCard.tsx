@@ -19,6 +19,7 @@ import ProfileCardPanelViewport from "./ProfileCardPanelViewport";
 import ProfileCardPanelTrack from "./ProfileCardPanelTrack";
 import ProfileCardPanelSlot from "./ProfileCardPanelSlot";
 import { APP_SHELL } from "@/components/system/shell/app/app-shell.constants";
+import { useProfileCardPanelSwipe } from "./useProfileCardPanelSwipe";
 
 /* ------------------------------
    Types
@@ -79,6 +80,11 @@ export default function ProfileCard({
     onChangePanel,
     onSelectAvatarFile,
 }: Props) {
+    const { panelSwipeHandlers } = useProfileCardPanelSwipe({
+        activePanel,
+        onChangePanel,
+    });
+
     if (!show) return null;
 
     return (
@@ -101,7 +107,7 @@ export default function ProfileCard({
                         onChangePanel={onChangePanel}
                     />
 
-                    <ProfileCardPanelViewport>
+                    <ProfileCardPanelViewport swipeHandlers={panelSwipeHandlers}>
                         <ProfileCardPanelTrack activePanel={activePanel}>
                             <ProfileCardPanelSlot>
                                 <ProfileAvatarPanel
