@@ -25,15 +25,11 @@ import ProfileOrbitSection from "./ProfileOrbitSection";
 import ProfileSocialSection from "./ProfileSocialSection";
 import ProfileEpochSection from "./ProfileEpochSection";
 import ProfileFooter from "./ProfileFooter";
-import ProfileAvatarPanel from "../internal/avatar/ProfileAvatarPanel";
-import ProfileControlsPanel from "../internal/ProfileControlsPanel";
-import ProfileThemePanel from "../internal/ProfileThemePanel";
 import type { ProfileDirection } from "../internal/profile.types";
 import { COLOR } from "@/components/system/primitives/color/color.config";
-import ProfileCardTabs from "../internal/ProfileCardTabs";
-import BottomCard from "@/components/system/surfaces/card/types/bottom/BottomCard";
 import MediaCropper from "@/components/system/surfaces/media-crop/MediaCropper";
 import type { MediaCropResult } from "@/components/system/surfaces/media-crop/media-crop.types";
+import ProfileCard from "../internal/card/ProfileCard";
 
 /* ------------------------------
    Constants
@@ -225,37 +221,15 @@ export default function ProfileView({
         </main>
       </Motion>
 
-      <BottomCard
+      <ProfileCard
         show={cardOpen}
+        activePanel={cardPanel}
+        fullName={fullName}
+        avatarUrl={avatarUrl}
         onClose={onCloseCard}
-        swipePanels={{
-          active: cardPanel,
-          order: ["avatar", "controls", "theme"] as const,
-          onChange: onChangeCardPanel,
-        }}
-        panelPostures={{
-          avatar: "compact",
-          controls: "medium",
-          theme: "medium",
-        }}
-      >
-        <ProfileCardTabs
-          activePanel={cardPanel}
-          fullName={fullName}
-          avatarUrl={avatarUrl}
-          onChangePanel={onChangeCardPanel}
-        />
-
-        {cardPanel === "avatar" && (
-          <ProfileAvatarPanel
-            fullName={fullName}
-            avatarUrl={avatarUrl}
-            onSelectAvatarFile={handleSelectAvatarFile}
-          />
-        )}
-        {cardPanel === "controls" && <ProfileControlsPanel />}
-        {cardPanel === "theme" && <ProfileThemePanel />}
-      </BottomCard>
+        onChangePanel={onChangeCardPanel}
+        onSelectAvatarFile={handleSelectAvatarFile}
+      />
 
       {cropSourceUrl && (
         <MediaCropper
@@ -265,7 +239,8 @@ export default function ProfileView({
           onCancel={handleCancelCrop}
           onSave={handleSaveCrop}
         />
-      )}
+      )
+      }
     </>
   );
 }
