@@ -20,6 +20,7 @@ import ProfileCardPanelTrack from "./ProfileCardPanelTrack";
 import ProfileCardPanelSlot from "./ProfileCardPanelSlot";
 import { APP_SHELL } from "@/components/system/shell/app/app-shell.constants";
 import { useProfileCardPanelSwipe } from "./useProfileCardPanelSwipe";
+import { useBottomCardScrollLock } from "@/components/system/surfaces/card/types/bottom/useBottomCardScrollLock";
 
 /* ------------------------------
    Types
@@ -84,6 +85,8 @@ export default function ProfileCard({
         activePanel,
         onChangePanel,
     });
+
+    useBottomCardScrollLock(show);
 
     if (!show) return null;
 
