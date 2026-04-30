@@ -81,7 +81,11 @@ export default function ProfileCard({
     onChangePanel,
     onSelectAvatarFile,
 }: Props) {
-    const { panelSwipeHandlers } = useProfileCardPanelSwipe({
+    const {
+        followX,
+        isSwiping,
+        panelSwipeHandlers,
+    } = useProfileCardPanelSwipe({
         activePanel,
         onChangePanel,
     });
@@ -111,7 +115,11 @@ export default function ProfileCard({
                     />
 
                     <ProfileCardPanelViewport swipeHandlers={panelSwipeHandlers}>
-                        <ProfileCardPanelTrack activePanel={activePanel}>
+                        <ProfileCardPanelTrack
+                            activePanel={activePanel}
+                            followX={followX}
+                            isSwiping={isSwiping}
+                        >
                             <ProfileCardPanelSlot>
                                 <ProfileAvatarPanel
                                     fullName={fullName}

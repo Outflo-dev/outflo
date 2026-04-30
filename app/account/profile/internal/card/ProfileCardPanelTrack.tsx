@@ -17,6 +17,8 @@ import type { ProfileCardPanel } from "./profile-card.types";
 -------------------------------- */
 type Props = {
     activePanel: ProfileCardPanel | null;
+    followX: number;
+    isSwiping: boolean;
     children: ReactNode;
 };
 
@@ -34,7 +36,6 @@ const TRACK_STYLE: React.CSSProperties = {
     minHeight: 0,
     height: "100%",
     width: "100%",
-    transition: "transform 260ms cubic-bezier(0.22, 1, 0.36, 1)",
 };
 
 /* ------------------------------
@@ -42,6 +43,8 @@ const TRACK_STYLE: React.CSSProperties = {
 -------------------------------- */
 export default function ProfileCardPanelTrack({
     activePanel,
+    followX,
+    isSwiping,
     children,
 }: Props) {
     const activeIndex = activePanel
@@ -52,7 +55,10 @@ export default function ProfileCardPanelTrack({
         <div
             style={{
                 ...TRACK_STYLE,
-                transform: `translateX(-${activeIndex * 100}%)`,
+                transform: `translateX(calc(-${activeIndex * 100}% + ${followX}px))`,
+                transition: isSwiping
+                    ? "none"
+                    : "transform 260ms cubic-bezier(0.22, 1, 0.36, 1)",
             }}
         >
             {children}
