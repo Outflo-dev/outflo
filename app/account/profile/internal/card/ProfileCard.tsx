@@ -9,6 +9,7 @@
 /* ------------------------------
    Imports
 -------------------------------- */
+import { useEffect, useState } from "react";
 import BottomCardFrame from "@/components/system/surfaces/card/types/bottom/BottomCardFrame";
 import ProfileCardTabs from "../ProfileCardTabs";
 import ProfileAvatarPanel from "../avatar/ProfileAvatarPanel";
@@ -21,11 +22,13 @@ import ProfileCardPanelSlot from "./ProfileCardPanelSlot";
 import { APP_SHELL } from "@/components/system/shell/app/app-shell.constants";
 import { useProfileCardPanelSwipe } from "./useProfileCardPanelSwipe";
 import { useBottomCardScrollLock } from "@/components/system/surfaces/card/types/bottom/useBottomCardScrollLock";
+import { useProfileCardPostureDrag } from "./useProfileCardPostureDrag";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type ProfileCardPanel = "avatar" | "controls" | "theme";
+type ProfileCardPosture = "compact" | "medium";
 
 type Props = {
     show: boolean;
@@ -89,10 +92,29 @@ export default function ProfileCard({
         activePanel,
         onChangePanel,
     });
+    const [posture, setPosture] = useState<ProfileCardPosture>("compact");
+
+    useEffect(() => {
+        setPosture("compact");
+    }, [activePanel]);
+
+    const {
+        postureDragStyle,
+        postureDragHandlers,
+    } = useProfileCardPostureDrag({
+        activePanel,
+        posture,
+        onChangePosture: setPosture,
+    });
 
     useBottomCardScrollLock(show);
 
     if (!show) return null;
+
+    const cardHeight =
+        posture === "compact"
+            ? "var(--bottom-card-height-compact)"
+            : "var(--bottom-card-height-medium)";
 
     return (
         <div style={WRAP_STYLE}>
@@ -103,9 +125,14 @@ export default function ProfileCard({
                 style={BACKDROP_STYLE}
             />
 
-            <div style={FRAME_WRAP_STYLE}>
-                <BottomCardFrame height="var(--bottom-card-height-compact)">
-                    <ProfileCardHandle />
+            <div
+                style={{
+                    ...FRAME_WRAP_STYLE,
+                    ...postureDragStyle,
+                }}
+            >
+                <BottomCardFrame height={cardHeight}>
+                    <ProfileCardHandle dragHandlers={postureDragHandlers} />
 
                     <ProfileCardTabs
                         activePanel={activePanel}

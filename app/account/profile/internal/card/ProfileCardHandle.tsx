@@ -7,6 +7,18 @@
    ========================================================== */
 
 /* ------------------------------
+   Types
+-------------------------------- */
+type Props = {
+    dragHandlers?: {
+        onPointerDown?: React.PointerEventHandler<HTMLDivElement>;
+        onPointerMove?: React.PointerEventHandler<HTMLDivElement>;
+        onPointerUp?: React.PointerEventHandler<HTMLDivElement>;
+        onPointerCancel?: React.PointerEventHandler<HTMLDivElement>;
+    };
+};
+
+/* ------------------------------
    Constants
 -------------------------------- */
 const HANDLE_WRAP_STYLE: React.CSSProperties = {
@@ -28,9 +40,9 @@ const HANDLE_STYLE: React.CSSProperties = {
 /* ------------------------------
    Component
 -------------------------------- */
-export default function ProfileCardHandle() {
+export default function ProfileCardHandle({ dragHandlers }: Props) {
     return (
-        <div style={HANDLE_WRAP_STYLE}>
+        <div style={HANDLE_WRAP_STYLE} {...dragHandlers}>
             <div style={HANDLE_STYLE} />
         </div>
     );
