@@ -1,5 +1,3 @@
-"use client";
-
 /* ==========================================================
    OUTFLO — USE PROFILE CARD PANEL SWIPE
    File: app/account/profile/internal/card/useProfileCardPanelSwipe.ts
@@ -27,9 +25,30 @@ const PANEL_ORDER: readonly ProfileCardPanel[] = [
 ];
 
 const SWIPE_THRESHOLD_PX = 54;
+const SWIPE_START_PX = 10;
 const VELOCITY_THRESHOLD_PX = 0.45;
 const VERTICAL_CANCEL_PX = 36;
 const FOLLOW_RESISTANCE = 1;
+
+const INTERACTIVE_SELECTOR = [
+    "button",
+    "a",
+    "input",
+    "textarea",
+    "select",
+    "label",
+    "[role='button']",
+    "[data-no-panel-swipe]",
+].join(",");
+
+/* ------------------------------
+   Helpers
+-------------------------------- */
+function isInteractiveTarget(target: EventTarget | null) {
+    if (!(target instanceof HTMLElement)) return false;
+
+    return Boolean(target.closest(INTERACTIVE_SELECTOR));
+}
 
 /* ------------------------------
    Hook
@@ -41,6 +60,7 @@ export function useProfileCardPanelSwipe({
     const startXRef = useRef<number | null>(null);
     const startYRef = useRef<number | null>(null);
     const startTimeRef = useRef<number | null>(null);
+    const hasCapturedRef = useRef(false);
 
     const [followX, setFollowX] = useState(0);
     const [isSwiping, setIsSwiping] = useState(false);
@@ -49,17 +69,18 @@ export function useProfileCardPanelSwipe({
         startXRef.current = null;
         startYRef.current = null;
         startTimeRef.current = null;
+        hasCapturedRef.current = false;
+
         setFollowX(0);
         setIsSwiping(false);
     }
 
     function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+        if (isInteractiveTarget(event.target)) return;
+
         startXRef.current = event.clientX;
         startYRef.current = event.clientY;
         startTimeRef.current = performance.now();
-        setIsSwiping(true);
-
-        event.currentTarget.setPointerCapture(event.pointerId);
     }
 
     function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
@@ -71,6 +92,14 @@ export function useProfileCardPanelSwipe({
         if (Math.abs(deltaY) > VERTICAL_CANCEL_PX) {
             resetSwipe();
             return;
+        }
+
+        if (Math.abs(deltaX) < SWIPE_START_PX) return;
+
+        if (!hasCapturedRef.current) {
+            event.currentTarget.setPointerCapture(event.pointerId);
+            hasCapturedRef.current = true;
+            setIsSwiping(true);
         }
 
         setFollowX(deltaX * FOLLOW_RESISTANCE);
