@@ -319,7 +319,6 @@ export default function ProfileThemePanel() {
 
     if (!response.ok) {
       setActiveTheme(previousTheme);
-      console.error("Unable to save theme preference.", await response.json());
       return;
     }
 
