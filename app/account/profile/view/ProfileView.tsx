@@ -4,10 +4,10 @@
    OUTFLO — PROFILE VIEW
    File: app/account/profile/view/ProfileView.tsx
    Scope: Compose the full profile page surface and profile card panels
-   Last Updated:
-   - ms: 1777481701125
-   - iso: 2026-04-29T16:55:01.125Z
-   - note: lift avatar crop surface outside bottom card
+    Last Updated:
+   - ms: 1777945233407
+   - iso: 2026-05-05T01:40:33.407Z
+   - note: route avatar persistence through isolated profile avatar API
    ========================================================== */
 
 /* ------------------------------
@@ -141,7 +141,7 @@ export default function ProfileView({
 
     const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
 
-    const response = await fetch("/api/profile", {
+    const response = await fetch("/api/profile/avatar", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
