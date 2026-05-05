@@ -2,12 +2,12 @@
 
 /* ==========================================================
    OUTFLŌ — APP SHELL
-   File: components/navigation/shell/AppShell.tsx
+   File: components/system/shell/app/AppShell.tsx
    Scope: Global shell owning frame navigation visibility layered surface root and route swipe
    Last Updated:
-   - ms: 1775672111393
-   - iso: 2026-04-08T18:15:11.393Z
-   - note: stabilize shell and restore route swipe inside new shell architecture
+   - ms: 1778018872799
+   - iso: 2026-05-05T22:07:52.799Z
+   - note: remove theme application from app shell
    ========================================================== */
 
 /* ------------------------------
@@ -92,8 +92,6 @@ export default function AppShell({ children }: AppShellProps) {
   const hideNav =
     pathname.startsWith("/app/money/receipts/") ||
     pathname.startsWith("/account/profile");
-
-  const disableRouteSwipe = pathname.startsWith("/app/money/receipts/");
 
   const showNav = !hideNav;
 

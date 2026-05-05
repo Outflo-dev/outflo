@@ -4,17 +4,25 @@
    OUTFLO — PROFILE THEME PANEL
    File: app/account/profile/internal/ProfileThemePanel.tsx
    Scope: Theme controls rendered inside ProfileCard
+   Last Updated:
+   - ms: 1777946153913
+   - iso: 2026-05-05T01:55:53.913Z
+   - note: persist theme selection through isolated profile theme API
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import type { ThemePreference } from "@/lib/app-state/theme-preference";
+import { isThemePreference } from "@/lib/app-state/theme-preference";
+import { emitThemePreference } from "@/components/system/shell/app/AppTheme";
 
 /* ------------------------------
    Types
 -------------------------------- */
-type ThemeName = "dark" | "light" | "dawn" | "day" | "dusk" | "night" | "funky";
+type ThemeName = ThemePreference;
 type TextScale = "small" | "standard" | "large";
 
 type ThemeOption = {
@@ -261,18 +269,10 @@ const SEGMENT_ACTIVE_STYLE: React.CSSProperties = {
 /* ------------------------------
    Helpers
 -------------------------------- */
-function applyTheme(theme: ThemeName) {
-  document.documentElement.dataset.theme = theme;
-  window.localStorage.setItem("outflo-theme", theme);
-}
 
 function applyTextScale(scale: TextScale) {
   document.documentElement.dataset.textScale = scale;
   window.localStorage.setItem("outflo-text-scale", scale);
-}
-
-function isThemeName(value: string): value is ThemeName {
-  return THEMES.some((theme) => theme.key === value);
 }
 
 function isTextScale(value: string): value is TextScale {
@@ -283,29 +283,48 @@ function isTextScale(value: string): value is TextScale {
    Component
 -------------------------------- */
 export default function ProfileThemePanel() {
+  const router = useRouter();
   const [activeTheme, setActiveTheme] = useState<ThemeName>("dark");
   const [activeScale, setActiveScale] = useState<TextScale>("standard");
 
-  const currentTheme = THEMES.find((theme) => theme.key === activeTheme) ?? THEMES[0];
+  const currentTheme =
+    THEMES.find((theme) => theme.key === activeTheme) ?? THEMES[0];
 
   useEffect(() => {
-    const theme =
-      document.documentElement.dataset.theme ||
-      window.localStorage.getItem("outflo-theme") ||
-      "dark";
+    const theme = document.documentElement.dataset.theme || "dark";
 
     const scale =
       document.documentElement.dataset.textScale ||
       window.localStorage.getItem("outflo-text-scale") ||
       "standard";
 
-    if (isThemeName(theme)) setActiveTheme(theme);
+    if (isThemePreference(theme)) setActiveTheme(theme);
     if (isTextScale(scale)) setActiveScale(scale);
   }, []);
 
-  function handleThemeChange(theme: ThemeName) {
-    applyTheme(theme);
+  async function handleThemeChange(theme: ThemeName) {
+    const previousTheme = activeTheme;
+
     setActiveTheme(theme);
+
+    const response = await fetch("/api/profile/theme", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        theme_preference: theme,
+      }),
+    });
+
+    if (!response.ok) {
+      setActiveTheme(previousTheme);
+      console.error("Unable to save theme preference.", await response.json());
+      return;
+    }
+
+    emitThemePreference(theme);
+    router.refresh();
   }
 
   function handleTextScaleChange(scale: TextScale) {
@@ -348,7 +367,9 @@ export default function ProfileThemePanel() {
                 type="button"
                 aria-pressed={active}
                 onClick={() => handleThemeChange(theme.key)}
-                style={active ? SWATCH_BUTTON_ACTIVE_STYLE : SWATCH_BUTTON_STYLE}
+                style={
+                  active ? SWATCH_BUTTON_ACTIVE_STYLE : SWATCH_BUTTON_STYLE
+                }
               >
                 <div style={SWATCH_TEXT_STYLE}>
                   <div style={SWATCH_TITLE_STYLE}>{theme.title}</div>
