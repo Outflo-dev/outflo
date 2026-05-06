@@ -3,69 +3,36 @@
    File: app/api/profile/theme/route.ts
    Scope: Persist authenticated user theme preference
    Last Updated:
-   - ms: 1778033477722
-   - iso: 2026-05-06T02:11:17.722Z
-   - note: add PATCH auth diagnostics for mobile session hydration
+   - ms: 1778071498197
+   - iso: 2026-05-06T12:44:58.197Z
+   - note: simplify theme write auth to server cookie session
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { isThemePreference } from "@/lib/app-state/theme-preference";
 import { supabaseServer } from "@/lib/supabase/server";
 
 /* ------------------------------
-   Route
+   PATCH Handler
 -------------------------------- */
 export async function PATCH(req: Request) {
-    const cookieStore = await cookies();
-    const cookieNames = cookieStore.getAll().map((cookie) => cookie.name);
-
     const supabase = await supabaseServer();
 
     const {
-        data: { user: cookieUser },
-        error: cookieUserError,
+        data: { user },
+        error: userError,
     } = await supabase.auth.getUser();
 
-    let user = cookieUser;
-
-    const authorization = req.headers.get("authorization");
-    const token = authorization?.startsWith("Bearer ")
-        ? authorization.slice("Bearer ".length)
-        : null;
-
-    let tokenUserErrorMessage: string | null = null;
-
-    if (!user && token) {
-        const {
-            data: { user: tokenUser },
-            error: tokenUserError,
-        } = await supabase.auth.getUser(token);
-
-        user = tokenUser;
-        tokenUserErrorMessage = tokenUserError?.message ?? null;
-    }
-
-    if (!user) {
+    if (userError || !user) {
         return NextResponse.json(
             {
                 error: "Unauthorized",
                 diagnostics: {
-                    cookie_count: cookieNames.length,
-                    cookie_names: cookieNames,
-                    has_sb_cookie: cookieNames.some((name) =>
-                        name.startsWith("sb-")
-                    ),
-                    has_auth_token_cookie: cookieNames.some((name) =>
-                        name.includes("auth-token")
-                    ),
-                    has_authorization_header: Boolean(authorization),
-                    has_bearer_token: Boolean(token),
-                    cookie_user_error: cookieUserError?.message ?? null,
-                    token_user_error: tokenUserErrorMessage,
+                    user_error: userError?.message ?? null,
+                    has_user: Boolean(user),
                 },
             },
             { status: 401 }
