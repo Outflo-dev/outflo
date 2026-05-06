@@ -306,12 +306,31 @@ export default function ProfileThemePanel() {
 
     setActiveTheme(theme);
 
-    const response = await fetch("/api/profile/theme", {
+    const supabase = supabaseBrowser();
+
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    const accessToken = session?.access_token ?? null;
+
+    alert(
+      [
+        `Theme client session: ${accessToken ? "HAS_TOKEN" : "NO_TOKEN"}`,
+        `Session error: ${sessionError?.message ?? "none"}`,
+        `Origin: ${window.location.origin}`,
+        `Token length: ${accessToken?.length ?? 0}`,
+      ].join("\n")
+    );
+
+    const response = await fetch(`${window.location.origin}/api/profile/theme`, {
       method: "PATCH",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       },
-      credentials: "include",
       body: JSON.stringify({
         theme_preference: theme,
       }),
