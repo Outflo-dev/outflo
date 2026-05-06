@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1778071498197
    - iso: 2026-05-06T12:44:58.197Z
-   - note: add callback diagnostics for production auth exchange
+   - note: route successful auth exchange to auth-test during mobile cookie diagnostics
    ========================================================== */
 
 /* ------------------------------
@@ -19,7 +19,6 @@ import { supabaseServer } from "@/lib/supabase/server";
 -------------------------------- */
 export async function GET(request: Request) {
    const url = new URL(request.url);
-
    const code = url.searchParams.get("code");
 
    console.log("AUTH CALLBACK HIT", {
@@ -44,5 +43,5 @@ export async function GET(request: Request) {
       return NextResponse.redirect(new URL("/login", url));
    }
 
-   return NextResponse.redirect(new URL("/", url));
+   return NextResponse.redirect(new URL("/api/auth-test", url));
 }

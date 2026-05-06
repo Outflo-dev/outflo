@@ -1,6 +1,22 @@
+/* ==========================================================
+   OUTFLO — SUPABASE SERVER CLIENT
+   File: lib/supabase/server.ts
+   Scope: Create the cookie-aware Supabase server client for server-side auth reads and protected writes
+   Last Updated:
+   - ms: 1778090000000
+   - iso: 2026-05-06T00:00:00.000Z
+   - note: clarify server auth cookie ownership for protected mobile writes
+   ========================================================== */
+
+/* ------------------------------
+   Imports
+-------------------------------- */
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 
+/* ------------------------------
+   Client
+-------------------------------- */
 export async function supabaseServer() {
   const cookieStore = await cookies();
 
@@ -12,15 +28,11 @@ export async function supabaseServer() {
         getAll() {
           return cookieStore.getAll();
         },
+
         setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options);
-            });
-          } catch {
-            // Next.js server components can't set cookies.
-            // It's fine; cookies will be set in route handlers (/auth/callback, /logout, etc).
-          }
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
         },
       },
     }

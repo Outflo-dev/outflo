@@ -5,15 +5,13 @@
    Last Updated:
    - ms: 1778156400000
    - iso: 2026-05-06T23:00:00.000Z
-   - note: support bearer fallback for mobile auth persistence
+   - note: restore cookie-auth-only protected theme write path
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import { isThemePreference } from "@/lib/app-state/theme-preference";
 import { supabaseServer } from "@/lib/supabase/server";
 
@@ -32,71 +30,18 @@ const DEFAULT_USER_PREFERENCES = {
    POST Handler
 -------------------------------- */
 export async function POST(req: Request) {
-    const cookieStore = await cookies();
-
-    const cookieNames = cookieStore
-        .getAll()
-        .map((cookie) => cookie.name);
-
-    const authHeader = req.headers.get("authorization");
-
-    const bearerToken = authHeader?.startsWith("Bearer ")
-        ? authHeader.slice("Bearer ".length)
-        : null;
-
     const supabase = await supabaseServer();
 
     const {
-        data: { user: cookieUser },
-        error: cookieUserError,
+        data: { user },
+        error: userError,
     } = await supabase.auth.getUser();
 
-    let bearerUser = null;
-    let bearerUserError: string | null = null;
-
-    if (!cookieUser && bearerToken) {
-        const {
-            data: { user },
-            error,
-        } = await supabase.auth.getUser(bearerToken);
-
-        bearerUser = user;
-
-        if (error) {
-            bearerUserError = error.message;
-        }
-    }
-
-    const user = cookieUser ?? bearerUser;
-
-    const writeSupabase = cookieUser
-        ? supabase
-        : createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-            {
-                global: {
-                    headers: {
-                        Authorization: `Bearer ${bearerToken}`,
-                    },
-                },
-            }
-        );
-
-    if (!user) {
+    if (userError || !user) {
         return NextResponse.json(
             {
                 error: "Unauthorized",
-                diagnostics: {
-                    cookie_count: cookieNames.length,
-                    cookie_names: cookieNames,
-                    has_sb_cookie: cookieNames.some((name) =>
-                        name.startsWith("sb-")
-                    ),
-                    has_bearer_token: Boolean(bearerToken),
-                    cookie_user_error: cookieUserError?.message ?? null,
-                    bearer_user_error: bearerUserError,
-                },
+                auth_error: userError?.message ?? null,
             },
             { status: 401 }
         );
@@ -127,40 +72,25 @@ export async function POST(req: Request) {
 
     const updatedAt = new Date().toISOString();
 
-    const { error: updateError, count } = await writeSupabase
+    const { error: upsertError } = await supabase
         .from("user_preferences")
-        .update(
+        .upsert(
             {
-                theme_preference: themePreference,
-                updated_at: updatedAt,
-            },
-            { count: "exact" }
-        )
-        .eq("user_id", user.id);
-
-    if (updateError) {
-        return NextResponse.json(
-            { error: updateError.message },
-            { status: 500 }
-        );
-    }
-
-    if (count === 0) {
-        const { error: insertError } = await writeSupabase
-            .from("user_preferences")
-            .insert({
                 user_id: user.id,
                 ...DEFAULT_USER_PREFERENCES,
                 theme_preference: themePreference,
                 updated_at: updatedAt,
-            });
+            },
+            {
+                onConflict: "user_id",
+            }
+        );
 
-        if (insertError) {
-            return NextResponse.json(
-                { error: insertError.message },
-                { status: 500 }
-            );
-        }
+    if (upsertError) {
+        return NextResponse.json(
+            { error: upsertError.message },
+            { status: 500 }
+        );
     }
 
     return NextResponse.json({ ok: true });
