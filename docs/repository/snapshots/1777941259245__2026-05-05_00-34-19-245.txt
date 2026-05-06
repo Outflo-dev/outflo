@@ -1,6 +1,6 @@
 ﻿OUTFLO - REPOSITORY TREE
-Generated: 2026-05-05 22:07:52.799 UTC
-Unix: 1778018872799
+Generated: 2026-05-05 00:34:19.245 UTC
+Unix: 1777941259245
 Root: C:\dev\Outflo
 
 app\
@@ -110,10 +110,6 @@ app\
 |   +-- outflows\
 |   |   +-- route.ts
 |   +-- profile\
-|   |   +-- avatar\
-|   |   |   +-- route.ts
-|   |   +-- theme\
-|   |   |   +-- route.ts
 |   |   +-- route.ts
 |   +-- receipts\
 |   |   +-- [id]\
@@ -403,7 +399,6 @@ docs\
 |   |   +-- thread-transition\
 |   |       +-- thread-transition-sop-v5__1774804792769__2026-03-29_17-19-52-769.md
 |   |       +-- thread-transition-sop-v6__1776222056208__2026-04-15_03-00-56-208.md
-|   |       +-- thread-transition-sop-v7.md
 |   +-- canon\
 |   |   +-- code\
 |   |   |   +-- code-style-sop-v3__1774806144569__2026-03-29_17-42-24-569.md
@@ -488,7 +483,6 @@ docs\
 |   |   +-- 1777498374494__2026-04-29_21-32-54-494.txt
 |   |   +-- 1777524208166__2026-04-30_04-43-28-166.txt
 |   |   +-- 1777859557094__2026-05-04_01-52-37-094.txt
-|   |   +-- 1777941259245__2026-05-05_00-34-19-245.txt
 |   +-- README.md
 +-- README.md
 
