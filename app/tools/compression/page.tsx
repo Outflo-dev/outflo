@@ -7,13 +7,14 @@
    Last Updated:
    - ms: 1778107087301
    - iso: 2026-05-06T22:38:07.301Z
-   - note: rename calculator to Orbit Money and replace hardcoded colors with theme tokens
+   - note: place orbit money calculator inside app frame and theme tokens
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import { useState } from "react";
+import AppFrame from "@/components/system/shell/app/AppFrame";
 
 /* ------------------------------
    Component
@@ -31,75 +32,76 @@ export default function OrbitMoneyCalculator() {
       style={{
         minHeight: "100svh",
         width: "100%",
-        boxSizing: "border-box",
         backgroundColor: "var(--bg-primary)",
         color: "var(--text-primary)",
         display: "grid",
         placeItems: "center",
-        padding: "max(24px, 6vh) 24px",
-        touchAction: "pan-y",
+        padding: "max(24px, 6vh) 0px",
+        boxSizing: "border-box",
       }}
     >
-      <section
-        style={{
-          width: "min(640px, 92vw)",
-          display: "grid",
-          rowGap: "clamp(44px, 7vh, 72px)",
-        }}
-      >
-        {/* Big Number */}
-        <div style={{ display: "grid", rowGap: 10 }}>
-          <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
-            Orbit Money
-          </div>
-          <div
-            style={{
-              fontSize: "clamp(52px, 7vw, 76px)",
-              fontWeight: 700,
-              fontVariantNumeric: "tabular-nums",
-            }}
-          >
-            ${orbitMoney.toFixed(2)}
-          </div>
-        </div>
+      <AppFrame>
+        <section
+          style={{
+            width: "100%",
+            display: "grid",
+            rowGap: "clamp(44px, 7vh, 72px)",
+            boxSizing: "border-box",
+          }}
+        >
+          <div style={{ display: "grid", rowGap: 10 }}>
+            <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+              Orbit Money
+            </div>
 
-        {/* Secondary Number */}
-        <div style={{ display: "grid", rowGap: 10 }}>
-          <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
-            Daily Rate
+            <div
+              style={{
+                fontSize: "clamp(52px, 7vw, 76px)",
+                fontWeight: 700,
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              ${orbitMoney.toFixed(2)}
+            </div>
           </div>
-          <div
-            style={{
-              fontSize: "clamp(40px, 5.5vw, 58px)",
-              fontWeight: 600,
-              fontVariantNumeric: "tabular-nums",
-            }}
-          >
-            ${dailyRate.toFixed(2)}
+
+          <div style={{ display: "grid", rowGap: 10 }}>
+            <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+              Daily Rate
+            </div>
+
+            <div
+              style={{
+                fontSize: "clamp(40px, 5.5vw, 58px)",
+                fontWeight: 600,
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              ${dailyRate.toFixed(2)}
+            </div>
           </div>
-        </div>
 
-        {/* Inputs */}
-        <div style={{ display: "grid", rowGap: 14 }}>
-          <input
-            type="number"
-            inputMode="decimal"
-            placeholder="Visits per week"
-            value={visitsPerWeek || ""}
-            onChange={(e) => setVisitsPerWeek(Number(e.target.value))}
-            style={inputStyle}
-          />
+          <div style={{ display: "grid", rowGap: 14 }}>
+            <input
+              type="number"
+              inputMode="decimal"
+              placeholder="Visits per week"
+              value={visitsPerWeek || ""}
+              onChange={(e) => setVisitsPerWeek(Number(e.target.value))}
+              style={inputStyle}
+            />
 
-          <input
-            type="number"
-            inputMode="decimal"
-            placeholder="$ per visit"
-            value={costPerVisit || ""}
-            onChange={(e) => setCostPerVisit(Number(e.target.value))}
-            style={inputStyle}
-          />
-        </div>
-      </section>
+            <input
+              type="number"
+              inputMode="decimal"
+              placeholder="$ per visit"
+              value={costPerVisit || ""}
+              onChange={(e) => setCostPerVisit(Number(e.target.value))}
+              style={inputStyle}
+            />
+          </div>
+        </section>
+      </AppFrame>
     </main>
   );
 }
@@ -116,4 +118,5 @@ const inputStyle: React.CSSProperties = {
   color: "var(--text-primary)",
   fontSize: 16,
   outline: "none",
+  boxSizing: "border-box",
 };
