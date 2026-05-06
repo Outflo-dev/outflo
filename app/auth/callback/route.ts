@@ -1,32 +1,51 @@
 /* ==========================================================
-   OUTFLO — AUTH CALLBACK (API)
-   File: app/auth/callback/route.ts
-   Scope: Handles auth code exchange and session creation
+   OUTFLO — AUTH TEST API
+   File: app/api/auth-test/route.ts
+   Scope: Diagnose server-readable auth state in API route context
    Last Updated:
-   - ms: 1778018872799
-   - iso: 2026-05-05T22:07:52.799Z
-   - note: redirect authenticated callback into app runtime
+   - ms: 1778033477722
+   - iso: 2026-05-06T02:11:17.722Z
+   - note: report safe cookie names and Supabase server auth state
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase/server";
 
 /* ------------------------------
    GET Handler
 -------------------------------- */
-export async function GET(request: Request) {
-   const url = new URL(request.url);
-   const code = url.searchParams.get("code");
-
-   if (!code) {
-      return NextResponse.redirect(new URL("/login", url));
-   }
+export async function GET() {
+   const cookieStore = await cookies();
+   const cookieNames = cookieStore.getAll().map((cookie) => cookie.name);
 
    const supabase = await supabaseServer();
-   await supabase.auth.exchangeCodeForSession(code);
 
-   return NextResponse.redirect(new URL("/app/systems", url));
+   const {
+      data: { user },
+      error: userError,
+   } = await supabase.auth.getUser();
+
+   const {
+      data: { session },
+      error: sessionError,
+   } = await supabase.auth.getSession();
+
+   return NextResponse.json({
+      connected: true,
+      cookie_count: cookieNames.length,
+      cookie_names: cookieNames,
+      has_sb_cookie: cookieNames.some((name) => name.startsWith("sb-")),
+      has_auth_token_cookie: cookieNames.some((name) =>
+         name.includes("auth-token")
+      ),
+      has_user: Boolean(user),
+      has_session: Boolean(session),
+      has_access_token: Boolean(session?.access_token),
+      user_error: userError?.message ?? null,
+      session_error: sessionError?.message ?? null,
+   });
 }
