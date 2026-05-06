@@ -1,3 +1,5 @@
+// app/account/profile/internal/ProfileThemePanel.tsx
+
 "use client";
 
 /* ==========================================================
@@ -5,9 +7,9 @@
    File: app/account/profile/internal/ProfileThemePanel.tsx
    Scope: Theme controls rendered inside ProfileCard
    Last Updated:
-   - ms: 1777946153913
-   - iso: 2026-05-05T01:55:53.913Z
-   - note: persist theme selection through isolated profile theme API
+   - ms: 1778071498197
+   - iso: 2026-05-06T12:44:58.197Z
+   - note: delegate profile theme write transport to client helper
    ========================================================== */
 
 /* ------------------------------
@@ -17,7 +19,7 @@ import { useEffect, useState } from "react";
 import type { ThemePreference } from "@/lib/app-state/theme-preference";
 import { isThemePreference } from "@/lib/app-state/theme-preference";
 import { emitThemePreference } from "@/components/system/shell/app/AppTheme";
-import { supabaseBrowser } from "@/lib/supabase/client";
+import { saveProfileThemePreference } from "./theme/profile-theme.client";
 
 /* ------------------------------
    Types
@@ -269,7 +271,6 @@ const SEGMENT_ACTIVE_STYLE: React.CSSProperties = {
 /* ------------------------------
    Helpers
 -------------------------------- */
-
 function applyTextScale(scale: TextScale) {
   document.documentElement.dataset.textScale = scale;
   window.localStorage.setItem("outflo-text-scale", scale);
@@ -306,42 +307,20 @@ export default function ProfileThemePanel() {
 
     setActiveTheme(theme);
 
-    const supabase = supabaseBrowser();
+    const result = await saveProfileThemePreference(theme);
 
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    const accessToken = session?.access_token ?? null;
-
-    alert(
-      [
-        `Theme client session: ${accessToken ? "HAS_TOKEN" : "NO_TOKEN"}`,
-        `Session error: ${sessionError?.message ?? "none"}`,
-        `Origin: ${window.location.origin}`,
-        `Token length: ${accessToken?.length ?? 0}`,
-      ].join("\n")
-    );
-
-    const response = await fetch(`${window.location.origin}/api/profile/theme`, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-      },
-      body: JSON.stringify({
-        theme_preference: theme,
-      }),
-    });
-
-    if (!response.ok) {
+    if (!result.ok) {
       setActiveTheme(previousTheme);
 
-      const errorText = await response.text();
+      alert(
+        [
+          `Theme save failed: ${result.status}`,
+          result.message,
+          "",
+          JSON.stringify(result.diagnostics, null, 2),
+        ].join("\n")
+      );
 
-      alert(`Theme save failed: ${response.status}\n${errorText}`);
       return;
     }
 
