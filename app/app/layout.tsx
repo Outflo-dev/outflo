@@ -16,7 +16,6 @@ import { supabaseServer } from "@/lib/supabase/server";
 import { resolveThemePreference } from "@/lib/app-state/theme-preference";
 import ScreenTimeMount from "./ScreenTimeMount";
 import AppShell from "@/components/system/shell/app/AppShell";
-import AppTheme from "@/components/system/shell/app/AppTheme";
 
 /* ------------------------------
    Types
@@ -43,18 +42,10 @@ export default async function AppLayout({
     redirect("/");
   }
 
-  const { data: preferences } = await supabase
-    .from("user_preferences")
-    .select("theme_preference")
-    .eq("user_id", user.id)
-    .maybeSingle<PreferenceRow>();
-
-  const themePreference = resolveThemePreference(preferences?.theme_preference);
-
   return (
-    <AppTheme themePreference={themePreference}>
+    <>
       <ScreenTimeMount />
       <AppShell>{children}</AppShell>
-    </AppTheme>
+    </>
   );
 }

@@ -16,6 +16,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
+import AppFrame from "@/components/system/shell/app/AppFrame";
 
 /* ------------------------------
    Types
@@ -169,7 +170,7 @@ function downloadTextFile(filename: string, content: string, mime: string) {
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-  } catch {}
+  } catch { }
 }
 
 /* ------------------------------
@@ -249,174 +250,176 @@ export default function DayPage() {
     <main
       style={{
         minHeight: "100vh",
-        backgroundColor: "black",
-        color: "white",
+        background: "var(--bg-primary)",
+        color: "var(--text-primary)",
         display: "grid",
         placeItems: "center",
         padding: "max(24px, 6vh) 0px",
       }}
     >
-      <section
-        style={{
-          width: "100%",
-          maxWidth: "none",
-          marginInline: "auto",
-          display: "grid",
-          gap: 16,
-          boxSizing: "border-box",
-        }}
-      >
-        <div
+      <AppFrame>
+        <section
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-            gap: 12,
+            width: "100%",
+            maxWidth: "none",
+            marginInline: "auto",
+            display: "grid",
+            gap: 16,
+            boxSizing: "border-box",
           }}
         >
-          <Link
-            href="/app/money/receipts"
-            style={{
-              color: "white",
-              opacity: 0.7,
-              textDecoration: "none",
-              fontSize: 12,
-            }}
-          >
-            ← Back
-          </Link>
-
-          <button onClick={exportDayCsv} style={pillButtonStyle}>
-            Export CSV
-          </button>
-        </div>
-
-        <div style={{ display: "grid", gap: 6 }}>
-          <div style={{ fontSize: 13, opacity: 0.85 }}>Day</div>
-
           <div
             style={{
-              fontSize: 12,
-              opacity: 0.6,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              gap: 12,
             }}
           >
-            {formatDayHeaderFromKey(key)} ·{" "}
-            {dayReceipts[0]
-              ? formatMoney(dayTotal, dayReceipts[0].currency)
-              : "—"}
+            <Link
+              href="/app/money/receipts"
+              style={{
+                color: "white",
+                opacity: 0.7,
+                textDecoration: "none",
+                fontSize: 12,
+              }}
+            >
+              ← Back
+            </Link>
+
+            <button onClick={exportDayCsv} style={pillButtonStyle}>
+              Export CSV
+            </button>
           </div>
 
-          <div style={{ fontSize: 12, opacity: 0.45 }}>
-            Receipts:{" "}
-            <span style={{ fontVariantNumeric: "tabular-nums" }}>
-              {loading ? "…" : dayReceipts.length}
-            </span>
+          <div style={{ display: "grid", gap: 6 }}>
+            <div style={{ fontSize: 13, opacity: 0.85 }}>Day</div>
+
+            <div
+              style={{
+                fontSize: 12,
+                opacity: 0.6,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+              }}
+            >
+              {formatDayHeaderFromKey(key)} ·{" "}
+              {dayReceipts[0]
+                ? formatMoney(dayTotal, dayReceipts[0].currency)
+                : "—"}
+            </div>
+
+            <div style={{ fontSize: 12, opacity: 0.45 }}>
+              Receipts:{" "}
+              <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                {loading ? "…" : dayReceipts.length}
+              </span>
+            </div>
           </div>
-        </div>
 
-        {loading ? (
-          <div style={{ fontSize: 12, opacity: 0.35 }}>Loading…</div>
-        ) : dayReceipts.length === 0 ? (
-          <div style={{ fontSize: 12, opacity: 0.35 }}>No receipts.</div>
-        ) : (
-          <div style={{ display: "grid", gap: 12 }}>
-            {dayReceipts.map((r) => {
-              const cum = dayCumById.get(r.id);
-              const cumText = formatMoney(
-                typeof cum === "number" ? cum : r.amount_minor,
-                r.currency
-              );
+          {loading ? (
+            <div style={{ fontSize: 12, opacity: 0.35 }}>Loading…</div>
+          ) : dayReceipts.length === 0 ? (
+            <div style={{ fontSize: 12, opacity: 0.35 }}>No receipts.</div>
+          ) : (
+            <div style={{ display: "grid", gap: 12 }}>
+              {dayReceipts.map((r) => {
+                const cum = dayCumById.get(r.id);
+                const cumText = formatMoney(
+                  typeof cum === "number" ? cum : r.amount_minor,
+                  r.currency
+                );
 
-              return (
-                <Link
-                  key={r.id}
-                  href={`/app/money/receipts/${encodeURIComponent(r.id)}`}
-                  style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                    display: "block",
-                  }}
-                >
-                  <div
+                return (
+                  <Link
+                    key={r.id}
+                    href={`/app/money/receipts/${encodeURIComponent(r.id)}`}
                     style={{
-                      padding: "16px",
-                      borderRadius: 18,
-                      border: "1px solid rgba(255,255,255,0.10)",
-                      background: "rgba(255,255,255,0.03)",
-                      display: "grid",
-                      gap: 10,
+                      textDecoration: "none",
+                      color: "inherit",
+                      display: "block",
                     }}
                   >
                     <div
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "baseline",
-                        gap: 12,
+                        padding: "16px",
+                        borderRadius: 18,
+                        border: "1px solid rgba(255,255,255,0.10)",
+                        background: "rgba(255,255,255,0.03)",
+                        display: "grid",
+                        gap: 10,
                       }}
                     >
-                      <div style={{ fontSize: 14, opacity: 0.9 }}>
-                        {r.merchant_raw}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "baseline",
+                          gap: 12,
+                        }}
+                      >
+                        <div style={{ fontSize: 14, opacity: 0.9 }}>
+                          {r.merchant_raw}
+                        </div>
+
+                        <div
+                          style={{
+                            fontSize: 12,
+                            opacity: 0.55,
+                            fontVariantNumeric: "tabular-nums",
+                            letterSpacing: "0.02em",
+                            textAlign: "right",
+                            whiteSpace: "nowrap",
+                          }}
+                          title="Day cumulative at this moment"
+                        >
+                          {cumText}
+                        </div>
                       </div>
 
                       <div
                         style={{
+                          fontSize: 30,
+                          fontWeight: 700,
+                          fontVariantNumeric: "tabular-nums",
+                          letterSpacing: "-0.02em",
+                        }}
+                      >
+                        {formatMoney(r.amount_minor, r.currency)}
+                      </div>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "baseline",
                           fontSize: 12,
                           opacity: 0.55,
-                          fontVariantNumeric: "tabular-nums",
-                          letterSpacing: "0.02em",
-                          textAlign: "right",
-                          whiteSpace: "nowrap",
                         }}
-                        title="Day cumulative at this moment"
                       >
-                        {cumText}
+                        <span>{formatReceiptTime(r.moment_ms)}</span>
+
+                        <span
+                          style={{
+                            fontVariantNumeric: "tabular-nums",
+                            letterSpacing: "0.05em",
+                            opacity: 0.7,
+                          }}
+                        >
+                          #{receiptSuffix(r.id)}
+                        </span>
                       </div>
                     </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
 
-                    <div
-                      style={{
-                        fontSize: 30,
-                        fontWeight: 700,
-                        fontVariantNumeric: "tabular-nums",
-                        letterSpacing: "-0.02em",
-                      }}
-                    >
-                      {formatMoney(r.amount_minor, r.currency)}
-                    </div>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "baseline",
-                        fontSize: 12,
-                        opacity: 0.55,
-                      }}
-                    >
-                      <span>{formatReceiptTime(r.moment_ms)}</span>
-
-                      <span
-                        style={{
-                          fontVariantNumeric: "tabular-nums",
-                          letterSpacing: "0.05em",
-                          opacity: 0.7,
-                        }}
-                      >
-                        #{receiptSuffix(r.id)}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
-
-        <div style={{ fontSize: 11, opacity: 0.22 }}>Stored in cloud.</div>
-      </section>
+          <div style={{ fontSize: 11, opacity: 0.22 }}>Stored in cloud.</div>
+        </section>
+      </AppFrame>
     </main>
   );
 }

@@ -3,9 +3,9 @@
    File: app/app/money/page.tsx
    Scope: Render money root surface with current spend summary and quick add
    Last Updated:
-   - ms: 1774328392539
-   - iso: 2026-03-24T04:59:52.539Z
-   - note: Phase D write alignment
+   - ms: 1778018872799
+   - iso: 2026-05-05T22:07:52.799Z
+   - note: render money root inside app frame and theme tokens
    ========================================================== */
 
 "use client";
@@ -16,7 +16,7 @@
 import type React from "react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import AppShell from "@/components/system/shell/app/AppShell";
+import AppFrame from "@/components/system/shell/app/AppFrame";
 
 /* ------------------------------
    Types
@@ -214,90 +214,101 @@ export default function MoneyPage() {
      Render
   -------------------------------- */
   return (
-    <div
+    <main
       style={{
         minHeight: "100svh",
-        backgroundColor: "black",
-        color: "white",
+        background: "var(--bg-primary)",
+        color: "var(--text-primary)",
         display: "grid",
         placeItems: "center",
         padding: "max(24px, 6vh) 0px",
         width: "100%",
       }}
     >
-      <section
-        style={{
-          width: "100%",
-          display: "grid",
-          rowGap: "clamp(28px, 5vh, 56px)",
-          boxSizing: "border-box",
-        }}
-      >
-        <div style={{ display: "grid", rowGap: 10 }}>
-          <div style={{ fontSize: 13, opacity: 0.55 }}>Today Spend</div>
-          <div
-            style={{
-              fontSize: "clamp(52px, 7vw, 76px)",
-              fontWeight: 700,
-              fontVariantNumeric: "tabular-nums",
-            }}
-          >
-            {formatMoney(todaySpendMinor, displayCurrency)}
-          </div>
-        </div>
+      <AppFrame>
+        <section
+          style={{
+            width: "100%",
+            display: "grid",
+            rowGap: "clamp(28px, 5vh, 56px)",
+            boxSizing: "border-box",
+          }}
+        >
+          <div style={{ display: "grid", rowGap: 10 }}>
+            <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+              Today Spend
+            </div>
 
-        <div style={{ display: "grid", rowGap: 10 }}>
-          <div style={{ fontSize: 13, opacity: 0.55 }}>365 Spend</div>
-          <div
-            style={{
-              fontSize: "clamp(40px, 5.5vw, 58px)",
-              fontWeight: 600,
-              fontVariantNumeric: "tabular-nums",
-            }}
-          >
-            {formatMoney(spend365Minor, displayCurrency)}
-          </div>
-        </div>
-
-        <div style={{ display: "grid", rowGap: 14 }}>
-          <input
-            placeholder="Place"
-            value={place}
-            onChange={(event) => setPlace(event.target.value)}
-            style={inputStyle}
-          />
-
-          <input
-            placeholder="Amount"
-            inputMode="decimal"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-            style={inputStyle}
-          />
-
-          <button onClick={addReceipt} style={buttonStyle} disabled={loading}>
-            Add
-          </button>
-
-          <div style={{ fontSize: 13, opacity: 0.85 }}>
-            <Link
-              href="/app/money/receipts"
-              style={{ textDecoration: "none", color: "white" }}
+            <div
+              style={{
+                fontSize: "clamp(52px, 7vw, 76px)",
+                fontWeight: 700,
+                fontVariantNumeric: "tabular-nums",
+              }}
             >
-              Receipts:{" "}
-              <span
+              {formatMoney(todaySpendMinor, displayCurrency)}
+            </div>
+          </div>
+
+          <div style={{ display: "grid", rowGap: 10 }}>
+            <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+              365 Spend
+            </div>
+
+            <div
+              style={{
+                fontSize: "clamp(40px, 5.5vw, 58px)",
+                fontWeight: 600,
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {formatMoney(spend365Minor, displayCurrency)}
+            </div>
+          </div>
+
+          <div style={{ display: "grid", rowGap: 14 }}>
+            <input
+              placeholder="Place"
+              value={place}
+              onChange={(event) => setPlace(event.target.value)}
+              style={inputStyle}
+            />
+
+            <input
+              placeholder="Amount"
+              inputMode="decimal"
+              value={amount}
+              onChange={(event) => setAmount(event.target.value)}
+              style={inputStyle}
+            />
+
+            <button onClick={addReceipt} style={buttonStyle} disabled={loading}>
+              Add
+            </button>
+
+            <div style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+              <Link
+                href="/app/money/receipts"
                 style={{
-                  fontWeight: 700,
-                  fontVariantNumeric: "tabular-nums",
+                  textDecoration: "none",
+                  color: "var(--text-primary)",
                 }}
               >
-                {receipts.length}
-              </span>
-            </Link>
+                Receipts:{" "}
+                <span
+                  style={{
+                    fontWeight: 700,
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  {receipts.length}
+                </span>
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </AppFrame>
+    </main>
   );
 }
 
@@ -307,10 +318,10 @@ export default function MoneyPage() {
 const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: "16px 18px",
-  background: "#111",
-  border: "1px solid #222",
+  background: "var(--surface-muted)",
+  border: "1px solid var(--border-soft)",
   borderRadius: 14,
-  color: "white",
+  color: "var(--text-primary)",
   fontSize: 16,
   outline: "none",
 };
@@ -318,10 +329,10 @@ const inputStyle: React.CSSProperties = {
 const buttonStyle: React.CSSProperties = {
   width: "100%",
   padding: "14px 18px",
-  background: "rgba(255,255,255,0.10)",
-  border: "1px solid rgba(255,255,255,0.14)",
+  background: "var(--surface-soft)",
+  border: "1px solid var(--border-soft)",
   borderRadius: 14,
-  color: "white",
+  color: "var(--text-primary)",
   fontSize: 15,
   fontWeight: 600,
 };

@@ -16,6 +16,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import AppFrame from "@/components/system/shell/app/AppFrame";
 
 /* ------------------------------
    Types
@@ -144,7 +145,7 @@ function downloadTextFile(filename: string, content: string, mime: string) {
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
-  } catch {}
+  } catch { }
 }
 
 async function apiGetReceipts(): Promise<Receipt[]> {
@@ -275,8 +276,8 @@ export default function ReceiptsPage() {
     <main
       style={{
         minHeight: "100vh",
-        backgroundColor: "black",
-        color: "white",
+        background: "var(--bg-primary)",
+        color: "var(--text-primary)",
         display: "grid",
         placeItems: "center",
         padding: "max(24px, 6vh) 0px",
@@ -284,206 +285,217 @@ export default function ReceiptsPage() {
         maxWidth: "none",
       }}
     >
-      <section
-        style={{
-          width: "100%",
-          display: "grid",
-          gap: 16,
-          boxSizing: "border-box",
-        }}
-      >
-        <div
+      <AppFrame>
+        <section
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-            gap: 12,
+            width: "100%",
+            display: "grid",
+            gap: 16,
+            boxSizing: "border-box",
           }}
         >
-          <Link
-            href="/app/money"
-            style={{
-              color: "white",
-              opacity: 0.7,
-              textDecoration: "none",
-              fontSize: 12,
-            }}
-          >
-            ← Back
-          </Link>
-
-          {showAdmin ? (
-            <button onClick={goAdmin} style={dangerButtonStyle}>
-              Admin
-            </button>
-          ) : (
-            <div style={{ fontSize: 12, opacity: 0.35 }} />
-          )}
-        </div>
-
-        <div style={{ display: "grid", gap: 6 }}>
           <div
-            onClick={onTapTitle}
             style={{
-              fontSize: 13,
-              opacity: 0.85,
-              userSelect: "none",
-              cursor: "default",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              gap: 12,
             }}
-            title="(tap 3x for export · 11x for admin)"
           >
-            Receipts
-          </div>
+            <Link
+              href="/app/money"
+              style={{
+                color: "var(--text-primary)",
+                opacity: 0.7,
+                textDecoration: "none",
+                fontSize: 12,
+              }}
+            >
+              ← Back
+            </Link>
 
-          <div style={{ fontSize: 12, opacity: 0.45 }}>
-            Total:{" "}
-            <span style={{ fontVariantNumeric: "tabular-nums" }}>
-              {receipts.length}
-            </span>
-            <span style={{ opacity: 0.35 }}>
-              {" "}
-              · showing latest {sortedLimited.length}
-            </span>
-          </div>
-
-          {showCsv ? (
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <button onClick={exportCsv} style={pillButtonStyle}>
-                Export CSV
+            {showAdmin ? (
+              <button onClick={goAdmin} style={dangerButtonStyle}>
+                Admin
               </button>
+            ) : (
+              <div style={{ fontSize: 12, opacity: 0.35 }} />
+            )}
+          </div>
+
+          <div style={{ display: "grid", gap: 6 }}>
+            <div
+              onClick={onTapTitle}
+              style={{
+                fontSize: 13,
+                color: "var(--text-secondary)",
+                userSelect: "none",
+                cursor: "default",
+              }}
+              title="(tap 3x for export · 11x for admin)"
+            >
+              Receipts
             </div>
-          ) : null}
-        </div>
 
-        {loading ? (
-          <div style={{ fontSize: 12, opacity: 0.35 }}>Loading…</div>
-        ) : sortedLimited.length === 0 ? (
-          <div style={{ fontSize: 12, opacity: 0.35 }}>No receipts yet.</div>
-        ) : (
-          <div style={{ display: "grid", gap: 18 }}>
-            {grouped.order.map((key) => {
-              const items = grouped.map.get(key)!;
-              const header = formatDayHeader(items[0].moment_ms);
-              const dayTotal = sumDay(items);
-              const dayCurrency = items[0].currency;
+            <div style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
+              Total:{" "}
+              <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                {receipts.length}
+              </span>
+              <span style={{ opacity: 0.35 }}>
+                {" "}
+                · showing latest {sortedLimited.length}
+              </span>
+            </div>
 
-              return (
-                <div key={key} style={{ display: "grid", gap: 10 }}>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      opacity: 0.6,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {header} · {formatMoney(dayTotal, dayCurrency)}
-                  </div>
+            {showCsv ? (
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <button onClick={exportCsv} style={pillButtonStyle}>
+                  Export CSV
+                </button>
+              </div>
+            ) : null}
+          </div>
 
-                  <div style={{ display: "grid", gap: 12 }}>
-                    {items.map((r) => {
-                      const cum = dayCumById.get(r.id);
-                      const cumText = formatMoney(
-                        typeof cum === "number" ? cum : r.amount_minor,
-                        r.currency
-                      );
+          {loading ? (
+            <div style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
+              Loading…
+            </div>
+          ) : sortedLimited.length === 0 ? (
+            <div style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
+              No receipts yet.
+            </div>
+          ) : (
+            <div style={{ display: "grid", gap: 18 }}>
+              {grouped.order.map((key) => {
+                const items = grouped.map.get(key)!;
+                const header = formatDayHeader(items[0].moment_ms);
+                const dayTotal = sumDay(items);
+                const dayCurrency = items[0].currency;
 
-                      return (
-                        <Link
-                          key={r.id}
-                          href={`/app/money/receipts/${encodeURIComponent(
-                            r.id
-                          )}`}
-                          style={{
-                            textDecoration: "none",
-                            color: "inherit",
-                            display: "block",
-                          }}
-                        >
-                          <div
+                return (
+                  <div key={key} style={{ display: "grid", gap: 10 }}>
+                    <div
+                      style={{
+                        fontSize: 12,
+                        color: "var(--text-tertiary)",
+                        letterSpacing: "0.06em",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {header} · {formatMoney(dayTotal, dayCurrency)}
+                    </div>
+
+                    <div style={{ display: "grid", gap: 12 }}>
+                      {items.map((r) => {
+                        const cum = dayCumById.get(r.id);
+                        const cumText = formatMoney(
+                          typeof cum === "number" ? cum : r.amount_minor,
+                          r.currency
+                        );
+
+                        return (
+                          <Link
+                            key={r.id}
+                            href={`/app/money/receipts/${encodeURIComponent(
+                              r.id
+                            )}`}
                             style={{
-                              padding: "16px",
-                              borderRadius: 18,
-                              border: "1px solid rgba(255,255,255,0.10)",
-                              background: "rgba(255,255,255,0.03)",
-                              display: "grid",
-                              gap: 10,
+                              textDecoration: "none",
+                              color: "inherit",
+                              display: "block",
                             }}
                           >
                             <div
                               style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "baseline",
-                                gap: 12,
+                                padding: "16px",
+                                borderRadius: 18,
+                                border: "1px solid var(--border-soft)",
+                                background: "var(--surface-muted)",
+                                display: "grid",
+                                gap: 10,
                               }}
                             >
-                              <div style={{ fontSize: 14, opacity: 0.9 }}>
-                                {r.merchant_raw}
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "baseline",
+                                  gap: 12,
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    fontSize: 14,
+                                    color: "var(--text-secondary)",
+                                  }}
+                                >
+                                  {r.merchant_raw}
+                                </div>
+
+                                <div
+                                  style={{
+                                    fontSize: 12,
+                                    color: "var(--text-tertiary)",
+                                    fontVariantNumeric: "tabular-nums",
+                                    letterSpacing: "0.02em",
+                                    textAlign: "right",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                  title="Day cumulative at this moment"
+                                >
+                                  {cumText}
+                                </div>
                               </div>
 
                               <div
                                 style={{
-                                  fontSize: 12,
-                                  opacity: 0.55,
+                                  fontSize: 30,
+                                  fontWeight: 700,
                                   fontVariantNumeric: "tabular-nums",
-                                  letterSpacing: "0.02em",
-                                  textAlign: "right",
-                                  whiteSpace: "nowrap",
+                                  letterSpacing: "-0.02em",
                                 }}
-                                title="Day cumulative at this moment"
                               >
-                                {cumText}
+                                {formatMoney(r.amount_minor, r.currency)}
+                              </div>
+
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "baseline",
+                                  fontSize: 12,
+                                  color: "var(--text-tertiary)",
+                                }}
+                              >
+                                <span>{formatReceiptTime(r.moment_ms)}</span>
+
+                                <span
+                                  style={{
+                                    fontVariantNumeric: "tabular-nums",
+                                    letterSpacing: "0.05em",
+                                    opacity: 0.7,
+                                  }}
+                                >
+                                  #{receiptSuffix(r.id)}
+                                </span>
                               </div>
                             </div>
-
-                            <div
-                              style={{
-                                fontSize: 30,
-                                fontWeight: 700,
-                                fontVariantNumeric: "tabular-nums",
-                                letterSpacing: "-0.02em",
-                              }}
-                            >
-                              {formatMoney(r.amount_minor, r.currency)}
-                            </div>
-
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "baseline",
-                                fontSize: 12,
-                                opacity: 0.55,
-                              }}
-                            >
-                              <span>{formatReceiptTime(r.moment_ms)}</span>
-
-                              <span
-                                style={{
-                                  fontVariantNumeric: "tabular-nums",
-                                  letterSpacing: "0.05em",
-                                  opacity: 0.7,
-                                }}
-                              >
-                                #{receiptSuffix(r.id)}
-                              </span>
-                            </div>
-                          </div>
-                        </Link>
-                      );
-                    })}
+                          </Link>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          )}
 
-        <div style={{ fontSize: 11, opacity: 0.22 }}>
-          Stored in cloud. Export recommended.
-        </div>
-      </section>
+          <div style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
+            Stored in cloud. Export recommended.
+          </div>
+        </section>
+      </AppFrame>
     </main>
   );
 }

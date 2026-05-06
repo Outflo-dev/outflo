@@ -29,7 +29,7 @@ type AppShellProps = {
 /* ------------------------------
    Routes
 -------------------------------- */
-const ROUTES = ["/", "/app/systems", "/app/time"] as const;
+const ROUTES = ["/", "/app", "/app/systems", "/app/time"] as const;
 
 /* ------------------------------
    Constants
@@ -62,8 +62,8 @@ const PILL_GROUP_STYLE: React.CSSProperties = {
   gap: 10,
   padding: "10px 12px",
   borderRadius: 999,
-  border: "1px solid rgba(255,255,255,0.10)",
-  background: "rgba(0,0,0,0.55)",
+  border: "1px solid var(--border-soft)",
+  background: "var(--surface-muted)",
   backdropFilter: "blur(10px)",
 };
 
@@ -130,17 +130,11 @@ export default function AppShell({ children }: AppShellProps) {
             <div style={PILL_GROUP_STYLE}>
               <Pill href="/" active={pathname === "/"} label="Portal" />
 
-              <Pill
-                href="/app/systems"
-                active={pathname === "/app/systems"}
-                label="Systems"
-              />
+              <Pill href="/app" active={pathname === "/app"} label="Control" />
 
-              <Pill
-                href="/app/time"
-                active={pathname === "/app/time"}
-                label="Time"
-              />
+              <Pill href="/app/systems" active={pathname === "/app/systems"} label="Systems" />
+
+              <Pill href="/app/time" active={pathname === "/app/time"} label="Time" />
             </div>
           </div>
         </nav>
@@ -166,15 +160,15 @@ function Pill({
       href={href}
       style={{
         textDecoration: "none",
-        color: "#FFFEFA",
+        color: "var(--text-primary)",
         fontSize: 12,
         opacity: active ? 1 : 0.55,
         padding: "8px 12px",
         borderRadius: 999,
         border: active
-          ? "1px solid rgba(255,255,255,0.20)"
+          ? "1px solid var(--border-soft)"
           : "1px solid transparent",
-        background: active ? "rgba(255,255,255,0.06)" : "transparent",
+        background: active ? "var(--surface-soft)" : "transparent",
       }}
     >
       {label}

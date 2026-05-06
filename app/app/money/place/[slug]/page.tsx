@@ -16,6 +16,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import AppFrame from "@/components/system/shell/app/AppFrame";
 
 /* ------------------------------
    Types
@@ -33,7 +34,6 @@ type Receipt = {
 -------------------------------- */
 const API_RECEIPTS = "/api/receipts";
 const SYSTEM_EPOCH_KEY = "outflo_system_epoch_v1";
-const GLOW = "#FFFEFA";
 const DAY_MS = 24 * 60 * 60 * 1000;
 const NAV_H = 56;
 
@@ -313,121 +313,123 @@ export default function PlacePage() {
         ×
       </button>
 
-      <div style={frame}>
-        {/* ------------------------------
+      <AppFrame>
+        <div style={frame}>
+          {/* ------------------------------
            Hero
         -------------------------------- */}
-        <section style={{ ...section, paddingTop: NAV_H }}>
-          <div style={heroStack}>
-            <div style={{ ...avatar, background: colors.bg, color: colors.fg }}>{glyph}</div>
+          <section style={{ ...section, paddingTop: NAV_H }}>
+            <div style={heroStack}>
+              <div style={{ ...avatar, background: colors.bg, color: colors.fg }}>{glyph}</div>
 
-            <div style={heroInfo}>
-              <div style={merchant} title={merchantName}>
-                {merchantName}
+              <div style={heroInfo}>
+                <div style={merchant} title={merchantName}>
+                  {merchantName}
+                </div>
+                <div style={metaLine}>
+                  Across time ·{" "}
+                  <span style={{ fontVariantNumeric: "tabular-nums" }}>{view.matching.length}</span>{" "}
+                  receipts
+                </div>
               </div>
-              <div style={metaLine}>
-                Across time ·{" "}
-                <span style={{ fontVariantNumeric: "tabular-nums" }}>{view.matching.length}</span>{" "}
-                receipts
+
+              <div style={amount}>{formatMoney(view.total, displayCurrency)}</div>
+              <div style={subAmount}>
+                {formatDate(view.startMs)} → {formatDate(view.endMs)}
               </div>
             </div>
+          </section>
 
-            <div style={amount}>{formatMoney(view.total, displayCurrency)}</div>
-            <div style={subAmount}>
-              {formatDate(view.startMs)} → {formatDate(view.endMs)}
-            </div>
-          </div>
-        </section>
+          <div style={sectionDivider} />
 
-        <div style={sectionDivider} />
-
-        {/* ------------------------------
+          {/* ------------------------------
            Window
         -------------------------------- */}
-        <section style={section}>
-          <Title>Window</Title>
+          <section style={section}>
+            <Title>Window</Title>
 
-          <div style={{ display: "grid", gap: 12 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
-              <div style={{ fontSize: 14, opacity: 0.55 }}>Days</div>
-              <div style={{ fontSize: 14, opacity: 0.92, fontVariantNumeric: "tabular-nums" }}>
-                {windowDays} {windowDays === 1 ? "day" : "days"}
+            <div style={{ display: "grid", gap: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
+                <div style={{ fontSize: 14, opacity: 0.55 }}>Days</div>
+                <div style={{ fontSize: 14, opacity: 0.92, fontVariantNumeric: "tabular-nums" }}>
+                  {windowDays} {windowDays === 1 ? "day" : "days"}
+                </div>
+              </div>
+
+              <input
+                type="range"
+                min={1}
+                max={maxWindow}
+                step={1}
+                value={windowDays}
+                onChange={(e) => setWindowDays(clamp(Number(e.target.value), 1, maxWindow))}
+                style={slider}
+                aria-label="Window days"
+              />
+
+              <div style={{ display: "grid", gap: 12 }}>
+                <Row label="Total (window)" value={formatMoney(view.total, displayCurrency)} />
+                <Row label="Count (window)" value={String(view.count)} mono />
+                <Row label="Avg (window)" value={formatMoney(avgToMinor(view.avg), displayCurrency)} />
+                <Row
+                  label="First (window)"
+                  value={
+                    view.first
+                      ? `${formatDate(view.first.moment_ms)} · ${formatTime(view.first.moment_ms)}`
+                      : "(none)"
+                  }
+                />
+                <Row
+                  label="Last (window)"
+                  value={
+                    view.last
+                      ? `${formatDate(view.last.moment_ms)} · ${formatTime(view.last.moment_ms)}`
+                      : "(none)"
+                  }
+                />
+              </div>
+            </div>
+          </section>
+
+          <div style={sectionDivider} />
+
+          {/* ------------------------------
+           Ledger
+        -------------------------------- */}
+          <section style={section}>
+            <Title>Ledger</Title>
+
+            <div style={rows}>
+              <Row label="Total (all time)" value={formatMoney(view.allTotal, displayCurrency)} />
+              <Row label="Receipts (all time)" value={String(view.matching.length)} mono />
+            </div>
+          </section>
+
+          <div style={sectionDivider} />
+
+          {/* ------------------------------
+           Explore (surface only)
+        -------------------------------- */}
+          <section style={section}>
+            <Title>Explore</Title>
+
+            <div style={menu}>
+              <div style={menuItem}>
+                <div style={menuLabel}>See tiles for this window</div>
+                <div style={chev}>›</div>
+              </div>
+              <div style={menuItem}>
+                <div style={menuLabel}>Export CSV (merchant)</div>
+                <div style={chev}>›</div>
               </div>
             </div>
 
-            <input
-              type="range"
-              min={1}
-              max={maxWindow}
-              step={1}
-              value={windowDays}
-              onChange={(e) => setWindowDays(clamp(Number(e.target.value), 1, maxWindow))}
-              style={slider}
-              aria-label="Window days"
-            />
+            <div style={{ fontSize: 12, opacity: 0.42 }}>Coming soon.</div>
+          </section>
 
-            <div style={{ display: "grid", gap: 12 }}>
-              <Row label="Total (window)" value={formatMoney(view.total, displayCurrency)} />
-              <Row label="Count (window)" value={String(view.count)} mono />
-              <Row label="Avg (window)" value={formatMoney(avgToMinor(view.avg), displayCurrency)} />
-              <Row
-                label="First (window)"
-                value={
-                  view.first
-                    ? `${formatDate(view.first.moment_ms)} · ${formatTime(view.first.moment_ms)}`
-                    : "(none)"
-                }
-              />
-              <Row
-                label="Last (window)"
-                value={
-                  view.last
-                    ? `${formatDate(view.last.moment_ms)} · ${formatTime(view.last.moment_ms)}`
-                    : "(none)"
-                }
-              />
-            </div>
-          </div>
-        </section>
-
-        <div style={sectionDivider} />
-
-        {/* ------------------------------
-           Ledger
-        -------------------------------- */}
-        <section style={section}>
-          <Title>Ledger</Title>
-
-          <div style={rows}>
-            <Row label="Total (all time)" value={formatMoney(view.allTotal, displayCurrency)} />
-            <Row label="Receipts (all time)" value={String(view.matching.length)} mono />
-          </div>
-        </section>
-
-        <div style={sectionDivider} />
-
-        {/* ------------------------------
-           Explore (surface only)
-        -------------------------------- */}
-        <section style={section}>
-          <Title>Explore</Title>
-
-          <div style={menu}>
-            <div style={menuItem}>
-              <div style={menuLabel}>See tiles for this window</div>
-              <div style={chev}>›</div>
-            </div>
-            <div style={menuItem}>
-              <div style={menuLabel}>Export CSV (merchant)</div>
-              <div style={chev}>›</div>
-            </div>
-          </div>
-
-          <div style={{ fontSize: 12, opacity: 0.42 }}>Coming soon.</div>
-        </section>
-
-        <div style={{ fontSize: 11, opacity: 0.22 }}>Stored in cloud.</div>
-      </div>
+          <div style={{ fontSize: 11, opacity: 0.22 }}>Stored in cloud.</div>
+        </div>
+      </AppFrame>
     </main>
   );
 }
@@ -473,8 +475,8 @@ function avgToMinor(avg: number) {
 -------------------------------- */
 const wrap: React.CSSProperties = {
   minHeight: "100vh",
-  background: "black",
-  color: "white",
+  background: "var(--bg-primary)",
+  color: "var(--text-primary)",
   display: "grid",
   placeItems: "start center",
   padding: "max(24px, 6vh) 0px",
@@ -497,9 +499,9 @@ const xFixed: React.CSSProperties = {
   lineHeight: "40px",
   padding: 0,
   borderRadius: 999,
-  background: "rgba(0,0,0,0.9)",
-  border: "none",
-  color: "white",
+  background: "var(--surface-muted)",
+  border: "1px solid var(--border-soft)",
+  color: "var(--text-primary)",
   fontSize: 26,
   opacity: 1,
   cursor: "pointer",
@@ -514,7 +516,7 @@ const section: React.CSSProperties = {
 
 const sectionDivider: React.CSSProperties = {
   height: 1,
-  background: "rgba(255,255,255,0.10)",
+  background: "var(--border-soft)",
   margin: "14px 0",
 };
 
@@ -544,7 +546,7 @@ const merchant: React.CSSProperties = {
   fontSize: 22,
   fontWeight: 650,
   letterSpacing: "-0.02em",
-  opacity: 0.92,
+  color: "var(--text-primary)",
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -552,7 +554,7 @@ const merchant: React.CSSProperties = {
 
 const metaLine: React.CSSProperties = {
   fontSize: 12,
-  opacity: 0.58,
+  color: "var(--text-tertiary)",
   letterSpacing: "0.02em",
 };
 
@@ -562,13 +564,13 @@ const amount: React.CSSProperties = {
   letterSpacing: "-0.05em",
   fontVariantNumeric: "tabular-nums",
   lineHeight: 1,
-  color: GLOW,
+  color: "var(--text-primary)",
   marginTop: 4,
 };
 
 const subAmount: React.CSSProperties = {
   fontSize: 12,
-  opacity: 0.55,
+  color: "var(--text-tertiary)",
   letterSpacing: "0.02em",
 };
 
@@ -576,7 +578,7 @@ const title: React.CSSProperties = {
   fontSize: 18,
   fontWeight: 650,
   letterSpacing: "-0.01em",
-  opacity: 0.92,
+  color: "var(--text-primary)",
 };
 
 const rows: React.CSSProperties = {
@@ -593,12 +595,12 @@ const row: React.CSSProperties = {
 
 const rowLabel: React.CSSProperties = {
   fontSize: 14,
-  opacity: 0.55,
+  color: "var(--text-tertiary)",
 };
 
 const rowValue: React.CSSProperties = {
   fontSize: 14,
-  opacity: 0.92,
+  color: "var(--text-primary)",
   textAlign: "right",
   maxWidth: "62%",
   overflow: "hidden",
@@ -608,7 +610,7 @@ const rowValue: React.CSSProperties = {
 
 const slider: React.CSSProperties = {
   width: "100%",
-  accentColor: GLOW,
+  accentColor: "var(--text-primary)",
   opacity: 0.9,
 };
 
@@ -627,22 +629,22 @@ const menuItem: React.CSSProperties = {
 
 const menuLabel: React.CSSProperties = {
   fontSize: 16,
-  opacity: 0.92,
+  color: "var(--text-primary)",
 };
 
 const chev: React.CSSProperties = {
   fontSize: 22,
-  opacity: 0.30,
+  color: "var(--text-tertiary)",
   lineHeight: "22px",
 };
 
 const linkPill: React.CSSProperties = {
   display: "inline-block",
   textDecoration: "none",
-  color: "white",
+  color: "var(--text-primary)",
   fontSize: 12,
   padding: "10px 12px",
   borderRadius: 999,
-  border: "1px solid rgba(255,255,255,0.14)",
-  background: "rgba(255,255,255,0.10)",
+  border: "1px solid var(--border-soft)",
+  background: "var(--surface-soft)",
 };

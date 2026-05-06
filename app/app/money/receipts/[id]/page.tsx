@@ -16,6 +16,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import AppFrame from "@/components/system/shell/app/AppFrame";
 
 /* ------------------------------
    Types
@@ -32,8 +33,6 @@ type Receipt = {
    Constants
 -------------------------------- */
 const SYSTEM_EPOCH_KEY = "outflo_system_epoch_v1";
-
-const GLOW = "#FFFEFA";
 
 const FOOTER_STREET = "314 Outflō Grove";
 const FOOTER_CITYSTATEZIP = "Miami, FL 33133";
@@ -315,17 +314,19 @@ export default function ReceiptDetailPage() {
           ×
         </button>
 
-        <div
-          style={{
-            width: "100%",
-            maxWidth: 720,
-            paddingTop: NAV_H,
-            fontSize: 12,
-            opacity: 0.55,
-          }}
-        >
-          Loading…
-        </div>
+        <AppFrame>
+          <div
+            style={{
+              width: "100%",
+              maxWidth: "none",
+              paddingTop: NAV_H,
+              fontSize: 12,
+              color: "var(--text-tertiary)",
+            }}
+          >
+            Loading…
+          </div>
+        </AppFrame>
       </main>
     );
   }
@@ -390,127 +391,128 @@ export default function ReceiptDetailPage() {
       <button onClick={close} style={xFixed} aria-label="Close">
         ×
       </button>
-
-      <div style={frame}>
-        <section style={{ ...section, paddingTop: NAV_H }}>
-          <div style={heroStack}>
-            <div style={{ ...avatar, background: colors.bg, color: colors.fg }}>
-              {logoUrl && logoOk ? (
-                <img
-                  src={logoUrl}
-                  alt={merchantName}
-                  width={54}
-                  height={54}
-                  style={{
-                    width: 54,
-                    height: 54,
-                    borderRadius: 999,
-                    objectFit: "cover",
-                    display: "block",
-                  }}
-                  onError={() => setLogoOk(false)}
-                />
-              ) : (
-                glyph
-              )}
-            </div>
-
-            <div style={heroInfo}>
-              <div style={merchant} title={merchantName}>
-                {merchantName}
+      <AppFrame>
+        <div style={frame}>
+          <section style={{ ...section, paddingTop: NAV_H }}>
+            <div style={heroStack}>
+              <div style={{ ...avatar, background: colors.bg, color: colors.fg }}>
+                {logoUrl && logoOk ? (
+                  <img
+                    src={logoUrl}
+                    alt={merchantName}
+                    width={54}
+                    height={54}
+                    style={{
+                      width: 54,
+                      height: 54,
+                      borderRadius: 999,
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                    onError={() => setLogoOk(false)}
+                  />
+                ) : (
+                  glyph
+                )}
               </div>
-              <div style={metaLine}>
-                {formatHeroDateTime(receipt.moment_ms)}
+
+              <div style={heroInfo}>
+                <div style={merchant} title={merchantName}>
+                  {merchantName}
+                </div>
+                <div style={metaLine}>
+                  {formatHeroDateTime(receipt.moment_ms)}
+                </div>
               </div>
+
+              <div style={amount}>{heroAmount}</div>
             </div>
+          </section>
 
-            <div style={amount}>{heroAmount}</div>
-          </div>
-        </section>
+          <div style={sectionDivider} />
 
-        <div style={sectionDivider} />
+          <section style={section}>
+            <Title>Position</Title>
 
-        <section style={section}>
-          <Title>Position</Title>
+            <div style={rows}>
+              <Row label="Day" value={computed.dayKey} mono />
+              <Row
+                label="Orbit"
+                value={formatMoney(computed.dayCum, receipt.currency)}
+              />
+              <Row label="Index" value={String(computed.dayIndex)} mono />
+            </div>
+          </section>
 
-          <div style={rows}>
-            <Row label="Day" value={computed.dayKey} mono />
-            <Row
-              label="Orbit"
-              value={formatMoney(computed.dayCum, receipt.currency)}
-            />
-            <Row label="Index" value={String(computed.dayIndex)} mono />
-          </div>
-        </section>
+          <div style={sectionDivider} />
 
-        <div style={sectionDivider} />
+          <section style={section}>
+            <Title>Orientation</Title>
 
-        <section style={section}>
-          <Title>Orientation</Title>
+            <div style={rows}>
+              <Row label="City, State" value="Miami, FL" />
+              <Row label="Weather" value="—" />
+            </div>
+          </section>
 
-          <div style={rows}>
-            <Row label="City, State" value="Miami, FL" />
-            <Row label="Weather" value="—" />
-          </div>
-        </section>
+          <div style={sectionDivider} />
 
-        <div style={sectionDivider} />
+          <section style={section}>
+            <Title>Ledger</Title>
 
-        <section style={section}>
-          <Title>Ledger</Title>
+            <div style={rows}>
+              <Row label="Receipt ID" value={`#${receiptSuffix(receipt.id)}`} mono />
+              <Row
+                label="Raw time (24h + seconds)"
+                value={formatTime24WithSeconds(receipt.moment_ms)}
+                mono
+              />
+              <Row
+                label="Epoch"
+                value={String(receipt.moment_ms)}
+                mono
+              />
+              <Row label="User Epoch" value={userEpochTime} mono />
+              <Row
+                label="Coordinates"
+                value={`${LAT_33133}, ${LNG_33133}`}
+                mono
+              />
+              <Row label="Payment rail" value="Cash App" />
+            </div>
+          </section>
 
-          <div style={rows}>
-            <Row label="Receipt ID" value={`#${receiptSuffix(receipt.id)}`} mono />
-            <Row
-              label="Raw time (24h + seconds)"
-              value={formatTime24WithSeconds(receipt.moment_ms)}
-              mono
-            />
-            <Row
-              label="Epoch"
-              value={String(receipt.moment_ms)}
-              mono
-            />
-            <Row label="User Epoch" value={userEpochTime} mono />
-            <Row
-              label="Coordinates"
-              value={`${LAT_33133}, ${LNG_33133}`}
-              mono
-            />
-            <Row label="Payment rail" value="Cash App" />
-          </div>
-        </section>
+          <div style={sectionDivider} />
 
-        <div style={sectionDivider} />
+          <section style={section}>
+            <Title>Explore</Title>
 
-        <section style={section}>
-          <Title>Explore</Title>
+            <div style={menu}>
+              <MenuItem href={dayHref} label="See all transactions for this day" />
+              <MenuItem
+                href={placeHref}
+                label={`View your ${merchantName} transactions across time`}
+              />
+              <MenuItem href="/app/money/about" label="Learn how the Engine works" />
+            </div>
+          </section>
 
-          <div style={menu}>
-            <MenuItem href={dayHref} label="See all transactions for this day" />
-            <MenuItem
-              href={placeHref}
-              label={`View your ${merchantName} transactions across time`}
-            />
-            <MenuItem href="/app/money/about" label="Learn how the Engine works" />
-          </div>
-        </section>
+          <div style={sectionDivider} />
 
-        <div style={sectionDivider} />
+          <section style={footerSection}>
+            <div style={footerBrand}>Outflō</div>
+            <div style={footerLine}>{FOOTER_STREET}</div>
+            <div style={footerLine}>{FOOTER_CITYSTATEZIP}</div>
+            <div style={footerLine}>{FOOTER_PHONE}</div>
 
-        <section style={footerSection}>
-          <div style={footerBrand}>Outflō</div>
-          <div style={footerLine}>{FOOTER_STREET}</div>
-          <div style={footerLine}>{FOOTER_CITYSTATEZIP}</div>
-          <div style={footerLine}>{FOOTER_PHONE}</div>
+            <div style={{ height: 14 }} />
 
-          <div style={{ height: 14 }} />
-
-          <Link href="/" style={footerLink}>
-            outflo.xyz
-          </Link>
-        </section>
-      </div>
+            <Link href="/" style={footerLink}>
+              outflo.xyz
+            </Link>
+          </section>
+        </div>
+      </AppFrame>
     </main>
   );
 }
@@ -566,13 +568,10 @@ function MenuItem({ label, href }: { label: string; href?: string }) {
   );
 }
 
-/* ------------------------------
-   Styles
--------------------------------- */
 const wrap: React.CSSProperties = {
   minHeight: "100vh",
-  background: "black",
-  color: "white",
+  background: "var(--bg-primary)",
+  color: "var(--text-primary)",
   display: "grid",
   placeItems: "start stretch",
   padding: "max(24px, 6vh) 0px",
@@ -594,9 +593,9 @@ const xFixed: React.CSSProperties = {
   lineHeight: "40px",
   padding: 0,
   borderRadius: 999,
-  background: "rgba(0,0,0,0.9)",
-  border: "none",
-  color: "white",
+  background: "var(--surface-muted)",
+  border: "1px solid var(--border-soft)",
+  color: "var(--text-primary)",
   fontSize: 26,
   opacity: 1,
   cursor: "pointer",
@@ -611,7 +610,7 @@ const section: React.CSSProperties = {
 
 const sectionDivider: React.CSSProperties = {
   height: 1,
-  background: "rgba(255,255,255,0.10)",
+  background: "var(--border-soft)",
   margin: "14px 0",
 };
 
@@ -642,7 +641,7 @@ const merchant: React.CSSProperties = {
   fontSize: 22,
   fontWeight: 650,
   letterSpacing: "-0.02em",
-  color: "var(--text-secondary)",
+  color: "var(--text-primary)",
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -650,7 +649,7 @@ const merchant: React.CSSProperties = {
 
 const metaLine: React.CSSProperties = {
   fontSize: 12,
-  color: "var(--text-secondary)",
+  color: "var(--text-tertiary)",
   letterSpacing: "0.02em",
 };
 
@@ -660,7 +659,7 @@ const amount: React.CSSProperties = {
   letterSpacing: "-0.05em",
   fontVariantNumeric: "tabular-nums",
   lineHeight: 1,
-  color: GLOW,
+  color: "var(--text-primary)",
   marginTop: 4,
 };
 
@@ -668,7 +667,7 @@ const title: React.CSSProperties = {
   fontSize: 18,
   fontWeight: 650,
   letterSpacing: "-0.01em",
-  opacity: 0.92,
+  color: "var(--text-primary)",
 };
 
 const rows: React.CSSProperties = {
@@ -685,12 +684,12 @@ const row: React.CSSProperties = {
 
 const rowLabel: React.CSSProperties = {
   fontSize: 14,
-  color: "var(--text-secondary)",
+  color: "var(--text-tertiary)",
 };
 
 const rowValue: React.CSSProperties = {
   fontSize: 14,
-  opacity: 0.92,
+  color: "var(--text-primary)",
   textAlign: "right",
   maxWidth: "62%",
   overflow: "hidden",
@@ -713,12 +712,12 @@ const menuItem: React.CSSProperties = {
 
 const menuLabel: React.CSSProperties = {
   fontSize: 16,
-  opacity: 0.92,
+  color: "var(--text-primary)",
 };
 
 const chev: React.CSSProperties = {
   fontSize: 22,
-  opacity: 0.30,
+  color: "var(--text-tertiary)",
   lineHeight: "22px",
 };
 
@@ -737,29 +736,28 @@ const footerSection: React.CSSProperties = {
 const footerBrand: React.CSSProperties = {
   fontSize: 13,
   fontWeight: 650,
-  opacity: 0.78,
+  color: "var(--text-secondary)",
   letterSpacing: "0.02em",
   marginBottom: 2,
 };
 
 const footerLine: React.CSSProperties = {
   fontSize: 13,
-  opacity: 0.42,
+  color: "var(--text-tertiary)",
   lineHeight: 1.12,
 };
 
 const footerLink: React.CSSProperties = {
   fontSize: 12,
-  color: GLOW,
+  color: "var(--text-primary)",
   textDecoration: "underline",
   textUnderlineOffset: 3,
-  opacity: 0.95,
 };
 
 const pillButtonStyle: React.CSSProperties = {
-  background: "rgba(255,255,255,0.10)",
-  border: "1px solid rgba(255,255,255,0.14)",
-  color: "white",
+  background: "var(--surface-soft)",
+  border: "1px solid var(--border-soft)",
+  color: "var(--text-primary)",
   borderRadius: 999,
   padding: "10px 12px",
   fontSize: 12,

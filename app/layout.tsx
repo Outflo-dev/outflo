@@ -1,11 +1,11 @@
 /* ==========================================================
    OUTFLO — ROOT LAYOUT
    File: app/layout.tsx
-   Scope: Global frame, metadata, and viewport contract
+   Scope: Global frame, metadata, viewport contract, and theme runtime
    Last Updated:
-   - ms: 1775672111393
-   - iso: 2026-04-08T18:15:11.393Z
-   - note: replace legacy swipe shell with app shell ownership
+   - ms: 1778018872799
+   - iso: 2026-05-05T22:07:52.799Z
+   - note: apply persisted theme preference across all route namespaces
    ========================================================== */
 
 /* ------------------------------
@@ -13,6 +13,9 @@
 -------------------------------- */
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
+import { supabaseServer } from "@/lib/supabase/server";
+import { resolveThemePreference } from "@/lib/app-state/theme-preference";
+import AppTheme from "@/components/system/shell/app/AppTheme";
 import "./globals.css";
 
 /* ------------------------------
@@ -51,6 +54,13 @@ export const viewport: Viewport = {
 };
 
 /* ------------------------------
+   Types
+-------------------------------- */
+type PreferenceRow = {
+  theme_preference: string | null;
+};
+
+/* ------------------------------
    Constants
 -------------------------------- */
 const BODY_STYLE: React.CSSProperties = {
@@ -64,14 +74,34 @@ const BODY_STYLE: React.CSSProperties = {
 /* ------------------------------
    Layout
 -------------------------------- */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await supabaseServer();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let themePreference = resolveThemePreference(null);
+
+  if (user) {
+    const { data: preferences } = await supabase
+      .from("user_preferences")
+      .select("theme_preference")
+      .eq("user_id", user.id)
+      .maybeSingle<PreferenceRow>();
+
+    themePreference = resolveThemePreference(preferences?.theme_preference);
+  }
+
   return (
     <html lang="en" className={ibmPlexSans.className}>
-      <body style={BODY_STYLE}>{children}</body>
+      <body style={BODY_STYLE}>
+        <AppTheme themePreference={themePreference}>{children}</AppTheme>
+      </body>
     </html>
   );
 }
