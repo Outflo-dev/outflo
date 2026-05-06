@@ -28,11 +28,21 @@ export default function LoginClient() {
           email,
           password,
         });
+
         if (error) throw error;
 
-        // If sign-in succeeds, server /login will redirect to /app on next render.
-        // But we can also hard-navigate client-side for immediacy:
-        window.location.href = "/";
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError) throw sessionError;
+
+        if (!session?.access_token) {
+          throw new Error("Sign-in succeeded, but no browser session token was found.");
+        }
+
+        window.location.href = "/app/systems";
         return;
       }
 
@@ -158,10 +168,10 @@ export default function LoginClient() {
             {busy
               ? "Working…"
               : mode === "signin"
-              ? "Sign in"
-              : mode === "signup"
-              ? "Create account"
-              : "Send reset email"}
+                ? "Sign in"
+                : mode === "signup"
+                  ? "Create account"
+                  : "Send reset email"}
           </button>
         </form>
 
