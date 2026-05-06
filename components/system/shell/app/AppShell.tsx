@@ -29,7 +29,7 @@ type AppShellProps = {
 /* ------------------------------
    Routes
 -------------------------------- */
-const ROUTES = ["/", "/app", "/app/systems", "/app/time"] as const;
+const ROUTES = ["/app", "/app/systems", "/app/time"] as const;
 
 /* ------------------------------
    Constants
@@ -128,11 +128,13 @@ export default function AppShell({ children }: AppShellProps) {
         <nav style={NAV_WRAP_STYLE}>
           <div style={NAV_INNER_STYLE}>
             <div style={PILL_GROUP_STYLE}>
-              <Pill href="/" active={pathname === "/"} label="Portal" />
-
               <Pill href="/app" active={pathname === "/app"} label="Control" />
 
-              <Pill href="/app/systems" active={pathname === "/app/systems"} label="Systems" />
+              <Pill
+                href="/app/systems"
+                active={pathname === "/app/systems"}
+                label="Systems"
+              />
 
               <Pill href="/app/time" active={pathname === "/app/time"} label="Time" />
             </div>
