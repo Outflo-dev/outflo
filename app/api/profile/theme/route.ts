@@ -13,7 +13,7 @@
 -------------------------------- */
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-
+import { createClient } from "@supabase/supabase-js";
 import { isThemePreference } from "@/lib/app-state/theme-preference";
 import { supabaseServer } from "@/lib/supabase/server";
 
@@ -58,6 +58,20 @@ export async function POST(req: Request) {
 
     const user = cookieUser ?? bearerUser;
 
+    const writeSupabase = cookieUser
+        ? supabase
+        : createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                global: {
+                    headers: {
+                        Authorization: `Bearer ${bearerToken}`,
+                    },
+                },
+            }
+        );
+
     if (!user) {
         return NextResponse.json(
             {
@@ -88,7 +102,7 @@ export async function POST(req: Request) {
         );
     }
 
-    const { error } = await supabase.from("user_preferences").upsert(
+    const { error } = await writeSupabase.from("user_preferences").upsert(
         {
             user_id: user.id,
             theme_preference: themePreference,
