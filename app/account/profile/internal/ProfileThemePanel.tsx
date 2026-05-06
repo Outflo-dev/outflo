@@ -19,14 +19,13 @@ import { useEffect, useState } from "react";
 import type { ThemePreference } from "@/lib/app-state/theme-preference";
 import { isThemePreference } from "@/lib/app-state/theme-preference";
 import { emitThemePreference } from "@/components/system/shell/app/AppTheme";
-import { saveProfileThemePreference } from "./theme/profile-theme.client";
+import ProfileThemeSaveAction from "./theme/ProfileThemeSaveAction";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type ThemeName = ThemePreference;
 type TextScale = "small" | "standard" | "large";
-type SaveStatus = "idle" | "saving" | "error";
 
 type ThemeOption = {
   key: ThemeName;
@@ -205,36 +204,6 @@ const SWATCH_DOT_STYLE: React.CSSProperties = {
   flexShrink: 0,
 };
 
-const SAVE_ROW_STYLE: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: 10,
-};
-
-const SAVE_BUTTON_STYLE: React.CSSProperties = {
-  minHeight: 42,
-  border: "1px solid var(--border-soft)",
-  borderRadius: 999,
-  background: "var(--surface-soft)",
-  color: "var(--text-primary)",
-  padding: "0 16px",
-  fontSize: 14,
-  fontWeight: 700,
-  cursor: "pointer",
-};
-
-const SAVE_BUTTON_DISABLED_STYLE: React.CSSProperties = {
-  ...SAVE_BUTTON_STYLE,
-  opacity: 0.42,
-  cursor: "not-allowed",
-};
-
-const SAVE_STATUS_STYLE: React.CSSProperties = {
-  fontSize: 12,
-  color: "var(--text-tertiary)",
-};
-
 const SEGMENT_GROUP_STYLE: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
@@ -280,7 +249,7 @@ function isTextScale(value: string): value is TextScale {
 export default function ProfileThemePanel() {
   const [savedTheme, setSavedTheme] = useState<ThemeName>("dark");
   const [draftTheme, setDraftTheme] = useState<ThemeName>("dark");
-  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "error">("idle");
   const [activeScale, setActiveScale] = useState<TextScale>("standard");
 
   const dirty = draftTheme !== savedTheme;
@@ -310,23 +279,6 @@ export default function ProfileThemePanel() {
     setDraftTheme(theme);
     setSaveStatus("idle");
     emitThemePreference(theme);
-  }
-
-  async function handleSaveTheme() {
-    if (!dirty || saveStatus === "saving") return;
-
-    setSaveStatus("saving");
-
-    const result = await saveProfileThemePreference(draftTheme);
-
-    if (!result.ok) {
-      setSaveStatus("error");
-      console.error(result.message, result.diagnostics);
-      return;
-    }
-
-    setSavedTheme(draftTheme);
-    setSaveStatus("idle");
   }
 
   function handleTextScaleChange(scale: TextScale) {
@@ -385,30 +337,13 @@ export default function ProfileThemePanel() {
         </div>
       </section>
 
-      <section style={GROUP_STYLE}>
-        <div style={SAVE_ROW_STYLE}>
-          <div style={SAVE_STATUS_STYLE}>
-            {saveStatus === "error"
-              ? "Save failed. Preview is still active."
-              : dirty
-                ? "Unsaved theme preview"
-                : "Theme saved"}
-          </div>
-
-          <button
-            type="button"
-            disabled={!dirty || saveStatus === "saving"}
-            onClick={handleSaveTheme}
-            style={
-              !dirty || saveStatus === "saving"
-                ? SAVE_BUTTON_DISABLED_STYLE
-                : SAVE_BUTTON_STYLE
-            }
-          >
-            {saveStatus === "saving" ? "Saving" : "Save"}
-          </button>
-        </div>
-      </section>
+      <ProfileThemeSaveAction
+        draftTheme={draftTheme}
+        savedTheme={savedTheme}
+        saveStatus={saveStatus}
+        setSaveStatus={setSaveStatus}
+        onSaved={setSavedTheme}
+      />
 
       <section style={GROUP_STYLE}>
         <div style={GROUP_LABEL_STYLE}>Text Scale</div>
