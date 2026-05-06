@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1777946153913
    - iso: 2026-05-05T01:55:53.913Z
-   - note: use shared app-state theme preference validation
+   - note: use bearer fallback for mobile theme writes
    ========================================================== */
 
 /* ------------------------------
@@ -21,9 +21,24 @@ import { supabaseServer } from "@/lib/supabase/server";
 export async function PATCH(req: Request) {
     const supabase = await supabaseServer();
 
-    const {
+    let {
         data: { user },
     } = await supabase.auth.getUser();
+
+    if (!user) {
+        const authorization = req.headers.get("authorization");
+        const token = authorization?.startsWith("Bearer ")
+            ? authorization.slice("Bearer ".length)
+            : null;
+
+        if (token) {
+            const {
+                data: { user: tokenUser },
+            } = await supabase.auth.getUser(token);
+
+            user = tokenUser;
+        }
+    }
 
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

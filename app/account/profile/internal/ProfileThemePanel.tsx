@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import type { ThemePreference } from "@/lib/app-state/theme-preference";
 import { isThemePreference } from "@/lib/app-state/theme-preference";
 import { emitThemePreference } from "@/components/system/shell/app/AppTheme";
+import { supabaseBrowser } from "@/lib/supabase/client";
 
 /* ------------------------------
    Types
@@ -305,11 +306,23 @@ export default function ProfileThemePanel() {
 
     setActiveTheme(theme);
 
+    const supabase = supabaseBrowser();
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const headers: HeadersInit = {
+      "Content-Type": "application/json",
+    };
+
+    if (session?.access_token) {
+      headers.Authorization = `Bearer ${session.access_token}`;
+    }
+
     const response = await fetch("/api/profile/theme", {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       credentials: "include",
       body: JSON.stringify({
         theme_preference: theme,
