@@ -1,21 +1,37 @@
 "use client";
 
+/* ==========================================================
+   OUTFLO — ORBIT MONEY CALCULATOR
+   File: app/tools/compression/page.tsx
+   Scope: Calculate annualized orbit money from weekly visit cadence and cost per visit
+   Last Updated:
+   - ms: 1778107087301
+   - iso: 2026-05-06T22:38:07.301Z
+   - note: rename calculator to Orbit Money and replace hardcoded colors with theme tokens
+   ========================================================== */
+
+/* ------------------------------
+   Imports
+-------------------------------- */
 import { useState } from "react";
 
-export default function Merchant365() {
+/* ------------------------------
+   Component
+-------------------------------- */
+export default function OrbitMoneyCalculator() {
   const [visitsPerWeek, setVisitsPerWeek] = useState<number>(0);
   const [costPerVisit, setCostPerVisit] = useState<number>(0);
 
   // Core engine
   const dailyRate = (visitsPerWeek / 7) * costPerVisit;
-  const merchant365 = dailyRate * 365;
+  const orbitMoney = dailyRate * 365;
 
   return (
     <main
       style={{
         minHeight: "100vh",
-        backgroundColor: "black",
-        color: "white",
+        backgroundColor: "var(--bg-primary)",
+        color: "var(--text-primary)",
         display: "grid",
         placeItems: "center",
         padding: "max(24px, 6vh) 24px",
@@ -30,8 +46,8 @@ export default function Merchant365() {
       >
         {/* Big Number */}
         <div style={{ display: "grid", rowGap: 10 }}>
-          <div style={{ fontSize: 13, opacity: 0.55 }}>
-            Merchant 365
+          <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+            Orbit Money
           </div>
           <div
             style={{
@@ -40,13 +56,13 @@ export default function Merchant365() {
               fontVariantNumeric: "tabular-nums",
             }}
           >
-            ${merchant365.toFixed(2)}
+            ${orbitMoney.toFixed(2)}
           </div>
         </div>
 
         {/* Secondary Number */}
         <div style={{ display: "grid", rowGap: 10 }}>
-          <div style={{ fontSize: 13, opacity: 0.55 }}>
+          <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
             Daily Rate
           </div>
           <div
@@ -85,13 +101,16 @@ export default function Merchant365() {
   );
 }
 
+/* ------------------------------
+   Styles
+-------------------------------- */
 const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: "16px 18px",
-  background: "#111",
-  border: "1px solid #222",
+  background: "var(--surface-muted)",
+  border: "1px solid var(--border-soft)",
   borderRadius: 14,
-  color: "white",
+  color: "var(--text-primary)",
   fontSize: 16,
   outline: "none",
 };

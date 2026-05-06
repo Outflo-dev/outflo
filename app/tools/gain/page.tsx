@@ -1,9 +1,25 @@
 "use client";
 
+/* ==========================================================
+   OUTFLO — GAIN CALCULATOR
+   File: app/tools/gain/page.tsx
+   Scope: Calculate daily gain and annualized projection from budget and spending inputs
+   Last Updated:
+   - ms: 1778107087301
+   - iso: 2026-05-06T22:38:07.301Z
+   - note: replace hardcoded calculator colors with theme tokens
+   ========================================================== */
+
+/* ------------------------------
+   Imports
+-------------------------------- */
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSwipe } from "@/hooks/use-swipe";
 
+/* ------------------------------
+   Component
+-------------------------------- */
 export default function State() {
   const router = useRouter();
   const swipe = useSwipe(
@@ -27,10 +43,11 @@ export default function State() {
 
   return (
     <main
+      {...swipe}
       style={{
         minHeight: "100vh",
-        backgroundColor: "black",
-        color: "white",
+        backgroundColor: "var(--bg-primary)",
+        color: "var(--text-primary)",
         display: "grid",
         placeItems: "center",
         padding: "max(24px, 6vh) 24px",
@@ -45,7 +62,9 @@ export default function State() {
         }}
       >
         <div style={{ display: "grid", rowGap: 10 }}>
-          <div style={{ fontSize: 13, opacity: 0.55 }}>Today’s Gain</div>
+          <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+            Today’s Gain
+          </div>
           <div
             style={{
               fontSize: "clamp(52px, 7vw, 76px)",
@@ -58,7 +77,9 @@ export default function State() {
         </div>
 
         <div style={{ display: "grid", rowGap: 10 }}>
-          <div style={{ fontSize: 13, opacity: 0.55 }}>365 Projection</div>
+          <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+            365 Projection
+          </div>
           <div
             style={{
               fontSize: "clamp(40px, 5.5vw, 58px)",
@@ -96,12 +117,15 @@ export default function State() {
   );
 }
 
+/* ------------------------------
+   Styles
+-------------------------------- */
 const inputStyle: React.CSSProperties = {
   padding: 14,
   borderRadius: 10,
-  border: "1px solid rgba(255,255,255,0.14)",
-  background: "rgba(255,255,255,0.06)",
-  color: "white",
+  border: "1px solid var(--border-soft)",
+  background: "var(--surface-muted)",
+  color: "var(--text-primary)",
   outline: "none",
   fontSize: 16,
 };
