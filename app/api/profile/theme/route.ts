@@ -3,9 +3,9 @@
    File: app/api/profile/theme/route.ts
    Scope: Persist authenticated user theme preference
    Last Updated:
-   - ms: 1778071498197
-   - iso: 2026-05-06T12:44:58.197Z
-   - note: add cookie diagnostics to theme auth seam
+   - ms: 1778156400000
+   - iso: 2026-05-06T23:00:00.000Z
+   - note: support bearer fallback for mobile auth persistence
    ========================================================== */
 
 /* ------------------------------
@@ -18,7 +18,7 @@ import { isThemePreference } from "@/lib/app-state/theme-preference";
 import { supabaseServer } from "@/lib/supabase/server";
 
 /* ------------------------------
-   PATCH Handler
+   POST Handler
 -------------------------------- */
 export async function POST(req: Request) {
     const cookieStore = await cookies();
@@ -27,14 +27,38 @@ export async function POST(req: Request) {
         .getAll()
         .map((cookie) => cookie.name);
 
+    const authHeader = req.headers.get("authorization");
+
+    const bearerToken = authHeader?.startsWith("Bearer ")
+        ? authHeader.slice("Bearer ".length)
+        : null;
+
     const supabase = await supabaseServer();
 
     const {
-        data: { user },
-        error: userError,
+        data: { user: cookieUser },
+        error: cookieUserError,
     } = await supabase.auth.getUser();
 
-    if (userError || !user) {
+    let bearerUser = null;
+    let bearerUserError: string | null = null;
+
+    if (!cookieUser && bearerToken) {
+        const {
+            data: { user },
+            error,
+        } = await supabase.auth.getUser(bearerToken);
+
+        bearerUser = user;
+
+        if (error) {
+            bearerUserError = error.message;
+        }
+    }
+
+    const user = cookieUser ?? bearerUser;
+
+    if (!user) {
         return NextResponse.json(
             {
                 error: "Unauthorized",
@@ -44,8 +68,9 @@ export async function POST(req: Request) {
                     has_sb_cookie: cookieNames.some((name) =>
                         name.startsWith("sb-")
                     ),
-                    user_error: userError?.message ?? null,
-                    has_user: Boolean(user),
+                    has_bearer_token: Boolean(bearerToken),
+                    cookie_user_error: cookieUserError?.message ?? null,
+                    bearer_user_error: bearerUserError,
                 },
             },
             { status: 401 }
