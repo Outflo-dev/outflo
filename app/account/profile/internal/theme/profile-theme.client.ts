@@ -46,6 +46,8 @@ async function readResponseBody(response: Response) {
 }
 
 function getErrorMessage(body: unknown) {
+    if (body instanceof Error) return body.message;
+
     if (typeof body === "string") return body;
 
     if (
@@ -68,24 +70,50 @@ export async function saveProfileThemePreference(
 ): Promise<SaveProfileThemePreferenceResult> {
     const supabase = supabaseBrowser();
 
-    const {
-        data: { session },
-        error: sessionError,
-    } = await supabase.auth.getSession();
+    let accessToken: string | null = null;
+    let sessionErrorMessage: string | null = null;
 
-    const accessToken = session?.access_token ?? null;
+    try {
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
 
-    const response = await fetch("/api/profile/theme", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        },
-        body: JSON.stringify({
-            theme_preference: themePreference,
-        }),
-    });
+        accessToken = session?.access_token ?? null;
+        sessionErrorMessage = sessionError?.message ?? null;
+    } catch (error) {
+        sessionErrorMessage = getErrorMessage(error);
+    }
+
+    let response: Response;
+
+    try {
+        response = await fetch("/api/profile/theme", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                ...(accessToken
+                    ? { Authorization: `Bearer ${accessToken}` }
+                    : {}),
+            },
+            body: JSON.stringify({
+                theme_preference: themePreference,
+            }),
+        });
+    } catch (error) {
+        return {
+            ok: false,
+            status: 0,
+            message: getErrorMessage(error),
+            diagnostics: {
+                origin: window.location.origin,
+                has_token: Boolean(accessToken),
+                token_length: accessToken?.length ?? 0,
+                session_error: sessionErrorMessage,
+            },
+        };
+    }
 
     const body = await readResponseBody(response);
 
@@ -98,7 +126,7 @@ export async function saveProfileThemePreference(
                 origin: window.location.origin,
                 has_token: Boolean(accessToken),
                 token_length: accessToken?.length ?? 0,
-                session_error: sessionError?.message ?? null,
+                session_error: sessionErrorMessage,
                 response: body,
             },
         };

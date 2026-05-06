@@ -13,6 +13,7 @@
 /* ------------------------------
    Imports
 -------------------------------- */
+import { useState } from "react";
 import type { ThemePreference } from "@/lib/app-state/theme-preference";
 import { saveProfileThemePreference } from "./profile-theme.client";
 
@@ -72,18 +73,21 @@ export default function ProfileThemeSaveAction({
     setSaveStatus,
     onSaved,
 }: ProfileThemeSaveActionProps) {
+    const [saveError, setSaveError] = useState<string | null>(null);
     const dirty = draftTheme !== savedTheme;
 
     async function handleSaveTheme() {
         if (!dirty || saveStatus === "saving") return;
 
         setSaveStatus("saving");
+        setSaveError(null);
 
         const result = await saveProfileThemePreference(draftTheme);
 
         if (!result.ok) {
             setSaveStatus("error");
-            throw new Error("Theme save failed");
+            setSaveError(result.message);
+            return;
         }
 
         onSaved(draftTheme);
@@ -95,7 +99,7 @@ export default function ProfileThemeSaveAction({
             <div style={SAVE_ROW_STYLE}>
                 <div style={SAVE_STATUS_STYLE}>
                     {saveStatus === "error"
-                        ? "Save failed. Preview is still active."
+                        ? saveError ?? "Save failed. Preview is still active."
                         : dirty
                             ? "Unsaved theme preview"
                             : "Theme saved"}

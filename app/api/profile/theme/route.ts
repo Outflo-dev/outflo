@@ -18,6 +18,17 @@ import { isThemePreference } from "@/lib/app-state/theme-preference";
 import { supabaseServer } from "@/lib/supabase/server";
 
 /* ------------------------------
+   Constants
+-------------------------------- */
+const DEFAULT_USER_PREFERENCES = {
+    base_currency: "USD",
+    time_display: "auto",
+    location_mode: "device",
+    manual_city: null,
+    weather_mode: "on",
+} as const;
+
+/* ------------------------------
    POST Handler
 -------------------------------- */
 export async function POST(req: Request) {
@@ -91,9 +102,21 @@ export async function POST(req: Request) {
         );
     }
 
-    const body = await req.json();
+    let body: unknown;
 
-    const themePreference = body.theme_preference;
+    try {
+        body = await req.json();
+    } catch {
+        return NextResponse.json(
+            { error: "Invalid JSON body." },
+            { status: 400 }
+        );
+    }
+
+    const themePreference =
+        body && typeof body === "object" && "theme_preference" in body
+            ? body.theme_preference
+            : null;
 
     if (!isThemePreference(themePreference)) {
         return NextResponse.json(
@@ -102,20 +125,42 @@ export async function POST(req: Request) {
         );
     }
 
-    const { error } = await writeSupabase.from("user_preferences").upsert(
-        {
-            user_id: user.id,
-            theme_preference: themePreference,
-            updated_at: new Date().toISOString(),
-        },
-        { onConflict: "user_id" }
-    );
+    const updatedAt = new Date().toISOString();
 
-    if (error) {
+    const { error: updateError, count } = await writeSupabase
+        .from("user_preferences")
+        .update(
+            {
+                theme_preference: themePreference,
+                updated_at: updatedAt,
+            },
+            { count: "exact" }
+        )
+        .eq("user_id", user.id);
+
+    if (updateError) {
         return NextResponse.json(
-            { error: error.message },
+            { error: updateError.message },
             { status: 500 }
         );
+    }
+
+    if (count === 0) {
+        const { error: insertError } = await writeSupabase
+            .from("user_preferences")
+            .insert({
+                user_id: user.id,
+                ...DEFAULT_USER_PREFERENCES,
+                theme_preference: themePreference,
+                updated_at: updatedAt,
+            });
+
+        if (insertError) {
+            return NextResponse.json(
+                { error: insertError.message },
+                { status: 500 }
+            );
+        }
     }
 
     return NextResponse.json({ ok: true });
