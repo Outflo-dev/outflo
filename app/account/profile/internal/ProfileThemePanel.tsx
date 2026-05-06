@@ -312,6 +312,12 @@ export default function ProfileThemePanel() {
       data: { session },
     } = await supabase.auth.getSession();
 
+    alert(
+      `Theme client session: ${
+        session?.access_token ? "HAS_TOKEN" : "NO_TOKEN"
+      }`,
+    );
+
     const headers: HeadersInit = {
       "Content-Type": "application/json",
     };
