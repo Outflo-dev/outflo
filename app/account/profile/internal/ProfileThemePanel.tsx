@@ -14,7 +14,6 @@
    Imports
 -------------------------------- */
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import type { ThemePreference } from "@/lib/app-state/theme-preference";
 import { isThemePreference } from "@/lib/app-state/theme-preference";
 import { emitThemePreference } from "@/components/system/shell/app/AppTheme";
@@ -283,7 +282,6 @@ function isTextScale(value: string): value is TextScale {
    Component
 -------------------------------- */
 export default function ProfileThemePanel() {
-  const router = useRouter();
   const [activeTheme, setActiveTheme] = useState<ThemeName>("dark");
   const [activeScale, setActiveScale] = useState<TextScale>("standard");
 
@@ -312,6 +310,7 @@ export default function ProfileThemePanel() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         theme_preference: theme,
       }),
@@ -319,11 +318,15 @@ export default function ProfileThemePanel() {
 
     if (!response.ok) {
       setActiveTheme(previousTheme);
+
+      const errorText = await response.text();
+
+      alert(`Theme save failed: ${response.status}\n${errorText}`);
       return;
     }
 
+    document.documentElement.dataset.theme = theme;
     emitThemePreference(theme);
-    router.refresh();
   }
 
   function handleTextScaleChange(scale: TextScale) {
