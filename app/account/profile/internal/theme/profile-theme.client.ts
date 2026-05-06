@@ -75,7 +75,7 @@ export async function saveProfileThemePreference(
 
     const accessToken = session?.access_token ?? null;
 
-    const response = await fetch(`${window.location.origin}/api/profile/theme`, {
+    const response = await fetch("/api/profile/theme", {
         method: "PATCH",
         credentials: "include",
         headers: {
