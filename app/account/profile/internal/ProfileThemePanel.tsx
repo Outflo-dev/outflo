@@ -306,29 +306,11 @@ export default function ProfileThemePanel() {
 
     setActiveTheme(theme);
 
-    const supabase = supabaseBrowser();
-
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    alert(
-      `Theme client session: ${
-        session?.access_token ? "HAS_TOKEN" : "NO_TOKEN"
-      }`,
-    );
-
-    const headers: HeadersInit = {
-      "Content-Type": "application/json",
-    };
-
-    if (session?.access_token) {
-      headers.Authorization = `Bearer ${session.access_token}`;
-    }
-
     const response = await fetch("/api/profile/theme", {
       method: "PATCH",
-      headers,
+      headers: {
+        "Content-Type": "application/json",
+      },
       credentials: "include",
       body: JSON.stringify({
         theme_preference: theme,
