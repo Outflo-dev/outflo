@@ -5,9 +5,9 @@
    File: app/app/systems/page.tsx
    Scope: Render system selector for authenticated app surfaces
    Last Updated:
-   - ms: 1778107087301
-   - iso: 2026-05-06T22:38:07.301Z
-   - note: add tool entries, remove app link, and reveal controls through secret tap
+   - ms: 1778110410006
+   - iso: 2026-05-06T23:33:30.006Z
+   - note: refine systems launcher with substrate tools runtime placement and secret controls access
    ========================================================== */
 
 /* ------------------------------
@@ -65,52 +65,115 @@ export default function SystemsPage() {
           <header
             style={{
               display: "grid",
-              rowGap: 8,
+              rowGap: 12,
             }}
           >
-            <button
-              type="button"
-              onClick={handleSecretTap}
-              aria-label="Systems"
-              style={{
-                appearance: "none",
-                border: 0,
-                background: "transparent",
-                color: "var(--text-tertiary)",
-                padding: 0,
-                width: "fit-content",
-                font: "inherit",
-                fontSize: 13,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                cursor: "default",
-              }}
-            >
-              Systems
-            </button>
-
             <div
               style={{
-                fontSize: "clamp(38px, 8vw, 58px)",
-                fontWeight: 700,
-                letterSpacing: "-0.05em",
-                lineHeight: 0.95,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
               }}
             >
-              Outflō
+              <button
+                type="button"
+                onClick={handleSecretTap}
+                aria-label="Reveal controls"
+                style={{
+                  appearance: "none",
+                  border: 0,
+                  background: "transparent",
+                  color: "var(--text-tertiary)",
+                  padding: 0,
+                  width: "fit-content",
+                  font: "inherit",
+                  fontSize: 13,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  cursor: "default",
+                }}
+              >
+                Systems
+              </button>
+
+              {controlsRevealed ? (
+                <Link
+                  href="/app"
+                  prefetch={false}
+                  style={{
+                    color: "var(--text-primary)",
+                    textDecoration: "none",
+                    fontSize: 13,
+                    border: "1px solid var(--border-soft)",
+                    background: "var(--surface-soft)",
+                    borderRadius: 999,
+                    padding: "8px 13px",
+                  }}
+                >
+                  Controls
+                </Link>
+              ) : null}
             </div>
 
             <div
               style={{
-                maxWidth: 420,
-                fontSize: 15,
-                lineHeight: 1.45,
-                color: "var(--text-secondary)",
+                display: "grid",
+                rowGap: 8,
               }}
             >
-              Substrates, tools, and system surfaces.
+              <div
+                style={{
+                  fontSize: "clamp(38px, 8vw, 58px)",
+                  fontWeight: 700,
+                  letterSpacing: "-0.05em",
+                  lineHeight: 0.95,
+                }}
+              >
+                Outflō
+              </div>
+
+              <div
+                style={{
+                  maxWidth: 420,
+                  fontSize: 15,
+                  lineHeight: 1.45,
+                  color: "var(--text-secondary)",
+                }}
+              >
+                Substrates, tools, and system surfaces.
+              </div>
             </div>
           </header>
+
+          <div
+            style={{
+              border: "1px solid var(--border-soft)",
+              background:
+                "linear-gradient(180deg, var(--surface-soft), var(--surface-muted))",
+              borderRadius: 28,
+              padding: "18px",
+              display: "grid",
+              rowGap: 6,
+              boxShadow: "0 18px 60px rgba(0,0,0,0.16)",
+            }}
+          >
+            <div style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
+              System running
+            </div>
+
+            <div
+              style={{
+                fontSize: 24,
+                fontWeight: 650,
+                letterSpacing: "-0.03em",
+                lineHeight: 1,
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              1390:23:03
+            </div>
+          </div>
 
           <div style={{ display: "grid", rowGap: 14 }}>
             <SectionLabel>Substrates</SectionLabel>
@@ -136,14 +199,19 @@ export default function SystemsPage() {
                 enabled
               />
 
-              <div style={{ gridColumn: "1 / -1" }}>
-                <Tile
-                  href="/app/carbon"
-                  label="Carbon"
-                  detail="Future substrate"
-                  enabled={false}
-                />
-              </div>
+              <Tile
+                href="/app/weather"
+                label="Weather"
+                detail="Atmospheric substrate"
+                enabled={false}
+              />
+
+              <Tile
+                href="/app/environment"
+                label="Environment"
+                detail="External state"
+                enabled={false}
+              />
             </div>
           </div>
 
@@ -172,20 +240,6 @@ export default function SystemsPage() {
               />
             </div>
           </div>
-
-          {controlsRevealed ? (
-            <div style={{ display: "grid", rowGap: 14 }}>
-              <SectionLabel>Control</SectionLabel>
-
-              <Tile
-                href="/account/profile"
-                label="Controls"
-                detail="Profile control surface"
-                enabled
-                prefetch={false}
-              />
-            </div>
-          ) : null}
         </section>
       </AppFrame>
     </main>
@@ -219,19 +273,18 @@ function Tile({
   label,
   detail,
   enabled,
-  prefetch,
 }: {
   href: string;
   label: string;
   detail: string;
   enabled: boolean;
-  prefetch?: boolean;
 }) {
   const style: React.CSSProperties = {
     textDecoration: "none",
     color: "var(--text-primary)",
     border: "1px solid var(--border-soft)",
-    background: "linear-gradient(180deg, var(--surface-soft), var(--surface-muted))",
+    background:
+      "linear-gradient(180deg, var(--surface-soft), var(--surface-muted))",
     borderRadius: 26,
     padding: "22px 20px",
     minHeight: 132,
@@ -239,12 +292,19 @@ function Tile({
     alignContent: "space-between",
     opacity: enabled ? 1 : 0.35,
     boxShadow: "0 18px 60px rgba(0,0,0,0.18)",
+    boxSizing: "border-box",
   };
 
   const content = (
     <>
       <div style={{ display: "grid", rowGap: 6 }}>
-        <div style={{ fontSize: 21, fontWeight: 700, letterSpacing: "-0.03em" }}>
+        <div
+          style={{
+            fontSize: 21,
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+          }}
+        >
           {label}
         </div>
 
@@ -270,7 +330,7 @@ function Tile({
   }
 
   return (
-    <Link href={href} prefetch={prefetch} style={style}>
+    <Link href={href} style={style}>
       {content}
     </Link>
   );

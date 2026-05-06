@@ -43,15 +43,15 @@ export default function State() {
 
   return (
     <main
-      {...swipe}
       style={{
-        minHeight: "100vh",
+        minHeight: "100svh",
+        width: "100%",
+        boxSizing: "border-box",
         backgroundColor: "var(--bg-primary)",
         color: "var(--text-primary)",
         display: "grid",
         placeItems: "center",
         padding: "max(24px, 6vh) 24px",
-        touchAction: "pan-y",
       }}
     >
       <section

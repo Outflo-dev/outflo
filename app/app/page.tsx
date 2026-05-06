@@ -1,7 +1,11 @@
 /* ==========================================================
    OUTFLO — APP ROOT
    File: app/app/page.tsx
-   Scope: Render authenticated systems surface
+   Scope: Render authenticated controls doorway
+   Last Updated:
+   - ms: 1778110410006
+   - iso: 2026-05-06T23:33:30.006Z
+   - note: restore app controls surface with active money time tiles and left-aligned control buttons
    ========================================================== */
 
 /* ------------------------------
@@ -35,32 +39,8 @@ export default function AppRootPage() {
             display: "grid",
             rowGap: 20,
             boxSizing: "border-box",
-            position: "relative",
           }}
         >
-          <Link
-            href="/account/profile"
-            aria-label="Open profile"
-            style={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              width: 34,
-              height: 34,
-              borderRadius: "50%",
-              border: "1px solid var(--border-soft)",
-              background: "var(--surface-soft)",
-              display: "grid",
-              placeItems: "center",
-              color: "var(--text-primary)",
-              textDecoration: "none",
-              fontSize: 13,
-              fontWeight: 650,
-            }}
-          >
-            E
-          </Link>
-
           <div style={{ display: "grid", rowGap: 8 }}>
             <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
               Outflō
@@ -102,6 +82,7 @@ export default function AppRootPage() {
                 fontWeight: 650,
                 letterSpacing: "-0.03em",
                 lineHeight: 1,
+                fontVariantNumeric: "tabular-nums",
               }}
             >
               1390:23:03
@@ -115,22 +96,25 @@ export default function AppRootPage() {
               gap: 14,
             }}
           >
-            <Tile href="/app/money" label="Money" enabled={false} />
+            <Tile href="/app/money" label="Money" enabled />
+            <Tile href="/app/time" label="Time" enabled />
             <Tile href="/app/weather" label="Weather" enabled={false} />
             <Tile href="/app/environment" label="Environment" enabled={false} />
-            <Tile href="/app/time" label="Time" enabled={false} />
           </div>
 
           <nav
-            aria-label="Primary app navigation"
+            aria-label="Control navigation"
             style={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               gap: 8,
-              paddingTop: 4,
+              flexWrap: "wrap",
+              paddingTop: 2,
             }}
           >
-            <Pill href="/account/profile" label="Profile" active />
+            <ControlButton href="/account/profile" label="Profile" />
+            <ControlButton href="/app/systems" label="Systems" />
+            <ControlButton href="/" label="Portal" />
           </nav>
         </section>
       </AppFrame>
@@ -165,28 +149,31 @@ function Tile({
     boxSizing: "border-box",
   };
 
-  return (
-    <Link href={enabled ? href : "#"} style={style}>
+  const content = (
+    <>
       <div style={{ fontSize: 20, fontWeight: 650 }}>{label}</div>
+
       <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
         {enabled ? "Open" : "Soon"}
       </div>
+    </>
+  );
+
+  if (!enabled) {
+    return <div style={style}>{content}</div>;
+  }
+
+  return (
+    <Link href={href} style={style}>
+      {content}
     </Link>
   );
 }
 
 /* ------------------------------
-   Pill
+   Control Button
 -------------------------------- */
-function Pill({
-  href,
-  label,
-  active = false,
-}: {
-  href: string;
-  label: string;
-  active?: boolean;
-}) {
+function ControlButton({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
@@ -195,10 +182,9 @@ function Pill({
         textDecoration: "none",
         fontSize: 13,
         border: "1px solid var(--border-soft)",
-        background: active ? "var(--surface-soft)" : "var(--surface-muted)",
+        background: "var(--surface-soft)",
         borderRadius: 999,
         padding: "9px 14px",
-        opacity: active ? 1 : 0.68,
       }}
     >
       {label}
