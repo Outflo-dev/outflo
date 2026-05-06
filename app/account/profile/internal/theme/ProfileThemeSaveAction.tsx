@@ -83,8 +83,7 @@ export default function ProfileThemeSaveAction({
 
         if (!result.ok) {
             setSaveStatus("error");
-            console.error(result);
-            return;
+            throw new Error("Theme save failed");
         }
 
         onSaved(draftTheme);
