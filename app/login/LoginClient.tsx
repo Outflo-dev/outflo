@@ -1,10 +1,29 @@
 "use client";
 
+/* ==========================================================
+   OUTFLO — LOGIN CLIENT
+   File: app/login/LoginClient.tsx
+   Scope: Own client-side auth form and password sign-in session sync
+   Last Updated:
+   - ms: 1778071498197
+   - iso: 2026-05-06T12:44:58.197Z
+   - note: sync password sign-in browser session into server cookies
+   ========================================================== */
+
+/* ------------------------------
+   Imports
+-------------------------------- */
 import { useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 
+/* ------------------------------
+   Types
+-------------------------------- */
 type Mode = "signin" | "signup" | "reset";
 
+/* ------------------------------
+   Component
+-------------------------------- */
 export default function LoginClient() {
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
@@ -38,8 +57,27 @@ export default function LoginClient() {
 
         if (sessionError) throw sessionError;
 
-        if (!session?.access_token) {
-          throw new Error("Sign-in succeeded, but no browser session token was found.");
+        if (!session?.access_token || !session.refresh_token) {
+          throw new Error(
+            "Sign-in succeeded, but no browser session token was found."
+          );
+        }
+
+        const sessionResponse = await fetch("/auth/session", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            access_token: session.access_token,
+            refresh_token: session.refresh_token,
+          }),
+        });
+
+        if (!sessionResponse.ok) {
+          const errorText = await sessionResponse.text();
+          throw new Error(`Server session sync failed: ${errorText}`);
         }
 
         window.location.href = "/app/systems";
@@ -51,6 +89,7 @@ export default function LoginClient() {
           email,
           password,
         });
+
         if (error) throw error;
 
         setMsg("Account created. You can sign in now.");
@@ -59,7 +98,6 @@ export default function LoginClient() {
         return;
       }
 
-      // reset
       const redirectTo =
         typeof window === "undefined"
           ? undefined
@@ -68,12 +106,13 @@ export default function LoginClient() {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo,
       });
+
       if (error) throw error;
 
       setMsg("Password reset email sent. Check your inbox.");
       return;
-    } catch (err: any) {
-      setMsg(err?.message ?? "Something went wrong.");
+    } catch (err: unknown) {
+      setMsg(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
       setBusy(false);
     }
@@ -92,7 +131,11 @@ export default function LoginClient() {
     >
       <div style={{ width: "100%", maxWidth: 420 }}>
         <h1 style={{ margin: 0, fontSize: 28 }}>
-          {mode === "signin" ? "Sign in" : mode === "signup" ? "Create account" : "Reset password"}
+          {mode === "signin"
+            ? "Sign in"
+            : mode === "signup"
+              ? "Create account"
+              : "Reset password"}
         </h1>
 
         <p style={{ opacity: 0.7, marginTop: 10 }}>
@@ -175,7 +218,14 @@ export default function LoginClient() {
           </button>
         </form>
 
-        <div style={{ marginTop: 14, display: "flex", gap: 12, flexWrap: "wrap" }}>
+        <div
+          style={{
+            marginTop: 14,
+            display: "flex",
+            gap: 12,
+            flexWrap: "wrap",
+          }}
+        >
           {mode !== "signin" && (
             <button
               type="button"
@@ -223,6 +273,9 @@ export default function LoginClient() {
   );
 }
 
+/* ------------------------------
+   Styles
+-------------------------------- */
 const linkBtn: React.CSSProperties = {
   background: "transparent",
   border: "none",
