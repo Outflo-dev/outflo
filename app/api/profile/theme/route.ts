@@ -3,14 +3,15 @@
    File: app/api/profile/theme/route.ts
    Scope: Persist authenticated user theme preference
    Last Updated:
-   - ms: 1777946153913
-   - iso: 2026-05-05T01:55:53.913Z
-   - note: use bearer fallback for mobile theme writes
+   - ms: 1778033477722
+   - iso: 2026-05-06T02:11:17.722Z
+   - note: add PATCH auth diagnostics for mobile session hydration
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { isThemePreference } from "@/lib/app-state/theme-preference";
 import { supabaseServer } from "@/lib/supabase/server";
@@ -19,29 +20,56 @@ import { supabaseServer } from "@/lib/supabase/server";
    Route
 -------------------------------- */
 export async function PATCH(req: Request) {
+    const cookieStore = await cookies();
+    const cookieNames = cookieStore.getAll().map((cookie) => cookie.name);
+
     const supabase = await supabaseServer();
 
-    let {
-        data: { user },
+    const {
+        data: { user: cookieUser },
+        error: cookieUserError,
     } = await supabase.auth.getUser();
 
-    if (!user) {
-        const authorization = req.headers.get("authorization");
-        const token = authorization?.startsWith("Bearer ")
-            ? authorization.slice("Bearer ".length)
-            : null;
+    let user = cookieUser;
 
-        if (token) {
-            const {
-                data: { user: tokenUser },
-            } = await supabase.auth.getUser(token);
+    const authorization = req.headers.get("authorization");
+    const token = authorization?.startsWith("Bearer ")
+        ? authorization.slice("Bearer ".length)
+        : null;
 
-            user = tokenUser;
-        }
+    let tokenUserErrorMessage: string | null = null;
+
+    if (!user && token) {
+        const {
+            data: { user: tokenUser },
+            error: tokenUserError,
+        } = await supabase.auth.getUser(token);
+
+        user = tokenUser;
+        tokenUserErrorMessage = tokenUserError?.message ?? null;
     }
 
     if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json(
+            {
+                error: "Unauthorized",
+                diagnostics: {
+                    cookie_count: cookieNames.length,
+                    cookie_names: cookieNames,
+                    has_sb_cookie: cookieNames.some((name) =>
+                        name.startsWith("sb-")
+                    ),
+                    has_auth_token_cookie: cookieNames.some((name) =>
+                        name.includes("auth-token")
+                    ),
+                    has_authorization_header: Boolean(authorization),
+                    has_bearer_token: Boolean(token),
+                    cookie_user_error: cookieUserError?.message ?? null,
+                    token_user_error: tokenUserErrorMessage,
+                },
+            },
+            { status: 401 }
+        );
     }
 
     const body = await req.json();
