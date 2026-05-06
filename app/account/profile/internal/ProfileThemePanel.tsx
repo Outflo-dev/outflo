@@ -9,7 +9,7 @@
    Last Updated:
    - ms: 1778071498197
    - iso: 2026-05-06T12:44:58.197Z
-   - note: delegate profile theme write transport to client helper
+   - note: add draft theme preview with explicit save action
    ========================================================== */
 
 /* ------------------------------
@@ -26,6 +26,7 @@ import { saveProfileThemePreference } from "./theme/profile-theme.client";
 -------------------------------- */
 type ThemeName = ThemePreference;
 type TextScale = "small" | "standard" | "large";
+type SaveStatus = "idle" | "saving" | "error";
 
 type ThemeOption = {
   key: ThemeName;
@@ -42,56 +43,19 @@ type TextScaleOption = {
    Constants
 -------------------------------- */
 const THEMES: ThemeOption[] = [
-  {
-    key: "dark",
-    title: "Dark",
-    meta: "Deep system surface",
-  },
-  {
-    key: "light",
-    title: "Light",
-    meta: "Clean daylight surface",
-  },
-  {
-    key: "dawn",
-    title: "Dawn",
-    meta: "Soft morning palette",
-  },
-  {
-    key: "day",
-    title: "Day",
-    meta: "Bright active palette",
-  },
-  {
-    key: "dusk",
-    title: "Dusk",
-    meta: "Warm evening palette",
-  },
-  {
-    key: "night",
-    title: "Night",
-    meta: "Low-light orbit palette",
-  },
-  {
-    key: "funky",
-    title: "Funky",
-    meta: "High personality mode",
-  },
+  { key: "dark", title: "Dark", meta: "Deep system surface" },
+  { key: "light", title: "Light", meta: "Clean daylight surface" },
+  { key: "dawn", title: "Dawn", meta: "Soft morning palette" },
+  { key: "day", title: "Day", meta: "Bright active palette" },
+  { key: "dusk", title: "Dusk", meta: "Warm evening palette" },
+  { key: "night", title: "Night", meta: "Low-light orbit palette" },
+  { key: "funky", title: "Funky", meta: "High personality mode" },
 ];
 
 const TEXT_SCALES: TextScaleOption[] = [
-  {
-    key: "small",
-    title: "Small",
-  },
-  {
-    key: "standard",
-    title: "Standard",
-  },
-  {
-    key: "large",
-    title: "Large",
-  },
+  { key: "small", title: "Small" },
+  { key: "standard", title: "Standard" },
+  { key: "large", title: "Large" },
 ];
 
 const PANEL_STYLE: React.CSSProperties = {
@@ -241,6 +205,36 @@ const SWATCH_DOT_STYLE: React.CSSProperties = {
   flexShrink: 0,
 };
 
+const SAVE_ROW_STYLE: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 10,
+};
+
+const SAVE_BUTTON_STYLE: React.CSSProperties = {
+  minHeight: 42,
+  border: "1px solid var(--border-soft)",
+  borderRadius: 999,
+  background: "var(--surface-soft)",
+  color: "var(--text-primary)",
+  padding: "0 16px",
+  fontSize: 14,
+  fontWeight: 700,
+  cursor: "pointer",
+};
+
+const SAVE_BUTTON_DISABLED_STYLE: React.CSSProperties = {
+  ...SAVE_BUTTON_STYLE,
+  opacity: 0.42,
+  cursor: "not-allowed",
+};
+
+const SAVE_STATUS_STYLE: React.CSSProperties = {
+  fontSize: 12,
+  color: "var(--text-tertiary)",
+};
+
 const SEGMENT_GROUP_STYLE: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
@@ -284,11 +278,15 @@ function isTextScale(value: string): value is TextScale {
    Component
 -------------------------------- */
 export default function ProfileThemePanel() {
-  const [activeTheme, setActiveTheme] = useState<ThemeName>("dark");
+  const [savedTheme, setSavedTheme] = useState<ThemeName>("dark");
+  const [draftTheme, setDraftTheme] = useState<ThemeName>("dark");
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [activeScale, setActiveScale] = useState<TextScale>("standard");
 
+  const dirty = draftTheme !== savedTheme;
+
   const currentTheme =
-    THEMES.find((theme) => theme.key === activeTheme) ?? THEMES[0];
+    THEMES.find((theme) => theme.key === draftTheme) ?? THEMES[0];
 
   useEffect(() => {
     const theme = document.documentElement.dataset.theme || "dark";
@@ -298,33 +296,37 @@ export default function ProfileThemePanel() {
       window.localStorage.getItem("outflo-text-scale") ||
       "standard";
 
-    if (isThemePreference(theme)) setActiveTheme(theme);
-    if (isTextScale(scale)) setActiveScale(scale);
+    if (isThemePreference(theme)) {
+      setSavedTheme(theme);
+      setDraftTheme(theme);
+    }
+
+    if (isTextScale(scale)) {
+      setActiveScale(scale);
+    }
   }, []);
 
-  async function handleThemeChange(theme: ThemeName) {
-    const previousTheme = activeTheme;
+  function handleThemeChange(theme: ThemeName) {
+    setDraftTheme(theme);
+    setSaveStatus("idle");
+    emitThemePreference(theme);
+  }
 
-    setActiveTheme(theme);
+  async function handleSaveTheme() {
+    if (!dirty || saveStatus === "saving") return;
 
-    const result = await saveProfileThemePreference(theme);
+    setSaveStatus("saving");
+
+    const result = await saveProfileThemePreference(draftTheme);
 
     if (!result.ok) {
-      setActiveTheme(previousTheme);
-
-      alert(
-        [
-          `Theme save failed: ${result.status}`,
-          result.message,
-          "",
-          JSON.stringify(result.diagnostics, null, 2),
-        ].join("\n")
-      );
-
+      setSaveStatus("error");
+      console.error(result.message, result.diagnostics);
       return;
     }
 
-    emitThemePreference(theme);
+    setSavedTheme(draftTheme);
+    setSaveStatus("idle");
   }
 
   function handleTextScaleChange(scale: TextScale) {
@@ -359,7 +361,7 @@ export default function ProfileThemePanel() {
 
         <div style={SWATCH_GRID_STYLE}>
           {THEMES.map((theme) => {
-            const active = theme.key === activeTheme;
+            const active = theme.key === draftTheme;
 
             return (
               <button
@@ -380,6 +382,31 @@ export default function ProfileThemePanel() {
               </button>
             );
           })}
+        </div>
+      </section>
+
+      <section style={GROUP_STYLE}>
+        <div style={SAVE_ROW_STYLE}>
+          <div style={SAVE_STATUS_STYLE}>
+            {saveStatus === "error"
+              ? "Save failed. Preview is still active."
+              : dirty
+                ? "Unsaved theme preview"
+                : "Theme saved"}
+          </div>
+
+          <button
+            type="button"
+            disabled={!dirty || saveStatus === "saving"}
+            onClick={handleSaveTheme}
+            style={
+              !dirty || saveStatus === "saving"
+                ? SAVE_BUTTON_DISABLED_STYLE
+                : SAVE_BUTTON_STYLE
+            }
+          >
+            {saveStatus === "saving" ? "Saving" : "Save"}
+          </button>
         </div>
       </section>
 
