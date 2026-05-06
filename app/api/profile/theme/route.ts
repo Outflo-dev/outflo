@@ -20,7 +20,7 @@ import { supabaseServer } from "@/lib/supabase/server";
 /* ------------------------------
    PATCH Handler
 -------------------------------- */
-export async function PATCH(req: Request) {
+export async function POST(req: Request) {
     const cookieStore = await cookies();
 
     const cookieNames = cookieStore
