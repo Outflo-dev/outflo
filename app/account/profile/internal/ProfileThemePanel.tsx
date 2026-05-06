@@ -324,7 +324,6 @@ export default function ProfileThemePanel() {
       return;
     }
 
-    document.documentElement.dataset.theme = theme;
     emitThemePreference(theme);
   }
 

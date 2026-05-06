@@ -98,7 +98,11 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en" className={ibmPlexSans.className}>
+    <html
+      lang="en"
+      className={ibmPlexSans.className}
+      data-theme={themePreference}
+    >
       <body style={BODY_STYLE}>
         <AppTheme themePreference={themePreference}>{children}</AppTheme>
       </body>
