@@ -3,30 +3,24 @@
 /* ==========================================================
    OUTFLO — ORBIT CALCULATOR
    File: app/tools/compression/page.tsx
-   Scope: Prototype dialable orbit calculation with ticking values and atomic money math
+   Scope: Prototype orbit calculator with visits cost and time
    Last Updated:
-   - ms: 1778113311005
-   - iso: 2026-05-07T00:21:51.005Z
-   - note: turn orbit calculator into winding interaction sandbox
+   - ms: 1778110410006
+   - iso: 2026-05-06T23:33:30.006Z
+   - note: restore winding lines and add time output
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CSSProperties } from "react";
-import { useEffect, useMemo, useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import AppFrame from "@/components/system/shell/app/AppFrame";
 
 /* ------------------------------
    Constants
 -------------------------------- */
-const VISITS_MIN = 0;
-const VISITS_MAX = 21;
-const MONEY_MINOR_MIN = 0;
-const MONEY_MINOR_MAX = 2500;
-const MONEY_MINOR_STEP = 1;
-const WEEKS_PER_ORBIT = 52;
-const TICK_COUNT = 23;
+const TICK_COUNT = 25;
 
 /* ------------------------------
    Helpers
@@ -35,117 +29,28 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function dollarsToMinor(value: string) {
-  const parsed = Number(value);
+function formatMinutes(totalMinutes: number) {
+  const safeMinutes = Math.max(0, Math.round(totalMinutes));
+  const hours = Math.floor(safeMinutes / 60);
+  const minutes = safeMinutes % 60;
 
-  if (!Number.isFinite(parsed)) {
-    return 0;
-  }
+  if (hours === 0) return `${minutes}m`;
+  if (minutes === 0) return `${hours}h`;
 
-  return clamp(Math.round(parsed * 100), MONEY_MINOR_MIN, MONEY_MINOR_MAX);
-}
-
-function minorToDollars(minor: number) {
-  return (minor / 100).toFixed(2);
-}
-
-function formatMoney(minor: number) {
-  return `$${minorToDollars(minor)}`;
-}
-
-function formatWhole(value: number) {
-  return Math.round(value).toLocaleString("en-US");
-}
-
-function useTickingNumber(target: number) {
-  const [displayValue, setDisplayValue] = useState(target);
-
-  useEffect(() => {
-    let frame = 0;
-    let startTime: number | null = null;
-
-    const startValue = displayValue;
-    const distance = target - startValue;
-    const duration = 220;
-
-    if (Math.abs(distance) < 1) {
-      setDisplayValue(target);
-      return;
-    }
-
-    function tick(timestamp: number) {
-      if (startTime === null) {
-        startTime = timestamp;
-      }
-
-      const elapsed = timestamp - startTime;
-      const progress = clamp(elapsed / duration, 0, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-
-      setDisplayValue(startValue + distance * eased);
-
-      if (progress < 1) {
-        frame = requestAnimationFrame(tick);
-      } else {
-        setDisplayValue(target);
-      }
-    }
-
-    frame = requestAnimationFrame(tick);
-
-    return () => {
-      cancelAnimationFrame(frame);
-    };
-  }, [target]);
-
-  return displayValue;
+  return `${hours}h ${minutes}m`;
 }
 
 /* ------------------------------
    Component
 -------------------------------- */
 export default function OrbitCalculator() {
-  const [visitsPerWeek, setVisitsPerWeek] = useState(5);
-  const [costPerVisitInput, setCostPerVisitInput] = useState("3.49");
+  const [visitsPerWeek, setVisitsPerWeek] = useState<number>(4);
+  const [costPerVisit, setCostPerVisit] = useState<number>(3.95);
+  const [minutesPerVisit, setMinutesPerVisit] = useState<number>(5);
 
-  const costPerVisitMinor = useMemo(
-    () => dollarsToMinor(costPerVisitInput),
-    [costPerVisitInput]
-  );
-
-  const visitsPerOrbit = visitsPerWeek * WEEKS_PER_ORBIT;
-  const orbitMinor = visitsPerOrbit * costPerVisitMinor;
-
-  const tickingOrbitMinor = useTickingNumber(orbitMinor);
-  const tickingVisits = useTickingNumber(visitsPerOrbit);
-
-  function handleVisitsChange(value: string) {
-    const nextVisits = clamp(
-      Math.round(Number(value) || 0),
-      VISITS_MIN,
-      VISITS_MAX
-    );
-
-    setVisitsPerWeek(nextVisits);
-  }
-
-  function handleMoneyMinorChange(value: string) {
-    const nextMinor = clamp(
-      Math.round(Number(value) || 0),
-      MONEY_MINOR_MIN,
-      MONEY_MINOR_MAX
-    );
-
-    setCostPerVisitInput(minorToDollars(nextMinor));
-  }
-
-  function handleMoneyInputChange(value: string) {
-    setCostPerVisitInput(value);
-  }
-
-  function handleMoneyInputBlur() {
-    setCostPerVisitInput(minorToDollars(costPerVisitMinor));
-  }
+  const visits = visitsPerWeek * 52;
+  const orbit = visits * costPerVisit;
+  const time = visits * minutesPerVisit;
 
   return (
     <main
@@ -160,126 +65,189 @@ export default function OrbitCalculator() {
         boxSizing: "border-box",
       }}
     >
+      <style>{`
+        .orbit-range {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 100%;
+          height: 18px;
+          background: transparent;
+          margin: 0;
+        }
+
+        .orbit-range::-webkit-slider-runnable-track {
+          height: 8px;
+          background: rgba(255,255,255,0.06);
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .orbit-range::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 22px;
+          height: 22px;
+          border-radius: 999px;
+          background: var(--text-primary);
+          border: none;
+          margin-top: -08px;
+        }
+
+        .orbit-range::-moz-range-track {
+          height: 8px;
+          background: rgba(255,255,255,0.06);
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .orbit-range::-moz-range-thumb {
+          width: 22px;
+          height: 22px;
+          border-radius: 999px;
+          background: var(--text-primary);
+          border: none;
+        }
+      `}</style>
+
       <AppFrame>
         <section
           style={{
             width: "100%",
             display: "grid",
-            rowGap: "clamp(34px, 6vh, 64px)",
+            rowGap: "clamp(34px, 5.5vh, 58px)",
             boxSizing: "border-box",
           }}
         >
           <div style={{ display: "grid", rowGap: 10 }}>
-            <div style={LABEL_STYLE}>Orbit</div>
+            <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+              Orbit
+            </div>
 
             <div
               style={{
-                fontSize: "clamp(58px, 12vw, 86px)",
-                fontWeight: 740,
-                letterSpacing: "-0.07em",
-                lineHeight: 0.92,
+                fontSize: "clamp(52px, 7vw, 76px)",
+                fontWeight: 700,
                 fontVariantNumeric: "tabular-nums",
+                letterSpacing: "-0.05em",
+                lineHeight: 0.95,
               }}
             >
-              {formatMoney(Math.round(tickingOrbitMinor))}
+              ${orbit.toFixed(2)}
             </div>
           </div>
 
           <div style={{ display: "grid", rowGap: 10 }}>
-            <div style={LABEL_STYLE}>Visits</div>
+            <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+              Visits
+            </div>
 
             <div
               style={{
-                fontSize: "clamp(42px, 8vw, 62px)",
-                fontWeight: 650,
-                letterSpacing: "-0.05em",
-                lineHeight: 0.95,
+                fontSize: "clamp(40px, 5.5vw, 58px)",
+                fontWeight: 600,
                 fontVariantNumeric: "tabular-nums",
+                letterSpacing: "-0.04em",
+                lineHeight: 1,
               }}
             >
-              {formatWhole(tickingVisits)}
+              {visits.toFixed(0)}
             </div>
           </div>
 
-          <div style={{ display: "grid", rowGap: 24 }}>
-            <div style={CONTROL_STYLE}>
-              <div style={CONTROL_HEADER_STYLE}>
-                <label htmlFor="visits-per-week" style={CONTROL_LABEL_STYLE}>
-                  Visits per week
-                </label>
+          <div style={{ display: "grid", rowGap: 10 }}>
+            <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+              Time
+            </div>
 
+            <div
+              style={{
+                fontSize: "clamp(40px, 5.5vw, 58px)",
+                fontWeight: 600,
+                fontVariantNumeric: "tabular-nums",
+                letterSpacing: "-0.04em",
+                lineHeight: 1,
+              }}
+            >
+              {formatMinutes(time)}
+            </div>
+          </div>
+
+          <div style={{ display: "grid", rowGap: 26 }}>
+            <DialBlock
+              label="Visits per week"
+              valueLabel={visitsPerWeek.toString()}
+              value={visitsPerWeek}
+              min={0}
+              max={14}
+              step={1}
+              onChange={(value) => setVisitsPerWeek(Math.round(value))}
+              input={
                 <input
-                  id="visits-per-week"
                   type="number"
-                  min={VISITS_MIN}
-                  max={VISITS_MAX}
-                  step={1}
                   inputMode="numeric"
+                  min={0}
+                  max={14}
+                  step={1}
                   value={visitsPerWeek}
-                  onChange={(event) => handleVisitsChange(event.target.value)}
-                  style={NUMBER_INPUT_STYLE}
-                />
-              </div>
-
-              <WindingRail
-                value={visitsPerWeek}
-                min={VISITS_MIN}
-                max={VISITS_MAX}
-              />
-
-              <input
-                type="range"
-                min={VISITS_MIN}
-                max={VISITS_MAX}
-                step={1}
-                value={visitsPerWeek}
-                onChange={(event) => handleVisitsChange(event.target.value)}
-                aria-label="Visits per week dial"
-                style={RANGE_STYLE}
-              />
-            </div>
-
-            <div style={CONTROL_STYLE}>
-              <div style={CONTROL_HEADER_STYLE}>
-                <label htmlFor="cost-per-visit" style={CONTROL_LABEL_STYLE}>
-                  Cost per visit
-                </label>
-
-                <input
-                  id="cost-per-visit"
-                  type="number"
-                  min={minorToDollars(MONEY_MINOR_MIN)}
-                  max={minorToDollars(MONEY_MINOR_MAX)}
-                  step="0.01"
-                  inputMode="decimal"
-                  value={costPerVisitInput}
-                  onChange={(event) =>
-                    handleMoneyInputChange(event.target.value)
+                  onChange={(e) =>
+                    setVisitsPerWeek(
+                      clamp(Math.round(Number(e.target.value) || 0), 0, 14)
+                    )
                   }
-                  onBlur={handleMoneyInputBlur}
-                  style={NUMBER_INPUT_STYLE}
+                  style={pillInputStyle}
                 />
-              </div>
+              }
+            />
 
-              <WindingRail
-                value={costPerVisitMinor}
-                min={MONEY_MINOR_MIN}
-                max={MONEY_MINOR_MAX}
-              />
+            <DialBlock
+              label="Cost per visit"
+              valueLabel={costPerVisit.toFixed(2)}
+              value={costPerVisit}
+              min={0}
+              max={15}
+              step={0.01}
+              onChange={(value) => setCostPerVisit(value)}
+              input={
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  max={15}
+                  step="0.01"
+                  value={costPerVisit}
+                  onChange={(e) =>
+                    setCostPerVisit(clamp(Number(e.target.value) || 0, 0, 15))
+                  }
+                  style={pillInputStyle}
+                />
+              }
+            />
 
-              <input
-                type="range"
-                min={MONEY_MINOR_MIN}
-                max={MONEY_MINOR_MAX}
-                step={MONEY_MINOR_STEP}
-                value={costPerVisitMinor}
-                onChange={(event) =>
-                  handleMoneyMinorChange(event.target.value)
-                }
-                aria-label="Cost per visit dial"
-                style={RANGE_STYLE}
-              />
-            </div>
+            <DialBlock
+              label="Minutes per visit"
+              valueLabel={minutesPerVisit.toString()}
+              value={minutesPerVisit}
+              min={0}
+              max={120}
+              step={1}
+              onChange={(value) => setMinutesPerVisit(Math.round(value))}
+              input={
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  max={120}
+                  step={1}
+                  value={minutesPerVisit}
+                  onChange={(e) =>
+                    setMinutesPerVisit(
+                      clamp(Math.round(Number(e.target.value) || 0), 0, 120)
+                    )
+                  }
+                  style={pillInputStyle}
+                />
+              }
+            />
           </div>
         </section>
       </AppFrame>
@@ -288,54 +256,94 @@ export default function OrbitCalculator() {
 }
 
 /* ------------------------------
-   Winding Rail
+   Dial Block
 -------------------------------- */
-function WindingRail({
+function DialBlock({
+  label,
+  valueLabel,
   value,
   min,
   max,
+  step,
+  onChange,
+  input,
 }: {
+  label: string;
+  valueLabel: string;
   value: number;
   min: number;
   max: number;
+  step: number;
+  onChange: (value: number) => void;
+  input: React.ReactNode;
 }) {
-  const activeIndex = Math.round(
-    ((value - min) / Math.max(max - min, 1)) * (TICK_COUNT - 1)
+  const percent = max === min ? 0 : ((value - min) / (max - min)) * 100;
+
+  return (
+    <div style={{ display: "grid", rowGap: 12 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 16,
+        }}
+      >
+        <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+          {label}
+        </div>
+
+        <div style={{ width: 96 }}>{input}</div>
+      </div>
+
+      <WindingTicks percent={percent} />
+
+      <input
+        className="orbit-range"
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+      />
+    </div>
   );
+}
+
+/* ------------------------------
+   Winding Ticks
+-------------------------------- */
+function WindingTicks({ percent }: { percent: number }) {
+  const activeIndex = (percent / 100) * (TICK_COUNT - 1);
 
   return (
     <div
       aria-hidden="true"
       style={{
-        height: 42,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: 4,
-        padding: "4px 2px",
-        overflow: "hidden",
+        display: "grid",
+        gridTemplateColumns: `repeat(${TICK_COUNT}, 1fr)`,
+        alignItems: "end",
+        gap: 3,
+        height: 28,
       }}
     >
       {Array.from({ length: TICK_COUNT }).map((_, index) => {
         const distance = Math.abs(index - activeIndex);
-        const strength = clamp(1 - distance / 7, 0, 1);
-        const isCenter = distance === 0;
+        const strength = Math.max(0, 1 - distance / 6);
+        const isCenter = distance < 0.75;
 
         return (
           <div
             key={index}
             style={{
-              width: isCenter ? 4 : 2,
-              height: 7 + strength * 28,
+              width: 3,
+              justifySelf: "center",
+              height: 5 + strength * 19,
               borderRadius: 999,
               background: "var(--text-primary)",
-              opacity: 0.16 + strength * 0.72,
-              boxShadow: isCenter
-                ? "0 0 18px var(--glow-primary)"
-                : "none",
-              transform: `scaleY(${0.75 + strength * 0.35})`,
-              transition:
-                "height 160ms cubic-bezier(0.22, 1, 0.36, 1), opacity 160ms ease, transform 160ms cubic-bezier(0.22, 1, 0.36, 1)",
+              opacity: isCenter ? 0.92 : 0.16 + strength * 0.42,
+              transition: "height 120ms ease, opacity 120ms ease",
             }}
           />
         );
@@ -347,43 +355,15 @@ function WindingRail({
 /* ------------------------------
    Styles
 -------------------------------- */
-const LABEL_STYLE: CSSProperties = {
-  fontSize: 13,
-  color: "var(--text-tertiary)",
-};
-
-const CONTROL_STYLE: CSSProperties = {
-  display: "grid",
-  rowGap: 10,
-};
-
-const CONTROL_HEADER_STYLE: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: 12,
-};
-
-const CONTROL_LABEL_STYLE: CSSProperties = {
-  fontSize: 13,
-  color: "var(--text-tertiary)",
-};
-
-const NUMBER_INPUT_STYLE: CSSProperties = {
-  width: 94,
-  padding: "10px 12px",
-  borderRadius: 999,
-  border: "1px solid var(--border-soft)",
-  background: "var(--surface-muted)",
-  color: "var(--text-primary)",
-  outline: "none",
-  fontSize: 15,
-  fontVariantNumeric: "tabular-nums",
-  textAlign: "right",
-  boxSizing: "border-box",
-};
-
-const RANGE_STYLE: CSSProperties = {
+const pillInputStyle: React.CSSProperties = {
   width: "100%",
-  accentColor: "var(--text-primary)",
+  padding: "12px 16px",
+  background: "var(--surface-muted)",
+  border: "1px solid var(--border-soft)",
+  borderRadius: 999,
+  color: "var(--text-primary)",
+  fontSize: 16,
+  textAlign: "right",
+  outline: "none",
+  boxSizing: "border-box",
 };
