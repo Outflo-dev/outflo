@@ -86,8 +86,8 @@ export default function OrbitCalculator() {
         .orbit-range::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
-          width: 22px;
-          height: 22px;
+          width: 28px;
+          height: 28px;
           border-radius: 999px;
           background: var(--text-primary);
           border: none;
@@ -102,8 +102,8 @@ export default function OrbitCalculator() {
         }
 
         .orbit-range::-moz-range-thumb {
-          width: 22px;
-          height: 22px;
+          width: 28px;
+          height: 28px;
           border-radius: 999px;
           background: var(--text-primary);
           border: none;
