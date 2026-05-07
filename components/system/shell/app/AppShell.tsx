@@ -95,6 +95,8 @@ export default function AppShell({ children }: AppShellProps) {
     pathname.startsWith("/account/profile");
 
   const showNav = !hideNav;
+  const disableRouteSwipe = pathname.startsWith("/tools");
+
 
   const { left, right } = useMemo(() => {
     const i = idxOf(pathname);
@@ -105,10 +107,10 @@ export default function AppShell({ children }: AppShellProps) {
 
   const swipe = useSwipe(
     () => {
-      if (!hideNav && pathname !== left) router.push(left);
+      if (!hideNav && !disableRouteSwipe && pathname !== left) router.push(left);
     },
     () => {
-      if (!hideNav && pathname !== right) router.push(right);
+      if (!hideNav && !disableRouteSwipe && pathname !== right) router.push(right);
     }
   );
 
