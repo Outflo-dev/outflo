@@ -91,6 +91,7 @@ export default function AppShell({ children }: AppShellProps) {
 
   const hideNav =
     pathname === "/app" ||
+    pathname === "/tools/compression" ||
     pathname.startsWith("/app/money/receipts/") ||
     pathname.startsWith("/account/profile");
 

@@ -15,6 +15,7 @@
 -------------------------------- */
 import type React from "react";
 import { useState } from "react";
+import Link from "next/link";
 import AppFrame from "@/components/system/shell/app/AppFrame";
 
 /* ------------------------------
@@ -76,7 +77,7 @@ export default function OrbitCalculator() {
         }
 
         .orbit-range::-webkit-slider-runnable-track {
-          height: 8px;
+          height: 6px;
           background: rgba(255,255,255,0.06);
           border-radius: 999px;
           border: 1px solid rgba(255,255,255,0.08);
@@ -90,7 +91,7 @@ export default function OrbitCalculator() {
           border-radius: 999px;
           background: var(--text-primary);
           border: none;
-          margin-top: -08px;
+          margin-top: -09px;
         }
 
         .orbit-range::-moz-range-track {
@@ -120,24 +121,6 @@ export default function OrbitCalculator() {
         >
           <div style={{ display: "grid", rowGap: 10 }}>
             <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
-              Orbit
-            </div>
-
-            <div
-              style={{
-                fontSize: "clamp(52px, 7vw, 76px)",
-                fontWeight: 700,
-                fontVariantNumeric: "tabular-nums",
-                letterSpacing: "-0.05em",
-                lineHeight: 0.95,
-              }}
-            >
-              ${orbit.toFixed(2)}
-            </div>
-          </div>
-
-          <div style={{ display: "grid", rowGap: 10 }}>
-            <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
               Visits
             </div>
 
@@ -151,6 +134,24 @@ export default function OrbitCalculator() {
               }}
             >
               {visits.toFixed(0)}
+            </div>
+          </div>
+
+          <div style={{ display: "grid", rowGap: 10 }}>
+            <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
+              Orbit
+            </div>
+
+            <div
+              style={{
+                fontSize: "clamp(52px, 7vw, 76px)",
+                fontWeight: 700,
+                fontVariantNumeric: "tabular-nums",
+                letterSpacing: "-0.05em",
+                lineHeight: 0.95,
+              }}
+            >
+              ${orbit.toFixed(2)}
             </div>
           </div>
 
@@ -249,6 +250,30 @@ export default function OrbitCalculator() {
               }
             />
           </div>
+
+          <nav
+            aria-label="Orbit calculator navigation"
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              paddingTop: 2,
+            }}
+          >
+            <Link
+              href="/app/systems"
+              style={{
+                color: "var(--text-primary)",
+                textDecoration: "none",
+                fontSize: 13,
+                border: "1px solid var(--border-soft)",
+                background: "var(--surface-soft)",
+                borderRadius: 999,
+                padding: "9px 14px",
+              }}
+            >
+              Systems
+            </Link>
+          </nav>
         </section>
       </AppFrame>
     </main>
