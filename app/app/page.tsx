@@ -3,10 +3,12 @@
    File: app/app/page.tsx
    Scope: Render authenticated controls doorway
    Last Updated:
-   - ms: 1778110410006
-   - iso: 2026-05-06T23:33:30.006Z
-   - note: restore app controls surface with active money time tiles and left-aligned control buttons
+   - ms: 1778202600000
+   - iso: 2026-05-08T01:10:00.000Z
+   - note: add authenticated identity avatar to systems surface
    ========================================================== */
+
+export const dynamic = "force-dynamic";
 
 /* ------------------------------
    Imports
@@ -15,11 +17,55 @@ import type React from "react";
 import Link from "next/link";
 
 import AppFrame from "@/components/system/shell/app/AppFrame";
+import Avatar from "@/components/system/primitives/display/avatar/Avatar";
+
+import { supabaseServer } from "@/lib/supabase/server";
+
+import {
+  getFullName,
+  getUsername,
+} from "@/app/account/profile/internal/profile.selectors";
+
+/* ------------------------------
+   Types
+-------------------------------- */
+type IdentityRow = {
+  first_name: string;
+  last_name: string | null;
+  username: string | null;
+  avatar_url: string | null;
+};
 
 /* ------------------------------
    Page
 -------------------------------- */
-export default function AppRootPage() {
+export default async function AppRootPage() {
+  const supabase = await supabaseServer();
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    throw new Error("Unable to load authenticated user.");
+  }
+
+  const { data: identity, error: identityError } = await supabase
+    .from("user_identity_assets")
+    .select("first_name, last_name, username, avatar_url")
+    .eq("user_id", user.id)
+    .single<IdentityRow>();
+
+  if (identityError || !identity) {
+    throw new Error("Unable to load identity.");
+  }
+
+  const fullName = getFullName(identity.first_name, identity.last_name);
+  const username = getUsername(identity.username);
+
+  const avatarValue = username ?? fullName ?? "O";
+
   return (
     <main
       style={{
@@ -41,27 +87,59 @@ export default function AppRootPage() {
             boxSizing: "border-box",
           }}
         >
-          <div style={{ display: "grid", rowGap: 8 }}>
-            <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
-              Outflō
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+              gap: 16,
+            }}
+          >
+            <div style={{ display: "grid", rowGap: 8 }}>
+              <div
+                style={{
+                  fontSize: 13,
+                  color: "var(--text-tertiary)",
+                }}
+              >
+                Outflō
+              </div>
+
+              <div
+                style={{
+                  fontSize: 34,
+                  fontWeight: 700,
+                  letterSpacing: "-0.04em",
+                  lineHeight: 1,
+                }}
+              >
+                Systems
+              </div>
+
+              <div
+                style={{
+                  fontSize: 13,
+                  color: "var(--text-tertiary)",
+                }}
+              >
+                Runtime doorway
+              </div>
             </div>
 
-            <div
+            <Link
+              href="/account/profile"
               style={{
-                fontSize: 34,
-                fontWeight: 700,
-                letterSpacing: "-0.04em",
-                lineHeight: 1,
+                textDecoration: "none",
               }}
             >
-              Systems
-            </div>
-
-            <div style={{ fontSize: 13, color: "var(--text-tertiary)" }}>
-              Runtime doorway
-            </div>
+              <Avatar
+                size="sm"
+                value={avatarValue}
+                src={identity.avatar_url}
+                alt={fullName}
+              />
+            </Link>
           </div>
-
           <div
             style={{
               border: "1px solid var(--border-soft)",
