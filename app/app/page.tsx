@@ -85,7 +85,7 @@ export default async function AppRootPage() {
           style={{
             width: "100%",
             display: "grid",
-            rowGap: 20,
+            rowGap: 30,
             boxSizing: "border-box",
           }}
         >
@@ -111,7 +111,7 @@ export default async function AppRootPage() {
             </Link>
           </div>
 
-          <div style={{ display: "grid", rowGap: 8 }}>
+          <div style={{ display: "grid", rowGap: 16 }}>
             <div
               style={{
                 fontSize: 13,
