@@ -30,20 +30,12 @@ import MediaCropper from "@/components/system/surfaces/media-crop/MediaCropper";
 import type { MediaCropResult } from "@/components/system/surfaces/media-crop/media-crop.types";
 import { saveProfileAvatar } from "../internal/avatar/profile-avatar.client";
 import ProfileCard from "../internal/card/ProfileCard";
+import { PROFILE_ACCOUNT_ITEMS } from "../internal/profile.sections";
+
 
 /* ------------------------------
    Constants
 -------------------------------- */
-const HUB_ITEMS = [
-  { label: "Account", href: "/account/profile/account" },
-  { label: "Environment", href: "/account/profile/environment" },
-  { label: "Money", href: "/account/profile/money" },
-  { label: "Privacy", href: "/account/profile/privacy" },
-  { label: "Notifications", href: "/account/profile/notifications" },
-  { label: "Records", href: "/account/profile/records" },
-  { label: "Support", href: "/account/profile/support" },
-] as const;
-
 const UI = {
   pageBottom: 40,
   sectionGap: 24,
@@ -166,7 +158,7 @@ export default function ProfileView({
             </section>
 
             <ProfileAccountSection
-              items={HUB_ITEMS}
+              items={PROFILE_ACCOUNT_ITEMS}
               sectionGap={UI.sectionGap}
             />
 

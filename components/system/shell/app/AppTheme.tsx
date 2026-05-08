@@ -5,9 +5,9 @@
    File: components/system/shell/app/AppTheme.tsx
    Scope: Apply resolved app theme preference to document runtime
    Last Updated:
-   - ms: 1778018872799
-   - iso: 2026-05-05T22:07:52.799Z
-   - note: add single runtime theme applicator for authenticated surfaces
+   - ms: 1778207400000
+   - iso: 2026-05-08T02:30:00.000Z
+   - note: sync document theme background and mobile theme-color chrome
    ========================================================== */
 
 /* ------------------------------
@@ -47,6 +47,26 @@ export function emitThemePreference(themePreference: ThemePreference) {
     );
 }
 
+function applyDocumentTheme(themePreference: ThemePreference) {
+    document.documentElement.dataset.theme = themePreference;
+
+    const bgPrimary = getComputedStyle(document.documentElement)
+        .getPropertyValue("--bg-primary")
+        .trim();
+
+    if (!bgPrimary) return;
+
+    document.body.style.background = bgPrimary;
+
+    const themeColorMeta = document.querySelector<HTMLMetaElement>(
+        'meta[name="theme-color"]'
+    );
+
+    if (themeColorMeta) {
+        themeColorMeta.content = bgPrimary;
+    }
+}
+
 /* ------------------------------
    Component
 -------------------------------- */
@@ -55,7 +75,7 @@ export default function AppTheme({
     themePreference,
 }: AppThemeProps) {
     useEffect(() => {
-        document.documentElement.dataset.theme = themePreference;
+        applyDocumentTheme(themePreference);
     }, [themePreference]);
 
     useEffect(() => {
@@ -65,7 +85,7 @@ export default function AppTheme({
 
             if (!isThemePreference(themePreference)) return;
 
-            document.documentElement.dataset.theme = themePreference;
+            applyDocumentTheme(themePreference);
         }
 
         window.addEventListener(THEME_PREFERENCE_EVENT, handleThemePreference);
