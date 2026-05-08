@@ -3,9 +3,9 @@
    File: app/app/page.tsx
    Scope: Render authenticated controls doorway
    Last Updated:
-   - ms: 1778202600000
-   - iso: 2026-05-08T01:10:00.000Z
-   - note: add authenticated identity avatar to systems surface
+   - ms: 1778204100000
+   - iso: 2026-05-08T01:35:00.000Z
+   - note: add top-right authenticated avatar and align systems surface to app shell rhythm
    ========================================================== */
 
 export const dynamic = "force-dynamic";
@@ -72,9 +72,11 @@ export default async function AppRootPage() {
         minHeight: "100svh",
         backgroundColor: "var(--bg-primary)",
         color: "var(--text-primary)",
-        padding: "max(24px, 6vh) 0px",
-        display: "grid",
-        placeItems: "center",
+        padding:
+          "calc(env(safe-area-inset-top) + 18px) 0px max(32px, env(safe-area-inset-bottom))",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
         width: "100%",
       }}
     >
@@ -90,42 +92,10 @@ export default async function AppRootPage() {
           <div
             style={{
               display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-              gap: 16,
+              justifyContent: "flex-end",
+              alignItems: "center",
             }}
           >
-            <div style={{ display: "grid", rowGap: 8 }}>
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "var(--text-tertiary)",
-                }}
-              >
-                Outflō
-              </div>
-
-              <div
-                style={{
-                  fontSize: 34,
-                  fontWeight: 700,
-                  letterSpacing: "-0.04em",
-                  lineHeight: 1,
-                }}
-              >
-                Systems
-              </div>
-
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "var(--text-tertiary)",
-                }}
-              >
-                Runtime doorway
-              </div>
-            </div>
-
             <Link
               href="/account/profile"
               style={{
@@ -133,13 +103,45 @@ export default async function AppRootPage() {
               }}
             >
               <Avatar
-                size="sm"
+                size="md"
                 value={avatarValue}
                 src={identity.avatar_url}
                 alt={fullName}
               />
             </Link>
           </div>
+
+          <div style={{ display: "grid", rowGap: 8 }}>
+            <div
+              style={{
+                fontSize: 13,
+                color: "var(--text-tertiary)",
+              }}
+            >
+              Outflō
+            </div>
+
+            <div
+              style={{
+                fontSize: 34,
+                fontWeight: 700,
+                letterSpacing: "-0.04em",
+                lineHeight: 1,
+              }}
+            >
+              Systems
+            </div>
+
+            <div
+              style={{
+                fontSize: 13,
+                color: "var(--text-tertiary)",
+              }}
+            >
+              Runtime doorway
+            </div>
+          </div>
+
           <div
             style={{
               border: "1px solid var(--border-soft)",
