@@ -5,16 +5,15 @@
    File: app/account/profile/actions/CloseProfileAction.tsx
    Scope: Trigger boundary for dismissing the profile route
    Last Updated:
-   - ms: 1776475194844
-   - iso: 2026-04-18T01:19:54.844Z
-   - note: wire close trigger to controller-owned dismiss behavior
+   - ms: 1778290038937
+   - iso: 2026-05-09T01:27:18.937Z
+   - note: remove nested icon motion from close trigger
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import IconButton from "@/components/system/shell/buttons/types/icon/IconButton";
-import Motion from "@/components/system/primitives/motion/Motion";
 import X from "@/components/system/primitives/marks/X";
 
 /* ------------------------------
@@ -43,9 +42,7 @@ export default function CloseProfileAction({
         color: textPrimary,
       }}
     >
-      <Motion show direction="down">
-        <X />
-      </Motion>
+      <X />
     </IconButton>
   );
 }

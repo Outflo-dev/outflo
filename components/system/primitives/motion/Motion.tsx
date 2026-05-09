@@ -5,9 +5,9 @@
    File: components/system/primitives/motion/Motion.tsx
    Scope: Pure motion primitive for directional presence (no layout, no interaction ownership)
    Last Updated:
-   - ms: 1776222056208
-   - iso: 2026-04-15T03:00:56.208Z
-   - note: remove layout ownership and keep motion purely visual
+   - ms: 1778290038937
+   - iso: 2026-05-09T01:27:18.937Z
+   - note: separate enter and exit direction transforms
    ========================================================== */
 
 /* ------------------------------
@@ -20,6 +20,8 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 -------------------------------- */
 type Direction = "up" | "down" | "left" | "right";
 
+type MotionPhase = "enter" | "exit";
+
 type MotionProps = {
   show: boolean;
   direction: Direction;
@@ -27,24 +29,35 @@ type MotionProps = {
 };
 
 /* ------------------------------
-   Constants (LOCKED)
+   Constants
 -------------------------------- */
-export const MOTION_DURATION_MS = 340;
+export const MOTION_DURATION_MS = 300;
+
 const EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
+const VERTICAL_TRAVEL_PX = 28;
+const HORIZONTAL_TRAVEL_PX = 22;
 
 /* ------------------------------
    Helpers
 -------------------------------- */
-function getOffsetTransform(direction: Direction) {
+function getOffsetTransform(direction: Direction, phase: MotionPhase) {
   switch (direction) {
     case "up":
-      return "translateY(-100%)";
+      return phase === "enter"
+        ? `translate3d(0, ${VERTICAL_TRAVEL_PX}px, 0)`
+        : `translate3d(0, -${VERTICAL_TRAVEL_PX}px, 0)`;
     case "down":
-      return "translateY(100%)";
+      return phase === "enter"
+        ? `translate3d(0, -${VERTICAL_TRAVEL_PX}px, 0)`
+        : `translate3d(0, ${VERTICAL_TRAVEL_PX}px, 0)`;
     case "left":
-      return "translateX(-100%)";
+      return phase === "enter"
+        ? `translate3d(${HORIZONTAL_TRAVEL_PX}px, 0, 0)`
+        : `translate3d(-${HORIZONTAL_TRAVEL_PX}px, 0, 0)`;
     case "right":
-      return "translateX(100%)";
+      return phase === "enter"
+        ? `translate3d(-${HORIZONTAL_TRAVEL_PX}px, 0, 0)`
+        : `translate3d(${HORIZONTAL_TRAVEL_PX}px, 0, 0)`;
   }
 }
 
@@ -58,11 +71,13 @@ export default function Motion({
 }: MotionProps) {
   const [mounted, setMounted] = useState(show);
   const [active, setActive] = useState(show);
+  const [phase, setPhase] = useState<MotionPhase>("enter");
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (show) {
       setMounted(true);
+      setPhase("enter");
       setActive(false);
 
       rafRef.current = window.requestAnimationFrame(() => {
@@ -78,6 +93,7 @@ export default function Motion({
       };
     }
 
+    setPhase("exit");
     setActive(false);
 
     return () => {
@@ -92,7 +108,9 @@ export default function Motion({
   return (
     <div
       style={{
-        transform: active ? "translate3d(0,0,0)" : getOffsetTransform(direction),
+        transform: active
+          ? "translate3d(0, 0, 0)"
+          : getOffsetTransform(direction, phase),
         opacity: active ? 1 : 0,
         transition: `transform ${MOTION_DURATION_MS}ms ${EASING}, opacity ${MOTION_DURATION_MS}ms ${EASING}`,
         willChange: "transform, opacity",

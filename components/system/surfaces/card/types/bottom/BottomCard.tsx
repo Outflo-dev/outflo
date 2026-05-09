@@ -154,7 +154,7 @@ export default function BottomCard<T extends string = string>({
         {`
           @keyframes outfloBottomCardIn {
             from {
-              transform: translateY(100%);
+              transform: translateY(18px);
               opacity: 0;
             }
 
@@ -177,7 +177,7 @@ export default function BottomCard<T extends string = string>({
         style={{
           ...FRAME_STYLE,
           ...dragStyle,
-          animation: "outfloBottomCardIn 340ms cubic-bezier(0.22, 1, 0.36, 1)",
+          animation: "outfloBottomCardIn 260ms cubic-bezier(0.22, 1, 0.36, 1)",
         }}
       >
         <BottomCardFrame height={cardHeight}>

@@ -36,12 +36,19 @@ export type ProfileSectionConfig = {
   title: string;
 };
 
+export type ProfileCardPanel = "avatar" | "controls" | "theme";
+
 export type ProfileViewProps = ProfileRouteProps & {
   show: boolean;
   direction: ProfileDirection;
-  sheetOpen: boolean;
+
+  cardPanel: ProfileCardPanel | null;
+  cardOpen: boolean;
+
   onDismiss: () => void;
   onOpenPortal: () => void;
-  onOpenPhotoSheet: () => void;
-  onClosePhotoSheet: () => void;
+  onOpenAvatarPanel: () => void;
+  onOpenControlsPanel: () => void;
+  onChangeCardPanel: (panel: ProfileCardPanel) => void;
+  onCloseCard: () => void;
 };

@@ -5,16 +5,15 @@
    File: app/account/profile/actions/OpenPortalAction.tsx
    Scope: Trigger boundary for exiting profile to the public portal
    Last Updated:
-   - ms: 1776475194844
-   - iso: 2026-04-18T01:19:54.844Z
-   - note: wire portal trigger to controller-owned exit behavior
+   - ms: 1778290038937
+   - iso: 2026-05-09T01:27:18.937Z
+   - note: remove nested icon motion from portal trigger
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import IconButton from "@/components/system/shell/buttons/types/icon/IconButton";
-import Motion from "@/components/system/primitives/motion/Motion";
 
 /* ------------------------------
    Types
@@ -42,19 +41,17 @@ export default function OpenPortalAction({
         color: textPrimary,
       }}
     >
-      <Motion show direction="up">
-        <span
-          aria-hidden="true"
-          style={{
-            display: "block",
-            fontSize: 18,
-            lineHeight: 1,
-            flexShrink: 0,
-          }}
-        >
-          ↗
-        </span>
-      </Motion>
+      <span
+        aria-hidden="true"
+        style={{
+          display: "block",
+          fontSize: 18,
+          lineHeight: 1,
+          flexShrink: 0,
+        }}
+      >
+        ↗
+      </span>
     </IconButton>
   );
 }

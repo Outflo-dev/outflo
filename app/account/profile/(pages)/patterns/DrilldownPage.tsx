@@ -18,7 +18,7 @@ import Motion, {
   MOTION_DURATION_MS,
 } from "@/components/system/primitives/motion/Motion";
 import AppFrame from "@/components/system/shell/app/AppFrame";
-import PillButtonLink from "@/components/system/shell/buttons/types/pill/PillButtonLink";
+import PillButton from "@/components/system/shell/buttons/types/pill/PillButton";
 
 /* ------------------------------
    Types
@@ -97,10 +97,10 @@ export default function DrilldownPage({
   description,
 }: DrilldownPageProps) {
   const [show, setShow] = useState(true);
-  const [direction, setDirection] = useState<"left" | "right">("right");
+  const [direction, setDirection] = useState<"left" | "right">("left");
 
   function handleBack() {
-    setDirection("left");
+    setDirection("right");
     setShow(false);
 
     window.setTimeout(() => {
@@ -114,21 +114,13 @@ export default function DrilldownPage({
         <AppFrame>
           <section style={SURFACE_STYLE}>
             <div>
-              <button
+              <PillButton
                 type="button"
+                variant="muted"
                 onClick={handleBack}
-                style={{
-                  appearance: "none",
-                  border: 0,
-                  background: "transparent",
-                  padding: 0,
-                  cursor: "pointer",
-                }}
               >
-                <PillButtonLink href="/account/profile" variant="muted">
-                  ← Profile
-                </PillButtonLink>
-              </button>
+                ← Profile
+              </PillButton>
             </div>
 
             <header style={HEADER_STYLE}>

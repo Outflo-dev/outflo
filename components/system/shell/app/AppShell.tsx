@@ -29,7 +29,7 @@ type AppShellProps = {
 /* ------------------------------
    Routes
 -------------------------------- */
-const ROUTES = ["/", "/app/systems", "app/app/time"] as const;
+const ROUTES = ["/", "/app/systems", "app/time"] as const;
 
 /* ------------------------------
    Constants
