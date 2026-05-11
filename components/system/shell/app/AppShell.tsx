@@ -5,19 +5,23 @@
    File: components/system/shell/app/AppShell.tsx
    Scope: Global shell owning frame navigation visibility layered surface root and route swipe
    Last Updated:
-   - ms: 1778018872799
-   - iso: 2026-05-05T22:07:52.799Z
-   - note: remove theme application from app shell
+   - ms: 1778467797659
+   - iso: 2026-05-11T02:49:57.659Z
+   - note: delegate route visual handoff to app route transition owner
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
+import type React from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { ReactNode, useMemo } from "react";
+import { useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
+
 import { useSwipe } from "@/hooks/use-swipe";
 import { APP_SHELL } from "./app-shell.constants";
+import AppRouteTransition from "./AppRouteTransition";
 
 /* ------------------------------
    Types
@@ -29,12 +33,11 @@ type AppShellProps = {
 /* ------------------------------
    Routes
 -------------------------------- */
-const ROUTES = ["/", "/app/systems", "app/time"] as const;
+const ROUTES = ["/", "/app/systems", "/app/time"] as const;
 
 /* ------------------------------
    Constants
 -------------------------------- */
-
 const NAV_WRAP_STYLE: React.CSSProperties = {
   position: "fixed",
   left: 0,
@@ -79,6 +82,7 @@ const LAYER_ROOT_STYLE: React.CSSProperties = {
 -------------------------------- */
 function idxOf(pathname: string) {
   const i = ROUTES.indexOf(pathname as (typeof ROUTES)[number]);
+
   return i === -1 ? 0 : i;
 }
 
@@ -99,20 +103,25 @@ export default function AppShell({ children }: AppShellProps) {
   const showNav = !hideNav;
   const disableRouteSwipe = pathname.startsWith("/tools");
 
-
   const { left, right } = useMemo(() => {
     const i = idxOf(pathname);
-    const left = ROUTES[Math.min(i + 1, ROUTES.length - 1)];
-    const right = ROUTES[Math.max(i - 1, 0)];
-    return { left, right };
+
+    return {
+      left: ROUTES[Math.min(i + 1, ROUTES.length - 1)],
+      right: ROUTES[Math.max(i - 1, 0)],
+    };
   }, [pathname]);
 
   const swipe = useSwipe(
     () => {
-      if (!hideNav && !disableRouteSwipe && pathname !== left) router.push(left);
+      if (!hideNav && !disableRouteSwipe && pathname !== left) {
+        router.push(left);
+      }
     },
     () => {
-      if (!hideNav && !disableRouteSwipe && pathname !== right) router.push(right);
+      if (!hideNav && !disableRouteSwipe && pathname !== right) {
+        router.push(right);
+      }
     }
   );
 
@@ -128,7 +137,9 @@ export default function AppShell({ children }: AppShellProps) {
       }}
     >
       <div id="surface-layer-root" style={LAYER_ROOT_STYLE} />
-      {children}
+
+      <AppRouteTransition pathname={pathname}>{children}</AppRouteTransition>
+
       {showNav ? (
         <nav style={NAV_WRAP_STYLE}>
           <div style={NAV_INNER_STYLE}>
@@ -141,7 +152,11 @@ export default function AppShell({ children }: AppShellProps) {
                 label="Systems"
               />
 
-              <Pill href="/app/time" active={pathname === "/app/app/time"} label="Time" />
+              <Pill
+                href="/app/time"
+                active={pathname === "/app/time"}
+                label="Time"
+              />
             </div>
           </div>
         </nav>
