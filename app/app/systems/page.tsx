@@ -1,44 +1,69 @@
-"use client";
-
 /* ==========================================================
    OUTFLO — SYSTEMS ROOT
    File: app/app/systems/page.tsx
-   Scope: Render system selector for authenticated app surfaces
+   Scope: Render authenticated read-only Systems launcher
    Last Updated:
-   - ms: 1778110410006
-   - iso: 2026-05-06T23:33:30.006Z
-   - note: refine systems launcher with substrate tools runtime placement and secret controls access
+   - ms: 1778467797659
+   - iso: 2026-05-11T02:49:57.659Z
+   - note: move systems board ownership to canonical launcher and add identity avatar read
    ========================================================== */
+
+export const dynamic = "force-dynamic";
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type React from "react";
-import { useState } from "react";
 import Link from "next/link";
+
 import AppFrame from "@/components/system/shell/app/AppFrame";
+import Avatar from "@/components/system/primitives/display/avatar/Avatar";
+
+import { supabaseServer } from "@/lib/supabase/server";
+
+import {
+  getFullName,
+  getUsername,
+} from "@/app/account/profile/internal/profile.selectors";
 
 /* ------------------------------
-   Constants
+   Types
 -------------------------------- */
-const SECRET_TAP_TARGET = 7;
+type IdentityRow = {
+  first_name: string;
+  last_name: string | null;
+  username: string | null;
+  avatar_url: string | null;
+};
 
 /* ------------------------------
    Page
 -------------------------------- */
-export default function SystemsPage() {
-  const [secretTaps, setSecretTaps] = useState(0);
-  const controlsRevealed = secretTaps >= SECRET_TAP_TARGET;
+export default async function SystemsPage() {
+  const supabase = await supabaseServer();
 
-  function handleSecretTap() {
-    setSecretTaps((current) => {
-      if (current >= SECRET_TAP_TARGET) {
-        return current;
-      }
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
 
-      return current + 1;
-    });
+  if (userError || !user) {
+    throw new Error("Unable to load authenticated user.");
   }
+
+  const { data: identity, error: identityError } = await supabase
+    .from("user_identity_assets")
+    .select("first_name, last_name, username, avatar_url")
+    .eq("user_id", user.id)
+    .single<IdentityRow>();
+
+  if (identityError || !identity) {
+    throw new Error("Unable to load identity.");
+  }
+
+  const fullName = getFullName(identity.first_name, identity.last_name);
+  const username = getUsername(identity.username);
+  const avatarValue = username ?? fullName ?? "O";
 
   return (
     <main
@@ -47,9 +72,11 @@ export default function SystemsPage() {
         background:
           "radial-gradient(circle at top, var(--surface-soft), transparent 34%), var(--bg-primary)",
         color: "var(--text-primary)",
-        padding: "max(24px, 6vh) 0px",
-        display: "grid",
-        placeItems: "center",
+        padding:
+          "calc(env(safe-area-inset-top) + 18px) 0px max(32px, env(safe-area-inset-bottom))",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
         width: "100%",
       }}
     >
@@ -58,14 +85,14 @@ export default function SystemsPage() {
           style={{
             width: "100%",
             display: "grid",
-            rowGap: 22,
+            rowGap: 26,
             boxSizing: "border-box",
           }}
         >
           <header
             style={{
               display: "grid",
-              rowGap: 12,
+              rowGap: 18,
             }}
           >
             <div
@@ -76,44 +103,30 @@ export default function SystemsPage() {
                 gap: 12,
               }}
             >
-              <button
-                type="button"
-                onClick={handleSecretTap}
-                aria-label="Reveal controls"
+              <div
                 style={{
-                  appearance: "none",
-                  border: 0,
-                  background: "transparent",
-                  color: "var(--text-tertiary)",
-                  padding: 0,
-                  width: "fit-content",
-                  font: "inherit",
                   fontSize: 13,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
-                  cursor: "default",
+                  color: "var(--text-tertiary)",
                 }}
               >
                 Systems
-              </button>
+              </div>
 
-              {controlsRevealed ? (
-                <Link
-                  href="/app"
-                  prefetch={false}
-                  style={{
-                    color: "var(--text-primary)",
-                    textDecoration: "none",
-                    fontSize: 13,
-                    border: "1px solid var(--border-soft)",
-                    background: "var(--surface-soft)",
-                    borderRadius: 999,
-                    padding: "8px 13px",
-                  }}
-                >
-                  Controls
-                </Link>
-              ) : null}
+              <Link
+                href="/account/profile"
+                style={{
+                  textDecoration: "none",
+                }}
+              >
+                <Avatar
+                  size="md"
+                  value={avatarValue}
+                  src={identity.avatar_url}
+                  alt={fullName}
+                />
+              </Link>
             </div>
 
             <div
@@ -124,10 +137,10 @@ export default function SystemsPage() {
             >
               <div
                 style={{
-                  fontSize: "clamp(38px, 8vw, 58px)",
+                  fontSize: "clamp(42px, 9vw, 62px)",
                   fontWeight: 700,
-                  letterSpacing: "-0.05em",
-                  lineHeight: 0.95,
+                  letterSpacing: "-0.055em",
+                  lineHeight: 0.92,
                 }}
               >
                 Outflō
@@ -240,6 +253,20 @@ export default function SystemsPage() {
               />
             </div>
           </div>
+
+          <nav
+            aria-label="System navigation"
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              gap: 8,
+              flexWrap: "wrap",
+              paddingTop: 2,
+            }}
+          >
+            <ControlButton href="/account/profile" label="Profile" />
+            <ControlButton href="/" label="Portal" />
+          </nav>
         </section>
       </AppFrame>
     </main>
@@ -293,6 +320,7 @@ function Tile({
     opacity: enabled ? 1 : 0.35,
     boxShadow: "0 18px 60px rgba(0,0,0,0.18)",
     boxSizing: "border-box",
+    pointerEvents: enabled ? "auto" : "none",
   };
 
   const content = (
@@ -332,6 +360,28 @@ function Tile({
   return (
     <Link href={href} style={style}>
       {content}
+    </Link>
+  );
+}
+
+/* ------------------------------
+   Control Button
+-------------------------------- */
+function ControlButton({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      style={{
+        color: "var(--text-primary)",
+        textDecoration: "none",
+        fontSize: 13,
+        border: "1px solid var(--border-soft)",
+        background: "var(--surface-soft)",
+        borderRadius: 999,
+        padding: "9px 14px",
+      }}
+    >
+      {label}
     </Link>
   );
 }
