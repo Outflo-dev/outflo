@@ -5,9 +5,9 @@
    File: components/system/shell/app/AppRouteTransition.tsx
    Scope: Own global visual handoff between routed app surfaces
    Last Updated:
-   - ms: 1778467797659
-   - iso: 2026-05-11T02:49:57.659Z
-   - note: add shell-adjacent route transition owner using Motion primitive
+   - ms: 1778540064130
+   - iso: 2026-05-11T22:54:24.130Z
+   - note: contain route transition rules in explicit motion map
    ========================================================== */
 
 /* ------------------------------
@@ -58,56 +58,57 @@ const LAYER_BASE_STYLE: CSSProperties = {
     minHeight: "100dvh",
 };
 
+const DEFAULT_TRANSITION: TransitionPair = {
+    enter: "up",
+    exit: "down",
+};
+
+const PROFILE_ENTER_TRANSITION: TransitionPair = {
+    enter: "up",
+    exit: "down",
+};
+
+const PROFILE_EXIT_TO_SYSTEMS_TRANSITION: TransitionPair = {
+    enter: "down",
+    exit: "down",
+};
+
+const ROUTE_TRANSITIONS: Record<string, TransitionPair> = {
+    "/app/systems→/app/time": {
+        enter: "left",
+        exit: "left",
+    },
+    "/app/time→/app/systems": {
+        enter: "right",
+        exit: "right",
+    },
+    "/app/systems→/app/money": {
+        enter: "right",
+        exit: "right",
+    },
+    "/app/money→/app/systems": {
+        enter: "left",
+        exit: "left",
+    },
+};
+
 /* ------------------------------
    Helpers
 -------------------------------- */
+function getRouteTransitionKey(from: string, to: string) {
+    return `${from}→${to}`;
+}
+
 function resolveTransition(from: string, to: string): TransitionPair {
     if (to.startsWith("/account/profile")) {
-        return {
-            enter: "up",
-            exit: "down",
-        };
+        return PROFILE_ENTER_TRANSITION;
     }
 
     if (from.startsWith("/account/profile") && to === "/app/systems") {
-        return {
-            enter: "down",
-            exit: "down",
-        };
+        return PROFILE_EXIT_TO_SYSTEMS_TRANSITION;
     }
 
-    if (to === "/app/time") {
-        return {
-            enter: "left",
-            exit: "left",
-        };
-    }
-
-    if (from === "/app/time" && to === "/app/systems") {
-        return {
-            enter: "right",
-            exit: "right",
-        };
-    }
-
-    if (to === "/app/money") {
-        return {
-            enter: "right",
-            exit: "right",
-        };
-    }
-
-    if (from === "/app/money" && to === "/app/systems") {
-        return {
-            enter: "left",
-            exit: "left",
-        };
-    }
-
-    return {
-        enter: "up",
-        exit: "down",
-    };
+    return ROUTE_TRANSITIONS[getRouteTransitionKey(from, to)] ?? DEFAULT_TRANSITION;
 }
 
 function getLayerStyle(layer: RouteLayer, isTopLayer: boolean): CSSProperties {
@@ -151,17 +152,19 @@ export default function AppRouteTransition({
                 children,
             };
 
-            setLayers([
-                {
-                    id: `route:${pathname}:current`,
-                    pathname,
-                    children,
-                    phase: "entered",
-                    direction: "up",
-                },
-            ]);
+            const timeout = window.setTimeout(() => {
+                setLayers([
+                    {
+                        id: `route:${pathname}:current`,
+                        pathname,
+                        children,
+                        phase: "entered",
+                        direction: "up",
+                    },
+                ]);
+            }, 0);
 
-            return;
+            return () => window.clearTimeout(timeout);
         }
 
         transitionId.current += 1;
@@ -234,13 +237,8 @@ function RouteMotionLayer({
     const [show, setShow] = useState(layer.phase !== "enter");
 
     useEffect(() => {
-        if (layer.phase === "entered") {
-            setShow(true);
-            return;
-        }
-
         const frame = window.requestAnimationFrame(() => {
-            setShow(layer.phase === "enter");
+            setShow(layer.phase === "entered" || layer.phase === "enter");
         });
 
         return () => window.cancelAnimationFrame(frame);

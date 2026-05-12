@@ -3,9 +3,9 @@
    File: app/app/systems/page.tsx
    Scope: Render authenticated read-only Systems launcher
    Last Updated:
-   - ms: 1778467797659
-   - iso: 2026-05-11T02:49:57.659Z
-   - note: move systems board ownership to canonical launcher and add identity avatar read
+   - ms: 1778540064130
+   - iso: 2026-05-11T22:54:24.130Z
+   - note: render systems launcher with identity avatar and real epoch ticker
    ========================================================== */
 
 export const dynamic = "force-dynamic";
@@ -18,8 +18,10 @@ import Link from "next/link";
 
 import AppFrame from "@/components/system/shell/app/AppFrame";
 import Avatar from "@/components/system/primitives/display/avatar/Avatar";
+import EpochTicker from "@/components/system/primitives/display/clocks/EpochTicker";
 
 import { supabaseServer } from "@/lib/supabase/server";
+import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
 
 import {
   getFullName,
@@ -50,6 +52,8 @@ export default async function SystemsPage() {
   if (userError || !user) {
     throw new Error("Unable to load authenticated user.");
   }
+
+  const epochMs = await getOrCreateUserEpochMs();
 
   const { data: identity, error: identityError } = await supabase
     .from("user_identity_assets")
@@ -184,7 +188,7 @@ export default async function SystemsPage() {
                 fontVariantNumeric: "tabular-nums",
               }}
             >
-              1390:23:03
+              <EpochTicker epochMs={epochMs} size="md" />
             </div>
           </div>
 

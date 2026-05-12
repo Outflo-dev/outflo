@@ -1,5 +1,3 @@
-// app/account/profile/internal/avatar/profile-avatar.client.ts
-
 "use client";
 
 /* ==========================================================
@@ -7,9 +5,9 @@
    File: app/account/profile/internal/avatar/profile-avatar.client.ts
    Scope: Own client-side avatar upload and avatar preference save transport
    Last Updated:
-   - ms: 1778071498197
-   - iso: 2026-05-06T12:44:58.197Z
-   - note: extract avatar write transport from ProfileView
+   - ms: 1778540064130
+   - iso: 2026-05-11T22:54:24.130Z
+   - note: clarify saved avatar URL result and remove unused error helper
    ========================================================== */
 
 /* ------------------------------
@@ -27,7 +25,7 @@ type SaveProfileAvatarInput = {
 export type SaveProfileAvatarResult =
     | {
         ok: true;
-        objectUrl: string;
+        avatarUrl: string;
     }
     | {
         ok: false;
@@ -48,13 +46,6 @@ async function readResponseBody(response: Response) {
     } catch {
         return text;
     }
-}
-
-function getErrorMessage(error: unknown) {
-    if (error instanceof Error) return error.message;
-    if (typeof error === "string") return error;
-
-    return "Avatar save failed.";
 }
 
 /* ------------------------------
@@ -98,6 +89,7 @@ export async function saveProfileAvatar({
     }
 
     const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
+    const avatarUrl = data.publicUrl;
 
     const response = await fetch("/api/profile/avatar", {
         method: "PATCH",
@@ -106,7 +98,7 @@ export async function saveProfileAvatar({
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            avatar_url: data.publicUrl,
+            avatar_url: avatarUrl,
             avatar_mode: "image",
         }),
     });
@@ -121,6 +113,6 @@ export async function saveProfileAvatar({
 
     return {
         ok: true,
-        objectUrl: data.publicUrl,
+        avatarUrl,
     };
 }

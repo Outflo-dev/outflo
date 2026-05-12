@@ -4,18 +4,19 @@
    OUTFLO — PROFILE VIEW
    File: app/account/profile/view/ProfileView.tsx
    Scope: Compose the full profile page surface and profile card panels
-    Last Updated:
-   - ms: 1777945233407
-   - iso: 2026-05-05T01:40:33.407Z
-   - note: route avatar persistence through isolated profile avatar API
+   Last Updated:
+   - ms: 1778540064130
+   - iso: 2026-05-11T22:54:24.130Z
+   - note: delegate avatar crop/save orchestration to profile avatar hook
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Motion from "@/components/system/primitives/motion/Motion";
+import { COLOR } from "@/components/system/primitives/color/color.config";
+import MediaCropper from "@/components/system/surfaces/media-crop/MediaCropper";
+
 import ProfileHeader from "./ProfileHeader";
 import ProfileIdentitySection from "./ProfileIdentitySection";
 import ProfileAccountSection from "./ProfileAccountSection";
@@ -24,14 +25,14 @@ import ProfileOrbitSection from "./ProfileOrbitSection";
 import ProfileSocialSection from "./ProfileSocialSection";
 import ProfileEpochSection from "./ProfileEpochSection";
 import ProfileFooter from "./ProfileFooter";
-import type { ProfileDirection } from "../internal/profile.types";
-import { COLOR } from "@/components/system/primitives/color/color.config";
-import MediaCropper from "@/components/system/surfaces/media-crop/MediaCropper";
-import type { MediaCropResult } from "@/components/system/surfaces/media-crop/media-crop.types";
-import { saveProfileAvatar } from "../internal/avatar/profile-avatar.client";
-import ProfileCard from "../internal/card/ProfileCard";
-import { PROFILE_ACCOUNT_ITEMS } from "../internal/profile.sections";
 
+import ProfileCard from "../internal/card/ProfileCard";
+import { useProfileAvatarCrop } from "../internal/avatar/useProfileAvatarCrop";
+import { PROFILE_ACCOUNT_ITEMS } from "../internal/profile.sections";
+import type {
+  ProfileCardPanel,
+  ProfileDirection,
+} from "../internal/profile.types";
 
 /* ------------------------------
    Constants
@@ -44,8 +45,6 @@ const UI = {
 /* ------------------------------
    Types
 -------------------------------- */
-type ProfileCardPanel = "avatar" | "controls" | "theme";
-
 type ProfileViewProps = {
   fullName: string;
   username: string | null;
@@ -85,44 +84,12 @@ export default function ProfileView({
   onChangeCardPanel,
   onCloseCard,
 }: ProfileViewProps) {
-  const router = useRouter();
-  const [cropSourceUrl, setCropSourceUrl] = useState<string | null>(null);
-
-  function handleSelectAvatarFile(file: File) {
-    if (cropSourceUrl) {
-      URL.revokeObjectURL(cropSourceUrl);
-    }
-
-    setCropSourceUrl(URL.createObjectURL(file));
-  }
-
-  function handleCancelCrop() {
-    if (cropSourceUrl) {
-      URL.revokeObjectURL(cropSourceUrl);
-    }
-
-    setCropSourceUrl(null);
-  }
-
-  async function handleSaveCrop(result: MediaCropResult) {
-    const saveResult = await saveProfileAvatar({
-      blob: result.blob,
-    });
-
-    if (!saveResult.ok) {
-      console.error(saveResult.message, saveResult.diagnostics);
-      return;
-    }
-
-    if (cropSourceUrl) {
-      URL.revokeObjectURL(cropSourceUrl);
-    }
-
-    URL.revokeObjectURL(result.objectUrl);
-
-    setCropSourceUrl(null);
-    router.refresh();
-  }
+  const {
+    cropSourceUrl,
+    handleSelectAvatarFile,
+    handleCancelCrop,
+    handleSaveCrop,
+  } = useProfileAvatarCrop();
 
   return (
     <>
@@ -188,7 +155,7 @@ export default function ProfileView({
         onSelectAvatarFile={handleSelectAvatarFile}
       />
 
-      {cropSourceUrl && (
+      {cropSourceUrl ? (
         <MediaCropper
           title="Adjust photo"
           sourceUrl={cropSourceUrl}
@@ -196,8 +163,7 @@ export default function ProfileView({
           onCancel={handleCancelCrop}
           onSave={handleSaveCrop}
         />
-      )
-      }
+      ) : null}
     </>
   );
 }

@@ -3,9 +3,9 @@
    File: app/account/profile/page.tsx
    Scope: Server route entry for authenticated profile data handoff
    Last Updated:
-   - ms: 1776471084070
-   - iso: 2026-04-18T00:11:24.070Z
-   - note: initial profile spine entry aligned to local page ownership
+   - ms: 1778540064130
+   - iso: 2026-05-11T22:54:24.130Z
+   - note: order authenticated user resolution before profile state reads
    ========================================================== */
 
 export const dynamic = "force-dynamic";
@@ -33,7 +33,6 @@ type IdentityRow = {
 -------------------------------- */
 export default async function ProfilePage() {
   const supabase = await supabaseServer();
-  const epochMs = await getOrCreateUserEpochMs();
 
   const {
     data: { user },
@@ -43,6 +42,8 @@ export default async function ProfilePage() {
   if (userError || !user) {
     throw new Error("Unable to load authenticated user.");
   }
+
+  const epochMs = await getOrCreateUserEpochMs();
 
   const { data: identity, error: identityError } = await supabase
     .from("user_identity_assets")

@@ -1,7 +1,11 @@
 /* ==========================================================
    OUTFLO — APP HOME REDIRECT (LEGACY)
    File: app/app/home/page.tsx
-   Scope: Redirect legacy /app/home to app root (/app)
+   Scope: Redirect legacy app home route to canonical Systems launcher
+   Last Updated:
+   - ms: 1778540064130
+   - iso: 2026-05-11T22:54:24.130Z
+   - note: remove redirect chain and point legacy home directly to systems
    ========================================================== */
 
 /* ------------------------------
@@ -10,8 +14,8 @@
 import { redirect } from "next/navigation";
 
 /* ------------------------------
-   Component
+   Page
 -------------------------------- */
-export default function Page() {
-  redirect("/app");
+export default function AppHomePage() {
+   redirect("/app/systems");
 }

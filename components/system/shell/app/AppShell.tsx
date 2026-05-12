@@ -80,10 +80,12 @@ const LAYER_ROOT_STYLE: React.CSSProperties = {
 /* ------------------------------
    Helpers
 -------------------------------- */
-function idxOf(pathname: string) {
-  const i = ROUTES.indexOf(pathname as (typeof ROUTES)[number]);
+function isSwipeRoute(pathname: string) {
+  return ROUTES.includes(pathname as (typeof ROUTES)[number]);
+}
 
-  return i === -1 ? 0 : i;
+function idxOf(pathname: string) {
+  return ROUTES.indexOf(pathname as (typeof ROUTES)[number]);
 }
 
 /* ------------------------------
@@ -93,6 +95,8 @@ export default function AppShell({ children }: AppShellProps) {
   const router = useRouter();
   const pathname = usePathname();
 
+  const canRouteSwipe = isSwipeRoute(pathname);
+
   const hideNav =
     pathname === "/app" ||
     pathname === "/app/systems" ||
@@ -101,7 +105,7 @@ export default function AppShell({ children }: AppShellProps) {
     pathname.startsWith("/account/profile");
 
   const showNav = !hideNav;
-  const disableRouteSwipe = pathname.startsWith("/tools");
+  const disableRouteSwipe = !canRouteSwipe || pathname.startsWith("/tools");
 
   const { left, right } = useMemo(() => {
     const i = idxOf(pathname);

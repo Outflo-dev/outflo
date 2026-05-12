@@ -15,7 +15,7 @@
 /* ------------------------------
    Imports
 -------------------------------- */
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { ThemePreference } from "@/lib/app-state/theme-preference";
 import { isThemePreference } from "@/lib/app-state/theme-preference";
 import { emitThemePreference } from "@/components/system/shell/app/AppTheme";
@@ -256,29 +256,33 @@ function isTextScale(value: string): value is TextScale {
 export default function ProfileThemePanel() {
   const saveSequenceRef = useRef(0);
 
-  const [activeTheme, setActiveTheme] = useState<ThemeName>("dark");
-  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
-  const [activeScale, setActiveScale] = useState<TextScale>("standard");
+  const [activeTheme, setActiveTheme] = useState<ThemeName>(() => {
+    if (typeof document === "undefined") {
+      return "dark";
+    }
 
-  const currentTheme =
-    THEMES.find((theme) => theme.key === activeTheme) ?? THEMES[0];
-
-  useEffect(() => {
     const theme = document.documentElement.dataset.theme || "dark";
+
+    return isThemePreference(theme) ? theme : "dark";
+  });
+
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+
+  const [activeScale, setActiveScale] = useState<TextScale>(() => {
+    if (typeof document === "undefined" || typeof window === "undefined") {
+      return "standard";
+    }
 
     const scale =
       document.documentElement.dataset.textScale ||
       window.localStorage.getItem("outflo-text-scale") ||
       "standard";
 
-    if (isThemePreference(theme)) {
-      setActiveTheme(theme);
-    }
+    return isTextScale(scale) ? scale : "standard";
+  });
 
-    if (isTextScale(scale)) {
-      setActiveScale(scale);
-    }
-  }, []);
+  const currentTheme =
+    THEMES.find((theme) => theme.key === activeTheme) ?? THEMES[0];
 
   async function handleThemeChange(theme: ThemeName) {
     if (theme === activeTheme && saveStatus !== "error") return;

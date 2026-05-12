@@ -3,19 +3,27 @@
    File: app/api/profile/avatar/route.ts
    Scope: Persist authenticated user avatar identity fields
    Last Updated:
-   - ms: 1777945233407
-   - iso: 2026-05-05T01:40:33.407Z
-   - note: add isolated avatar persistence route
+   - ms: 1778540064130
+   - iso: 2026-05-11T22:54:24.130Z
+   - note: harden avatar request parsing and clear avatar URL in initial mode
    ========================================================== */
 
-
+/* ------------------------------
+   Imports
+-------------------------------- */
 import { NextResponse } from "next/server";
+
 import { supabaseServer } from "@/lib/supabase/server";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type AvatarMode = "image" | "initial";
+
+type AvatarRequestBody = {
+    avatar_mode?: unknown;
+    avatar_url?: unknown;
+};
 
 type IdentityRow = {
     first_name: string;
@@ -38,6 +46,20 @@ function getFallbackFirstName(email: string | undefined) {
     return email?.split("@")[0]?.trim() || "Outflo";
 }
 
+async function readAvatarRequestBody(req: Request): Promise<AvatarRequestBody> {
+    try {
+        const body = await req.json();
+
+        if (!body || typeof body !== "object") {
+            return {};
+        }
+
+        return body as AvatarRequestBody;
+    } catch {
+        return {};
+    }
+}
+
 /* ------------------------------
    Route
 -------------------------------- */
@@ -52,10 +74,8 @@ export async function PATCH(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await req.json();
-
+    const body = await readAvatarRequestBody(req);
     const avatarMode = body.avatar_mode;
-    const hasAvatarUrl = Object.prototype.hasOwnProperty.call(body, "avatar_url");
 
     if (!isAvatarMode(avatarMode)) {
         return NextResponse.json(
@@ -89,24 +109,14 @@ export async function PATCH(req: Request) {
         );
     }
 
-    const payload: {
-        user_id: string;
-        first_name: string;
-        last_name: string | null;
-        avatar_mode: AvatarMode;
-        avatar_url?: string | null;
-        updated_at: string;
-    } = {
+    const payload = {
         user_id: user.id,
         first_name: identity?.first_name ?? getFallbackFirstName(user.email),
         last_name: identity?.last_name ?? null,
         avatar_mode: avatarMode,
+        avatar_url: avatarMode === "image" ? avatarUrl : null,
         updated_at: new Date().toISOString(),
     };
-
-    if (hasAvatarUrl) {
-        payload.avatar_url = avatarUrl;
-    }
 
     const { error } = await supabase
         .from("user_identity_assets")
