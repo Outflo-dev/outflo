@@ -22,7 +22,7 @@ export type AccountTile = {
 
 export type AccountActionTile = AccountTile & {
     href: string;
-    actionLabel: "Add" | "Edit" | "Continue" | "Verify";
+    actionLabel: "Add" | "Edit" | "Continue" | "Verify" | "Soon";
 };
 
 export type AccountMarkKind =

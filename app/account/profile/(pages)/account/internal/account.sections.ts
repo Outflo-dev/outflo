@@ -53,10 +53,10 @@ export function getAccountModel(data: AccountPageData): AccountViewModel {
             {
                 mark: "phone",
                 label: "Phone",
-                value: data.phone ?? "Not added",
-                detail: "Recovery and future text alerts.",
+                value: "Coming soon",
+                detail: "Phone support is coming soon.",
                 href: "/account/profile/account/phone",
-                actionLabel: data.phone ? "Edit" : "Add",
+                actionLabel: "Soon",
             },
             {
                 mark: "email",
