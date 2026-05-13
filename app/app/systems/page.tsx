@@ -3,9 +3,9 @@
    File: app/app/systems/page.tsx
    Scope: Render authenticated read-only Systems launcher
    Last Updated:
-   - ms: 1778540064130
-   - iso: 2026-05-11T22:54:24.130Z
-   - note: render systems launcher with identity avatar and real epoch ticker
+   - ms: 1778611632761
+   - iso: 2026-05-12T18:47:12.761Z
+   - note: consolidate systems atmosphere and surface glow consumption
    ========================================================== */
 
 export const dynamic = "force-dynamic";
@@ -16,17 +16,17 @@ export const dynamic = "force-dynamic";
 import type React from "react";
 import Link from "next/link";
 
-import AppFrame from "@/components/system/shell/app/AppFrame";
 import Avatar from "@/components/system/primitives/display/avatar/Avatar";
 import EpochTicker from "@/components/system/primitives/display/clocks/EpochTicker";
-
-import { supabaseServer } from "@/lib/supabase/server";
-import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
+import AppFrame from "@/components/system/shell/app/AppFrame";
 
 import {
   getFullName,
   getUsername,
 } from "@/app/account/profile/internal/profile.selectors";
+
+import { supabaseServer } from "@/lib/supabase/server";
+import { getOrCreateUserEpochMs } from "@/lib/time/user-epoch";
 
 /* ------------------------------
    Types
@@ -36,6 +36,185 @@ type IdentityRow = {
   last_name: string | null;
   username: string | null;
   avatar_url: string | null;
+};
+
+type TileProps = {
+  href: string;
+  label: string;
+  detail: string;
+  enabled: boolean;
+};
+
+type ControlButtonProps = {
+  href: string;
+  label: string;
+};
+
+type SectionLabelProps = {
+  children: React.ReactNode;
+};
+
+/* ------------------------------
+   Constants
+-------------------------------- */
+const SYSTEMS_PAGE_STYLE: React.CSSProperties = {
+  minHeight: "100svh",
+  background: "var(--glow-atmosphere)",
+  color: "var(--text-primary)",
+  padding:
+    "calc(env(safe-area-inset-top) + 18px) 0px max(32px, env(safe-area-inset-bottom))",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "flex-start",
+  width: "100%",
+};
+
+const SYSTEMS_STACK_STYLE: React.CSSProperties = {
+  width: "100%",
+  display: "grid",
+  rowGap: 26,
+  boxSizing: "border-box",
+};
+
+const HEADER_STYLE: React.CSSProperties = {
+  display: "grid",
+  rowGap: 18,
+};
+
+const HEADER_TOP_STYLE: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 12,
+};
+
+const EYEBROW_STYLE: React.CSSProperties = {
+  fontSize: "var(--text-xs)",
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+  color: "var(--text-tertiary)",
+};
+
+const PROFILE_LINK_STYLE: React.CSSProperties = {
+  textDecoration: "none",
+};
+
+const HERO_STACK_STYLE: React.CSSProperties = {
+  display: "grid",
+  rowGap: 8,
+};
+
+const HERO_TITLE_STYLE: React.CSSProperties = {
+  fontSize: "clamp(42px, 9vw, 62px)",
+  fontWeight: 700,
+  letterSpacing: "-0.055em",
+  lineHeight: 0.92,
+};
+
+const HERO_COPY_STYLE: React.CSSProperties = {
+  maxWidth: 420,
+  fontSize: "var(--text-sm)",
+  lineHeight: 1.45,
+  color: "var(--text-secondary)",
+};
+
+const SURFACE_STYLE: React.CSSProperties = {
+  border: "1px solid var(--border-soft)",
+  background:
+    "linear-gradient(180deg, var(--surface-soft), var(--surface-muted))",
+  borderRadius: 28,
+  boxShadow: "var(--glow-surface), var(--glow-ring)",
+  boxSizing: "border-box",
+};
+
+const STATUS_CARD_STYLE: React.CSSProperties = {
+  ...SURFACE_STYLE,
+  padding: 18,
+  display: "grid",
+  rowGap: 6,
+};
+
+const STATUS_LABEL_STYLE: React.CSSProperties = {
+  fontSize: "var(--text-xs)",
+  color: "var(--text-tertiary)",
+};
+
+const STATUS_VALUE_STYLE: React.CSSProperties = {
+  fontSize: 24,
+  fontWeight: 650,
+  letterSpacing: "-0.03em",
+  lineHeight: 1,
+  fontVariantNumeric: "tabular-nums",
+};
+
+const SECTION_STACK_STYLE: React.CSSProperties = {
+  display: "grid",
+  rowGap: 14,
+};
+
+const TILE_GRID_STYLE: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+  gap: 14,
+};
+
+const SECTION_LABEL_STYLE: React.CSSProperties = {
+  fontSize: "var(--text-xs)",
+  fontWeight: 650,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+  color: "var(--text-tertiary)",
+};
+
+const TILE_BASE_STYLE: React.CSSProperties = {
+  ...SURFACE_STYLE,
+  textDecoration: "none",
+  color: "var(--text-primary)",
+  padding: "22px 20px",
+  minHeight: 132,
+  display: "grid",
+  alignContent: "space-between",
+};
+
+const TILE_TEXT_STACK_STYLE: React.CSSProperties = {
+  display: "grid",
+  rowGap: 6,
+};
+
+const TILE_LABEL_STYLE: React.CSSProperties = {
+  fontSize: "var(--header-md)",
+  fontWeight: 700,
+  letterSpacing: "-0.03em",
+};
+
+const TILE_DETAIL_STYLE: React.CSSProperties = {
+  fontSize: "var(--text-xs)",
+  lineHeight: 1.35,
+  color: "var(--text-tertiary)",
+};
+
+const TILE_ACTION_STYLE: React.CSSProperties = {
+  fontSize: "var(--text-xs)",
+  color: "var(--text-secondary)",
+};
+
+const CONTROL_NAV_STYLE: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "flex-start",
+  gap: 8,
+  flexWrap: "wrap",
+  paddingTop: 2,
+};
+
+const CONTROL_BUTTON_STYLE: React.CSSProperties = {
+  color: "var(--text-primary)",
+  textDecoration: "none",
+  fontSize: "var(--text-xs)",
+  border: "1px solid var(--border-soft)",
+  background: "var(--surface-soft)",
+  borderRadius: 999,
+  boxShadow: "var(--glow-ring)",
+  padding: "9px 14px",
 };
 
 /* ------------------------------
@@ -70,60 +249,14 @@ export default async function SystemsPage() {
   const avatarValue = username ?? fullName ?? "O";
 
   return (
-    <main
-      style={{
-        minHeight: "100svh",
-        background:
-          "radial-gradient(circle at top, var(--surface-soft), transparent 34%), var(--bg-primary)",
-        color: "var(--text-primary)",
-        padding:
-          "calc(env(safe-area-inset-top) + 18px) 0px max(32px, env(safe-area-inset-bottom))",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        width: "100%",
-      }}
-    >
+    <main style={SYSTEMS_PAGE_STYLE}>
       <AppFrame>
-        <section
-          style={{
-            width: "100%",
-            display: "grid",
-            rowGap: 26,
-            boxSizing: "border-box",
-          }}
-        >
-          <header
-            style={{
-              display: "grid",
-              rowGap: 18,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 13,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "var(--text-tertiary)",
-                }}
-              >
-                Systems
-              </div>
+        <section style={SYSTEMS_STACK_STYLE}>
+          <header style={HEADER_STYLE}>
+            <div style={HEADER_TOP_STYLE}>
+              <div style={EYEBROW_STYLE}>Systems</div>
 
-              <Link
-                href="/account/profile"
-                style={{
-                  textDecoration: "none",
-                }}
-              >
+              <Link href="/account/profile" style={PROFILE_LINK_STYLE}>
                 <Avatar
                   size="md"
                   value={avatarValue}
@@ -133,75 +266,27 @@ export default async function SystemsPage() {
               </Link>
             </div>
 
-            <div
-              style={{
-                display: "grid",
-                rowGap: 8,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "clamp(42px, 9vw, 62px)",
-                  fontWeight: 700,
-                  letterSpacing: "-0.055em",
-                  lineHeight: 0.92,
-                }}
-              >
-                Outflō
-              </div>
+            <div style={HERO_STACK_STYLE}>
+              <div style={HERO_TITLE_STYLE}>Outflō</div>
 
-              <div
-                style={{
-                  maxWidth: 420,
-                  fontSize: 15,
-                  lineHeight: 1.45,
-                  color: "var(--text-secondary)",
-                }}
-              >
+              <div style={HERO_COPY_STYLE}>
                 Substrates, tools, and system surfaces.
               </div>
             </div>
           </header>
 
-          <div
-            style={{
-              border: "1px solid var(--border-soft)",
-              background:
-                "linear-gradient(180deg, var(--surface-soft), var(--surface-muted))",
-              borderRadius: 28,
-              padding: "18px",
-              display: "grid",
-              rowGap: 6,
-              boxShadow: "0 18px 60px rgba(0,0,0,0.16)",
-            }}
-          >
-            <div style={{ fontSize: 12, color: "var(--text-tertiary)" }}>
-              System running
-            </div>
+          <div style={STATUS_CARD_STYLE}>
+            <div style={STATUS_LABEL_STYLE}>System running</div>
 
-            <div
-              style={{
-                fontSize: 24,
-                fontWeight: 650,
-                letterSpacing: "-0.03em",
-                lineHeight: 1,
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
+            <div style={STATUS_VALUE_STYLE}>
               <EpochTicker epochMs={epochMs} size="md" />
             </div>
           </div>
 
-          <div style={{ display: "grid", rowGap: 14 }}>
+          <div style={SECTION_STACK_STYLE}>
             <SectionLabel>Substrates</SectionLabel>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: 14,
-              }}
-            >
+            <div style={TILE_GRID_STYLE}>
               <Tile
                 href="/app/money"
                 label="Money"
@@ -232,16 +317,10 @@ export default async function SystemsPage() {
             </div>
           </div>
 
-          <div style={{ display: "grid", rowGap: 14 }}>
+          <div style={SECTION_STACK_STYLE}>
             <SectionLabel>Tools</SectionLabel>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: 14,
-              }}
-            >
+            <div style={TILE_GRID_STYLE}>
               <Tile
                 href="/tools/gain"
                 label="Gain"
@@ -258,16 +337,7 @@ export default async function SystemsPage() {
             </div>
           </div>
 
-          <nav
-            aria-label="System navigation"
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              gap: 8,
-              flexWrap: "wrap",
-              paddingTop: 2,
-            }}
-          >
+          <nav aria-label="System navigation" style={CONTROL_NAV_STYLE}>
             <ControlButton href="/account/profile" label="Profile" />
             <ControlButton href="/" label="Portal" />
           </nav>
@@ -280,80 +350,30 @@ export default async function SystemsPage() {
 /* ------------------------------
    Section Label
 -------------------------------- */
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        fontSize: 12,
-        fontWeight: 650,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
-        color: "var(--text-tertiary)",
-      }}
-    >
-      {children}
-    </div>
-  );
+function SectionLabel({ children }: SectionLabelProps) {
+  return <div style={SECTION_LABEL_STYLE}>{children}</div>;
 }
 
 /* ------------------------------
    Tile
 -------------------------------- */
-function Tile({
-  href,
-  label,
-  detail,
-  enabled,
-}: {
-  href: string;
-  label: string;
-  detail: string;
-  enabled: boolean;
-}) {
+function Tile({ href, label, detail, enabled }: TileProps) {
   const style: React.CSSProperties = {
-    textDecoration: "none",
-    color: "var(--text-primary)",
-    border: "1px solid var(--border-soft)",
-    background:
-      "linear-gradient(180deg, var(--surface-soft), var(--surface-muted))",
-    borderRadius: 26,
-    padding: "22px 20px",
-    minHeight: 132,
-    display: "grid",
-    alignContent: "space-between",
+    ...TILE_BASE_STYLE,
     opacity: enabled ? 1 : 0.35,
-    boxShadow: "0 18px 60px rgba(0,0,0,0.18)",
-    boxSizing: "border-box",
+    boxShadow: enabled ? TILE_BASE_STYLE.boxShadow : "var(--glow-ring)",
     pointerEvents: enabled ? "auto" : "none",
   };
 
   const content = (
     <>
-      <div style={{ display: "grid", rowGap: 6 }}>
-        <div
-          style={{
-            fontSize: 21,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-          }}
-        >
-          {label}
-        </div>
+      <div style={TILE_TEXT_STACK_STYLE}>
+        <div style={TILE_LABEL_STYLE}>{label}</div>
 
-        <div
-          style={{
-            fontSize: 13,
-            lineHeight: 1.35,
-            color: "var(--text-tertiary)",
-          }}
-        >
-          {detail}
-        </div>
+        <div style={TILE_DETAIL_STYLE}>{detail}</div>
       </div>
 
-      <div style={{ fontSize: 13, color: "var(--text-secondary)" }}>
-        {enabled ? "Open" : "Soon"}
-      </div>
+      <div style={TILE_ACTION_STYLE}>{enabled ? "Open" : "Soon"}</div>
     </>
   );
 
@@ -371,20 +391,9 @@ function Tile({
 /* ------------------------------
    Control Button
 -------------------------------- */
-function ControlButton({ href, label }: { href: string; label: string }) {
+function ControlButton({ href, label }: ControlButtonProps) {
   return (
-    <Link
-      href={href}
-      style={{
-        color: "var(--text-primary)",
-        textDecoration: "none",
-        fontSize: 13,
-        border: "1px solid var(--border-soft)",
-        background: "var(--surface-soft)",
-        borderRadius: 999,
-        padding: "9px 14px",
-      }}
-    >
+    <Link href={href} style={CONTROL_BUTTON_STYLE}>
       {label}
     </Link>
   );

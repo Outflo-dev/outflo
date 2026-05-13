@@ -3,6 +3,11 @@
    File: components/system/surfaces/card/types/bottom/bottom-card.tokens.css
    Scope: BottomCard visual tokens
    ========================================================== */
+/* ==========================================================
+   OUTFLO — BOTTOM CARD TOKENS
+   File: components/system/surfaces/card/types/bottom/bottom-card.tokens.css
+   Scope: BottomCard visual tokens
+   ========================================================== */
 
 :root {
     --bottom-card-bg: var(--bg-primary);
@@ -16,6 +21,9 @@
     --bottom-card-padding: 14px 14px 18px;
 
     --bottom-card-backdrop: rgba(0, 0, 0, 0.38);
+
+    --bottom-card-shadow: var(--glow-surface);
+    --bottom-card-ring: var(--glow-ring);
 
     --bottom-card-handle-bg: var(--border-soft);
     --bottom-card-handle-width: 44px;

@@ -1,0 +1,51 @@
+/* ==========================================================
+   OUTFLO — GLOW TOKENS
+   File: app/styles/tokens/glow.css
+   Scope: Global glow preference tokens
+   Last Updated:
+   - ms: 1778611632761
+   - iso: 2026-05-12T18:47:12.761Z
+   - note: add surface and atmosphere glow preference tokens
+   ========================================================== */
+
+/* Matte */
+:root,
+:root[data-glow="matte"] {
+    --glow-opacity: 0;
+    --glow-blur: 0px;
+    --glow-spread: 0px;
+
+    --glow-surface: none;
+    --glow-ring: none;
+
+    --glow-atmosphere: var(--bg-primary);
+}
+
+/* Soft */
+:root[data-glow="soft"] {
+    --glow-opacity: 0.2;
+    --glow-blur: 22px;
+    --glow-spread: -12px;
+
+    --glow-surface: 0 0 var(--glow-blur) var(--glow-spread) rgb(255 255 255 / var(--glow-opacity));
+    --glow-ring: 0 0 0 1px rgb(255 255 255 / 0.08);
+
+    --glow-atmosphere:
+        radial-gradient(circle at top, var(--surface-soft), transparent 34%),
+        var(--bg-primary);
+}
+
+/* Full */
+:root[data-glow="full"] {
+    --glow-opacity: 0.34;
+    --glow-blur: 34px;
+    --glow-spread: -10px;
+
+    --glow-surface: 0 0 var(--glow-blur) var(--glow-spread) rgb(255 255 255 / var(--glow-opacity));
+    --glow-ring: 0 0 0 1px rgb(255 255 255 / 0.14);
+
+    --glow-atmosphere:
+        radial-gradient(circle at top, var(--surface-soft), transparent 48%),
+        radial-gradient(circle at 50% 18%, var(--surface-muted), transparent 42%),
+        var(--bg-primary);
+}

@@ -14,7 +14,9 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
 import { supabaseServer } from "@/lib/supabase/server";
+import { resolveDisplayPreferences } from "@/lib/app-state/display-preferences";
 import { resolveThemePreference } from "@/lib/app-state/theme-preference";
+import AppDisplayPreferences from "@/components/system/shell/app/AppDisplayPreferences";
 import AppTheme from "@/components/system/shell/app/AppTheme";
 import "./globals.css";
 
@@ -58,6 +60,8 @@ export const viewport: Viewport = {
 -------------------------------- */
 type PreferenceRow = {
   theme_preference: string | null;
+  text_scale: string | null;
+  glow_preference: string | null;
 };
 
 /* ------------------------------
@@ -86,15 +90,17 @@ export default async function RootLayout({
   } = await supabase.auth.getUser();
 
   let themePreference = resolveThemePreference(null);
+  let displayPreferences = resolveDisplayPreferences(null);
 
   if (user) {
     const { data: preferences } = await supabase
       .from("user_preferences")
-      .select("theme_preference")
+      .select("theme_preference, text_scale, glow_preference")
       .eq("user_id", user.id)
       .maybeSingle<PreferenceRow>();
 
     themePreference = resolveThemePreference(preferences?.theme_preference);
+    displayPreferences = resolveDisplayPreferences(preferences);
   }
 
   return (
@@ -102,9 +108,18 @@ export default async function RootLayout({
       lang="en"
       className={ibmPlexSans.className}
       data-theme={themePreference}
+      data-text-scale={displayPreferences.textScale}
+      data-glow={displayPreferences.glowPreference}
     >
       <body style={BODY_STYLE}>
-        <AppTheme themePreference={themePreference}>{children}</AppTheme>
+        <AppTheme themePreference={themePreference}>
+          <AppDisplayPreferences
+            textScale={displayPreferences.textScale}
+            glowPreference={displayPreferences.glowPreference}
+          >
+            {children}
+          </AppDisplayPreferences>
+        </AppTheme>
       </body>
     </html>
   );

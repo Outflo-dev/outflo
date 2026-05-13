@@ -38,6 +38,7 @@ const FRAME_STYLE: React.CSSProperties = {
   borderRight: "var(--bottom-card-border-right)",
   borderBottom: "var(--bottom-card-border-bottom)",
   background: "var(--bottom-card-bg)",
+  boxShadow: "var(--bottom-card-shadow), var(--bottom-card-ring)",
   padding: "var(--bottom-card-padding)",
   boxSizing: "border-box",
 };
