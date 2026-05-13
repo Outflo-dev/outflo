@@ -2,18 +2,19 @@
 
 /* ==========================================================
    OUTFLO — PROFILE ACCOUNT HEADER
-   File: app/account/profile/(pages)/account/view/AccountHeader.tsx
+   File: app/account/profile/(pages)/account/header/AccountHeader.tsx
    Scope: Render compact account drilldown header
    Last Updated:
    - ms: 1778645071428
    - iso: 2026-05-13T04:04:31.428Z
-   - note: remove oversized account header and tighten account nav
+   - note: remove duplicate account nav label and keep account title as page heading
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type { CSSProperties } from "react";
+
 import Text from "@/components/system/primitives/display/type/Text";
 import AccountBackAction from "./AccountBackAction";
 
@@ -34,17 +35,9 @@ const HEADER_STYLE: CSSProperties = {
 
 const NAV_STYLE: CSSProperties = {
     minHeight: 44,
-    display: "grid",
-    gridTemplateColumns: "44px 1fr 44px",
+    display: "flex",
     alignItems: "center",
-};
-
-const NAV_TITLE_STYLE: CSSProperties = {
-    textAlign: "center",
-    fontSize: "var(--text-md)",
-    fontWeight: "var(--font-weight-bold)",
-    letterSpacing: "-0.025em",
-    color: "var(--text-primary)",
+    justifyContent: "flex-start",
 };
 
 const INTRO_STYLE: CSSProperties = {
@@ -55,7 +48,7 @@ const INTRO_STYLE: CSSProperties = {
 
 const TITLE_STYLE: CSSProperties = {
     fontSize: "var(--header-lg)",
-    fontWeight: 700,
+    fontWeight: "var(--font-weight-bold)",
     letterSpacing: "-0.045em",
     lineHeight: 1,
     color: "var(--text-primary)",
@@ -76,10 +69,6 @@ export default function AccountHeader({ onBack }: AccountHeaderProps) {
         <header style={HEADER_STYLE}>
             <div style={NAV_STYLE}>
                 <AccountBackAction onBack={onBack} />
-
-                <div style={NAV_TITLE_STYLE}>Account</div>
-
-                <div />
             </div>
 
             <div style={INTRO_STYLE}>

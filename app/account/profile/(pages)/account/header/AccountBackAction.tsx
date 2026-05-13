@@ -2,19 +2,21 @@
 
 /* ==========================================================
    OUTFLO — PROFILE ACCOUNT BACK ACTION
-   File: app/account/profile/(pages)/account/actions/AccountBackAction.tsx
+   File: app/account/profile/(pages)/account/header/AccountBackAction.tsx
    Scope: Render account drilldown return action
    Last Updated:
    - ms: 1778645071428
    - iso: 2026-05-13T04:04:31.428Z
-   - note: replace pill back action with clean account-style arrow action
+   - note: compose TextButton and Chevron primitives for account return action
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type { CSSProperties } from "react";
+
 import Chevron from "@/components/system/primitives/navigation/chevron/Chevron";
+import TextButton from "@/components/system/shell/buttons/types/text/TextButton";
 
 /* ------------------------------
    Types
@@ -26,34 +28,31 @@ type AccountBackActionProps = {
 /* ------------------------------
    Constants
 -------------------------------- */
-const BUTTON_STYLE: CSSProperties = {
+const ACTION_STYLE: CSSProperties = {
     width: 44,
     height: 44,
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    border: 0,
-    borderRadius: 999,
-    background: "transparent",
-    color: "var(--text-primary)",
-    padding: 0,
-    cursor: "pointer",
 };
 
 /* ------------------------------
    Component
 -------------------------------- */
-export default function AccountBackAction({
-    onBack,
-}: AccountBackActionProps) {
+export default function AccountBackAction({ onBack }: AccountBackActionProps) {
     return (
-        <button
-            type="button"
-            aria-label="Return to profile"
+        <TextButton
             onClick={onBack}
-            style={BUTTON_STYLE}
+            ariaLabel="Return to profile"
+            title="Return to profile"
+            style={ACTION_STYLE}
         >
-            <Chevron direction="left" />
-        </button>
+            <Chevron
+                direction="left"
+                size="var(--chevron-size-md)"
+                color="var(--text-primary)"
+                strokeWidth={1.8}
+            />
+        </TextButton>
     );
 }
