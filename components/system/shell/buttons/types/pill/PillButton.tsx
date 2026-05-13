@@ -5,9 +5,9 @@
    File: components/system/shell/buttons/types/pill/PillButton.tsx
    Scope: Interactive pill button built from PillButtonFrame (action owner, no navigation ownership)
    Last Updated:
-   - ms: 1776994676754
-   - iso: 2026-04-24T01:37:56.754Z
-   - note: align to system-level pill variants (soft, muted, danger) and remove domain leakage
+   - ms: 1778701972789
+   - iso: 2026-05-13T19:52:52.789Z
+   - note: allow form submit buttons without duplicate click ownership
    ========================================================== */
 
 /* ------------------------------
@@ -23,7 +23,7 @@ type PillVariant = "soft" | "muted" | "danger";
 
 type Props = {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   variant?: PillVariant;
   disabled?: boolean;
   ariaLabel?: string;
