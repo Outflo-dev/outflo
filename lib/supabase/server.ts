@@ -3,9 +3,9 @@
    File: lib/supabase/server.ts
    Scope: Create the cookie-aware Supabase server client for server-side auth reads and protected writes
    Last Updated:
-   - ms: 1778090000000
-   - iso: 2026-05-06T00:00:00.000Z
-   - note: clarify server auth cookie ownership for protected mobile writes
+   - ms: 1778701972789
+   - iso: 2026-05-13T19:52:52.789Z
+   - note: guard cookie writes when Supabase server client is used from Server Components
    ========================================================== */
 
 /* ------------------------------
@@ -31,14 +31,18 @@ export async function supabaseServer() {
 
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options);
+            try {
+              cookieStore.set(name, value, options);
+            } catch {
+              // Server Components can read cookies but cannot always write them.
+              // Route Handlers and Server Actions own cookie mutation.
+            }
           });
         },
       },
     }
   );
 }
-
 
 
 

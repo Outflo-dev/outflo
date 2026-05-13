@@ -1,11 +1,21 @@
 /* ==========================================================
-   OUTFLO — ACCOUNT MODEL
-   File: app/account/profile/(pages)/account/internal/account.sections.ts
-   Scope: Build account information view model
-   ========================================================== */
+  OUTFLO — ACCOUNT MODEL
+  File: app/account/profile/(pages)/account/internal/account.sections.ts
+  Scope: Build account information view model
+  Last Updated:
+  - ms: 1778701972789
+  - iso: 2026-05-13T19:52:52.789Z
+  - note: rename username row to Orbit handle and route to isolated handle drilldown
+  ========================================================== */
 
+/* ------------------------------
+   Imports
+-------------------------------- */
 import type { AccountPageData, AccountViewModel } from "./account.types";
 
+/* ------------------------------
+   Helpers
+-------------------------------- */
 function formatDate(value: string | number) {
     return new Intl.DateTimeFormat("en-US", {
         month: "short",
@@ -14,6 +24,9 @@ function formatDate(value: string | number) {
     }).format(new Date(value));
 }
 
+/* ------------------------------
+   Model
+-------------------------------- */
 export function getAccountModel(data: AccountPageData): AccountViewModel {
     return {
         epochMs: data.epochMs,
@@ -28,10 +41,10 @@ export function getAccountModel(data: AccountPageData): AccountViewModel {
             },
             {
                 mark: "handle",
-                label: "Username",
-                value: data.username ?? "@outflo",
-                detail: "Public profile handle.",
-                href: "/account/profile/account/username",
+                label: "Orbit handle",
+                value: data.username ?? "Set handle",
+                detail: "Required Outflō identity handle.",
+                href: "/account/profile/account/orbit-handle",
                 actionLabel: "Edit",
             },
         ],
