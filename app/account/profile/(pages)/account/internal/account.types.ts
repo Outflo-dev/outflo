@@ -44,6 +44,7 @@ export type AccountActionRowData = AccountActionTile & {
 };
 
 export type AccountViewModel = {
+    epochMs: number;
     personal: AccountActionRowData[];
     contact: AccountActionRowData[];
     system: AccountInfoRowData[];

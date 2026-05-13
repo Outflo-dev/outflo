@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1778645071428
    - iso: 2026-05-13T04:04:31.428Z
-   - note: render system facts separately from status action
+   - note: render live epoch ticker inside Outflō time system row
    ========================================================== */
 
 /* ------------------------------
@@ -15,6 +15,7 @@
 -------------------------------- */
 import type { CSSProperties } from "react";
 
+import EpochTicker from "@/components/system/primitives/display/clocks/EpochTicker";
 import Text from "@/components/system/primitives/display/type/Text";
 import type { AccountViewModel } from "../../../internal/account.types";
 import AccountActionRow from "../../rows/AccountActionRow";
@@ -69,7 +70,15 @@ export default function AccountSystemSection({
             <div style={ROW_STACK_STYLE}>
                 {model.system.map((row) => (
                     <div key={row.label}>
-                        <AccountInfoRow row={row} />
+                        <AccountInfoRow
+                            row={row}
+                            valueNode={
+                                row.label === "Outflō time" ? (
+                                    <EpochTicker epochMs={model.epochMs} />
+                                ) : undefined
+                            }
+                        />
+
                         <div style={DIVIDER_STYLE} />
                     </div>
                 ))}

@@ -3,17 +3,17 @@
 /* ==========================================================
    OUTFLO — ACCOUNT INFO ROW
    File: app/account/profile/(pages)/account/view/rows/AccountInfoRow.tsx
-   Scope: Render one account information row with mark, label, value, and detail
+   Scope: Render one account information row with mark, label, value, optional value node, and detail
    Last Updated:
    - ms: 1778645071428
    - iso: 2026-05-13T04:04:31.428Z
-   - note: extract account row layout from AccountView
+   - note: allow live value node for system clock row
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import Text from "@/components/system/primitives/display/type/Text";
 import AccountEmailMark from "@/components/system/primitives/marks/account/AccountEmailMark";
@@ -33,6 +33,7 @@ import type {
 -------------------------------- */
 type AccountInfoRowProps = {
     row: AccountInfoRowData;
+    valueNode?: ReactNode;
 };
 
 /* ------------------------------
@@ -79,7 +80,10 @@ const ROW_DETAIL_STYLE: CSSProperties = {
 /* ------------------------------
    Component
 -------------------------------- */
-export default function AccountInfoRow({ row }: AccountInfoRowProps) {
+export default function AccountInfoRow({
+    row,
+    valueNode,
+}: AccountInfoRowProps) {
     return (
         <article style={ROW_STYLE}>
             <div style={ICON_STYLE}>
@@ -91,9 +95,13 @@ export default function AccountInfoRow({ row }: AccountInfoRowProps) {
                     {row.label}
                 </Text>
 
-                <Text as="p" type="meta" style={ROW_VALUE_STYLE}>
-                    {row.value}
-                </Text>
+                {valueNode ? (
+                    valueNode
+                ) : (
+                    <Text as="p" type="meta" style={ROW_VALUE_STYLE}>
+                        {row.value}
+                    </Text>
+                )}
             </div>
 
             {row.detail ? (

@@ -16,6 +16,7 @@ function formatDate(value: string | number) {
 
 export function getAccountModel(data: AccountPageData): AccountViewModel {
     return {
+        epochMs: data.epochMs,
         personal: [
             {
                 mark: "person",
