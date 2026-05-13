@@ -1,0 +1,16 @@
+/* ==========================================================
+   OUTFLO — FONT WEIGHT TOKENS
+   File: components/system/primitives/display/type/font-weight.tokens.css
+   Scope: Font weight tokens for the Text primitive family
+   Last Updated:
+   - ms: 1778645071428
+   - iso: 2026-05-13T04:04:31.428Z
+   - note: split font weight ownership from typography tokens
+   ========================================================== */
+
+:root {
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+}

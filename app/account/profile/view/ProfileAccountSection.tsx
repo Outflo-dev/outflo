@@ -14,7 +14,7 @@
    Imports
 -------------------------------- */
 import Link from "next/link";
-import Chevron from "@/components/system/primitives/navigation/Chevron";
+import Chevron from "@/components/system/primitives/navigation/chevron/Chevron";
 import Text from "@/components/system/primitives/display/type/Text";
 import { COLOR } from "@/components/system/primitives/color/color.config";
 

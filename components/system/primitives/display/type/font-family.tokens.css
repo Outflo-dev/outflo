@@ -1,0 +1,17 @@
+/* ==========================================================
+   OUTFLO — FONT FAMILY TOKENS
+   File: components/system/primitives/display/type/font-family.tokens.css
+   Scope: Font family tokens for the Text primitive family
+   Last Updated:
+   - ms: 1778645071428
+   - iso: 2026-05-13T04:04:31.428Z
+   - note: split font family ownership from typography tokens
+   ========================================================== */
+
+:root {
+    --font-family-base: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    --font-family-mono: "Ubuntu Sans Mono", "SFMono-Regular", Consolas,
+        "Liberation Mono", Menlo, monospace;
+}

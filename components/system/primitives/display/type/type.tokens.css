@@ -1,0 +1,65 @@
+/* ==========================================================
+   OUTFLO — TYPE TOKENS
+   File: components/system/primitives/display/type/type.tokens.css
+   Scope: Text primitive font, weight, text scale, and header scale tokens
+   Last Updated:
+   - ms: 1778645071428
+   - iso: 2026-05-13T04:04:31.428Z
+   - note: move type ownership into Text primitive family
+   ========================================================== */
+
+/* ------------------------------
+   Font Family + Weights
+-------------------------------- */
+:root {
+    --font-family-base: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    --font-family-mono: "Ubuntu Sans Mono", "SFMono-Regular", Consolas,
+        "Liberation Mono", Menlo, monospace;
+
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+}
+
+/* ------------------------------
+   Compact Scale Default
+-------------------------------- */
+:root,
+:root[data-text-scale="compact"] {
+    --text-xs: 12px;
+    --text-sm: 14px;
+    --text-md: 16px;
+
+    --header-sm: 18px;
+    --header-md: 22px;
+    --header-lg: 28px;
+}
+
+/* ------------------------------
+   Standard Scale
+-------------------------------- */
+:root[data-text-scale="standard"] {
+    --text-xs: 13px;
+    --text-sm: 15px;
+    --text-md: 17px;
+
+    --header-sm: 19px;
+    --header-md: 24px;
+    --header-lg: 30px;
+}
+
+/* ------------------------------
+   Large Scale
+-------------------------------- */
+:root[data-text-scale="large"] {
+    --text-xs: 14px;
+    --text-sm: 16px;
+    --text-md: 18px;
+
+    --header-sm: 20px;
+    --header-md: 26px;
+    --header-lg: 32px;
+}

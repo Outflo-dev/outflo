@@ -17,10 +17,12 @@
 @import "./styles/themes/dusk.css";
 @import "./styles/themes/night.css";
 
-@import "./styles/tokens/typography.css";
-@import "./styles/tokens/buttons.css";
-@import "./styles/tokens/zoom.css";
-@import "./styles/tokens/glow.css";
+@import "../components/system/primitives/display/type/font-family.tokens.css";
+@import "../components/system/primitives/display/type/font-weight.tokens.css";
+@import "../components/system/primitives/display/type/type.tokens.css";
+@import "../components/system/primitives/navigation/chevron/chevron.tokens.css";
 
+@import "./styles/tokens/buttons.css";
+@import "./styles/tokens/glow.css";
 
 @import "../components/system/surfaces/card/types/bottom/bottom-card.tokens.css";

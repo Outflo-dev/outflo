@@ -1,0 +1,31 @@
+/* ==========================================================
+   OUTFLO — CHEVRON TOKENS
+   File: components/system/primitives/navigation/chevron.tokens.css
+   Scope: Chevron primitive sizing by text scale
+   Last Updated:
+   - ms: 1778645071428
+   - iso: 2026-05-13T04:04:31.428Z
+   - note: move chevron scale ownership into Chevron primitive family
+   ========================================================== */
+
+/* ------------------------------
+   Compact Scale Default
+-------------------------------- */
+:root,
+:root[data-text-scale="compact"] {
+    --chevron-size: 4.5px;
+}
+
+/* ------------------------------
+   Standard Scale
+-------------------------------- */
+:root[data-text-scale="standard"] {
+    --chevron-size: 5px;
+}
+
+/* ------------------------------
+   Large Scale
+-------------------------------- */
+:root[data-text-scale="large"] {
+    --chevron-size: 5.5px;
+}

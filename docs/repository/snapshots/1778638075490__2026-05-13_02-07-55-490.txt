@@ -1,6 +1,6 @@
 ﻿OUTFLO - REPOSITORY TREE
-Generated: 2026-05-13 04:04:31.428 UTC
-Unix: 1778645071428
+Generated: 2026-05-13 02:07:55.490 UTC
+Unix: 1778638075490
 Root: C:\dev\Outflo
 
 app\
@@ -11,17 +11,6 @@ app\
 |   +-- profile\
 |   |   +-- (pages)\
 |   |   |   +-- account\
-|   |   |   |   +-- actions\
-|   |   |   |   |   +-- AccountBackAction.tsx
-|   |   |   |   +-- internal\
-|   |   |   |   |   +-- account.sections.ts
-|   |   |   |   |   +-- account.types.ts
-|   |   |   |   |   +-- AccountController.tsx
-|   |   |   |   +-- view\
-|   |   |   |   |   +-- AccountHeader.tsx
-|   |   |   |   |   +-- AccountRow.tsx
-|   |   |   |   |   +-- AccountSection.tsx
-|   |   |   |   |   +-- AccountView.tsx
 |   |   |   |   +-- page.tsx
 |   |   |   +-- environment\
 |   |   |   |   +-- page.tsx
@@ -527,7 +516,6 @@ docs\
 |   |   +-- 1778467797659__2026-05-11_02-49-57-659.txt
 |   |   +-- 1778540064130__2026-05-11_22-54-24-130.txt
 |   |   +-- 1778611632761__2026-05-12_18-47-12-761.txt
-|   |   +-- 1778638075490__2026-05-13_02-07-55-490.txt
 |   +-- README.md
 +-- README.md
 
