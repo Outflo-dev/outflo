@@ -22,7 +22,7 @@ export type AccountTile = {
 
 export type AccountActionTile = AccountTile & {
     href: string;
-    actionLabel: "Add" | "Edit" | "Continue";
+    actionLabel: "Add" | "Edit" | "Continue" | "Verify";
 };
 
 export type AccountMarkKind =
@@ -47,4 +47,5 @@ export type AccountViewModel = {
     personal: AccountActionRowData[];
     contact: AccountActionRowData[];
     system: AccountInfoRowData[];
+    systemActions: AccountActionRowData[];
 };

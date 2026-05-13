@@ -18,14 +18,6 @@ export function getAccountModel(data: AccountPageData): AccountViewModel {
     return {
         personal: [
             {
-                mark: "verification",
-                label: "Identity verification",
-                value: "Not started",
-                detail: "Confirm your account identity.",
-                href: "/account/profile/account/verification",
-                actionLabel: "Continue",
-            },
-            {
                 mark: "person",
                 label: "Account name",
                 value: data.accountName,
@@ -48,7 +40,7 @@ export function getAccountModel(data: AccountPageData): AccountViewModel {
                 mark: "phone",
                 label: "Phone",
                 value: data.phone ?? "Not added",
-                detail: "Used for recovery and future text alerts.",
+                detail: "Recovery and future text alerts.",
                 href: "/account/profile/account/phone",
                 actionLabel: data.phone ? "Edit" : "Add",
             },
@@ -56,7 +48,7 @@ export function getAccountModel(data: AccountPageData): AccountViewModel {
                 mark: "email",
                 label: "Email",
                 value: data.email,
-                detail: "Used for login and account access.",
+                detail: "Login and account access.",
                 href: "/account/profile/account/email",
                 actionLabel: "Edit",
             },
@@ -67,25 +59,30 @@ export function getAccountModel(data: AccountPageData): AccountViewModel {
                 mark: "number",
                 label: "Account number",
                 value: data.accountNumber,
-                detail: "Stable Outflō account anchor.",
+                detail: "",
+            },
+            {
+                mark: "time",
+                label: "Outflō time",
+                value: "Running soon",
+                detail: "",
             },
             {
                 mark: "time",
                 label: "Begin anchor",
                 value: formatDate(data.epochMs),
-                detail: "Your Outflō start point.",
+                detail: "",
             },
-            {
-                mark: "time",
-                label: "Member since",
-                value: formatDate(data.memberSince),
-                detail: "Account creation.",
-            },
+        ],
+
+        systemActions: [
             {
                 mark: "status",
                 label: "Status",
-                value: "Active",
-                detail: "Session verified.",
+                value: "Not verified",
+                detail: "Verification unlocks higher-trust systems.",
+                href: "/account/profile/account/verification",
+                actionLabel: "Verify",
             },
         ],
     };

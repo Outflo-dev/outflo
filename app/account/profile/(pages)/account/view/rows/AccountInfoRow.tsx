@@ -96,9 +96,11 @@ export default function AccountInfoRow({ row }: AccountInfoRowProps) {
                 </Text>
             </div>
 
-            <Text as="p" type="meta" style={ROW_DETAIL_STYLE}>
-                {row.detail}
-            </Text>
+            {row.detail ? (
+                <Text as="p" type="meta" style={ROW_DETAIL_STYLE}>
+                    {row.detail}
+                </Text>
+            ) : null}
         </article>
     );
 }

@@ -3,11 +3,11 @@
 /* ==========================================================
    OUTFLO — ACCOUNT SYSTEM SECTION
    File: app/account/profile/(pages)/account/view/sections/system/AccountSystemSection.tsx
-   Scope: Render account system read-only rows
+   Scope: Render account system facts and verification status action
    Last Updated:
    - ms: 1778645071428
    - iso: 2026-05-13T04:04:31.428Z
-   - note: render system rows directly from account model
+   - note: render system facts separately from status action
    ========================================================== */
 
 /* ------------------------------
@@ -17,6 +17,7 @@ import type { CSSProperties } from "react";
 
 import Text from "@/components/system/primitives/display/type/Text";
 import type { AccountViewModel } from "../../../internal/account.types";
+import AccountActionRow from "../../rows/AccountActionRow";
 import AccountInfoRow from "../../rows/AccountInfoRow";
 
 /* ------------------------------
@@ -66,11 +67,18 @@ export default function AccountSystemSection({
             </Text>
 
             <div style={ROW_STACK_STYLE}>
-                {model.system.map((row, index) => (
+                {model.system.map((row) => (
                     <div key={row.label}>
                         <AccountInfoRow row={row} />
+                        <div style={DIVIDER_STYLE} />
+                    </div>
+                ))}
 
-                        {index < model.system.length - 1 ? (
+                {model.systemActions.map((row, index) => (
+                    <div key={row.label}>
+                        <AccountActionRow row={row} />
+
+                        {index < model.systemActions.length - 1 ? (
                             <div style={DIVIDER_STYLE} />
                         ) : null}
                     </div>
