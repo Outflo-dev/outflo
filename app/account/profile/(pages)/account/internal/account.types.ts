@@ -1,29 +1,17 @@
 /* ==========================================================
-   OUTFLO — PROFILE ACCOUNT TYPES
+   OUTFLO — ACCOUNT TYPES
    File: app/account/profile/(pages)/account/internal/account.types.ts
-   Scope: Define account drilldown data and view contracts
-   Last Updated:
-   - ms: 1778645071428
-   - iso: 2026-05-13T04:04:31.428Z
-   - note: add account row mark contract for extracted account layout
+   Scope: Define account information page data and view model
    ========================================================== */
 
-/* ------------------------------
-   Types
--------------------------------- */
 export type AccountPageData = {
     accountName: string;
     username: string | null;
     email: string;
+    phone?: string | null;
     accountNumber: string;
     epochMs: number;
     memberSince: string;
-};
-
-export type AccountHero = {
-    label: string;
-    value: string;
-    detail: string;
 };
 
 export type AccountTile = {
@@ -32,10 +20,9 @@ export type AccountTile = {
     detail: string;
 };
 
-export type AccountViewModel = {
-    hero: AccountHero;
-    identity: AccountTile[];
-    system: AccountTile[];
+export type AccountActionTile = AccountTile & {
+    href: string;
+    actionLabel: "Add" | "Edit" | "Continue";
 };
 
 export type AccountMarkKind =
@@ -43,9 +30,21 @@ export type AccountMarkKind =
     | "handle"
     | "number"
     | "email"
+    | "phone"
     | "time"
-    | "status";
+    | "status"
+    | "verification";
 
 export type AccountInfoRowData = AccountTile & {
     mark: AccountMarkKind;
+};
+
+export type AccountActionRowData = AccountActionTile & {
+    mark: AccountMarkKind;
+};
+
+export type AccountViewModel = {
+    personal: AccountActionRowData[];
+    contact: AccountActionRowData[];
+    system: AccountInfoRowData[];
 };

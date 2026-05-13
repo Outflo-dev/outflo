@@ -3,11 +3,11 @@
 /* ==========================================================
    OUTFLO — ACCOUNT CONTACT SECTION
    File: app/account/profile/(pages)/account/view/sections/contact/AccountContactSection.tsx
-   Scope: Render account contact section
+   Scope: Render account contact action rows
    Last Updated:
    - ms: 1778645071428
    - iso: 2026-05-13T04:04:31.428Z
-   - note: extract contact account section from AccountView
+   - note: render contact rows from account model as actionable edit/add rows
    ========================================================== */
 
 /* ------------------------------
@@ -16,11 +16,8 @@
 import type { CSSProperties } from "react";
 
 import Text from "@/components/system/primitives/display/type/Text";
-import type {
-    AccountInfoRowData,
-    AccountViewModel,
-} from "../../../internal/account.types";
-import AccountInfoRow from "../../rows/AccountInfoRow";
+import type { AccountViewModel } from "../../../internal/account.types";
+import AccountActionRow from "../../rows/AccountActionRow";
 
 /* ------------------------------
    Types
@@ -44,7 +41,7 @@ const SECTION_HEADER_STYLE: CSSProperties = {
 
 const SECTION_TITLE_STYLE: CSSProperties = {
     fontSize: "var(--header-md)",
-    fontWeight: 700,
+    fontWeight: "var(--font-weight-bold)",
     letterSpacing: "-0.04em",
     lineHeight: 1,
     color: "var(--text-primary)",
@@ -60,19 +57,18 @@ const ROW_STACK_STYLE: CSSProperties = {
     rowGap: 0,
 };
 
+const DIVIDER_STYLE: CSSProperties = {
+    height: 1,
+    background: "var(--border-soft)",
+    opacity: 0.82,
+};
+
 /* ------------------------------
    Component
 -------------------------------- */
 export default function AccountContactSection({
     model,
 }: AccountContactSectionProps) {
-    const rows: AccountInfoRowData[] = [
-        {
-            mark: "email",
-            ...model.system[0],
-        },
-    ];
-
     return (
         <section style={SECTION_STYLE}>
             <div style={SECTION_HEADER_STYLE}>
@@ -81,13 +77,19 @@ export default function AccountContactSection({
                 </Text>
 
                 <Text as="p" type="label" style={SECTION_COPY_STYLE}>
-                    Used for login and account access.
+                    Used for login, recovery, and important account activity.
                 </Text>
             </div>
 
             <div style={ROW_STACK_STYLE}>
-                {rows.map((row) => (
-                    <AccountInfoRow key={row.label} row={row} />
+                {model.contact.map((row, index) => (
+                    <div key={row.label}>
+                        <AccountActionRow row={row} />
+
+                        {index < model.contact.length - 1 ? (
+                            <div style={DIVIDER_STYLE} />
+                        ) : null}
+                    </div>
                 ))}
             </div>
         </section>
