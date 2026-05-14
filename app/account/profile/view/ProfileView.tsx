@@ -21,7 +21,6 @@ import ProfileHeader from "./ProfileHeader";
 import ProfileIdentitySection from "./ProfileIdentitySection";
 import ProfileAccountSection from "./ProfileAccountSection";
 import ProfileEnvironmentSection from "./ProfileEnvironmentSection";
-import ProfileOrbitSection from "./ProfileOrbitSection";
 import ProfileSocialSection from "./ProfileSocialSection";
 import ProfileEpochSection from "./ProfileEpochSection";
 import ProfileFooter from "./ProfileFooter";
@@ -130,8 +129,6 @@ export default function ProfileView({
             />
 
             <ProfileEnvironmentSection />
-
-            <ProfileOrbitSection sectionGap={UI.sectionGap} />
 
             <ProfileSocialSection sectionGap={UI.sectionGap} />
 

@@ -29,6 +29,7 @@ export type ProfileRouteProps = {
 export type ProfileSectionItem = {
   href: string;
   label: string;
+  description?: string;
 };
 
 export type ProfileSectionConfig = {

@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1778720709456
    - iso: 2026-05-14T01:05:09.456Z
-   - note: soften profile navigation rows to mirror account row rhythm
+   - note: add profile row descriptions while preserving floating account rhythm
    ========================================================== */
 
 /* ------------------------------
@@ -26,6 +26,7 @@ import { COLOR } from "@/components/system/primitives/color/color.config";
 type ProfileAccountItem = {
   label: string;
   href: string;
+  description?: string;
 };
 
 type ProfileAccountSectionProps = {
@@ -36,12 +37,10 @@ type ProfileAccountSectionProps = {
 /* ------------------------------
    Constants
 -------------------------------- */
-const NAV_STYLE: CSSProperties = {
-  borderTop: `1px solid ${COLOR.border.soft}`,
-};
+const NAV_STYLE: CSSProperties = {};
 
 const ROW_STYLE: CSSProperties = {
-  minHeight: 76,
+  minHeight: 82,
   padding: "0 4px",
   display: "grid",
   gridTemplateColumns: "1fr auto",
@@ -49,13 +48,24 @@ const ROW_STYLE: CSSProperties = {
   columnGap: 18,
   textDecoration: "none",
   color: COLOR.text.primary,
+};
+
+const ROW_DIVIDER_STYLE: CSSProperties = {
   borderBottom: `1px solid ${COLOR.border.row}`,
 };
 
-const LABEL_WRAP_STYLE: CSSProperties = {
+const TEXT_WRAP_STYLE: CSSProperties = {
   minWidth: 0,
-  display: "flex",
-  alignItems: "center",
+  display: "grid",
+  rowGap: 5,
+};
+
+const LABEL_STYLE: CSSProperties = {
+  color: COLOR.text.primary,
+};
+
+const DESCRIPTION_STYLE: CSSProperties = {
+  color: COLOR.text.secondary,
 };
 
 const CHEVRON_WRAP_STYLE: CSSProperties = {
@@ -81,21 +91,40 @@ export default function ProfileAccountSection({
       }}
     >
       <nav aria-label="Profile navigation" style={NAV_STYLE}>
-        {items.map((item) => (
-          <Link key={item.href} href={item.href} style={ROW_STYLE}>
-            <span style={LABEL_WRAP_STYLE}>
-              <Text type="label">{item.label}</Text>
-            </span>
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1;
 
-            <span style={CHEVRON_WRAP_STYLE} aria-hidden="true">
-              <Chevron
-                direction="right"
-                color="currentColor"
-                strokeWidth={1.7}
-              />
-            </span>
-          </Link>
-        ))}
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              style={{
+                ...ROW_STYLE,
+                ...(isLast ? null : ROW_DIVIDER_STYLE),
+              }}
+            >
+              <span style={TEXT_WRAP_STYLE}>
+                <Text type="label" style={LABEL_STYLE}>
+                  {item.label}
+                </Text>
+
+                {item.description ? (
+                  <Text type="meta" style={DESCRIPTION_STYLE}>
+                    {item.description}
+                  </Text>
+                ) : null}
+              </span>
+
+              <span style={CHEVRON_WRAP_STYLE} aria-hidden="true">
+                <Chevron
+                  direction="right"
+                  color="currentColor"
+                  strokeWidth={1.7}
+                />
+              </span>
+            </Link>
+          );
+        })}
       </nav>
     </section>
   );

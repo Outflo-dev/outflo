@@ -17,22 +17,42 @@ import type { ProfileSectionConfig, ProfileSectionItem } from "./profile.types";
    Sections
 -------------------------------- */
 export const PROFILE_SECTION_ORDER: ProfileSectionConfig[] = [
-  { key: "identity", title: "Identity" },
-  { key: "account", title: "Account" },
-  { key: "environment", title: "Environment" },
-  { key: "orbit", title: "Orbit" },
-  { key: "social", title: "Social" },
-  { key: "epoch", title: "Epoch" },
-  { key: "footer", title: "Footer" },
+   { key: "identity", title: "Identity" },
+   { key: "account", title: "Account" },
+   { key: "environment", title: "Environment" },
+   { key: "orbit", title: "Orbit" },
+   { key: "social", title: "Social" },
+   { key: "epoch", title: "Epoch" },
+   { key: "footer", title: "Footer" },
 ];
 
 /* ------------------------------
    Account Items
 -------------------------------- */
 export const PROFILE_ACCOUNT_ITEMS: ProfileSectionItem[] = [
-  { href: "/account/profile/account", label: "Account" },
-  { href: "/account/profile/flows", label: "Flows" },
-  { href: "/account/profile/settings", label: "Settings" },
-  { href: "/account/profile/records", label: "Records" },
-  { href: "/account/profile/support", label: "Support" },
+   {
+      href: "/account/profile/account",
+      label: "Account",
+      description: "Identity, access, and Begin anchor.",
+   },
+   {
+      href: "/account/profile/flows",
+      label: "Flows",
+      description: "Money, time, and future substrates.",
+   },
+   {
+      href: "/account/profile/settings",
+      label: "Settings",
+      description: "Display, theme, and app feel.",
+   },
+   {
+      href: "/account/profile/records",
+      label: "Records",
+      description: "Receipts, logs, and history.",
+   },
+   {
+      href: "/account/profile/support",
+      label: "Support",
+      description: "Help, docs, and contact.",
+   },
 ];
