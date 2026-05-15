@@ -3,19 +3,17 @@
 /* ==========================================================
    OUTFLO — PROFILE HEADER
    File: app/account/profile/view/ProfileHeader.tsx
-   Scope: Sticky header band composing profile route actions
+   Scope: Sticky header band composing profile route back navigation
    Last Updated:
-   - ms: 1776475194844
-   - iso: 2026-04-18T01:19:54.844Z
-   - note: connect profile header actions to controller-owned route behavior
+   - ms: 1778720709456
+   - iso: 2026-05-14T01:05:09.456Z
+   - note: remove secondary header icons and keep one quiet chevron affordance
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import CloseProfileAction from "../actions/CloseProfileAction";
-import OpenInviteAction from "../actions/OpenInviteAction";
-import OpenPortalAction from "../actions/OpenPortalAction";
 import { COLOR } from "@/components/system/primitives/color/color.config";
 
 /* ------------------------------
@@ -31,7 +29,6 @@ type ProfileHeaderProps = {
 -------------------------------- */
 export default function ProfileHeader({
   onDismiss,
-  onOpenPortal,
 }: ProfileHeaderProps) {
   return (
     <div
@@ -41,7 +38,7 @@ export default function ProfileHeader({
         zIndex: 10,
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         background: COLOR.surface.base,
         paddingTop: 10,
         paddingBottom: 12,
@@ -53,25 +50,6 @@ export default function ProfileHeader({
         iconSurface={COLOR.surface.icon}
         onDismiss={onDismiss}
       />
-
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-        }}
-      >
-        <OpenInviteAction
-        textPrimary={COLOR.text.primary}
-        iconSurface={COLOR.surface.icon}
-        />
-
-        <OpenPortalAction
-         textPrimary={COLOR.text.primary}
-         iconSurface={COLOR.surface.icon}
-          onOpenPortal={onOpenPortal}
-        />
-      </div>
     </div>
   );
 }

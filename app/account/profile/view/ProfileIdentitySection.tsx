@@ -3,11 +3,11 @@
 /* ==========================================================
    OUTFLO — PROFILE IDENTITY SECTION
    File: app/account/profile/view/ProfileIdentitySection.tsx
-   Scope: Render the profile identity block with avatar, name, secret trigger, and identity actions
+   Scope: Render the profile identity lockup with avatar, secret trigger, and compact card actions
    Last Updated:
-   - ms: 1777481701125
-   - iso: 2026-04-29T16:55:01.125Z
-   - note: rename profile card entry handlers from sheet to panel
+   - ms: 1778720709456
+   - iso: 2026-05-14T01:05:09.456Z
+   - note: place identity text beside avatar and compact card actions below avatar row
    ========================================================== */
 
 /* ------------------------------
@@ -16,8 +16,6 @@
 import ProfileSecretTrigger from "../actions/ProfileSecretTrigger";
 import ProfileIdentityActions from "../internal/ProfileIdentityActions";
 import Avatar from "@/components/system/primitives/display/avatar/Avatar";
-import IconButton from "@/components/system/shell/buttons/types/icon/IconButton";
-import Plus from "@/components/system/primitives/marks/Plus";
 import Text from "@/components/system/primitives/display/type/Text";
 import { COLOR } from "@/components/system/primitives/color/color.config";
 
@@ -30,7 +28,17 @@ type ProfileIdentitySectionProps = {
   avatarUrl: string | null;
   onOpenAvatarPanel: () => void;
   onOpenControlsPanel: () => void;
+  onOpenDisplayPanel: () => void;
 };
+
+/* ------------------------------
+   Helpers
+-------------------------------- */
+function formatUsername(username: string | null) {
+  if (!username) return null;
+
+  return username.startsWith("@") ? username : `@${username}`;
+}
 
 /* ------------------------------
    Component
@@ -41,68 +49,81 @@ export default function ProfileIdentitySection({
   avatarUrl,
   onOpenAvatarPanel,
   onOpenControlsPanel,
+  onOpenDisplayPanel,
 }: ProfileIdentitySectionProps) {
+  const formattedUsername = formatUsername(username);
+  const primaryIdentity = formattedUsername ?? fullName;
+  const secondaryIdentity = formattedUsername ? fullName : null;
+
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-        paddingTop: 2,
+        display: "grid",
+        rowGap: 18,
+        paddingTop: 4,
       }}
     >
       <div
         style={{
-          position: "relative",
-          width: 92,
-          height: 92,
-          marginBottom: 2,
+          display: "grid",
+          gridTemplateColumns: "104px 1fr",
+          alignItems: "center",
+          columnGap: 18,
         }}
       >
-        <button
-          type="button"
-          aria-label="Edit profile avatar"
-          onClick={onOpenAvatarPanel}
+        <div
           style={{
-            width: 88,
-            height: 88,
-            borderRadius: "50%",
-            border: "none",
-            padding: 0,
-            background: "transparent",
-            cursor: "pointer",
-            flexShrink: 0,
+            position: "relative",
+            width: 104,
+            height: 104,
           }}
         >
-          <Avatar size="lg" value={fullName} src={avatarUrl} alt={fullName} />
-        </button>
+          <button
+            type="button"
+            aria-label="Edit profile avatar"
+            onClick={onOpenAvatarPanel}
+            style={{
+              width: 99,
+              height: 99,
+              borderRadius: "50%",
+              border: "none",
+              padding: 0,
+              background: "transparent",
+              cursor: "pointer",
+              flexShrink: 0,
+            }}
+          >
+            <Avatar size="lg" value={fullName} src={avatarUrl} alt={fullName} />
+          </button>
 
-        <ProfileSecretTrigger />
+          <ProfileSecretTrigger />
+        </div>
 
-        <IconButton
-          onClick={onOpenAvatarPanel}
-          ariaLabel="Add a profile avatar"
+        <div
           style={{
-            position: "absolute",
-            right: 0,
-            bottom: 0,
+            minWidth: 0,
+            display: "grid",
+            rowGap: 3,
           }}
         >
-          <Plus size={12} />
-        </IconButton>
+          <Text as="h1" type="display" style={{ color: COLOR.text.primary }}>
+            {primaryIdentity}
+          </Text>
+
+          {secondaryIdentity ? (
+            <Text as="p" type="meta" style={{ color: COLOR.text.secondary }}>
+              {secondaryIdentity}
+            </Text>
+          ) : null}
+        </div>
       </div>
 
-      <Text as="h1" type="display" style={{ color: COLOR.text.primary }}>
-        {fullName}
-      </Text>
-
-      <div style={{ marginTop: -1 }}>
-        <ProfileIdentityActions
-          username={username}
-          logoutHref="/logout"
-          onOpenControlsPanel={onOpenControlsPanel}
-        />
-      </div>
+      <ProfileIdentityActions
+        logoutHref="/logout"
+        onOpenAvatarPanel={onOpenAvatarPanel}
+        onOpenControlsPanel={onOpenControlsPanel}
+        onOpenDisplayPanel={onOpenDisplayPanel}
+      />
     </div>
   );
 }

@@ -3,37 +3,111 @@
 /* ==========================================================
    OUTFLO — PROFILE IDENTITY ACTIONS ROW
    File: app/account/profile/internal/ProfileIdentityActionsRow.tsx
-   Scope: Layout owner for profile identity pills
+   Scope: Layout owner for compact profile identity card entry actions
    Last Updated:
-   - ms: 1777481701125
-   - iso: 2026-04-29T16:55:01.125Z
-   - note: remove stale sheet naming → controls panel
+   - ms: 1778720709456
+   - iso: 2026-05-14T01:05:09.456Z
+   - note: replace username controls row with compact edit controls and display actions
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
+import type { CSSProperties } from "react";
+
+import IconButton from "@/components/system/shell/buttons/types/icon/IconButton";
+import PillButton from "@/components/system/shell/buttons/types/pill/PillButton";
+import Text from "@/components/system/primitives/display/type/Text";
+import { COLOR } from "@/components/system/primitives/color/color.config";
+
 import { useProfileSecretState } from "./profile.secret";
-import ProfileUsernamePill from "./ProfileUsernamePill";
-import ProfileControlsPill from "./ProfileControlsPill";
 import ProfileLogoutReveal from "./ProfileLogoutReveal";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type Props = {
-  username: string | null;
   logoutHref: string;
+  onOpenAvatarPanel: () => void;
   onOpenControlsPanel: () => void;
+  onOpenDisplayPanel: () => void;
 };
+
+/* ------------------------------
+   Constants
+-------------------------------- */
+const ROOT_STYLE: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  flexWrap: "wrap",
+  paddingTop: 2,
+};
+
+const EDIT_PILL_STYLE: CSSProperties = {
+  minHeight: 34,
+  padding: "0 15px",
+};
+
+const ICON_BUTTON_STYLE: CSSProperties = {
+  width: 34,
+  height: 34,
+  background: "transparent",
+  color: COLOR.text.primary,
+};
+
+/* ------------------------------
+   Icons
+-------------------------------- */
+function MoreIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    >
+      <circle cx="4.5" cy="9" r="1" />
+      <circle cx="9" cy="9" r="1" />
+      <circle cx="13.5" cy="9" r="1" />
+    </svg>
+  );
+}
+
+function DisplayIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.65"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="9" cy="9" r="3.25" />
+      <path d="M9 1.75v2" />
+      <path d="M9 14.25v2" />
+      <path d="M16.25 9h-2" />
+      <path d="M4.25 9h-2" />
+    </svg>
+  );
+}
 
 /* ------------------------------
    Component
 -------------------------------- */
 export default function ProfileIdentityActionsRow({
-  username,
   logoutHref,
+  onOpenAvatarPanel,
   onOpenControlsPanel,
+  onOpenDisplayPanel,
 }: Props) {
   const {
     showSecret,
@@ -45,16 +119,34 @@ export default function ProfileIdentityActionsRow({
     <div
       onMouseEnter={showSecret ? resetHideTimer : undefined}
       onPointerDown={showSecret ? resetHideTimer : undefined}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-        flexWrap: "wrap",
-      }}
+      style={ROOT_STYLE}
     >
-      <ProfileUsernamePill username={username} />
+      <PillButton
+        variant="soft"
+        onClick={onOpenAvatarPanel}
+        ariaLabel="Edit profile avatar"
+        style={EDIT_PILL_STYLE}
+      >
+        <Text type="pill" style={{ color: COLOR.text.primary }}>
+          Edit
+        </Text>
+      </PillButton>
 
-      <ProfileControlsPill onClick={onOpenControlsPanel} />
+      <IconButton
+        ariaLabel="Open profile controls"
+        onClick={onOpenControlsPanel}
+        style={ICON_BUTTON_STYLE}
+      >
+        <MoreIcon />
+      </IconButton>
+
+      <IconButton
+        ariaLabel="Open display settings"
+        onClick={onOpenDisplayPanel}
+        style={ICON_BUTTON_STYLE}
+      >
+        <DisplayIcon />
+      </IconButton>
 
       <ProfileLogoutReveal
         show={showSecret}

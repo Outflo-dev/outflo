@@ -26,10 +26,18 @@ export type ProfileRouteProps = {
   epochMs: number;
 };
 
+export type ProfileMenuMarkKind =
+  | "account"
+  | "flows"
+  | "settings"
+  | "records"
+  | "support";
+
 export type ProfileSectionItem = {
   href: string;
   label: string;
   description?: string;
+  mark: ProfileMenuMarkKind;
 };
 
 export type ProfileSectionConfig = {

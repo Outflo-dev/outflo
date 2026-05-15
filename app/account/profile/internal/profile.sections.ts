@@ -33,26 +33,31 @@ export const PROFILE_ACCOUNT_ITEMS: ProfileSectionItem[] = [
    {
       href: "/account/profile/account",
       label: "Account",
-      description: "Identity, access, and Begin anchor.",
+      description: "Identity + access",
+      mark: "account",
    },
    {
       href: "/account/profile/flows",
       label: "Flows",
-      description: "Money, time, and future substrates.",
+      description: "Money + time",
+      mark: "flows",
    },
    {
       href: "/account/profile/settings",
       label: "Settings",
-      description: "Display, theme, and app feel.",
+      description: "Theme + display",
+      mark: "settings",
    },
    {
       href: "/account/profile/records",
       label: "Records",
-      description: "Receipts, logs, and history.",
+      description: "Receipts + history",
+      mark: "records",
    },
    {
       href: "/account/profile/support",
       label: "Support",
-      description: "Help, docs, and contact.",
+      description: "Help + contact",
+      mark: "support",
    },
 ];

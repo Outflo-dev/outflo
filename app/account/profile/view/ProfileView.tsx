@@ -21,7 +21,6 @@ import ProfileHeader from "./ProfileHeader";
 import ProfileIdentitySection from "./ProfileIdentitySection";
 import ProfileAccountSection from "./ProfileAccountSection";
 import ProfileEnvironmentSection from "./ProfileEnvironmentSection";
-import ProfileSocialSection from "./ProfileSocialSection";
 import ProfileEpochSection from "./ProfileEpochSection";
 import ProfileFooter from "./ProfileFooter";
 
@@ -38,7 +37,7 @@ import type {
 -------------------------------- */
 const UI = {
   pageBottom: 40,
-  sectionGap: 24,
+  sectionGap: 18,
 } as const;
 
 /* ------------------------------
@@ -120,6 +119,7 @@ export default function ProfileView({
                 avatarUrl={avatarUrl}
                 onOpenAvatarPanel={onOpenAvatarPanel}
                 onOpenControlsPanel={onOpenControlsPanel}
+                onOpenDisplayPanel={() => onChangeCardPanel("theme")}
               />
             </section>
 
@@ -129,8 +129,6 @@ export default function ProfileView({
             />
 
             <ProfileEnvironmentSection />
-
-            <ProfileSocialSection sectionGap={UI.sectionGap} />
 
             <ProfileEpochSection
               epochMs={epochMs}
