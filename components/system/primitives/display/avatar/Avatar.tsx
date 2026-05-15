@@ -35,7 +35,7 @@ type AvatarProps = {
 const AVATAR_SIZE: Record<AvatarSize, number> = {
   sm: 34,
   md: 56,
-  lg: 88,
+  lg: 99,
 };
 
 /* ------------------------------
