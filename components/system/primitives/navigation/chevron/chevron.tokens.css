@@ -1,11 +1,11 @@
 /* ==========================================================
    OUTFLO — CHEVRON TOKENS
    File: components/system/primitives/navigation/chevron/chevron.tokens.css
-   Scope: Chevron primitive size variants responding to text-scale display signal
+   Scope: Chevron primitive size and stroke roles responding to text-scale display signal
    Last Updated:
-   - ms: 1778645071428
-   - iso: 2026-05-13T04:04:31.428Z
-   - note: give Chevron its own size variants instead of hardcoding contextual sizes
+   - ms: 1779058286512
+   - iso: 2026-05-17T22:51:26.512Z
+   - note: add menu and nav chevron role tokens
    ========================================================== */
 
 /* Compact default */
@@ -16,6 +16,12 @@
     --chevron-size-lg: 10px;
 
     --chevron-size: var(--chevron-size-sm);
+
+    --chevron-size-menu: var(--chevron-size-sm);
+    --chevron-size-nav: var(--chevron-size-md);
+
+    --chevron-stroke-menu: 1.7px;
+    --chevron-stroke-nav: 1.5px;
 }
 
 /* Standard */
@@ -25,6 +31,12 @@
     --chevron-size-lg: 11px;
 
     --chevron-size: var(--chevron-size-sm);
+
+    --chevron-size-menu: var(--chevron-size-sm);
+    --chevron-size-nav: var(--chevron-size-md);
+
+    --chevron-stroke-menu: 1.7px;
+    --chevron-stroke-nav: 1.5px;
 }
 
 /* Large */
@@ -34,4 +46,10 @@
     --chevron-size-lg: 12px;
 
     --chevron-size: var(--chevron-size-sm);
+
+    --chevron-size-menu: var(--chevron-size-sm);
+    --chevron-size-nav: var(--chevron-size-md);
+
+    --chevron-stroke-menu: 1.8px;
+    --chevron-stroke-nav: 1.6px;
 }

@@ -21,7 +21,6 @@ import ProfileHeader from "./ProfileHeader";
 import ProfileIdentitySection from "./ProfileIdentitySection";
 import ProfileAccountSection from "./ProfileAccountSection";
 import ProfileEnvironmentSection from "./ProfileEnvironmentSection";
-import ProfileEpochSection from "./ProfileEpochSection";
 import ProfileFooter from "./ProfileFooter";
 
 import ProfileCard from "../internal/card/ProfileCard";
@@ -126,14 +125,10 @@ export default function ProfileView({
             <ProfileAccountSection
               items={PROFILE_ACCOUNT_ITEMS}
               sectionGap={UI.sectionGap}
+              epochMs={epochMs}
             />
 
             <ProfileEnvironmentSection />
-
-            <ProfileEpochSection
-              epochMs={epochMs}
-              sectionGap={UI.sectionGap}
-            />
 
             <ProfileFooter />
           </div>

@@ -1,0 +1,31 @@
+/* ==========================================================
+   OUTFLO — MARK FRAME TOKENS
+   File: components/system/primitives/marks/frame/mark-frame.tokens.css
+   Scope: Define zoom-aware mark frame and mark icon sizing
+   Last Updated:
+   - ms: 1779058286512
+   - iso: 2026-05-17T22:51:26.512Z
+   - note: add mark frame tokens for account and profile row primitives
+   ========================================================== */
+
+/* Compact default */
+:root,
+:root[data-text-scale="compact"] {
+    --mark-frame-size: 34px;
+    --mark-icon-size: 28px;
+    --mark-frame-color: var(--text-primary);
+}
+
+/* Standard */
+:root[data-text-scale="standard"] {
+    --mark-frame-size: 35px;
+    --mark-icon-size: 29px;
+    --mark-frame-color: var(--text-primary);
+}
+
+/* Large */
+:root[data-text-scale="large"] {
+    --mark-frame-size: 37px;
+    --mark-icon-size: 30px;
+    --mark-frame-color: var(--text-primary);
+}

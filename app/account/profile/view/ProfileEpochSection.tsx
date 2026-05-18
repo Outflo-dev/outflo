@@ -3,17 +3,20 @@
 /* ==========================================================
    OUTFLO — PROFILE EPOCH SECTION
    File: app/account/profile/view/ProfileEpochSection.tsx
-   Scope: Render the profile epoch ticker block
+   Scope: Render the profile epoch ticker through shared system row grammar
    Last Updated:
-   - ms: 1776475194844
-   - iso: 2026-04-18T01:19:54.844Z
-   - note: extract epoch ticker block from legacy profile surface into route-owned view
+   - ms: 1779058286512
+   - iso: 2026-05-17T22:51:26.512Z
+   - note: cohere profile clock with Account-derived row and mark grammar
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import EpochTicker from "@/components/system/primitives/display/clocks/EpochTicker";
+import MarkFrame from "@/components/system/primitives/marks/frame/MarkFrame";
+import TimeMark from "@/components/system/primitives/marks/icons/TimeMark";
+import SystemRow from "@/components/system/surfaces/rows/SystemRow";
 
 /* ------------------------------
    Types
@@ -33,11 +36,18 @@ export default function ProfileEpochSection({
   return (
     <section
       style={{
-        paddingTop: sectionGap * 3.5,
-        textAlign: "left",
+        marginTop: sectionGap,
       }}
     >
-      <EpochTicker epochMs={epochMs} />
+      <SystemRow
+        mark={
+          <MarkFrame>
+            <TimeMark />
+          </MarkFrame>
+        }
+        label="Orbit"
+        value={<EpochTicker epochMs={epochMs} />}
+      />
     </section>
   );
 }

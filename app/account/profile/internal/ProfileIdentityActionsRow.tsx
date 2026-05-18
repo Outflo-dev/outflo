@@ -5,9 +5,9 @@
    File: app/account/profile/internal/ProfileIdentityActionsRow.tsx
    Scope: Layout owner for compact profile identity card entry actions
    Last Updated:
-   - ms: 1778720709456
-   - iso: 2026-05-14T01:05:09.456Z
-   - note: replace username controls row with compact edit controls and display actions
+   - ms: 1779058286512
+   - iso: 2026-05-17T22:51:26.512Z
+   - note: replace local display sun with shared SunMark
    ========================================================== */
 
 /* ------------------------------
@@ -15,10 +15,11 @@
 -------------------------------- */
 import type { CSSProperties } from "react";
 
+import Text from "@/components/system/primitives/display/type/Text";
+import SunMark from "@/components/system/primitives/marks/icons/SunMark";
+import { COLOR } from "@/components/system/primitives/color/color.config";
 import IconButton from "@/components/system/shell/buttons/types/icon/IconButton";
 import PillButton from "@/components/system/shell/buttons/types/pill/PillButton";
-import Text from "@/components/system/primitives/display/type/Text";
-import { COLOR } from "@/components/system/primitives/color/color.config";
 
 import { useProfileSecretState } from "./profile.secret";
 import ProfileLogoutReveal from "./ProfileLogoutReveal";
@@ -78,28 +79,6 @@ function MoreIcon() {
   );
 }
 
-function DisplayIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.65"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="9" cy="9" r="3.25" />
-      <path d="M9 1.75v2" />
-      <path d="M9 14.25v2" />
-      <path d="M16.25 9h-2" />
-      <path d="M4.25 9h-2" />
-    </svg>
-  );
-}
-
 /* ------------------------------
    Component
 -------------------------------- */
@@ -145,7 +124,7 @@ export default function ProfileIdentityActionsRow({
         onClick={onOpenDisplayPanel}
         style={ICON_BUTTON_STYLE}
       >
-        <DisplayIcon />
+        <SunMark />
       </IconButton>
 
       <ProfileLogoutReveal

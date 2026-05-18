@@ -1,18 +1,34 @@
 "use client";
 
-type PlusProps = {
+/* ==========================================================
+   OUTFLO — PLUS MARK
+   File: components/system/primitives/marks/icons/PlusMark.tsx
+   Scope: Render reusable plus mark glyph
+   Last Updated:
+   - ms: 1779058286512
+   - iso: 2026-05-17T22:51:26.512Z
+   - note: move generic mark icons into marks/icons
+   ========================================================== */
+
+/* ------------------------------
+   Types
+-------------------------------- */
+type PlusMarkProps = {
   size?: number;
   strokeWidth?: number;
   color?: string;
   opacity?: number;
 };
 
-export default function Plus({
+/* ------------------------------
+   Component
+-------------------------------- */
+export default function PlusMark({
   size = 14,
   strokeWidth = 1.5,
   color = "currentColor",
   opacity = 1,
-}: PlusProps) {
+}: PlusMarkProps) {
   const half = size / 2;
 
   return (

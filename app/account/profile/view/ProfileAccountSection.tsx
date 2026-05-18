@@ -3,22 +3,27 @@
 /* ==========================================================
    OUTFLO — PROFILE ACCOUNT SECTION
    File: app/account/profile/view/ProfileAccountSection.tsx
-   Scope: Render the primary account navigation list for the profile route
+   Scope: Render profile navigation and orbit row through Account-derived row grammar
    Last Updated:
-   - ms: 1778720709456
-   - iso: 2026-05-14T01:05:09.456Z
-   - note: add quiet profile menu marks and larger chevron rhythm
+   - ms: 1779058286512
+   - iso: 2026-05-17T22:51:26.512Z
+   - note: align profile intro sizing, rows, marks, chevrons, and orbit row to account grammar
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type { CSSProperties } from "react";
-import Link from "next/link";
 
-import Chevron from "@/components/system/primitives/navigation/chevron/Chevron";
+import EpochTicker from "@/components/system/primitives/display/clocks/EpochTicker";
 import Text from "@/components/system/primitives/display/type/Text";
-import { COLOR } from "@/components/system/primitives/color/color.config";
+import MarkFrame from "@/components/system/primitives/marks/frame/MarkFrame";
+import PersonMark from "@/components/system/primitives/marks/icons/PersonMark";
+import SunMark from "@/components/system/primitives/marks/icons/SunMark";
+import TimeMark from "@/components/system/primitives/marks/icons/TimeMark";
+import Chevron from "@/components/system/primitives/navigation/chevron/Chevron";
+import SystemRow from "@/components/system/surfaces/rows/SystemRow";
+
 import type { ProfileMenuMarkKind } from "../internal/profile.types";
 
 /* ------------------------------
@@ -34,101 +39,61 @@ type ProfileAccountItem = {
 type ProfileAccountSectionProps = {
   items: readonly ProfileAccountItem[];
   sectionGap: number;
+  epochMs: number;
 };
 
 /* ------------------------------
    Constants
 -------------------------------- */
-const NAV_STYLE: CSSProperties = {};
-
-const ROW_STYLE: CSSProperties = {
-  minHeight: 78,
+const SECTION_TITLE_STACK_STYLE: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "52px 1fr auto",
-  alignItems: "center",
-  columnGap: 20,
-  textDecoration: "none",
-  color: COLOR.text.primary,
+  rowGap: 8,
+  marginBottom: 18,
+  paddingTop: 4,
 };
 
-const ROW_DIVIDER_STYLE: CSSProperties = {
-  borderBottom: `1px solid ${COLOR.border.row}`,
-};
-
-const MARK_WRAP_STYLE: CSSProperties = {
-  width: 34,
-  height: 34,
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  color: COLOR.text.primary,
-};
-
-const TEXT_WRAP_STYLE: CSSProperties = {
-  minWidth: 0,
-  display: "grid",
-  rowGap: 5,
-};
-
-const LABEL_STYLE: CSSProperties = {
-  color: COLOR.text.primary,
+const TITLE_STYLE: CSSProperties = {
+  fontSize: "var(--header-lg)",
+  fontWeight: "var(--font-weight-bold)",
+  letterSpacing: "-0.045em",
+  lineHeight: 1,
+  color: "var(--text-primary)",
 };
 
 const DESCRIPTION_STYLE: CSSProperties = {
-  color: COLOR.text.secondary,
+  maxWidth: 460,
+  fontSize: "var(--text-sm)",
+  lineHeight: 1.45,
+  color: "var(--text-secondary)",
 };
 
-const CHEVRON_WRAP_STYLE: CSSProperties = {
-  minWidth: 34,
-  minHeight: 34,
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  color: COLOR.text.secondary,
+const ROW_DIVIDER_STYLE: CSSProperties = {
+  borderBottom: "1px solid var(--border-soft)",
 };
 
 const MARK_ICON_STYLE: CSSProperties = {
+  width: "var(--mark-icon-size)",
+  height: "var(--mark-icon-size)",
   display: "block",
+  flexShrink: 0,
 };
 
 /* ------------------------------
    Marks
 -------------------------------- */
 function ProfileMenuMark({ mark }: { mark: ProfileMenuMarkKind }) {
-  if (mark === "account") return <AccountMark />;
+  if (mark === "account") return <PersonMark />;
+  if (mark === "settings") return <SunMark />;
   if (mark === "flows") return <FlowsMark />;
-  if (mark === "settings") return <SettingsMark />;
   if (mark === "records") return <RecordsMark />;
 
   return <SupportMark />;
-}
-
-function AccountMark() {
-  return (
-    <svg
-      aria-hidden="true"
-      width="22"
-      height="22"
-      viewBox="0 0 22 22"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.65"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={MARK_ICON_STYLE}
-    >
-      <circle cx="11" cy="8" r="3.2" />
-      <path d="M5.6 18.1c.9-3 2.8-4.5 5.4-4.5s4.5 1.5 5.4 4.5" />
-    </svg>
-  );
 }
 
 function FlowsMark() {
   return (
     <svg
       aria-hidden="true"
-      width="22"
-      height="22"
       viewBox="0 0 22 22"
       fill="none"
       stroke="currentColor"
@@ -145,35 +110,10 @@ function FlowsMark() {
   );
 }
 
-function SettingsMark() {
-  return (
-    <svg
-      aria-hidden="true"
-      width="22"
-      height="22"
-      viewBox="0 0 22 22"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.65"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={MARK_ICON_STYLE}
-    >
-      <circle cx="11" cy="11" r="3.3" />
-      <path d="M11 3.5v2" />
-      <path d="M11 16.5v2" />
-      <path d="M18.5 11h-2" />
-      <path d="M5.5 11h-2" />
-    </svg>
-  );
-}
-
 function RecordsMark() {
   return (
     <svg
       aria-hidden="true"
-      width="22"
-      height="22"
       viewBox="0 0 22 22"
       fill="none"
       stroke="currentColor"
@@ -193,8 +133,6 @@ function SupportMark() {
   return (
     <svg
       aria-hidden="true"
-      width="22"
-      height="22"
       viewBox="0 0 22 22"
       fill="none"
       stroke="currentColor"
@@ -216,6 +154,7 @@ function SupportMark() {
 export default function ProfileAccountSection({
   items,
   sectionGap,
+  epochMs,
 }: ProfileAccountSectionProps) {
   return (
     <section
@@ -223,61 +162,48 @@ export default function ProfileAccountSection({
         marginTop: sectionGap,
       }}
     >
-      <div
-        style={{
-          display: "grid",
-          rowGap: 6,
-          marginBottom: 18,
-        }}
-      >
-        <Text as="h1" type="label" style={{ color: COLOR.text.primary }}>
+      <div style={SECTION_TITLE_STACK_STYLE}>
+        <Text as="h1" type="display" style={TITLE_STYLE}>
           Profile
         </Text>
 
-        <Text type="meta" style={{ color: COLOR.text.secondary }}>
+        <Text as="p" type="meta" style={DESCRIPTION_STYLE}>
           Identity, controls, and system surfaces.
         </Text>
       </div>
 
-      <nav aria-label="Profile navigation" style={NAV_STYLE}>
-        {items.map((item, index) => {
-          const isLast = index === items.length - 1;
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              style={{
-                ...ROW_STYLE,
-                ...(isLast ? null : ROW_DIVIDER_STYLE),
-              }}
-            >
-              <span style={MARK_WRAP_STYLE} aria-hidden="true">
+      <nav aria-label="Profile navigation">
+        {items.map((item) => (
+          <SystemRow
+            key={item.href}
+            href={item.href}
+            mark={
+              <MarkFrame>
                 <ProfileMenuMark mark={item.mark} />
-              </span>
+              </MarkFrame>
+            }
+            label={item.label}
+            value={item.description}
+            right={
+              <Chevron
+                direction="right"
+                role="menu"
+                color="var(--text-secondary)"
+              />
+            }
+            style={ROW_DIVIDER_STYLE}
+          />
+        ))}
 
-              <span style={TEXT_WRAP_STYLE}>
-                <Text type="label" style={LABEL_STYLE}>
-                  {item.label}
-                </Text>
-
-                {item.description ? (
-                  <Text type="meta" style={DESCRIPTION_STYLE}>
-                    {item.description}
-                  </Text>
-                ) : null}
-              </span>
-
-              <span style={CHEVRON_WRAP_STYLE} aria-hidden="true">
-                <Chevron
-                  direction="right"
-                  color="currentColor"
-                  strokeWidth={1.95}
-                />
-              </span>
-            </Link>
-          );
-        })}
+        <SystemRow
+          mark={
+            <MarkFrame>
+              <TimeMark />
+            </MarkFrame>
+          }
+          label="Orbit"
+          value={<EpochTicker epochMs={epochMs} />}
+        />
       </nav>
     </section>
   );

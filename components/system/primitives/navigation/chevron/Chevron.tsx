@@ -2,55 +2,77 @@
 
 /* ==========================================================
    OUTFLO — CHEVRON
-   File: components/system/primitives/navigation/Chevron.tsx
-   Scope: Pure directional chevron primitive for navigation affordances
+   File: components/system/primitives/navigation/chevron/Chevron.tsx
+   Scope: Render directional chevron primitive with role-based sizing
    Last Updated:
-   - ms: 1776222056208
-   - iso: 2026-04-15T03:00:56.208Z
-   - note: extract chevron as first clean navigation primitive
+   - ms: 1779058286512
+   - iso: 2026-05-17T22:51:26.512Z
+   - note: add safe numeric and token stroke handling for chevron roles
    ========================================================== */
 
 /* ------------------------------
    Types
 -------------------------------- */
+type ChevronDirection = "right" | "left" | "up" | "down";
+
+type ChevronRole = "menu" | "nav";
+
 type ChevronProps = {
-  direction?: "right" | "left" | "up" | "down";
+  direction?: ChevronDirection;
+  role?: ChevronRole;
   size?: number | string;
   color?: string;
-  strokeWidth?: number;
+  strokeWidth?: number | string;
   opacity?: number;
 };
+
+/* ------------------------------
+   Helpers
+-------------------------------- */
+function getChevronRotation(direction: ChevronDirection) {
+  if (direction === "right") return "45deg";
+  if (direction === "left") return "225deg";
+  if (direction === "up") return "315deg";
+
+  return "135deg";
+}
+
+function formatCssSize(value: number | string) {
+  if (typeof value === "number") return `${value}px`;
+
+  return value;
+}
 
 /* ------------------------------
    Component
 -------------------------------- */
 export default function Chevron({
   direction = "right",
-  size = "var(--chevron-size)",
+  role = "menu",
+  size,
   color = "var(--text-tertiary)",
-  strokeWidth = 1.5,
+  strokeWidth,
   opacity = 1,
 }: ChevronProps) {
-  const rotation =
-    direction === "right"
-      ? "45deg"
-      : direction === "left"
-        ? "225deg"
-        : direction === "up"
-          ? "315deg"
-          : "135deg";
+  const resolvedSize = formatCssSize(
+    size ?? `var(--chevron-size-${role}, var(--chevron-size, 5px))`
+  );
+
+  const resolvedStrokeWidth = formatCssSize(
+    strokeWidth ?? `var(--chevron-stroke-${role}, 1.5px)`
+  );
 
   return (
     <span
       aria-hidden="true"
       style={{
-        width: size,
-        height: size,
+        width: resolvedSize,
+        height: resolvedSize,
         display: "inline-block",
         boxSizing: "border-box",
-        borderTop: `${strokeWidth}px solid ${color}`,
-        borderRight: `${strokeWidth}px solid ${color}`,
-        transform: `rotate(${rotation})`,
+        borderTop: `${resolvedStrokeWidth} solid ${color}`,
+        borderRight: `${resolvedStrokeWidth} solid ${color}`,
+        transform: `rotate(${getChevronRotation(direction)})`,
         opacity,
         flexShrink: 0,
       }}

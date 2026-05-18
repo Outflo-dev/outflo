@@ -34,10 +34,17 @@ const HEADER_STYLE: CSSProperties = {
 };
 
 const NAV_STYLE: CSSProperties = {
+    position: "sticky",
+    top: -1,
+    zIndex: 10,
     minHeight: 44,
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
+    background: "var(--bg-primary)",
+    paddingTop: 10,
+    paddingBottom: 12,
+    marginBottom: -6,
 };
 
 const INTRO_STYLE: CSSProperties = {

@@ -51,7 +51,6 @@ export default function AccountBackAction({ onBack }: AccountBackActionProps) {
                 direction="left"
                 size="var(--chevron-size-md)"
                 color="var(--text-primary)"
-                strokeWidth={1.8}
             />
         </TextButton>
     );

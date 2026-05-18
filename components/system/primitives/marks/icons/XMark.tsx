@@ -1,18 +1,37 @@
 "use client";
 
+/* ==========================================================
+   OUTFLO — X MARK
+   File: components/system/primitives/marks/icons/XMark.tsx
+   Scope: Render reusable x mark glyph
+   Last Updated:
+   - ms: 1779058286512
+   - iso: 2026-05-17T22:51:26.512Z
+   - note: move generic mark icons into marks/icons
+   ========================================================== */
+
+/* ------------------------------
+   Imports
+-------------------------------- */
 import type { CSSProperties } from "react";
 
-type XProps = {
+/* ------------------------------
+   Types
+-------------------------------- */
+type XMarkProps = {
   size?: number;
   strokeWidth?: number;
   style?: CSSProperties;
 };
 
-export default function X({
+/* ------------------------------
+   Component
+-------------------------------- */
+export default function XMark({
   size = 18,
   strokeWidth = 2,
   style,
-}: XProps) {
+}: XMarkProps) {
   return (
     <svg
       aria-hidden="true"
