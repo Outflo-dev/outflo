@@ -55,5 +55,5 @@ export default async function Page() {
       memberSince: getMemberSince(user?.created_at),
    };
 
-   return <AccountController data={accountData} />;
+   return <AccountController {...accountData} />;
 }
