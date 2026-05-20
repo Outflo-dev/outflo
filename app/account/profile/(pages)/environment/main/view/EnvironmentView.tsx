@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: render environment participation signals and records sections
+   - note: nest header and footer under environment view ownership
    ========================================================== */
 
 /* ------------------------------
@@ -16,7 +16,8 @@
 import type { CSSProperties } from "react";
 
 import type { EnvironmentViewModel } from "../internal/environment.types";
-import EnvironmentHeader from "../header/EnvironmentHeader";
+import EnvironmentHeader from "./header/EnvironmentHeader";
+import EnvironmentFooter from "./footer/EnvironmentFooter";
 import EnvironmentParticipationSection from "./sections/EnvironmentParticipationSection";
 import EnvironmentSignalsSection from "./sections/EnvironmentSignalsSection";
 import EnvironmentRecordsSection from "./sections/EnvironmentRecordsSection";
@@ -54,6 +55,8 @@ export default function EnvironmentView({
             <EnvironmentSignalsSection model={model} />
 
             <EnvironmentRecordsSection model={model} />
+
+            <EnvironmentFooter />
         </section>
     );
 }
