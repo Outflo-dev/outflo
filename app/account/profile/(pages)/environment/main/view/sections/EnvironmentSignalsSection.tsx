@@ -1,13 +1,13 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — ENVIRONMENT RUNTIME SECTION
-   File: app/account/profile/(pages)/environment/main/view/sections/EnvironmentRuntimeSection.tsx
-   Scope: Render environment runtime rows
+   OUTFLO — ENVIRONMENT SIGNALS SECTION
+   File: app/account/profile/(pages)/environment/main/view/sections/EnvironmentSignalsSection.tsx
+   Scope: Render environment signal participation rows
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: add environment runtime section
+   - note: replace runtime section with signal controls section
    ========================================================== */
 
 /* ------------------------------
@@ -23,7 +23,7 @@ import EnvironmentInfoRow from "../rows/EnvironmentInfoRow";
 /* ------------------------------
    Types
 -------------------------------- */
-type EnvironmentRuntimeSectionProps = {
+type EnvironmentSignalsSectionProps = {
     model: EnvironmentViewModel;
 };
 
@@ -48,22 +48,22 @@ const ROW_DIVIDER_STYLE: CSSProperties = {
 /* ------------------------------
    Component
 -------------------------------- */
-export default function EnvironmentRuntimeSection({
+export default function EnvironmentSignalsSection({
     model,
-}: EnvironmentRuntimeSectionProps) {
+}: EnvironmentSignalsSectionProps) {
     return (
         <section style={SECTION_STYLE}>
             <Text as="h2" type="meta" style={TITLE_STYLE}>
-                Runtime
+                Signals
             </Text>
 
             <div>
-                {model.runtime.map((row, index) => (
+                {model.signals.map((row, index) => (
                     <EnvironmentInfoRow
                         key={row.label}
                         row={row}
                         style={
-                            index < model.runtime.length - 1
+                            index < model.signals.length - 1
                                 ? ROW_DIVIDER_STYLE
                                 : undefined
                         }

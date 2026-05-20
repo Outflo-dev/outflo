@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: add environment row adapter for SystemRow
+   - note: restore environment row adapter text value and status affordance
    ========================================================== */
 
 /* ------------------------------

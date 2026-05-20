@@ -5,17 +5,20 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: add environment activation row contracts
+   - note: update environment model around participation signals and records
    ========================================================== */
 
 /* ------------------------------
    Types
 -------------------------------- */
 export type EnvironmentInfoRowMarkKind =
+    | "environment"
     | "location"
-    | "weather"
     | "capture"
-    | "runtime"
+    | "sun"
+    | "precipitation"
+    | "weather"
+    | "air"
     | "snapshot"
     | "receipt";
 
@@ -29,6 +32,6 @@ export type EnvironmentInfoRowData = {
 
 export type EnvironmentViewModel = {
     participation: EnvironmentInfoRowData[];
-    runtime: EnvironmentInfoRowData[];
+    signals: EnvironmentInfoRowData[];
     records: EnvironmentInfoRowData[];
 };

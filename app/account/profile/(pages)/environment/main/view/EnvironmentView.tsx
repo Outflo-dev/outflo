@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: add environment view using account-derived section grammar
+   - note: render environment participation signals and records sections
    ========================================================== */
 
 /* ------------------------------
@@ -18,7 +18,7 @@ import type { CSSProperties } from "react";
 import type { EnvironmentViewModel } from "../internal/environment.types";
 import EnvironmentHeader from "../header/EnvironmentHeader";
 import EnvironmentParticipationSection from "./sections/EnvironmentParticipationSection";
-import EnvironmentRuntimeSection from "./sections/EnvironmentRuntimeSection";
+import EnvironmentSignalsSection from "./sections/EnvironmentSignalsSection";
 import EnvironmentRecordsSection from "./sections/EnvironmentRecordsSection";
 
 /* ------------------------------
@@ -51,7 +51,7 @@ export default function EnvironmentView({
 
             <EnvironmentParticipationSection model={model} />
 
-            <EnvironmentRuntimeSection model={model} />
+            <EnvironmentSignalsSection model={model} />
 
             <EnvironmentRecordsSection model={model} />
         </section>
