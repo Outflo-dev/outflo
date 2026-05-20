@@ -188,6 +188,7 @@ export default function ProfileAccountSection({
               <Chevron
                 direction="right"
                 role="menu"
+                size="var(--chevron-size-md)"
                 color="var(--text-secondary)"
               />
             }

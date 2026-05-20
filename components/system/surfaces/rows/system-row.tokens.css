@@ -1,13 +1,3 @@
-/* ==========================================================
-   OUTFLO — SYSTEM ROW TOKENS
-   File: components/system/surfaces/rows/system-row.tokens.css
-   Scope: Define zoom-aware shared row layout tokens
-   Last Updated:
-   - ms: 1779058286512
-   - iso: 2026-05-17T22:51:26.512Z
-   - note: add shared row grammar tokens for account and profile surfaces
-   ========================================================== */
-
 /* Compact default */
 :root,
 :root[data-text-scale="compact"] {
@@ -15,7 +5,9 @@
     --system-row-mark-column: 52px;
     --system-row-column-gap: 20px;
     --system-row-text-gap: 5px;
+    --system-row-right-column: 46px;
     --system-row-right-max-width: 112px;
+    --system-row-right-inset: 24px;
 }
 
 /* Standard */
@@ -24,7 +16,9 @@
     --system-row-mark-column: 54px;
     --system-row-column-gap: 20px;
     --system-row-text-gap: 5px;
+    --system-row-right-column: 48px;
     --system-row-right-max-width: 118px;
+    --system-row-right-inset: 24px;
 }
 
 /* Large */
@@ -33,5 +27,7 @@
     --system-row-mark-column: 58px;
     --system-row-column-gap: 22px;
     --system-row-text-gap: 6px;
+    --system-row-right-column: 52px;
     --system-row-right-max-width: 126px;
+    --system-row-right-inset: 24px;
 }

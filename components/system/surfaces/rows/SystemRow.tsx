@@ -5,9 +5,9 @@
    File: components/system/surfaces/rows/SystemRow.tsx
    Scope: Render reusable row grammar with mark, text stack, and right affordance
    Last Updated:
-   - ms: 1779058286512
-   - iso: 2026-05-17T22:51:26.512Z
-   - note: extract shared account/profile row grammar into system surface
+   - ms: 1779269374486
+   - iso: 2026-05-20T09:29:34.486Z
+   - note: restore natural row grid and inset right affordance safely
    ========================================================== */
 
 /* ------------------------------
@@ -36,9 +36,10 @@ type SystemRowProps = {
 const ROW_STYLE: CSSProperties = {
     minHeight: "var(--system-row-min-height)",
     display: "grid",
-    gridTemplateColumns: "var(--system-row-mark-column) 1fr auto",
+    gridTemplateColumns: "var(--system-row-mark-column) minmax(0, 1fr) auto",
     alignItems: "center",
     columnGap: "var(--system-row-column-gap)",
+    paddingRight: "var(--system-row-right-inset)",
     textDecoration: "none",
     color: "inherit",
 };
@@ -66,6 +67,9 @@ const VALUE_STYLE: CSSProperties = {
 
 const RIGHT_STYLE: CSSProperties = {
     maxWidth: "var(--system-row-right-max-width)",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
     textAlign: "right",
     color: "var(--text-secondary)",
 };
