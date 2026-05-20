@@ -1,13 +1,13 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — ENVIRONMENT LOCATION CONTROLLER
-   File: app/account/profile/(pages)/environment/location/main/internal/LocationController.tsx
-   Scope: Own location control drilldown motion, navigation, and location preference writes
+   OUTFLO — LOCATION SOURCE CONTROLLER
+   File: app/account/profile/(pages)/environment/location/source/main/internal/SourceController.tsx
+   Scope: Own location source drilldown motion, navigation, and source preference writes
    Last Updated:
    - ms: 1779283695954
    - iso: 2026-05-20T13:28:15.954Z
-   - note: prevent invalid manual-city toggle payload and expose save failures
+   - note: wire source controls to persisted environment preferences
    ========================================================== */
 
 /* ------------------------------
@@ -24,16 +24,18 @@ import AppFrame from "@/components/system/shell/app/AppFrame";
 import {
     saveProfileEnvironmentPreferences,
     type ProfileEnvironmentPreferences,
-} from "../../../main/internal/profile-environment.client";
-import LocationView from "../view/LocationView";
-import { getLocationModel } from "./location.sections";
+} from "../../../../main/internal/profile-environment.client";
+import SourceView from "../view/SourceView";
+import { getSourceModel } from "./source.sections";
 
 /* ------------------------------
    Types
 -------------------------------- */
-type LocationControllerProps = {
+type SourceControllerProps = {
     preferences: ProfileEnvironmentPreferences;
 };
+
+type LocationSourceMode = ProfileEnvironmentPreferences["location_mode"];
 
 /* ------------------------------
    Constants
@@ -49,9 +51,9 @@ const MAIN_STYLE: CSSProperties = {
 /* ------------------------------
    Component
 -------------------------------- */
-export default function LocationController({
+export default function SourceController({
     preferences,
-}: LocationControllerProps) {
+}: SourceControllerProps) {
     const [show, setShow] = useState(true);
     const [direction, setDirection] = useState<"left" | "right">("left");
     const [environmentPreferences, setEnvironmentPreferences] =
@@ -59,7 +61,7 @@ export default function LocationController({
     const [saving, setSaving] = useState(false);
 
     const model = useMemo(() => {
-        return getLocationModel(environmentPreferences);
+        return getSourceModel(environmentPreferences);
     }, [environmentPreferences]);
 
     function handleBack() {
@@ -71,21 +73,21 @@ export default function LocationController({
         }, MOTION_DURATION_MS);
     }
 
-    async function handleToggleLocation() {
+    async function handleSelectSource(locationMode: LocationSourceMode) {
         if (saving) return;
 
-        const nextLocationMode =
-            environmentPreferences.location_mode === "off"
-                ? environmentPreferences.manual_city
-                    ? "manual_city"
-                    : "device"
-                : "off";
+        if (
+            locationMode === "manual_city" &&
+            !environmentPreferences.manual_city
+        ) {
+            return;
+        }
 
         const nextPreferences: ProfileEnvironmentPreferences = {
             ...environmentPreferences,
-            location_mode: nextLocationMode,
+            location_mode: locationMode,
             manual_city:
-                nextLocationMode === "manual_city"
+                locationMode === "manual_city"
                     ? environmentPreferences.manual_city
                     : null,
         };
@@ -96,7 +98,7 @@ export default function LocationController({
         try {
             await saveProfileEnvironmentPreferences(nextPreferences);
         } catch (error) {
-            console.error("Failed to save location preferences", error);
+            console.error("Failed to save location source", error);
             setEnvironmentPreferences(environmentPreferences);
         } finally {
             setSaving(false);
@@ -107,10 +109,10 @@ export default function LocationController({
         <Motion show={show} direction={direction}>
             <main style={MAIN_STYLE}>
                 <AppFrame>
-                    <LocationView
+                    <SourceView
                         model={model}
                         onBack={handleBack}
-                        onToggleLocation={handleToggleLocation}
+                        onSelectSource={handleSelectSource}
                         saving={saving}
                     />
                 </AppFrame>

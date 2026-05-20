@@ -5,9 +5,9 @@
    File: app/account/profile/(pages)/environment/location/main/view/LocationView.tsx
    Scope: Compose location control surface
    Last Updated:
-   - ms: 1779269374486
-   - iso: 2026-05-20T09:29:34.486Z
-   - note: add location control view with header footer packet shape
+   - ms: 1779283695954
+   - iso: 2026-05-20T13:28:15.954Z
+   - note: pass location system toggle action into system section
    ========================================================== */
 
 /* ------------------------------
@@ -17,6 +17,7 @@ import type { CSSProperties } from "react";
 
 import type { LocationViewModel } from "../internal/location.types";
 import LocationHeader from "./header/LocationHeader";
+import LocationSystemSection from "./sections/LocationSystemSection";
 import LocationControlsSection from "./sections/LocationControlsSection";
 import LocationFooter from "./footer/LocationFooter";
 
@@ -26,6 +27,8 @@ import LocationFooter from "./footer/LocationFooter";
 type LocationViewProps = {
     model: LocationViewModel;
     onBack: () => void;
+    onToggleLocation: () => void;
+    saving: boolean;
 };
 
 /* ------------------------------
@@ -43,10 +46,18 @@ const SURFACE_STYLE: CSSProperties = {
 export default function LocationView({
     model,
     onBack,
+    onToggleLocation,
+    saving,
 }: LocationViewProps) {
     return (
         <section style={SURFACE_STYLE}>
             <LocationHeader onBack={onBack} />
+
+            <LocationSystemSection
+                model={model}
+                onToggleLocation={onToggleLocation}
+                saving={saving}
+            />
 
             <LocationControlsSection model={model} />
 

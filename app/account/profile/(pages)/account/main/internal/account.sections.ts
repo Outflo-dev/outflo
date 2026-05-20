@@ -1,11 +1,11 @@
 /* ==========================================================
   OUTFLO — ACCOUNT MODEL
-  File: app/account/profile/(pages)/account/internal/account.sections.ts
+  File: app/account/profile/(pages)/account/main/internal/account.sections.ts
   Scope: Build account information view model
   Last Updated:
-  - ms: 1778701972789
-  - iso: 2026-05-13T19:52:52.789Z
-  - note: rename username row to Orbit handle and route to isolated handle drilldown
+  - ms: 1779281968087
+  - iso: 2026-05-20T12:59:28.087Z
+  - note: normalize account model path and guard invalid epoch date
   ========================================================== */
 
 /* ------------------------------
@@ -16,12 +16,22 @@ import type { AccountPageData, AccountViewModel } from "./account.types";
 /* ------------------------------
    Helpers
 -------------------------------- */
-function formatDate(value: string | number) {
+function formatDate(value: string | number | null | undefined) {
+    if (value === null || value === undefined || value === "") {
+        return "Not set";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return "Not set";
+    }
+
     return new Intl.DateTimeFormat("en-US", {
         month: "short",
         day: "numeric",
         year: "numeric",
-    }).format(new Date(value));
+    }).format(date);
 }
 
 /* ------------------------------

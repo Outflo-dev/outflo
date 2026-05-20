@@ -1,20 +1,21 @@
 /* ==========================================================
-   OUTFLO — ENVIRONMENT LOCATION PAGE
-   File: app/account/profile/(pages)/environment/location/page.tsx
-   Scope: Server route entry for environment location controls
+   OUTFLO — LOCATION SOURCE PAGE
+   File: app/account/profile/(pages)/environment/location/source/page.tsx
+   Scope: Server route entry for location source controls
    Last Updated:
    - ms: 1779283695954
    - iso: 2026-05-20T13:28:15.954Z
-   - note: read environment preferences before rendering location controls
+   - note: read persisted environment preferences for source controls
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { ProfileEnvironmentPreferences } from "../main/internal/profile-environment.client";
+import type { ProfileEnvironmentPreferences } from "../../main/internal/profile-environment.client";
+
 import { supabaseServer } from "@/lib/supabase/server";
 
-import LocationController from "./main/internal/LocationController";
+import SourceController from "./main/internal/SourceController";
 
 /* ------------------------------
    Types
@@ -48,7 +49,9 @@ export default async function Page() {
    } = await supabase.auth.getUser();
 
    if (!user) {
-      return <LocationController preferences={DEFAULT_ENVIRONMENT_PREFERENCES} />;
+      return (
+         <SourceController preferences={DEFAULT_ENVIRONMENT_PREFERENCES} />
+      );
    }
 
    const { data } = await supabase
@@ -71,7 +74,7 @@ export default async function Page() {
       .maybeSingle<PreferenceRow>();
 
    return (
-      <LocationController
+      <SourceController
          preferences={{
             ...DEFAULT_ENVIRONMENT_PREFERENCES,
             ...data,

@@ -1,13 +1,13 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — PROFILE FLOWS VIEW
+   OUTFLO — FLOWS VIEW
    File: app/account/profile/(pages)/flows/main/view/FlowsView.tsx
-   Scope: Compose profile flows doorway sections
+   Scope: Compose profile flows surface
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: add flows view using account-derived section grammar
+   - note: normalize flows view ownership with header and footer
    ========================================================== */
 
 /* ------------------------------
@@ -16,8 +16,9 @@
 import type { CSSProperties } from "react";
 
 import type { FlowsViewModel } from "../internal/flows.types";
-import FlowsHeader from "../header/FlowsHeader";
+import FlowsHeader from "./header/FlowsHeader";
 import FlowsSystemsSection from "./sections/FlowsSystemsSection";
+import FlowsFooter from "./footer/FlowsFooter";
 
 /* ------------------------------
    Types
@@ -45,6 +46,8 @@ export default function FlowsView({ model, onBack }: FlowsViewProps) {
             <FlowsHeader onBack={onBack} />
 
             <FlowsSystemsSection model={model} />
+
+            <FlowsFooter />
         </section>
     );
 }
