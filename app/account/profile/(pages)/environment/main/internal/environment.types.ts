@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: update environment model around participation signals and records
+   - note: define environment category doorway rows
    ========================================================== */
 
 /* ------------------------------

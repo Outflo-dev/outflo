@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: restore environment row adapter text value and status affordance
+   - note: render environment master row as direct toggle and category rows as controls
    ========================================================== */
 
 /* ------------------------------
@@ -34,7 +34,13 @@ type EnvironmentInfoRowProps = {
 /* ------------------------------
    Constants
 -------------------------------- */
-const STATUS_PILL_STYLE: CSSProperties = {
+const ACTION_STACK_STYLE: CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+};
+
+const ACTION_PILL_STYLE: CSSProperties = {
     minHeight: 26,
     display: "inline-flex",
     alignItems: "center",
@@ -46,6 +52,25 @@ const STATUS_PILL_STYLE: CSSProperties = {
     color: "var(--text-secondary)",
 };
 
+const TOGGLE_STYLE: CSSProperties = {
+    width: 48,
+    height: 28,
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    border: "1px solid var(--border-soft)",
+    borderRadius: 999,
+    padding: 2,
+    background: "var(--surface-muted)",
+};
+
+const TOGGLE_DOT_STYLE: CSSProperties = {
+    width: 22,
+    height: 22,
+    borderRadius: 999,
+    background: "var(--text-tertiary)",
+};
+
 /* ------------------------------
    Component
 -------------------------------- */
@@ -53,6 +78,8 @@ export default function EnvironmentInfoRow({
     row,
     style,
 }: EnvironmentInfoRowProps) {
+    const isMasterToggle = row.mark === "environment" && !row.href;
+
     return (
         <SystemRow
             href={row.href}
@@ -64,18 +91,26 @@ export default function EnvironmentInfoRow({
             label={row.label}
             value={row.value}
             right={
-                row.href ? (
-                    <Chevron
-                        direction="right"
-                        role="menu"
-                        size="var(--chevron-size-md)"
-                        color="var(--text-secondary)"
-                    />
+                isMasterToggle ? (
+                    <span aria-label="Environment off" role="switch" aria-checked="false" style={TOGGLE_STYLE}>
+                        <span style={TOGGLE_DOT_STYLE} />
+                    </span>
                 ) : row.actionLabel ? (
-                    <span style={STATUS_PILL_STYLE}>
-                        <Text as="span" type="meta">
-                            {row.actionLabel}
-                        </Text>
+                    <span style={ACTION_STACK_STYLE}>
+                        <span style={ACTION_PILL_STYLE}>
+                            <Text as="span" type="meta">
+                                {row.actionLabel}
+                            </Text>
+                        </span>
+
+                        {row.href ? (
+                            <Chevron
+                                direction="right"
+                                role="menu"
+                                size="var(--chevron-size-md)"
+                                color="var(--text-secondary)"
+                            />
+                        ) : null}
                     </span>
                 ) : null
             }

@@ -7,7 +7,7 @@
     --system-row-text-gap: 5px;
     --system-row-right-column: 46px;
     --system-row-right-max-width: 112px;
-    --system-row-right-inset: 12px;
+    --system-row-right-inset: 8px;
 }
 
 /* Standard */
@@ -18,7 +18,7 @@
     --system-row-text-gap: 5px;
     --system-row-right-column: 48px;
     --system-row-right-max-width: 118px;
-    --system-row-right-inset: 12px;
+    --system-row-right-inset: 8px;
 }
 
 /* Large */
@@ -29,5 +29,5 @@
     --system-row-text-gap: 6px;
     --system-row-right-column: 52px;
     --system-row-right-max-width: 126px;
-    --system-row-right-inset: 12px;
+    --system-row-right-inset: 8px;
 }

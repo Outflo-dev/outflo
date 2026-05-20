@@ -1,11 +1,11 @@
 /* ==========================================================
    OUTFLO — PROFILE ENVIRONMENT MODEL
    File: app/account/profile/(pages)/environment/main/internal/environment.sections.ts
-   Scope: Build profile environment activation view model
+   Scope: Build profile environment category doorway view model
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: define environment participation signals and records rows
+   - note: make environment row the master participation toggle
    ========================================================== */
 
 /* ------------------------------
@@ -22,20 +22,22 @@ export function getEnvironmentModel(): EnvironmentViewModel {
             {
                 mark: "environment",
                 label: "Environment",
-                value: "Off",
-                actionLabel: "Soon",
+                value: "Turn user-specific environment participation on or off.",
+                actionLabel: "Off",
             },
             {
                 mark: "location",
                 label: "Location",
-                value: "Off",
-                actionLabel: "Soon",
+                value: "Manual city, device, and precision.",
+                href: "/account/profile/environment/location",
+                actionLabel: "Controls",
             },
             {
                 mark: "capture",
                 label: "Capture",
-                value: "Off",
-                actionLabel: "Soon",
+                value: "Moment and continuous capture.",
+                href: "/account/profile/environment/capture",
+                actionLabel: "Controls",
             },
         ],
 
@@ -43,26 +45,30 @@ export function getEnvironmentModel(): EnvironmentViewModel {
             {
                 mark: "sun",
                 label: "Sun",
-                value: "Altitude + azimuth",
-                actionLabel: "Soon",
+                value: "Altitude, azimuth, and daylight.",
+                href: "/account/profile/environment/sun",
+                actionLabel: "Controls",
             },
             {
                 mark: "precipitation",
                 label: "Precipitation",
-                value: "Rain + accumulation",
-                actionLabel: "Soon",
+                value: "Rain, accumulation, and probability.",
+                href: "/account/profile/environment/precipitation",
+                actionLabel: "Controls",
             },
             {
                 mark: "weather",
                 label: "Weather",
-                value: "Temperature + conditions",
-                actionLabel: "Soon",
+                value: "Temperature, humidity, wind, and pressure.",
+                href: "/account/profile/environment/weather",
+                actionLabel: "Controls",
             },
             {
                 mark: "air",
                 label: "Air quality",
-                value: "AQI + particles",
-                actionLabel: "Soon",
+                value: "AQI, PM2.5, PM10, and ozone.",
+                href: "/account/profile/environment/air-quality",
+                actionLabel: "Controls",
             },
         ],
 
@@ -70,14 +76,16 @@ export function getEnvironmentModel(): EnvironmentViewModel {
             {
                 mark: "snapshot",
                 label: "Snapshots",
-                value: "No environment records yet",
-                actionLabel: "Soon",
+                value: "Environment records.",
+                href: "/account/profile/environment/snapshots",
+                actionLabel: "View",
             },
             {
                 mark: "receipt",
                 label: "Receipt links",
-                value: "No linked context yet",
-                actionLabel: "Soon",
+                value: "Receipt-linked environment context.",
+                href: "/account/profile/environment/receipt-links",
+                actionLabel: "View",
             },
         ],
     };
