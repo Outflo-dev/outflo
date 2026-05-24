@@ -1,11 +1,8 @@
 /* ==========================================================
-   OUTFLO — OWNTRACKS INGEST WEBHOOK
+   OUTFLO — OWNTRACKS HTTP INGEST WEBHOOK
    File: app/api/ingest/location/owntracks/route.ts
-   Scope: Receive raw OwnTracks emitter payloads, resolve ownership, persist events, update environment snapshot
-   Last Updated:
-   - ms: <YOUR_MS>
-   - iso: <YOUR_ISO>
-   - note: upsert OwnTracks location into environment snapshot
+   Scope: Legacy/fallback HTTP receiver for OwnTracks emitter payloads
+   Status: Retained as fallback after MQTT ingest worker became primary
    ========================================================== */
 
 /* ------------------------------
