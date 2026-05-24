@@ -3,9 +3,9 @@
    File: app/api/profile/environment/route.ts
    Scope: Persist authenticated user environment preferences
    Last Updated:
-   - ms: 1779283695954
-   - iso: 2026-05-20T13:28:15.954Z
-   - note: add isolated environment preference write path
+   - ms: 1779411840000
+   - iso: 2026-05-22T01:04:00.000Z
+   - note: preserve inactive manual place and harden environment defaults
    ========================================================== */
 
 /* ------------------------------
@@ -54,19 +54,19 @@ const SIGNAL_MODES = ["off", "on"] as const;
 const DEFAULT_USER_PREFERENCES = {
     base_currency: "USD",
     time_display: "auto",
-    location_mode: "device",
+    location_mode: "off",
     manual_city: null,
-    weather_mode: "on",
+    weather_mode: "off",
     theme_preference: DEFAULT_THEME_PREFERENCE,
     text_scale: "compact",
     glow_preference: "soft",
     location_precision: "city",
     capture_mode: "off",
-    sun_mode: "on",
-    precipitation_mode: "on",
-    air_quality_mode: "on",
-    receipt_links_mode: "on",
-    snapshots_mode: "on",
+    sun_mode: "off",
+    precipitation_mode: "off",
+    air_quality_mode: "off",
+    receipt_links_mode: "off",
+    snapshots_mode: "off",
 } as const;
 
 /* ------------------------------
@@ -89,11 +89,17 @@ async function readEnvironmentRequestBody(
 }
 
 function isLocationMode(value: unknown): value is LocationMode {
-    return typeof value === "string" && LOCATION_MODES.includes(value as LocationMode);
+    return (
+        typeof value === "string" &&
+        LOCATION_MODES.includes(value as LocationMode)
+    );
 }
 
 function isWeatherMode(value: unknown): value is WeatherMode {
-    return typeof value === "string" && WEATHER_MODES.includes(value as WeatherMode);
+    return (
+        typeof value === "string" &&
+        WEATHER_MODES.includes(value as WeatherMode)
+    );
 }
 
 function isLocationPrecision(value: unknown): value is LocationPrecision {
@@ -104,21 +110,20 @@ function isLocationPrecision(value: unknown): value is LocationPrecision {
 }
 
 function isCaptureMode(value: unknown): value is CaptureMode {
-    return typeof value === "string" && CAPTURE_MODES.includes(value as CaptureMode);
+    return (
+        typeof value === "string" &&
+        CAPTURE_MODES.includes(value as CaptureMode)
+    );
 }
 
 function isSignalMode(value: unknown): value is SignalMode {
-    return typeof value === "string" && SIGNAL_MODES.includes(value as SignalMode);
+    return (
+        typeof value === "string" &&
+        SIGNAL_MODES.includes(value as SignalMode)
+    );
 }
 
-function normalizeManualCity(
-    locationMode: LocationMode,
-    value: unknown
-): string | null {
-    if (locationMode !== "manual_city") {
-        return null;
-    }
-
+function normalizeManualCity(value: unknown): string | null {
     if (typeof value !== "string") {
         return null;
     }
@@ -202,11 +207,14 @@ export async function PATCH(req: Request) {
         );
     }
 
-    const manualCity = normalizeManualCity(locationMode, body.manual_city);
+    const manualCity = normalizeManualCity(body.manual_city);
 
     if (locationMode === "manual_city" && !manualCity) {
         return NextResponse.json(
-            { error: "Manual city is required when location_mode is manual_city." },
+            {
+                error:
+                    "Manual city is required when location_mode is manual_city.",
+            },
             { status: 400 }
         );
     }
@@ -234,7 +242,10 @@ export async function PATCH(req: Request) {
         .maybeSingle<PreferenceRow>();
 
     if (readError) {
-        return NextResponse.json({ error: readError.message }, { status: 500 });
+        return NextResponse.json(
+            { error: readError.message },
+            { status: 500 }
+        );
     }
 
     if (existingPreference) {
@@ -244,21 +255,29 @@ export async function PATCH(req: Request) {
             .eq("user_id", user.id);
 
         if (updateError) {
-            return NextResponse.json({ error: updateError.message }, { status: 500 });
+            return NextResponse.json(
+                { error: updateError.message },
+                { status: 500 }
+            );
         }
 
         return NextResponse.json({ ok: true });
     }
 
-    const { error: insertError } = await supabase.from("user_preferences").insert({
-        user_id: user.id,
-        ...DEFAULT_USER_PREFERENCES,
-        ...payload,
-        updated_at: updatedAt,
-    });
+    const { error: insertError } = await supabase
+        .from("user_preferences")
+        .insert({
+            user_id: user.id,
+            ...DEFAULT_USER_PREFERENCES,
+            ...payload,
+            updated_at: updatedAt,
+        });
 
     if (insertError) {
-        return NextResponse.json({ error: insertError.message }, { status: 500 });
+        return NextResponse.json(
+            { error: insertError.message },
+            { status: 500 }
+        );
     }
 
     return NextResponse.json({ ok: true });

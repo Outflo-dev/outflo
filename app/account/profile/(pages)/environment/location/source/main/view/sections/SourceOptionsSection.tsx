@@ -3,11 +3,11 @@
 /* ==========================================================
    OUTFLO — SOURCE OPTIONS SECTION
    File: app/account/profile/(pages)/environment/location/source/main/view/sections/SourceOptionsSection.tsx
-   Scope: Render location source option rows
+   Scope: Render location source toggle rows
    Last Updated:
    - ms: 1779283695954
    - iso: 2026-05-20T13:28:15.954Z
-   - note: wire source option rows to source selection action
+   - note: recast source options section as toggle control section
    ========================================================== */
 
 /* ------------------------------
@@ -61,7 +61,7 @@ export default function SourceOptionsSection({
     return (
         <section style={SECTION_STYLE}>
             <Text as="h2" type="meta" style={TITLE_STYLE}>
-                Options
+                Controls
             </Text>
 
             <div>

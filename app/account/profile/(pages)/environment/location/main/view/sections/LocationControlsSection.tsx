@@ -5,9 +5,9 @@
    File: app/account/profile/(pages)/environment/location/main/view/sections/LocationControlsSection.tsx
    Scope: Render location control drilldown rows
    Last Updated:
-   - ms: 1779283695954
-   - iso: 2026-05-20T13:28:15.954Z
-   - note: wire enabled location controls to child drilldown routes
+   - ms: 1779411840000
+   - iso: 2026-05-22T01:04:00.000Z
+   - note: render active place row instead of manual city row
    ========================================================== */
 
 /* ------------------------------
@@ -16,8 +16,8 @@
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 
-import Chevron from "@/components/system/primitives/navigation/chevron/Chevron";
 import Text from "@/components/system/primitives/display/type/Text";
+import Chevron from "@/components/system/primitives/navigation/chevron/Chevron";
 
 import type {
     LocationControlDrillData,
@@ -93,7 +93,7 @@ export default function LocationControlsSection({
                 />
 
                 <ControlRow
-                    control={model.manualCity}
+                    control={model.activePlace}
                     style={ROW_DIVIDER_STYLE}
                 />
 

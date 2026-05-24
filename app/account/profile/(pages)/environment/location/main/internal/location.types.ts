@@ -3,9 +3,9 @@
    File: app/account/profile/(pages)/environment/location/main/internal/location.types.ts
    Scope: Define location control view model contracts
    Last Updated:
-   - ms: 1779283695954
-   - iso: 2026-05-20T13:28:15.954Z
-   - note: align location model with persisted environment preferences and drilldown controls
+   - ms: 1779411840000
+   - iso: 2026-05-22T01:04:00.000Z
+   - note: rename manual city control model to active place
    ========================================================== */
 
 /* ------------------------------
@@ -34,6 +34,6 @@ export type LocationViewModel = {
     preferences: ProfileEnvironmentPreferences;
     master: LocationMasterData;
     source: LocationControlDrillData;
-    manualCity: LocationControlDrillData;
+    activePlace: LocationControlDrillData;
     precision: LocationControlDrillData;
 };

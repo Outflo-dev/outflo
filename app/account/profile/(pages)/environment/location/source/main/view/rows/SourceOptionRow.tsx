@@ -3,11 +3,11 @@
 /* ==========================================================
    OUTFLO — SOURCE OPTION ROW
    File: app/account/profile/(pages)/environment/location/source/main/view/rows/SourceOptionRow.tsx
-   Scope: Render one interactive location source option row
+   Scope: Render one interactive location source choice row
    Last Updated:
-   - ms: 1779283695954
-   - iso: 2026-05-20T13:28:15.954Z
-   - note: wire source option row selection and disabled state
+   - ms: 1779411840000
+   - iso: 2026-05-22T01:04:00.000Z
+   - note: replace source toggles with source choice actions
    ========================================================== */
 
 /* ------------------------------
@@ -16,6 +16,7 @@
 import type { CSSProperties } from "react";
 
 import Text from "@/components/system/primitives/display/type/Text";
+
 import type { SourceOptionData } from "../../internal/source.types";
 
 /* ------------------------------
@@ -47,7 +48,6 @@ const ROW_STYLE: CSSProperties = {
 
 const DISABLED_ROW_STYLE: CSSProperties = {
     opacity: 0.42,
-    cursor: "not-allowed",
 };
 
 const ENABLED_ROW_STYLE: CSSProperties = {
@@ -64,7 +64,7 @@ const VALUE_STYLE: CSSProperties = {
     color: "var(--text-secondary)",
 };
 
-const PILL_STYLE: CSSProperties = {
+const ACTION_STYLE: CSSProperties = {
     minHeight: 28,
     display: "inline-flex",
     alignItems: "center",
@@ -76,8 +76,7 @@ const PILL_STYLE: CSSProperties = {
     color: "var(--text-secondary)",
 };
 
-const SELECTED_PILL_STYLE: CSSProperties = {
-    background: "var(--surface-soft)",
+const SELECTED_ACTION_STYLE: CSSProperties = {
     color: "var(--text-primary)",
 };
 
@@ -101,35 +100,26 @@ export default function SourceOptionRow({
                 ...style,
             }}
         >
-            <span style={TEXT_STACK_STYLE}>
-                <Text as="span" type="label">
+            <div style={TEXT_STACK_STYLE}>
+                <Text as="h3" type="label">
                     {option.label}
                 </Text>
 
-                <Text as="span" type="meta" style={VALUE_STYLE}>
+                <Text as="p" type="meta" style={VALUE_STYLE}>
                     {option.value}
                 </Text>
-            </span>
+            </div>
 
             <span
                 style={{
-                    ...PILL_STYLE,
-                    ...(option.selected ? SELECTED_PILL_STYLE : undefined),
+                    ...ACTION_STYLE,
+                    ...(option.selected ? SELECTED_ACTION_STYLE : null),
                 }}
             >
                 <Text as="span" type="meta">
-                    {getPillLabel(option, disabled)}
+                    {option.actionLabel}
                 </Text>
             </span>
         </button>
     );
-}
-
-/* ------------------------------
-   Helpers
--------------------------------- */
-function getPillLabel(option: SourceOptionData, disabled: boolean) {
-    if (option.selected) return "Selected";
-    if (disabled) return "Disabled";
-    return "Select";
 }

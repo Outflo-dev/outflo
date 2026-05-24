@@ -1,13 +1,13 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — LOCATION SOURCE CONTROLLER
-   File: app/account/profile/(pages)/environment/location/source/main/internal/SourceController.tsx
-   Scope: Own location source drilldown motion, navigation, and source writes
+   OUTFLO — MANUAL CITY CONTROLLER
+   File: app/account/profile/(pages)/environment/location/manual-city/main/internal/ManualCityController.tsx
+   Scope: Own manual city drilldown motion, navigation, and preference writes
    Last Updated:
-   - ms: 1779411840000
-   - iso: 2026-05-22T01:04:00.000Z
-   - note: route city selection to active place setup when no place exists
+   - ms: 1779283695954
+   - iso: 2026-05-20T13:28:15.954Z
+   - note: wire manual city draft state and persisted environment preference writes
    ========================================================== */
 
 /* ------------------------------
@@ -25,14 +25,13 @@ import {
     saveProfileEnvironmentPreferences,
     type ProfileEnvironmentPreferences,
 } from "../../../../main/internal/profile-environment.client";
-import SourceView from "../view/SourceView";
-import { getSourceModel } from "./source.sections";
-import type { SourceOptionKind } from "./source.types";
+import ManualCityView from "../view/ManualCityView";
+import { getManualCityModel } from "./manual-city.sections";
 
 /* ------------------------------
    Types
 -------------------------------- */
-type SourceControllerProps = {
+type ManualCityControllerProps = {
     preferences: ProfileEnvironmentPreferences;
 };
 
@@ -50,18 +49,21 @@ const MAIN_STYLE: CSSProperties = {
 /* ------------------------------
    Component
 -------------------------------- */
-export default function SourceController({
+export default function ManualCityController({
     preferences,
-}: SourceControllerProps) {
+}: ManualCityControllerProps) {
     const [show, setShow] = useState(true);
     const [direction, setDirection] = useState<"left" | "right">("left");
     const [environmentPreferences, setEnvironmentPreferences] =
         useState<ProfileEnvironmentPreferences>(preferences);
+    const [draftCity, setDraftCity] = useState(
+        preferences.manual_city ?? ""
+    );
     const [saving, setSaving] = useState(false);
 
     const model = useMemo(() => {
-        return getSourceModel(environmentPreferences);
-    }, [environmentPreferences]);
+        return getManualCityModel(environmentPreferences, draftCity);
+    }, [environmentPreferences, draftCity]);
 
     function handleBack() {
         setDirection("right");
@@ -72,31 +74,12 @@ export default function SourceController({
         }, MOTION_DURATION_MS);
     }
 
-    function routeToActivePlace() {
-        setDirection("left");
-        setShow(false);
-
-        window.setTimeout(() => {
-            window.location.href =
-                "/account/profile/environment/location/manual-city";
-        }, MOTION_DURATION_MS);
-    }
-
-    async function handleSelectSource(sourceKind: SourceOptionKind) {
-        if (saving) return;
-
-        if (
-            sourceKind === "manual_city" &&
-            !environmentPreferences.manual_city
-        ) {
-            routeToActivePlace();
-            return;
-        }
+    async function handleSaveCity() {
+        if (saving || !model.canSave) return;
 
         const nextPreferences: ProfileEnvironmentPreferences = {
             ...environmentPreferences,
-            location_mode: sourceKind,
-            manual_city: environmentPreferences.manual_city,
+            manual_city: draftCity.trim(),
         };
 
         setSaving(true);
@@ -105,7 +88,7 @@ export default function SourceController({
         try {
             await saveProfileEnvironmentPreferences(nextPreferences);
         } catch (error) {
-            console.error("Failed to save location source", error);
+            console.error("Failed to save manual city", error);
             setEnvironmentPreferences(environmentPreferences);
         } finally {
             setSaving(false);
@@ -116,10 +99,11 @@ export default function SourceController({
         <Motion show={show} direction={direction}>
             <main style={MAIN_STYLE}>
                 <AppFrame>
-                    <SourceView
+                    <ManualCityView
                         model={model}
                         onBack={handleBack}
-                        onSelectSource={handleSelectSource}
+                        onDraftCityChange={setDraftCity}
+                        onSaveCity={handleSaveCity}
                         saving={saving}
                     />
                 </AppFrame>

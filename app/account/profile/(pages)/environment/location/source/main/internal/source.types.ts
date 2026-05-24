@@ -1,17 +1,17 @@
 /* ==========================================================
    OUTFLO — LOCATION SOURCE TYPES
    File: app/account/profile/(pages)/environment/location/source/main/internal/source.types.ts
-   Scope: Define location source control view model contracts
+   Scope: Define location source choice view model contracts
    Last Updated:
-   - ms: 1779283695954
-   - iso: 2026-05-20T13:28:15.954Z
-   - note: include off source and disabled source option state
+   - ms: 1779411840000
+   - iso: 2026-05-22T01:04:00.000Z
+   - note: recast source controls as off/device/city choices
    ========================================================== */
 
 /* ------------------------------
    Types
 -------------------------------- */
-export type SourceOptionKind = "device" | "manual_city" | "off";
+export type SourceOptionKind = "off" | "device" | "manual_city";
 
 export type SourceOptionData = {
     label: string;
@@ -19,6 +19,7 @@ export type SourceOptionData = {
     selected: boolean;
     disabled: boolean;
     kind: SourceOptionKind;
+    actionLabel: string;
 };
 
 export type SourceViewModel = {

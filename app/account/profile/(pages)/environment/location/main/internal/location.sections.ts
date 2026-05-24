@@ -3,9 +3,9 @@
    File: app/account/profile/(pages)/environment/location/main/internal/location.sections.ts
    Scope: Build location control view model from environment preferences
    Last Updated:
-   - ms: 1779283695954
-   - iso: 2026-05-20T13:28:15.954Z
-   - note: derive location system and drilldown controls from persisted environment preferences
+   - ms: 1779411840000
+   - iso: 2026-05-22T01:04:00.000Z
+   - note: separate active place and precision availability by location source
    ========================================================== */
 
 /* ------------------------------
@@ -21,6 +21,10 @@ export function getLocationModel(
     preferences: ProfileEnvironmentPreferences
 ): LocationViewModel {
     const locationEnabled = preferences.location_mode !== "off";
+    const deviceSelected = preferences.location_mode === "device";
+    const manualSelected = preferences.location_mode === "manual_city";
+    const activePlaceDisabled = !locationEnabled || deviceSelected;
+    const precisionDisabled = !locationEnabled || manualSelected;
 
     return {
         preferences,
@@ -47,34 +51,40 @@ export function getLocationModel(
             disabled: !locationEnabled,
         },
 
-        manualCity: {
-            label: "Manual city",
-            value: locationEnabled
-                ? getManualCityValue(preferences.manual_city)
-                : "Disabled while Location is off.",
-            actionLabel: locationEnabled
-                ? preferences.manual_city
-                    ? "Change"
-                    : "Add"
-                : "Disabled",
-            href: locationEnabled
-                ? "/account/profile/environment/location/manual-city"
-                : null,
-            disabled: !locationEnabled,
+        activePlace: {
+            label: "Active place",
+            value: getActivePlaceValue(
+                preferences.manual_city,
+                locationEnabled,
+                deviceSelected
+            ),
+            actionLabel: getActivePlaceActionLabel(
+                preferences.manual_city,
+                locationEnabled,
+                deviceSelected
+            ),
+            href: activePlaceDisabled
+                ? null
+                : "/account/profile/environment/location/manual-city",
+            disabled: activePlaceDisabled,
         },
 
         precision: {
             label: "Precision",
-            value: locationEnabled
-                ? getPrecisionLabel(preferences.location_precision)
-                : "Disabled while Location is off.",
-            actionLabel: locationEnabled
-                ? getPrecisionLabel(preferences.location_precision)
-                : "Disabled",
-            href: locationEnabled
-                ? "/account/profile/environment/location/precision"
-                : null,
-            disabled: !locationEnabled,
+            value: getPrecisionValue(
+                preferences.location_precision,
+                locationEnabled,
+                manualSelected
+            ),
+            actionLabel: getPrecisionActionLabel(
+                preferences.location_precision,
+                locationEnabled,
+                manualSelected
+            ),
+            href: precisionDisabled
+                ? null
+                : "/account/profile/environment/location/precision",
+            disabled: precisionDisabled,
         },
     };
 }
@@ -90,8 +100,47 @@ function getSourceLabel(
     return "Disabled";
 }
 
-function getManualCityValue(manualCity: string | null) {
-    return manualCity ? manualCity : "No city selected.";
+function getActivePlaceValue(
+    manualCity: string | null,
+    locationEnabled: boolean,
+    deviceSelected: boolean
+) {
+    if (!locationEnabled) return "Disabled while Location is off.";
+    if (deviceSelected) return "Inactive while Source is Device.";
+
+    return manualCity ? manualCity : "No active place selected.";
+}
+
+function getActivePlaceActionLabel(
+    manualCity: string | null,
+    locationEnabled: boolean,
+    deviceSelected: boolean
+) {
+    if (!locationEnabled || deviceSelected) return "Disabled";
+
+    return manualCity ? "Change" : "Add";
+}
+
+function getPrecisionValue(
+    precision: ProfileEnvironmentPreferences["location_precision"],
+    locationEnabled: boolean,
+    manualSelected: boolean
+) {
+    if (!locationEnabled) return "Disabled while Location is off.";
+    if (manualSelected) return "City precision locked for Manual source.";
+
+    return getPrecisionLabel(precision);
+}
+
+function getPrecisionActionLabel(
+    precision: ProfileEnvironmentPreferences["location_precision"],
+    locationEnabled: boolean,
+    manualSelected: boolean
+) {
+    if (!locationEnabled) return "Disabled";
+    if (manualSelected) return "City";
+
+    return getPrecisionLabel(precision);
 }
 
 function getPrecisionLabel(

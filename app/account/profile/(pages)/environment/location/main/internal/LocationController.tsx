@@ -5,9 +5,9 @@
    File: app/account/profile/(pages)/environment/location/main/internal/LocationController.tsx
    Scope: Own location control drilldown motion, navigation, and location preference writes
    Last Updated:
-   - ms: 1779283695954
-   - iso: 2026-05-20T13:28:15.954Z
-   - note: prevent invalid manual-city toggle payload and expose save failures
+   - ms: 1779411840000
+   - iso: 2026-05-22T01:04:00.000Z
+   - note: preserve saved manual place when toggling location participation
    ========================================================== */
 
 /* ------------------------------
@@ -75,19 +75,11 @@ export default function LocationController({
         if (saving) return;
 
         const nextLocationMode =
-            environmentPreferences.location_mode === "off"
-                ? environmentPreferences.manual_city
-                    ? "manual_city"
-                    : "device"
-                : "off";
+            environmentPreferences.location_mode === "off" ? "device" : "off";
 
         const nextPreferences: ProfileEnvironmentPreferences = {
             ...environmentPreferences,
             location_mode: nextLocationMode,
-            manual_city:
-                nextLocationMode === "manual_city"
-                    ? environmentPreferences.manual_city
-                    : null,
         };
 
         setSaving(true);

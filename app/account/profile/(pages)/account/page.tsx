@@ -3,9 +3,9 @@
    File: app/account/profile/(pages)/account/page.tsx
    Scope: Server route entry for account information surface
    Last Updated:
-   - ms: 1779306395650
-   - iso: 2026-05-20T19:46:35.650Z
-   - note: pass required account page data into account controller
+   - ms: 1779407770945
+   - iso: 2026-05-21T23:56:10.945Z
+   - note: read canonical account number from profiles table
    ========================================================== */
 
 /* ------------------------------
@@ -19,10 +19,6 @@ import type { AccountPageData } from "./main/internal/account.types";
 /* ------------------------------
    Helpers
 -------------------------------- */
-function getAccountNumber(userId: string) {
-   return userId.slice(0, 8).toUpperCase();
-}
-
 function getMemberSince(createdAt: string | undefined) {
    if (!createdAt) return "Unknown";
 
@@ -42,6 +38,14 @@ export default async function Page() {
       data: { user },
    } = await supabase.auth.getUser();
 
+   const { data: profile } = user
+      ? await supabase
+         .from("profiles")
+         .select("account_number")
+         .eq("id", user.id)
+         .maybeSingle()
+      : { data: null };
+
    const accountData: AccountPageData = {
       accountName:
          user?.user_metadata?.full_name ??
@@ -50,7 +54,7 @@ export default async function Page() {
       username: user?.email?.split("@")[0] ?? null,
       email: user?.email ?? "Unknown",
       phone: user?.phone ?? null,
-      accountNumber: user ? getAccountNumber(user.id) : "UNKNOWN",
+      accountNumber: profile?.account_number ?? "UNKNOWN",
       epochMs: Date.now(),
       memberSince: getMemberSince(user?.created_at),
    };
