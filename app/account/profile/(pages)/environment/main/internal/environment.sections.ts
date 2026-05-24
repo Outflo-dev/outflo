@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: make environment row the master participation toggle
+   - note: align Environment doorway with MQTT-backed context model
    ========================================================== */
 
 /* ------------------------------
@@ -22,53 +22,60 @@ export function getEnvironmentModel(): EnvironmentViewModel {
             {
                 mark: "environment",
                 label: "Environment",
-                value: "Turn user-specific environment participation on or off.",
-                actionLabel: "Off",
+                value: "Environment may participate in Outflō.",
+                actionLabel: "On",
             },
             {
                 mark: "location",
                 label: "Location",
-                value: "Manual city, device, and precision.",
+                value: "Control how place enters Environment.",
                 href: "/account/profile/environment/location",
-                actionLabel: "Controls",
+                actionLabel: "Select",
             },
             {
                 mark: "capture",
                 label: "Capture",
-                value: "Moment and continuous capture.",
+                value: "Control when Environment records.",
                 href: "/account/profile/environment/capture",
-                actionLabel: "Controls",
+                actionLabel: "Edit",
             },
         ],
 
         signals: [
             {
+                mark: "weather",
+                label: "Weather",
+                value: "Temperature, pressure, wind, visibility, and atmosphere.",
+                href: "/account/profile/environment/weather",
+                actionLabel: "Edit",
+            },
+            {
                 mark: "sun",
                 label: "Sun",
-                value: "Altitude, azimuth, and daylight.",
+                value: "Light, sun position, and day context.",
                 href: "/account/profile/environment/sun",
-                actionLabel: "Controls",
+                actionLabel: "Edit",
             },
             {
                 mark: "precipitation",
                 label: "Precipitation",
-                value: "Rain, accumulation, and probability.",
+                value: "Rain and related weather events.",
                 href: "/account/profile/environment/precipitation",
-                actionLabel: "Controls",
-            },
-            {
-                mark: "weather",
-                label: "Weather",
-                value: "Temperature, humidity, wind, and pressure.",
-                href: "/account/profile/environment/weather",
-                actionLabel: "Controls",
+                actionLabel: "Edit",
             },
             {
                 mark: "air",
                 label: "Air quality",
-                value: "AQI, PM2.5, PM10, and ozone.",
+                value: "Outdoor air context.",
                 href: "/account/profile/environment/air-quality",
-                actionLabel: "Controls",
+                actionLabel: "Edit",
+            },
+            {
+                mark: "altitude",
+                label: "Altitude",
+                value: "Elevation context from the active source.",
+                href: "/account/profile/environment/altitude",
+                actionLabel: "Edit",
             },
         ],
 
@@ -76,16 +83,16 @@ export function getEnvironmentModel(): EnvironmentViewModel {
             {
                 mark: "snapshot",
                 label: "Snapshots",
-                value: "Environment records.",
+                value: "Current Environment truth.",
                 href: "/account/profile/environment/snapshots",
                 actionLabel: "View",
             },
             {
                 mark: "receipt",
                 label: "Receipt links",
-                value: "Receipt-linked environment context.",
+                value: "Environment attached to Money events.",
                 href: "/account/profile/environment/receipt-links",
-                actionLabel: "View",
+                actionLabel: "Soon",
             },
         ],
     };

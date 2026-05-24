@@ -19,6 +19,7 @@ export type EnvironmentInfoRowMarkKind =
     | "precipitation"
     | "weather"
     | "air"
+    | "altitude"
     | "snapshot"
     | "receipt";
 

@@ -49,6 +49,7 @@ export default function EnvironmentInfoRowMark({
     if (mark === "precipitation") return <PrecipitationMark />;
     if (mark === "weather") return <WeatherMark />;
     if (mark === "air") return <AirMark />;
+    if (mark === "altitude") return <AltitudeMark />;
     if (mark === "snapshot") return <SnapshotMark />;
 
     return <ReceiptMark />;
@@ -115,6 +116,16 @@ function AirMark() {
             <path d="M4.5 8h8.8a2 2 0 1 0-1.8-2.8" />
             <path d="M4.5 11.5h12.2a2 2 0 1 1-1.8 2.8" />
             <path d="M4.5 15h6.5" />
+        </svg>
+    );
+}
+
+function AltitudeMark() {
+    return (
+        <svg aria-hidden="true" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" style={MARK_ICON_STYLE}>
+            <path d="M4.5 16.5 9 9.5l3 4.2 1.7-2.5 3.8 5.3" />
+            <path d="M8.2 16.5h8.8" />
+            <path d="M9 9.5l1.5 2.1" />
         </svg>
     );
 }

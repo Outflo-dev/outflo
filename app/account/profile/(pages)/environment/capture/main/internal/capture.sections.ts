@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: define capture control rows
+   - note: define Off, Moment, and Continuous capture controls
    ========================================================== */
 
 /* ------------------------------
@@ -20,19 +20,19 @@ export function getCaptureModel(): CaptureViewModel {
     return {
         controls: [
             {
-                label: "Capture signal",
-                value: "Master environment capture participation.",
+                label: "Off",
+                value: "Do not record Environment context.",
                 enabled: false,
             },
             {
-                label: "Moment capture",
-                value: "Record environment context at specific app moments.",
+                label: "Moment",
+                value: "Record Environment when explicitly requested.",
                 enabled: false,
             },
             {
-                label: "Continuous capture",
-                value: "Allow environment context to update over time.",
-                enabled: false,
+                label: "Continuous",
+                value: "Accept background emitter reports.",
+                enabled: true,
             },
         ],
     };
