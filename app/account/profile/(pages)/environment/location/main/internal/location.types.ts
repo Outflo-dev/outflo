@@ -34,6 +34,6 @@ export type LocationViewModel = {
     preferences: ProfileEnvironmentPreferences;
     master: LocationMasterData;
     source: LocationControlDrillData;
-    activePlace: LocationControlDrillData | null;
+    activePlace: LocationControlDrillData;
     precision: LocationControlDrillData;
 };
