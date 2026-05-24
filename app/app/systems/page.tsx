@@ -309,10 +309,10 @@ export default async function SystemsPage() {
               />
 
               <Tile
-                href="/app/environment"
+                href="/account/profile/environment/live-test"
                 label="Environment"
-                detail="External state"
-                enabled={false}
+                detail="Live OwnTracks test"
+                enabled
               />
             </div>
           </div>
