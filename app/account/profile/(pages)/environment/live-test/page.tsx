@@ -9,7 +9,7 @@
    Imports
 -------------------------------- */
 import type { ReactNode } from "react";
-
+import EnvironmentLiveTestHeader from "./header/EnvironmentLiveTestHeader";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 /* ------------------------------
@@ -101,6 +101,9 @@ export default async function EnvironmentLiveTestPage() {
                     gap: 16,
                 }}
             >
+
+                <EnvironmentLiveTestHeader />
+
                 <header>
                     <p style={{ margin: 0, opacity: 0.6, fontSize: 12 }}>
                         DEV ONLY · auto-refreshes every 10s

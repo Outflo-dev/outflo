@@ -5,6 +5,7 @@
    ========================================================== */
 
 import { supabaseServer } from "@/lib/supabase/server";
+import RawEnvironmentHeader from "./header/RawEnvironmentHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -78,6 +79,8 @@ export default async function RawEnvironmentPage() {
                 minHeight: "100vh",
             }}
         >
+            <RawEnvironmentHeader />
+
             <h1 style={{ margin: "0 0 8px" }}>🧾 Environment Raw Receipts</h1>
 
             <p style={{ margin: "0 0 20px", color: "#aaa" }}>

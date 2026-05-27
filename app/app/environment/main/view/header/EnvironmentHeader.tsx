@@ -1,4 +1,3 @@
-// app/app/environment/main/view/header/EnvironmentHeader.tsx
 "use client";
 
 /* ==========================================================
@@ -8,7 +7,7 @@
    Last Updated:
    - ms: 1779901409308
    - iso: 2026-05-27T17:03:29.308Z
-   - note: create Environment substrate header
+   - note: align Environment header with sticky drilldown packet grammar
    ========================================================== */
 
 /* ------------------------------
@@ -17,6 +16,8 @@
 import type { CSSProperties } from "react";
 
 import Text from "@/components/system/primitives/display/type/Text";
+import EnvironmentBackAction from "./EnvironmentBackAction";
+import EnvironmentRefreshAction from "./EnvironmentRefreshAction";
 
 /* ------------------------------
    Types
@@ -31,28 +32,42 @@ type EnvironmentHeaderProps = {
    Constants
 -------------------------------- */
 const HEADER_STYLE: CSSProperties = {
-    display: "grid",
-    gridTemplateColumns: "auto minmax(0, 1fr) auto",
-    alignItems: "center",
-    columnGap: 14,
+    display: "contents",
 };
 
-const BUTTON_STYLE: CSSProperties = {
-    border: "1px solid var(--border-subtle)",
-    borderRadius: 999,
-    padding: "9px 13px",
-    background: "var(--bg-secondary)",
+const NAV_STYLE: CSSProperties = {
+    position: "sticky",
+    top: -1,
+    zIndex: 10,
+    minHeight: 44,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    background: "var(--bg-primary)",
+    paddingTop: 10,
+    paddingBottom: 12,
+    marginBottom: -6,
+};
+
+const INTRO_STYLE: CSSProperties = {
+    display: "grid",
+    rowGap: 8,
+    paddingTop: 4,
+};
+
+const TITLE_STYLE: CSSProperties = {
+    fontSize: "var(--header-lg)",
+    fontWeight: "var(--font-weight-bold)",
+    letterSpacing: "-0.045em",
+    lineHeight: 1,
     color: "var(--text-primary)",
 };
 
-const TITLE_STACK_STYLE: CSSProperties = {
-    minWidth: 0,
-    display: "grid",
-    rowGap: 2,
-};
-
-const META_STYLE: CSSProperties = {
-    color: "var(--text-tertiary)",
+const COPY_STYLE: CSSProperties = {
+    maxWidth: 460,
+    fontSize: "var(--text-sm)",
+    lineHeight: 1.45,
+    color: "var(--text-secondary)",
 };
 
 /* ------------------------------
@@ -65,28 +80,24 @@ export default function EnvironmentHeader({
 }: EnvironmentHeaderProps) {
     return (
         <header style={HEADER_STYLE}>
-            <button type="button" style={BUTTON_STYLE} onClick={onBack}>
-                Back
-            </button>
+            <div style={NAV_STYLE}>
+                <EnvironmentBackAction onBack={onBack} />
 
-            <div style={TITLE_STACK_STYLE}>
-                <Text as="h1" type="display">
+                <EnvironmentRefreshAction
+                    onRefresh={onRefresh}
+                    refreshing={refreshing}
+                />
+            </div>
+
+            <div style={INTRO_STYLE}>
+                <Text as="h1" type="display" style={TITLE_STYLE}>
                     Environment
                 </Text>
 
-                <Text as="p" type="meta" style={META_STYLE}>
-                    Current external truth
+                <Text as="p" type="meta" style={COPY_STYLE}>
+                    Weather, air, sun, signal, and proof from the current Environment snapshot.
                 </Text>
             </div>
-
-            <button
-                type="button"
-                style={BUTTON_STYLE}
-                disabled={refreshing}
-                onClick={onRefresh}
-            >
-                {refreshing ? "Pulling" : "Refresh"}
-            </button>
         </header>
     );
 }
