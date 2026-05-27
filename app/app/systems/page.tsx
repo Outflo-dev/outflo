@@ -339,6 +339,7 @@ export default async function SystemsPage() {
 
           <nav aria-label="System navigation" style={CONTROL_NAV_STYLE}>
             <ControlButton href="/account/profile" label="Profile" />
+            <ControlButton href="/dev/environment/raw" label="Environment Raw" />
             <ControlButton href="/" label="Portal" />
           </nav>
         </section>
