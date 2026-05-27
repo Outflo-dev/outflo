@@ -82,7 +82,7 @@ export default function EnvironmentHeroSection({
 
                 <div style={TEMP_STYLE}>{model.temperature}</div>
 
-                <Text as="h2" type="title">
+                <Text as="h2" type="display">
                     {model.condition}
                 </Text>
             </div>

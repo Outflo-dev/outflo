@@ -70,7 +70,7 @@ export default function EnvironmentHeader({
             </button>
 
             <div style={TITLE_STACK_STYLE}>
-                <Text as="h1" type="title">
+                <Text as="h1" type="display">
                     Environment
                 </Text>
 
