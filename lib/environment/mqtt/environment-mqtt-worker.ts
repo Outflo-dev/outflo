@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 /* ==========================================================
    OUTFLO — ENVIRONMENT MQTT WORKER
-   File: scripts/environment-mqtt-worker.ts
+   File: lib/environment/mqtt/environment-mqtt-worker.ts
    Scope: Consume OwnTracks MQTT location events into Environment DB
    ========================================================== */
 
@@ -13,30 +13,49 @@ loadEnvConfig(process.cwd());
 const PROVIDER = "owntracks";
 const MQTT_URL = process.env.OUTFLO_MQTT_URL ?? "mqtt://localhost:1883";
 const MQTT_TOPIC = process.env.OUTFLO_MQTT_TOPIC ?? "owntracks/+/+";
+const MQTT_USERNAME = process.env.OUTFLO_MQTT_USERNAME;
+const MQTT_PASSWORD = process.env.OUTFLO_MQTT_PASSWORD;
 
+/* ------------------------------
+   Types
+-------------------------------- */
 type OwnTracksPayload = {
     _type?: string;
     tst?: number;
     created_at?: number;
+
     lat?: number;
     lon?: number;
+
     acc?: number;
     vac?: number;
     alt?: number;
     p?: number;
+
     batt?: number;
     bs?: number;
     conn?: string;
+
     t?: string;
     tid?: string;
     topic?: string;
+
+    motionactivities?: unknown;
+
     [key: string]: unknown;
 };
+
+/* ------------------------------
+   Helpers
+-------------------------------- */
+function isNumber(value: unknown): value is number {
+    return typeof value === "number" && Number.isFinite(value);
+}
 
 function resolveEventMs(payload: OwnTracksPayload) {
     const unixSeconds = payload.created_at ?? payload.tst;
 
-    if (typeof unixSeconds !== "number") {
+    if (!isNumber(unixSeconds)) {
         return null;
     }
 
@@ -66,10 +85,27 @@ function parseOwnTracksTopic(topic: string) {
     };
 }
 
-function isNumber(value: unknown): value is number {
-    return typeof value === "number" && Number.isFinite(value);
+function getMotionActivities(payload: OwnTracksPayload) {
+    return Array.isArray(payload.motionactivities)
+        ? payload.motionactivities
+        : [];
 }
 
+function buildRawPayload(args: {
+    payload: OwnTracksPayload;
+    topic: string;
+    providerUserId: string;
+}) {
+    return {
+        ...args.payload,
+        topic: args.topic,
+        provider_user_id: args.providerUserId,
+    };
+}
+
+/* ------------------------------
+   Handler
+-------------------------------- */
 async function handleMessage(topic: string, message: Buffer) {
     const topicParts = parseOwnTracksTopic(topic);
 
@@ -94,6 +130,11 @@ async function handleMessage(topic: string, message: Buffer) {
 
     const eventMs = resolveEventMs(payload);
     const receivedMs = Date.now();
+    const rawPayload = buildRawPayload({
+        payload,
+        topic,
+        providerUserId: topicParts.providerUserId,
+    });
 
     const supabase = createAdminClient();
 
@@ -124,24 +165,27 @@ async function handleMessage(topic: string, message: Buffer) {
         provider: PROVIDER,
         device_id: topicParts.deviceId,
         event_type: payload._type,
-        raw: {
-            ...payload,
-            topic,
-            provider_user_id: topicParts.providerUserId,
-        },
-        event_ms: eventMs,
+
         received_ms: receivedMs,
+        event_ms: eventMs,
+
         lat: isNumber(payload.lat) ? payload.lat : null,
         lon: isNumber(payload.lon) ? payload.lon : null,
+
         accuracy_m: isNumber(payload.acc) ? payload.acc : null,
         altitude_m: isNumber(payload.alt) ? payload.alt : null,
         vertical_accuracy_m: isNumber(payload.vac) ? payload.vac : null,
+
         pressure_kpa: isNumber(payload.p) ? payload.p : null,
+
         battery_pct: isNumber(payload.batt) ? payload.batt : null,
         battery_status: isNumber(payload.bs) ? payload.bs : null,
         connection: typeof payload.conn === "string" ? payload.conn : null,
+
         trigger: typeof payload.t === "string" ? payload.t : null,
         tracker_id: typeof payload.tid === "string" ? payload.tid : null,
+
+        raw: rawPayload,
     };
 
     const { data: insertedEvent, error: eventError } = await supabase
@@ -156,22 +200,44 @@ async function handleMessage(topic: string, message: Buffer) {
     }
 
     if (!eventMs || !isNumber(payload.lat) || !isNumber(payload.lon)) {
-        console.log("[environment-mqtt] event stored without snapshot", insertedEvent.id);
+        console.log("[environment-mqtt] event stored without snapshot", {
+            event_id: insertedEvent.id,
+            event_ms: eventMs,
+            has_lat: isNumber(payload.lat),
+            has_lon: isNumber(payload.lon),
+        });
         return;
     }
 
     const snapshotUpsert = {
         user_id: emitter.user_id,
         moment_ms: eventMs,
+
         location_precision: "device",
         lat: payload.lat,
         lng: payload.lon,
+
         pressure_hpa: isNumber(payload.p) ? payload.p * 10 : null,
         elevation_m: isNumber(payload.alt) ? payload.alt : null,
+
         source_payload_ref: insertedEvent.id,
         observation_type: "owntracks_location",
         capture_mode: typeof payload.t === "string" ? payload.t : "mqtt",
         source_mode: "owntracks_mqtt",
+
+        accuracy_m: isNumber(payload.acc) ? payload.acc : null,
+        vertical_accuracy_m: isNumber(payload.vac) ? payload.vac : null,
+
+        emitter_pressure_kpa: isNumber(payload.p) ? payload.p : null,
+        emitter_battery_pct: isNumber(payload.batt) ? payload.batt : null,
+        emitter_battery_status: isNumber(payload.bs) ? payload.bs : null,
+        emitter_connection: typeof payload.conn === "string" ? payload.conn : null,
+        emitter_trigger: typeof payload.t === "string" ? payload.t : null,
+        emitter_tracker_id: typeof payload.tid === "string" ? payload.tid : null,
+        emitter_device_id: topicParts.deviceId,
+        emitter_motion: getMotionActivities(payload),
+
+        latest_emitter_raw: rawPayload,
     };
 
     const { error: snapshotError } = await supabase
@@ -190,16 +256,28 @@ async function handleMessage(topic: string, message: Buffer) {
         event_id: insertedEvent.id,
         event_ms: eventMs,
         device_id: topicParts.deviceId,
+        trigger: snapshotUpsert.emitter_trigger,
+        battery_pct: snapshotUpsert.emitter_battery_pct,
+        connection: snapshotUpsert.emitter_connection,
+        accuracy_m: snapshotUpsert.accuracy_m,
+        motion: snapshotUpsert.emitter_motion,
     });
 }
 
+/* ------------------------------
+   Main
+-------------------------------- */
 function main() {
     console.log("[environment-mqtt] connecting", {
         url: MQTT_URL,
         topic: MQTT_TOPIC,
+        auth: MQTT_USERNAME ? "enabled" : "disabled",
     });
 
-    const client = mqtt.connect(MQTT_URL);
+    const client = mqtt.connect(MQTT_URL, {
+        username: MQTT_USERNAME,
+        password: MQTT_PASSWORD,
+    });
 
     client.on("connect", () => {
         console.log("[environment-mqtt] connected");
@@ -214,8 +292,8 @@ function main() {
         });
     });
 
-    client.on("message", (topic, message) => {
-        void handleMessage(topic, message);
+    client.on("message", (incomingTopic, message) => {
+        void handleMessage(incomingTopic, message);
     });
 
     client.on("error", (error) => {
