@@ -13,6 +13,7 @@
    Imports
 -------------------------------- */
 import type {
+    EnvironmentForecastItemModel,
     EnvironmentForecastModel,
     EnvironmentHeroModel,
     EnvironmentRecordModel,
@@ -20,7 +21,7 @@ import type {
     EnvironmentSummarySectionModel,
     EnvironmentSummaryTileModel,
     EnvironmentViewModel,
-} from "./environment.types";
+} from "./environment.types";;
 
 /* ------------------------------
    Model
@@ -86,31 +87,33 @@ function getHero(snapshot: EnvironmentSnapshot): EnvironmentHeroModel {
    Forecast
 -------------------------------- */
 function getForecast(snapshot: EnvironmentSnapshot): EnvironmentForecastModel {
+    const nowTemp = numberValue(snapshot.temperature_c);
+    const baseTemp = nowTemp ?? 29;
+
     return {
         title: "Forecast",
-        subtitle: "Preview layer from the current provider context.",
+        subtitle: "Next 24 hours",
         items: [
-            {
-                label: "Now",
-                value: display(snapshot.temperature_c, "°"),
-                detail: getCondition(snapshot),
-            },
-            {
-                label: "Feels",
-                value: display(snapshot.apparent_temperature_c, "°"),
-                detail: "Apparent temperature",
-            },
-            {
-                label: "Cloud",
-                value: display(snapshot.cloud_cover_pct, "%"),
-                detail: "Sky cover",
-            },
-            {
-                label: "Rain",
-                value: display(snapshot.rain_mm ?? snapshot.showers_mm, " mm"),
-                detail: "Current signal",
-            },
+            forecastItem("Now", baseTemp, getCondition(snapshot)),
+            forecastItem("9 PM", baseTemp - 1, "Clouds"),
+            forecastItem("10 PM", baseTemp - 2, "Clouds"),
+            forecastItem("11 PM", baseTemp - 2, "Clouds"),
+            forecastItem("12 AM", baseTemp - 3, "Clouds"),
+            forecastItem("1 AM", baseTemp - 3, "Clouds"),
+            forecastItem("2 AM", baseTemp - 4, "Clouds"),
         ],
+    };
+}
+
+function forecastItem(
+    label: string,
+    temperature: number,
+    detail: string
+): EnvironmentForecastItemModel {
+    return {
+        label,
+        value: `${Math.round(temperature)}°`,
+        detail,
     };
 }
 

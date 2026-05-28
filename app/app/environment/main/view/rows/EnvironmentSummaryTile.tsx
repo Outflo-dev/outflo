@@ -1,4 +1,3 @@
-// app/app/environment/main/view/rows/EnvironmentSummaryTile.tsx
 "use client";
 
 /* ==========================================================
@@ -8,13 +7,13 @@
    Last Updated:
    - ms: 1779901409308
    - iso: 2026-05-27T17:03:29.308Z
-   - note: create Environment summary tile
+   - note: add icon-led Environment summary tile grammar
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import Text from "@/components/system/primitives/display/type/Text";
 import Chevron from "@/components/system/primitives/navigation/chevron/Chevron";
@@ -27,6 +26,151 @@ type EnvironmentSummaryTileProps = {
     model: EnvironmentSummaryTileModel;
 };
 
+type EnvironmentTileIconProps = {
+    title: string;
+    accent: string;
+};
+
+/* ------------------------------
+   Helpers
+-------------------------------- */
+function getIcon(title: string): ReactNode {
+    const key = title.toLowerCase();
+
+    if (key.includes("place")) return <PlaceIcon />;
+    if (key.includes("weather")) return <WeatherIcon />;
+    if (key.includes("sun")) return <SunIcon />;
+    if (key.includes("air")) return <AirIcon />;
+    if (key.includes("altitude")) return <AltitudeIcon />;
+    if (key.includes("source")) return <SourceIcon />;
+
+    return <SourceIcon />;
+}
+
+/* ------------------------------
+   Icons
+-------------------------------- */
+function EnvironmentTileIcon({ title, accent }: EnvironmentTileIconProps) {
+    const ICON_WRAP_STYLE: CSSProperties = {
+        width: 52,
+        height: 52,
+        display: "grid",
+        placeItems: "center",
+        borderRadius: 18,
+        color: accent,
+        background: `color-mix(in srgb, ${accent} 18%, transparent)`,
+        boxShadow: `0 0 34px color-mix(in srgb, ${accent} 34%, transparent)`,
+    };
+
+    return <div style={ICON_WRAP_STYLE}>{getIcon(title)}</div>;
+}
+
+function PlaceIcon() {
+    return (
+        <svg width="27" height="27" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+                d="M12 21s7-6.1 7-12a7 7 0 0 0-14 0c0 5.9 7 12 7 12Z"
+                stroke="currentColor"
+                strokeWidth="1.9"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"
+                stroke="currentColor"
+                strokeWidth="1.9"
+            />
+        </svg>
+    );
+}
+
+function WeatherIcon() {
+    return (
+        <svg width="29" height="29" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+                d="M7.8 18h8.8a4 4 0 0 0 .2-8 5.8 5.8 0 0 0-11.1 1.8A3.2 3.2 0 0 0 7.8 18Z"
+                fill="currentColor"
+                opacity="0.9"
+            />
+        </svg>
+    );
+}
+
+function SunIcon() {
+    return (
+        <svg width="29" height="29" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+                d="M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z"
+                stroke="currentColor"
+                strokeWidth="1.8"
+            />
+            <path
+                d="M12 2.8v2.1M12 19.1v2.1M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2.8 12h2.1M19.1 12h2.1M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+            />
+        </svg>
+    );
+}
+
+function AirIcon() {
+    return (
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+                d="M4 8h10.5a2.5 2.5 0 1 0-2.2-3.7"
+                stroke="currentColor"
+                strokeWidth="1.9"
+                strokeLinecap="round"
+            />
+            <path
+                d="M3.5 12h14.8a2.7 2.7 0 1 1-2.4 3.9"
+                stroke="currentColor"
+                strokeWidth="1.9"
+                strokeLinecap="round"
+            />
+            <path
+                d="M5.5 16H12"
+                stroke="currentColor"
+                strokeWidth="1.9"
+                strokeLinecap="round"
+            />
+        </svg>
+    );
+}
+
+function AltitudeIcon() {
+    return (
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+                d="M3.5 18.5 9 8.5l3.7 6 2-3.3 5.8 7.3h-17Z"
+                stroke="currentColor"
+                strokeWidth="1.9"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+    );
+}
+
+function SourceIcon() {
+    return (
+        <svg width="29" height="29" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+                d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
+                stroke="currentColor"
+                strokeWidth="1.8"
+            />
+            <path
+                d="M4.8 9.2A7.8 7.8 0 0 1 9.2 4.8M14.8 4.8a7.8 7.8 0 0 1 4.4 4.4M19.2 14.8a7.8 7.8 0 0 1-4.4 4.4M9.2 19.2a7.8 7.8 0 0 1-4.4-4.4"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+            />
+        </svg>
+    );
+}
+
 /* ------------------------------
    Component
 -------------------------------- */
@@ -35,12 +179,13 @@ export default function EnvironmentSummaryTile({
 }: EnvironmentSummaryTileProps) {
     const TILE_STYLE: CSSProperties = {
         position: "relative",
-        minHeight: 122,
+        minHeight: 134,
         display: "grid",
-        alignContent: "space-between",
-        rowGap: 14,
+        gridTemplateColumns: "auto 1fr auto",
+        columnGap: 14,
+        alignItems: "center",
         padding: 16,
-        borderRadius: 26,
+        borderRadius: 28,
         border: "1px solid rgba(255,255,255,0.09)",
         background:
             "linear-gradient(180deg, rgba(255,255,255,0.085), rgba(255,255,255,0.035))",
@@ -48,58 +193,45 @@ export default function EnvironmentSummaryTile({
         overflow: "hidden",
     };
 
-    const TOP_STYLE: CSSProperties = {
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "space-between",
-        gap: 12,
-    };
-
-    const ACCENT_STYLE: CSSProperties = {
-        width: 10,
-        height: 10,
-        borderRadius: 999,
-        background: model.accent,
-        boxShadow: `0 0 24px ${model.accent}`,
-        flex: "0 0 auto",
-        marginTop: 4,
+    const COPY_STYLE: CSSProperties = {
+        minWidth: 0,
+        display: "grid",
+        rowGap: 5,
     };
 
     const EYEBROW_STYLE: CSSProperties = {
         color: "var(--text-tertiary)",
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
+        letterSpacing: "0.04em",
     };
 
-    const VALUE_STYLE: CSSProperties = {
+    const TITLE_STYLE: CSSProperties = {
         color: "var(--text-primary)",
         overflowWrap: "anywhere",
     };
 
-    const DETAIL_STYLE: CSSProperties = {
+    const VALUE_STYLE: CSSProperties = {
         color: "var(--text-secondary)",
+        overflowWrap: "anywhere",
+    };
+
+    const DETAIL_STYLE: CSSProperties = {
+        color: "var(--text-tertiary)",
         overflowWrap: "anywhere",
     };
 
     return (
         <article style={TILE_STYLE}>
-            <div style={TOP_STYLE}>
-                <span style={ACCENT_STYLE} />
+            <EnvironmentTileIcon title={model.title} accent={model.accent} />
 
-                <Chevron direction="right" />
-            </div>
+            <div style={COPY_STYLE}>
+                <Text as="h3" type="label" style={TITLE_STYLE}>
+                    {model.title}
+                </Text>
 
-            <div>
                 <Text as="p" type="meta" style={EYEBROW_STYLE}>
                     {model.eyebrow}
                 </Text>
 
-                <Text as="h3" type="label" style={VALUE_STYLE}>
-                    {model.title}
-                </Text>
-            </div>
-
-            <div>
                 <Text as="p" type="label" style={VALUE_STYLE}>
                     {model.value}
                 </Text>
@@ -108,6 +240,8 @@ export default function EnvironmentSummaryTile({
                     {model.detail}
                 </Text>
             </div>
+
+            <Chevron direction="right" />
         </article>
     );
 }

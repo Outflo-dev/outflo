@@ -8,7 +8,7 @@
    Last Updated:
    - ms: 1779901409308
    - iso: 2026-05-27T17:03:29.308Z
-   - note: create Environment landing summary section
+   - note: restore Environment summary grid to mock-aligned layout
    ========================================================== */
 
 /* ------------------------------
@@ -50,7 +50,7 @@ export default function EnvironmentSummarySection({
     };
 
     const SUBTITLE_STYLE: CSSProperties = {
-        color: "var(--text-secondary)",
+        display: "none",
     };
 
     const GRID_STYLE: CSSProperties = {
