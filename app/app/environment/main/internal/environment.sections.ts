@@ -6,7 +6,7 @@
    Last Updated:
    - ms: 1779901409308
    - iso: 2026-05-27T17:03:29.308Z
-   - note: create rich Environment snapshot grouping model
+   - note: refine Environment snapshot grouping model
    ========================================================== */
 
 /* ------------------------------
@@ -35,7 +35,7 @@ export function getEnvironmentModel(
                 condition: "No snapshot",
                 feelsLike: "Open OwnTracks to emit location.",
                 updated: "No current truth",
-                signal: "Silent",
+                signal: "Emitter silent",
                 background: "empty",
             },
             sections: [],
@@ -47,69 +47,69 @@ export function getEnvironmentModel(
         hero: getHero(snapshot),
         sections: [
             section("Place", [
-                field("Precision", snapshot.location_precision),
+                field("Mode", snapshot.location_precision),
                 field("Latitude", snapshot.lat),
                 field("Longitude", snapshot.lng),
-                field("Elevation", snapshot.elevation_m, "m"),
+                field("Elevation", snapshot.elevation_m, " m"),
                 field("Timezone", snapshot.environment_timezone),
-                field("UTC offset", snapshot.environment_utc_offset_seconds, "s"),
+                field("UTC offset", formatOffset(snapshot.environment_utc_offset_seconds)),
             ]),
-            section("Weather", [
-                field("Temperature", snapshot.temperature_c, "°C"),
-                field("Feels like", snapshot.apparent_temperature_c, "°C"),
+            section("Atmosphere", [
+                field("Temperature", snapshot.temperature_c, " °C"),
+                field("Feels like", snapshot.apparent_temperature_c, " °C"),
                 field("Humidity", snapshot.humidity_pct, "%"),
                 field("Cloud cover", snapshot.cloud_cover_pct, "%"),
-                field("Rain", snapshot.rain_mm, "mm"),
-                field("Showers", snapshot.showers_mm, "mm"),
-                field("Pressure", snapshot.pressure_msl_hpa ?? snapshot.pressure_hpa, "hPa"),
-                field("Surface pressure", snapshot.surface_pressure_hpa, "hPa"),
-                field("Wind", snapshot.wind_speed_kmh, "km/h"),
-                field("Gusts", snapshot.wind_gusts_kmh, "km/h"),
-                field("Direction", snapshot.wind_direction_deg ?? snapshot.wind_dir_deg, "°"),
-                field("Weather code", snapshot.weather_code),
+                field("Rain", snapshot.rain_mm, " mm"),
+                field("Showers", snapshot.showers_mm, " mm"),
+                field("Pressure", snapshot.pressure_msl_hpa ?? snapshot.pressure_hpa, " hPa"),
+                field("Surface pressure", snapshot.surface_pressure_hpa, " hPa"),
+                field("Wind speed", snapshot.wind_speed_kmh, " km/h"),
+                field("Wind gusts", snapshot.wind_gusts_kmh, " km/h"),
+                field("Wind direction", snapshot.wind_direction_deg ?? snapshot.wind_dir_deg, "°"),
+                field("Code", snapshot.weather_code),
             ]),
             section("Sun", [
                 field("Daylight", snapshot.is_day),
                 field("Sunrise", snapshot.sunrise_local),
                 field("Sunset", snapshot.sunset_local),
-                field("Daylight duration", formatDuration(snapshot.daylight_duration_seconds)),
+                field("Duration", formatDuration(snapshot.daylight_duration_seconds)),
                 field("UV index", snapshot.uv_index),
-                field("Clear sky UV", snapshot.uv_index_clear_sky),
+                field("Clear-sky UV", snapshot.uv_index_clear_sky),
             ]),
             section("Air", [
                 field("AQI", snapshot.us_aqi ?? snapshot.aqi),
-                field("PM2.5", snapshot.pm2_5, "μg/m³"),
-                field("PM10", snapshot.pm10, "μg/m³"),
-                field("Ozone", snapshot.ozone_ug_m3 ?? snapshot.ozone_ppb, "μg/m³"),
-                field("CO", snapshot.carbon_monoxide, "μg/m³"),
-                field("NO₂", snapshot.nitrogen_dioxide, "μg/m³"),
-                field("SO₂", snapshot.sulphur_dioxide, "μg/m³"),
-                field("Dust", snapshot.dust, "μg/m³"),
+                field("PM2.5", snapshot.pm2_5, " μg/m³"),
+                field("PM10", snapshot.pm10, " μg/m³"),
+                field("Ozone", snapshot.ozone_ug_m3 ?? snapshot.ozone_ppb, " μg/m³"),
+                field("Carbon monoxide", snapshot.carbon_monoxide, " μg/m³"),
+                field("Nitrogen dioxide", snapshot.nitrogen_dioxide, " μg/m³"),
+                field("Sulphur dioxide", snapshot.sulphur_dioxide, " μg/m³"),
+                field("Dust", snapshot.dust, " μg/m³"),
                 field("Aerosol depth", snapshot.aerosol_optical_depth),
             ]),
             section("Signal", [
                 field("Source", snapshot.source_mode),
                 field("Capture", snapshot.capture_mode),
                 field("Observation", snapshot.observation_type),
-                field("Accuracy", snapshot.accuracy_m, "m"),
-                field("Vertical accuracy", snapshot.vertical_accuracy_m, "m"),
+                field("Accuracy", snapshot.accuracy_m, " m"),
+                field("Vertical", snapshot.vertical_accuracy_m, " m"),
                 field("Device", snapshot.emitter_device_id),
                 field("Tracker", snapshot.emitter_tracker_id),
                 field("Battery", snapshot.emitter_battery_pct, "%"),
                 field("Connection", snapshot.emitter_connection),
                 field("Motion", formatArray(snapshot.emitter_motion)),
             ]),
-            section("Proof", [
+            section("Record", [
                 field("Snapshot", snapshot.id),
                 field("Moment", formatMs(snapshot.moment_ms)),
                 field("Emitter event", snapshot.source_payload_ref),
                 field("Context event", snapshot.environment_context_event_id),
-                field("Context pulled", formatMs(snapshot.environment_context_pulled_at_ms)),
+                field("Pulled", formatMs(snapshot.environment_context_pulled_at_ms)),
                 field("Provider", snapshot.environment_context_provider),
-                field("Forecast provider lat", snapshot.forecast_provider_lat),
-                field("Forecast provider lng", snapshot.forecast_provider_lng),
-                field("Air provider lat", snapshot.air_provider_lat),
-                field("Air provider lng", snapshot.air_provider_lng),
+                field("Forecast lat", snapshot.forecast_provider_lat),
+                field("Forecast lng", snapshot.forecast_provider_lng),
+                field("Air lat", snapshot.air_provider_lat),
+                field("Air lng", snapshot.air_provider_lng),
             ]),
         ],
     };
@@ -119,7 +119,7 @@ export function getEnvironmentModel(
    Helpers
 -------------------------------- */
 function getHero(snapshot: EnvironmentSnapshot): EnvironmentHeroModel {
-    const temperature = display(snapshot.temperature_c, "°C");
+    const temperature = display(snapshot.temperature_c, "°");
     const feelsLike = display(snapshot.apparent_temperature_c, "°C");
     const cloud = numberValue(snapshot.cloud_cover_pct);
     const rain = numberValue(snapshot.rain_mm);
@@ -131,7 +131,7 @@ function getHero(snapshot: EnvironmentSnapshot): EnvironmentHeroModel {
         temperature,
         condition,
         feelsLike: `Feels like ${feelsLike}`,
-        updated: `Updated ${formatMs(snapshot.environment_context_pulled_at_ms ?? snapshot.moment_ms)}`,
+        updated: `Updated ${formatHeroTime(snapshot.environment_context_pulled_at_ms ?? snapshot.moment_ms)}`,
         signal: getSignal(snapshot),
         background: rain && rain > 0 ? "rain" : isDay ? (cloud && cloud > 40 ? "cloud" : "day") : "night",
     };
@@ -150,8 +150,12 @@ function getPlace(snapshot: EnvironmentSnapshot): string {
 }
 
 function getSignal(snapshot: EnvironmentSnapshot): string {
-    const accuracy = display(snapshot.accuracy_m, "m");
+    const accuracy = display(snapshot.accuracy_m, " m");
     const connection = display(snapshot.emitter_connection);
+
+    if (accuracy === "—" && connection === "—") return "Signal active";
+    if (accuracy === "—") return connection;
+
     return `Signal ${accuracy} · ${connection}`;
 }
 
@@ -192,10 +196,12 @@ function display(value: unknown, suffix = ""): string {
 
 function numberValue(value: unknown): number | null {
     if (typeof value === "number" && Number.isFinite(value)) return value;
+
     if (typeof value === "string") {
         const parsed = Number(value);
         return Number.isFinite(parsed) ? parsed : null;
     }
+
     return null;
 }
 
@@ -212,7 +218,18 @@ function formatArray(value: unknown): string {
 function formatMs(value: unknown): string {
     const ms = numberValue(value);
     if (!ms) return "—";
+
     return new Date(ms).toLocaleString();
+}
+
+function formatHeroTime(value: unknown): string {
+    const ms = numberValue(value);
+    if (!ms) return "—";
+
+    return new Date(ms).toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+    });
 }
 
 function formatDuration(value: unknown): string {
@@ -223,4 +240,14 @@ function formatDuration(value: unknown): string {
     const minutes = Math.round((seconds % 3600) / 60);
 
     return `${hours}h ${minutes}m`;
+}
+
+function formatOffset(value: unknown): string {
+    const seconds = numberValue(value);
+    if (seconds === null) return "—";
+
+    const hours = seconds / 3600;
+    const sign = hours >= 0 ? "+" : "";
+
+    return `UTC${sign}${hours}`;
 }
