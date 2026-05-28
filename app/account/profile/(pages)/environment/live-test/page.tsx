@@ -91,7 +91,7 @@ export default async function EnvironmentLiveTestPage() {
                 fontFamily: "var(--font-sans)",
             }}
         >
-            <meta httpEquiv="refresh" content="10" />
+
 
             <section
                 style={{
