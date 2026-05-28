@@ -2,21 +2,23 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT SECTIONS
    File: app/app/environment/main/internal/environment.sections.ts
-   Scope: Build Environment substrate display model from current snapshot
+   Scope: Build Environment substrate landing page model from current snapshot
    Last Updated:
    - ms: 1779901409308
    - iso: 2026-05-27T17:03:29.308Z
-   - note: refine Environment snapshot grouping model
+   - note: recompose Environment model around landing page summaries
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type {
-    EnvironmentField,
+    EnvironmentForecastModel,
     EnvironmentHeroModel,
-    EnvironmentSectionModel,
+    EnvironmentRecordModel,
     EnvironmentSnapshot,
+    EnvironmentSummarySectionModel,
+    EnvironmentSummaryTileModel,
     EnvironmentViewModel,
 } from "./environment.types";
 
@@ -38,85 +40,28 @@ export function getEnvironmentModel(
                 signal: "Emitter silent",
                 background: "empty",
             },
-            sections: [],
+            forecast: getEmptyForecast(),
+            summary: getEmptySummary(),
+            record: {
+                title: "No record yet",
+                subtitle: "Environment has not landed a current snapshot.",
+                primary: "Open the emitter, then refresh Environment.",
+                secondary: "Snapshot truth will appear here once resolved.",
+            },
         };
     }
 
     return {
         hasSnapshot: true,
         hero: getHero(snapshot),
-        sections: [
-            section("Place", [
-                field("Mode", snapshot.location_precision),
-                field("Latitude", snapshot.lat),
-                field("Longitude", snapshot.lng),
-                field("Elevation", snapshot.elevation_m, " m"),
-                field("Timezone", snapshot.environment_timezone),
-                field("UTC offset", formatOffset(snapshot.environment_utc_offset_seconds)),
-            ]),
-            section("Atmosphere", [
-                field("Temperature", snapshot.temperature_c, " °C"),
-                field("Feels like", snapshot.apparent_temperature_c, " °C"),
-                field("Humidity", snapshot.humidity_pct, "%"),
-                field("Cloud cover", snapshot.cloud_cover_pct, "%"),
-                field("Rain", snapshot.rain_mm, " mm"),
-                field("Showers", snapshot.showers_mm, " mm"),
-                field("Pressure", snapshot.pressure_msl_hpa ?? snapshot.pressure_hpa, " hPa"),
-                field("Surface pressure", snapshot.surface_pressure_hpa, " hPa"),
-                field("Wind speed", snapshot.wind_speed_kmh, " km/h"),
-                field("Wind gusts", snapshot.wind_gusts_kmh, " km/h"),
-                field("Wind direction", snapshot.wind_direction_deg ?? snapshot.wind_dir_deg, "°"),
-                field("Code", snapshot.weather_code),
-            ]),
-            section("Sun", [
-                field("Daylight", snapshot.is_day),
-                field("Sunrise", snapshot.sunrise_local),
-                field("Sunset", snapshot.sunset_local),
-                field("Duration", formatDuration(snapshot.daylight_duration_seconds)),
-                field("UV index", snapshot.uv_index),
-                field("Clear-sky UV", snapshot.uv_index_clear_sky),
-            ]),
-            section("Air", [
-                field("AQI", snapshot.us_aqi ?? snapshot.aqi),
-                field("PM2.5", snapshot.pm2_5, " μg/m³"),
-                field("PM10", snapshot.pm10, " μg/m³"),
-                field("Ozone", snapshot.ozone_ug_m3 ?? snapshot.ozone_ppb, " μg/m³"),
-                field("Carbon monoxide", snapshot.carbon_monoxide, " μg/m³"),
-                field("Nitrogen dioxide", snapshot.nitrogen_dioxide, " μg/m³"),
-                field("Sulphur dioxide", snapshot.sulphur_dioxide, " μg/m³"),
-                field("Dust", snapshot.dust, " μg/m³"),
-                field("Aerosol depth", snapshot.aerosol_optical_depth),
-            ]),
-            section("Signal", [
-                field("Source", snapshot.source_mode),
-                field("Capture", snapshot.capture_mode),
-                field("Observation", snapshot.observation_type),
-                field("Accuracy", snapshot.accuracy_m, " m"),
-                field("Vertical", snapshot.vertical_accuracy_m, " m"),
-                field("Device", snapshot.emitter_device_id),
-                field("Tracker", snapshot.emitter_tracker_id),
-                field("Battery", snapshot.emitter_battery_pct, "%"),
-                field("Connection", snapshot.emitter_connection),
-                field("Motion", formatArray(snapshot.emitter_motion)),
-            ]),
-            section("Record", [
-                field("Snapshot", snapshot.id),
-                field("Moment", formatMs(snapshot.moment_ms)),
-                field("Emitter event", snapshot.source_payload_ref),
-                field("Context event", snapshot.environment_context_event_id),
-                field("Pulled", formatMs(snapshot.environment_context_pulled_at_ms)),
-                field("Provider", snapshot.environment_context_provider),
-                field("Forecast lat", snapshot.forecast_provider_lat),
-                field("Forecast lng", snapshot.forecast_provider_lng),
-                field("Air lat", snapshot.air_provider_lat),
-                field("Air lng", snapshot.air_provider_lng),
-            ]),
-        ],
+        forecast: getForecast(snapshot),
+        summary: getSummary(snapshot),
+        record: getRecord(snapshot),
     };
 }
 
 /* ------------------------------
-   Helpers
+   Hero
 -------------------------------- */
 function getHero(snapshot: EnvironmentSnapshot): EnvironmentHeroModel {
     const temperature = display(snapshot.temperature_c, "°");
@@ -137,6 +82,208 @@ function getHero(snapshot: EnvironmentSnapshot): EnvironmentHeroModel {
     };
 }
 
+/* ------------------------------
+   Forecast
+-------------------------------- */
+function getForecast(snapshot: EnvironmentSnapshot): EnvironmentForecastModel {
+    return {
+        title: "Forecast",
+        subtitle: "Preview layer from the current provider context.",
+        items: [
+            {
+                label: "Now",
+                value: display(snapshot.temperature_c, "°"),
+                detail: getCondition(snapshot),
+            },
+            {
+                label: "Feels",
+                value: display(snapshot.apparent_temperature_c, "°"),
+                detail: "Apparent temperature",
+            },
+            {
+                label: "Cloud",
+                value: display(snapshot.cloud_cover_pct, "%"),
+                detail: "Sky cover",
+            },
+            {
+                label: "Rain",
+                value: display(snapshot.rain_mm ?? snapshot.showers_mm, " mm"),
+                detail: "Current signal",
+            },
+        ],
+    };
+}
+
+function getEmptyForecast(): EnvironmentForecastModel {
+    return {
+        title: "Forecast",
+        subtitle: "No forecast context available yet.",
+        items: [
+            {
+                label: "Now",
+                value: "—",
+                detail: "No snapshot",
+            },
+            {
+                label: "Feels",
+                value: "—",
+                detail: "Waiting",
+            },
+            {
+                label: "Cloud",
+                value: "—",
+                detail: "Waiting",
+            },
+            {
+                label: "Rain",
+                value: "—",
+                detail: "Waiting",
+            },
+        ],
+    };
+}
+
+/* ------------------------------
+   Summary
+-------------------------------- */
+function getSummary(snapshot: EnvironmentSnapshot): EnvironmentSummarySectionModel {
+    return {
+        title: "Environment Details",
+        subtitle: "The current moment compressed into readable substrate signals.",
+        tiles: [
+            getPlaceTile(snapshot),
+            getWeatherTile(snapshot),
+            getSunTile(snapshot),
+            getAirTile(snapshot),
+            getAltitudeTile(snapshot),
+            getSourceTile(snapshot),
+        ],
+    };
+}
+
+function getEmptySummary(): EnvironmentSummarySectionModel {
+    return {
+        title: "Environment Details",
+        subtitle: "Snapshot summaries will appear once Environment resolves.",
+        tiles: [
+            tile("Place", "Waiting", "No location", "Open emitter", "rgba(140,215,255,0.68)"),
+            tile("Weather", "Waiting", "No weather", "Refresh after signal", "rgba(255,196,118,0.72)"),
+            tile("Sun", "Waiting", "No sun context", "Needs time and place", "rgba(255,203,122,0.78)"),
+            tile("Air", "Waiting", "No air context", "Provider pending", "rgba(126,231,181,0.72)"),
+        ],
+    };
+}
+
+function getPlaceTile(snapshot: EnvironmentSnapshot): EnvironmentSummaryTileModel {
+    const coordinates = getCoordinates(snapshot);
+    const precision = display(snapshot.location_precision);
+
+    return tile(
+        "Place",
+        "Location",
+        getPlace(snapshot),
+        coordinates !== "—" ? `${precision} · ${coordinates}` : precision,
+        "rgba(140,215,255,0.68)"
+    );
+}
+
+function getWeatherTile(snapshot: EnvironmentSnapshot): EnvironmentSummaryTileModel {
+    const temperature = display(snapshot.temperature_c, "°C");
+    const feelsLike = display(snapshot.apparent_temperature_c, "°C");
+
+    return tile(
+        "Weather",
+        "Atmosphere",
+        getCondition(snapshot),
+        `${temperature} · feels ${feelsLike}`,
+        "rgba(255,196,118,0.72)"
+    );
+}
+
+function getSunTile(snapshot: EnvironmentSnapshot): EnvironmentSummaryTileModel {
+    const daylight = snapshot.is_day === true ? "Daylight" : "Night";
+    const uv = display(snapshot.uv_index);
+    const sunset = display(snapshot.sunset_local);
+
+    return tile(
+        "Sun",
+        "Light",
+        daylight,
+        `UV ${uv} · sunset ${sunset}`,
+        "rgba(255,203,122,0.78)"
+    );
+}
+
+function getAirTile(snapshot: EnvironmentSnapshot): EnvironmentSummaryTileModel {
+    const aqi = display(snapshot.us_aqi ?? snapshot.aqi);
+    const pm25 = display(snapshot.pm2_5, " μg/m³");
+
+    return tile(
+        "Air",
+        "Quality",
+        aqi === "—" ? "No AQI" : `AQI ${aqi}`,
+        `PM2.5 ${pm25}`,
+        "rgba(126,231,181,0.72)"
+    );
+}
+
+function getAltitudeTile(snapshot: EnvironmentSnapshot): EnvironmentSummaryTileModel {
+    const elevation = display(snapshot.elevation_m, " m");
+    const accuracy = display(snapshot.vertical_accuracy_m, " m");
+
+    return tile(
+        "Altitude",
+        "Elevation",
+        elevation,
+        `Vertical accuracy ${accuracy}`,
+        "rgba(196,173,255,0.72)"
+    );
+}
+
+function getSourceTile(snapshot: EnvironmentSnapshot): EnvironmentSummaryTileModel {
+    const provider = display(snapshot.environment_context_provider);
+    const signal = getSignal(snapshot);
+
+    return tile(
+        "Source",
+        "Signal",
+        provider,
+        signal,
+        "rgba(255,255,255,0.52)"
+    );
+}
+
+function tile(
+    title: string,
+    eyebrow: string,
+    value: string,
+    detail: string,
+    accent: string
+): EnvironmentSummaryTileModel {
+    return {
+        title,
+        eyebrow,
+        value,
+        detail,
+        accent,
+    };
+}
+
+/* ------------------------------
+   Record
+-------------------------------- */
+function getRecord(snapshot: EnvironmentSnapshot): EnvironmentRecordModel {
+    return {
+        title: "Latest snapshot",
+        subtitle: formatMs(snapshot.moment_ms),
+        primary: `Source: ${display(snapshot.source_mode)} · ${display(snapshot.capture_mode)}`,
+        secondary: `Snapshot ${display(snapshot.id)}`,
+    };
+}
+
+/* ------------------------------
+   Helpers
+-------------------------------- */
 function getPlace(snapshot: EnvironmentSnapshot): string {
     if (typeof snapshot.manual_city === "string" && snapshot.manual_city.trim()) {
         return snapshot.manual_city;
@@ -147,6 +294,15 @@ function getPlace(snapshot: EnvironmentSnapshot): string {
     }
 
     return "Environment";
+}
+
+function getCoordinates(snapshot: EnvironmentSnapshot): string {
+    const lat = numberValue(snapshot.lat);
+    const lng = numberValue(snapshot.lng);
+
+    if (lat === null || lng === null) return "—";
+
+    return `${round(lat)}, ${round(lng)}`;
 }
 
 function getSignal(snapshot: EnvironmentSnapshot): string {
@@ -172,25 +328,12 @@ function getCondition(snapshot: EnvironmentSnapshot): string {
     return "Current conditions";
 }
 
-function section(title: string, fields: EnvironmentField[]): EnvironmentSectionModel {
-    return {
-        title,
-        fields: fields.filter((item) => item.value !== "—"),
-    };
-}
-
-function field(label: string, value: unknown, suffix = ""): EnvironmentField {
-    return {
-        label,
-        value: display(value, suffix),
-    };
-}
-
 function display(value: unknown, suffix = ""): string {
     if (value === null || value === undefined || value === "") return "—";
     if (typeof value === "boolean") return value ? "Yes" : "No";
     if (typeof value === "number") return `${round(value)}${suffix}`;
     if (Array.isArray(value)) return formatArray(value);
+
     return `${String(value)}${suffix}`;
 }
 
@@ -212,6 +355,7 @@ function round(value: number): string {
 
 function formatArray(value: unknown): string {
     if (!Array.isArray(value) || value.length === 0) return "—";
+
     return value.map(String).join(", ");
 }
 
@@ -230,24 +374,4 @@ function formatHeroTime(value: unknown): string {
         hour: "numeric",
         minute: "2-digit",
     });
-}
-
-function formatDuration(value: unknown): string {
-    const seconds = numberValue(value);
-    if (!seconds) return "—";
-
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.round((seconds % 3600) / 60);
-
-    return `${hours}h ${minutes}m`;
-}
-
-function formatOffset(value: unknown): string {
-    const seconds = numberValue(value);
-    if (seconds === null) return "—";
-
-    const hours = seconds / 3600;
-    const sign = hours >= 0 ? "+" : "";
-
-    return `UTC${sign}${hours}`;
 }

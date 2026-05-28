@@ -1,14 +1,13 @@
-// app/app/environment/main/view/EnvironmentView.tsx
 "use client";
 
 /* ==========================================================
    OUTFLO — ENVIRONMENT VIEW
    File: app/app/environment/main/view/EnvironmentView.tsx
-   Scope: Compose Environment substrate surface
+   Scope: Compose Environment substrate landing page surface
    Last Updated:
    - ms: 1779901409308
    - iso: 2026-05-27T17:03:29.308Z
-   - note: create Environment substrate view composition
+   - note: recompose Environment surface as landing page
    ========================================================== */
 
 /* ------------------------------
@@ -20,7 +19,9 @@ import type { EnvironmentViewModel } from "../internal/environment.types";
 import EnvironmentHeader from "./header/EnvironmentHeader";
 import EnvironmentFooter from "./footer/EnvironmentFooter";
 import EnvironmentHeroSection from "./sections/EnvironmentHeroSection";
-import EnvironmentDataSection from "./sections/EnvironmentDataSection";
+import EnvironmentForecastSection from "./sections/EnvironmentForecastSection";
+import EnvironmentSummarySection from "./sections/EnvironmentSummarySection";
+import EnvironmentRecordSection from "./sections/EnvironmentRecordSection";
 
 /* ------------------------------
    Types
@@ -38,7 +39,7 @@ type EnvironmentViewProps = {
 const SURFACE_STYLE: CSSProperties = {
     width: "100%",
     display: "grid",
-    rowGap: 28,
+    rowGap: 24,
 };
 
 /* ------------------------------
@@ -60,9 +61,11 @@ export default function EnvironmentView({
 
             <EnvironmentHeroSection model={model.hero} />
 
-            {model.sections.map((section) => (
-                <EnvironmentDataSection key={section.title} model={section} />
-            ))}
+            <EnvironmentForecastSection model={model.forecast} />
+
+            <EnvironmentSummarySection model={model.summary} />
+
+            <EnvironmentRecordSection model={model.record} />
 
             <EnvironmentFooter hasSnapshot={model.hasSnapshot} />
         </section>
