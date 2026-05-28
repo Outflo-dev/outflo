@@ -56,7 +56,7 @@ export default function EnvironmentFieldCard({
 
     const CARD_STYLE: CSSProperties = {
         position: "relative",
-        minHeight: 104,
+        minHeight: 88,
         display: "grid",
         alignContent: "space-between",
         rowGap: 14,

@@ -56,7 +56,7 @@ export default function EnvironmentSummarySection({
     const GRID_STYLE: CSSProperties = {
         display: "grid",
         gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-        gap: 12,
+        gap: 8,
     };
 
     return (

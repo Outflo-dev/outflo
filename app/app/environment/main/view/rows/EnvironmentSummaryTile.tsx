@@ -52,8 +52,8 @@ function getIcon(title: string): ReactNode {
 -------------------------------- */
 function EnvironmentTileIcon({ title, accent }: EnvironmentTileIconProps) {
     const ICON_WRAP_STYLE: CSSProperties = {
-        width: 52,
-        height: 52,
+        width: 36,
+        height: 36,
         display: "grid",
         placeItems: "center",
         borderRadius: 18,
@@ -141,7 +141,7 @@ function AirIcon() {
 
 function AltitudeIcon() {
     return (
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 2 22 24" fill="none" aria-hidden="true">
             <path
                 d="M3.5 18.5 9 8.5l3.7 6 2-3.3 5.8 7.3h-17Z"
                 stroke="currentColor"
@@ -179,44 +179,51 @@ export default function EnvironmentSummaryTile({
 }: EnvironmentSummaryTileProps) {
     const TILE_STYLE: CSSProperties = {
         position: "relative",
-        minHeight: 134,
+        height: 104,
         display: "grid",
         gridTemplateColumns: "auto 1fr auto",
-        columnGap: 14,
+        columnGap: 10,
         alignItems: "center",
-        padding: 16,
-        borderRadius: 28,
-        border: "1px solid rgba(255,255,255,0.09)",
+        padding: 12,
+        borderRadius: 22,
+        border: "1px solid rgba(255,255,255,0.08)",
         background:
-            "linear-gradient(180deg, rgba(255,255,255,0.085), rgba(255,255,255,0.035))",
-        boxShadow: "0 18px 44px rgba(0,0,0,0.18)",
+            "linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03))",
+        boxShadow: "0 14px 34px rgba(0,0,0,0.14)",
         overflow: "hidden",
     };
 
     const COPY_STYLE: CSSProperties = {
         minWidth: 0,
         display: "grid",
-        rowGap: 5,
+        rowGap: 2,
+    };
+
+    const TEXT_CLAMP_STYLE: CSSProperties = {
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
     };
 
     const EYEBROW_STYLE: CSSProperties = {
+        ...TEXT_CLAMP_STYLE,
         color: "var(--text-tertiary)",
         letterSpacing: "0.04em",
     };
 
     const TITLE_STYLE: CSSProperties = {
+        ...TEXT_CLAMP_STYLE,
         color: "var(--text-primary)",
-        overflowWrap: "anywhere",
     };
 
     const VALUE_STYLE: CSSProperties = {
+        ...TEXT_CLAMP_STYLE,
         color: "var(--text-secondary)",
-        overflowWrap: "anywhere",
     };
 
     const DETAIL_STYLE: CSSProperties = {
+        ...TEXT_CLAMP_STYLE,
         color: "var(--text-tertiary)",
-        overflowWrap: "anywhere",
     };
 
     return (
