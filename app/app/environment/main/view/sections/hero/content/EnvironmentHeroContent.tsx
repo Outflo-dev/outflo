@@ -16,7 +16,7 @@
 -------------------------------- */
 import type { CSSProperties } from "react";
 
-import type { EnvironmentHeroModel } from "../../../internal/environment.types";
+import type { EnvironmentHeroModel } from "../../../../internal/environment.types";
 import EnvironmentHeroLivePill from "../EnvironmentHeroLivePill";
 import EnvironmentHeroTemperature from "./EnvironmentHeroTemperature";
 import EnvironmentHeroMeta from "../EnvironmentHeroMeta";
