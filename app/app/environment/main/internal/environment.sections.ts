@@ -4,9 +4,9 @@
    File: app/app/environment/main/internal/environment.sections.ts
    Scope: Build Environment substrate landing page model from current snapshot
    Last Updated:
-   - ms: 1779901409308
-   - iso: 2026-05-27T17:03:29.308Z
-   - note: recompose Environment model around landing page summaries
+   - ms: 1780011540053
+   - iso: 2026-05-28T23:39:00.053Z
+   - note: tighten Environment North Star model copy and tile density
    ========================================================== */
 
 /* ------------------------------
@@ -21,7 +21,7 @@ import type {
     EnvironmentSummarySectionModel,
     EnvironmentSummaryTileModel,
     EnvironmentViewModel,
-} from "./environment.types";;
+} from "./environment.types";
 
 /* ------------------------------
    Model
@@ -152,7 +152,7 @@ function getEmptyForecast(): EnvironmentForecastModel {
 function getSummary(snapshot: EnvironmentSnapshot): EnvironmentSummarySectionModel {
     return {
         title: "Environment Details",
-        subtitle: "The current moment compressed into readable substrate signals.",
+        subtitle: "Current resolved environment signals.",
         tiles: [
             getPlaceTile(snapshot),
             getWeatherTile(snapshot),
@@ -169,10 +169,10 @@ function getEmptySummary(): EnvironmentSummarySectionModel {
         title: "Environment Details",
         subtitle: "Snapshot summaries will appear once Environment resolves.",
         tiles: [
-            tile("Place", "Waiting", "No location", "Open emitter", "rgba(140,215,255,0.68)"),
-            tile("Weather", "Waiting", "No weather", "Refresh after signal", "rgba(255,196,118,0.72)"),
-            tile("Sun", "Waiting", "No sun context", "Needs time and place", "rgba(255,203,122,0.78)"),
-            tile("Air", "Waiting", "No air context", "Provider pending", "rgba(126,231,181,0.72)"),
+            tile("Place", "Location", "Waiting", "No location", "rgba(140,215,255,0.68)"),
+            tile("Weather", "Atmosphere", "Waiting", "No weather", "rgba(255,196,118,0.72)"),
+            tile("Sun", "Light", "Waiting", "No sun context", "rgba(255,203,122,0.78)"),
+            tile("Air", "Quality", "Waiting", "No air context", "rgba(126,231,181,0.72)"),
         ],
     };
 }

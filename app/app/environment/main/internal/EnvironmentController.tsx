@@ -6,9 +6,9 @@
    File: app/app/environment/main/internal/EnvironmentController.tsx
    Scope: Own Environment route motion, navigation, and refresh action
    Last Updated:
-   - ms: 1779901409308
-   - iso: 2026-05-27T17:03:29.308Z
-   - note: create Environment substrate controller
+   - ms: 1780011540053
+   - iso: 2026-05-28T23:39:00.053Z
+   - note: preserve compact Environment surface while allowing page scroll
    ========================================================== */
 
 /* ------------------------------
@@ -40,7 +40,7 @@ type EnvironmentControllerProps = {
 const MAIN_STYLE: CSSProperties = {
     minHeight: "100svh",
     padding:
-        "calc(env(safe-area-inset-top) + 18px) 0px max(32px, env(safe-area-inset-bottom))",
+        "calc(env(safe-area-inset-top) + 6px) 0 max(18px, env(safe-area-inset-bottom))",
     background: "var(--bg-primary)",
     color: "var(--text-primary)",
 };

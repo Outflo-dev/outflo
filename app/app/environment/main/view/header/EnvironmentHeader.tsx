@@ -1,23 +1,22 @@
+// app/app/environment/main/view/header/EnvironmentHeader.tsx
 "use client";
 
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER
    File: app/app/environment/main/view/header/EnvironmentHeader.tsx
-   Scope: Render Environment landing page navigation
+   Scope: Compose Environment scene header controls
    Last Updated:
-   - ms: 1779901409308
-   - iso: 2026-05-27T17:03:29.308Z
-   - note: compress Environment header for landing surface
+   - ms: 1780011540053
+   - iso: 2026-05-28T23:39:00.053Z
+   - note: delegate Environment header internals to local owners
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CSSProperties } from "react";
-
-import Text from "@/components/system/primitives/display/type/Text";
-import EnvironmentBackAction from "./EnvironmentBackAction";
-import EnvironmentRefreshAction from "./EnvironmentRefreshAction";
+import EnvironmentHeaderFrame from "./internal/EnvironmentHeaderFrame";
+import EnvironmentBackButton from "./internal/EnvironmentBackButton";
+import EnvironmentRefreshCluster from "./internal/EnvironmentRefreshCluster";
 
 /* ------------------------------
    Types
@@ -36,40 +35,14 @@ export default function EnvironmentHeader({
     onRefresh,
     refreshing,
 }: EnvironmentHeaderProps) {
-    const HEADER_STYLE: CSSProperties = {
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "space-between",
-        gap: 16,
-        minHeight: 72,
-        paddingTop: 8,
-    };
-
-    const ACTION_GROUP_STYLE: CSSProperties = {
-        display: "grid",
-        justifyItems: "end",
-        rowGap: 6,
-    };
-
-    const UPDATED_STYLE: CSSProperties = {
-        color: "var(--text-secondary)",
-        paddingRight: 6,
-    };
-
     return (
-        <header style={HEADER_STYLE}>
-            <EnvironmentBackAction onBack={onBack} />
+        <EnvironmentHeaderFrame>
+            <EnvironmentBackButton onBack={onBack} />
 
-            <div style={ACTION_GROUP_STYLE}>
-                <EnvironmentRefreshAction
-                    onRefresh={onRefresh}
-                    refreshing={refreshing}
-                />
-
-                <Text as="p" type="meta" style={UPDATED_STYLE}>
-                    Updated 4m ago
-                </Text>
-            </div>
-        </header>
+            <EnvironmentRefreshCluster
+                onRefresh={onRefresh}
+                refreshing={refreshing}
+            />
+        </EnvironmentHeaderFrame>
     );
 }

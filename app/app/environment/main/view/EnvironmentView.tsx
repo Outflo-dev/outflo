@@ -6,9 +6,9 @@
    File: app/app/environment/main/view/EnvironmentView.tsx
    Scope: Compose Environment substrate landing page surface
    Last Updated:
-   - ms: 1779901409308
-   - iso: 2026-05-27T17:03:29.308Z
-   - note: restore blue viewport backdrop while keeping scene image in route
+   - ms: 1780011540053
+   - iso: 2026-05-28T23:39:00.053Z
+   - note: normalize Environment side padding to app frame rhythm
    ========================================================== */
 
 /* ------------------------------
@@ -46,8 +46,12 @@ export default function EnvironmentView({
     const ROOT_STYLE: CSSProperties = {
         position: "relative",
         width: "100%",
-        minHeight: "100%",
+        height: "100%",
+        minHeight: 0,
+        display: "grid",
+        gridTemplateRows: "auto minmax(0, 1fr)",
         isolation: "isolate",
+        overflow: "hidden",
         background: "transparent",
     };
 
@@ -57,19 +61,20 @@ export default function EnvironmentView({
         zIndex: -30,
         pointerEvents: "none",
         background:
-            "linear-gradient(180deg, rgba(74,113,139,0.96), rgba(20,48,76,0.98) 42%, rgba(5,12,24,1) 100%)",
+            "linear-gradient(180deg, rgba(23,36,69,0.98), rgba(8,22,42,0.98) 44%, rgba(3,7,16,1) 100%)",
     };
 
     const TOP_SCENE_STYLE: CSSProperties = {
         position: "relative",
         display: "grid",
-        rowGap: 14,
-        margin: "-16px -16px 0",
-        padding: "16px 16px 18px",
+        rowGap: 5,
+        margin: "-6px 0 0",
+        padding: "7px 0 7px",
         overflow: "hidden",
+        borderRadius: 30,
         backgroundImage: `
-            linear-gradient(180deg, rgba(3,8,18,0.06), rgba(3,8,18,0.42) 52%, rgba(3,8,18,0.92)),
-            linear-gradient(90deg, rgba(3,8,18,0.5), rgba(3,8,18,0.16) 58%, rgba(3,8,18,0.04)),
+            linear-gradient(180deg, rgba(3,8,18,0.02), rgba(3,8,18,0.26) 54%, rgba(3,8,18,0.7)),
+            linear-gradient(90deg, rgba(3,8,18,0.58), rgba(3,8,18,0.18) 58%, rgba(3,8,18,0.02)),
             url("/environment/hero/day-clouds.png")
         `,
         backgroundSize: "cover",
@@ -81,24 +86,28 @@ export default function EnvironmentView({
         inset: 0,
         pointerEvents: "none",
         background:
-            "radial-gradient(circle at 80% 18%, rgba(255,223,150,0.2), transparent 26%), linear-gradient(180deg, rgba(255,255,255,0.08), transparent 36%)",
-        opacity: 0.88,
+            "radial-gradient(circle at 82% 20%, rgba(255,223,150,0.22), transparent 25%), linear-gradient(180deg, rgba(255,255,255,0.06), transparent 34%)",
+        opacity: 0.82,
     };
 
     const TOP_CONTENT_STYLE: CSSProperties = {
         position: "relative",
         zIndex: 1,
         display: "grid",
-        rowGap: 14,
+        rowGap: 5,
+        paddingInline: 8,
     };
 
     const LOWER_SURFACE_STYLE: CSSProperties = {
+        minHeight: 0,
         display: "grid",
-        rowGap: 18,
-        margin: "0 -16px",
-        padding: "16px 16px 28px",
+        gridTemplateRows: "auto auto auto",
+        rowGap: 6,
+        margin: "0",
+        padding: "7px 0 8px",
+        overflow: "hidden",
         background:
-            "linear-gradient(180deg, rgba(3,8,18,0.24), rgba(3,8,18,0.76) 24%, rgba(3,5,10,0.94) 100%)",
+            "linear-gradient(180deg, rgba(6,19,36,0.52), rgba(3,7,16,0.74) 42%, rgba(3,5,10,0.9) 100%)",
     };
 
     return (

@@ -1,3 +1,4 @@
+// app/app/environment/main/view/rows/EnvironmentSummaryTile.tsx
 "use client";
 
 /* ==========================================================
@@ -5,9 +6,9 @@
    File: app/app/environment/main/view/rows/EnvironmentSummaryTile.tsx
    Scope: Render one Environment landing summary tile
    Last Updated:
-   - ms: 1779901409308
-   - iso: 2026-05-27T17:03:29.308Z
-   - note: add icon-led Environment summary tile grammar
+   - ms: 1780011540053
+   - iso: 2026-05-28T23:39:00.053Z
+   - note: compress Environment summary tile for one-screen composition
    ========================================================== */
 
 /* ------------------------------
@@ -52,14 +53,15 @@ function getIcon(title: string): ReactNode {
 -------------------------------- */
 function EnvironmentTileIcon({ title, accent }: EnvironmentTileIconProps) {
     const ICON_WRAP_STYLE: CSSProperties = {
-        width: 36,
-        height: 36,
+        width: 27,
+        height: 27,
         display: "grid",
         placeItems: "center",
-        borderRadius: 18,
+        borderRadius: 14,
         color: accent,
         background: `color-mix(in srgb, ${accent} 18%, transparent)`,
-        boxShadow: `0 0 34px color-mix(in srgb, ${accent} 34%, transparent)`,
+        boxShadow: `0 0 22px color-mix(in srgb, ${accent} 30%, transparent)`,
+        flexShrink: 0,
     };
 
     return <div style={ICON_WRAP_STYLE}>{getIcon(title)}</div>;
@@ -67,7 +69,7 @@ function EnvironmentTileIcon({ title, accent }: EnvironmentTileIconProps) {
 
 function PlaceIcon() {
     return (
-        <svg width="27" height="27" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
                 d="M12 21s7-6.1 7-12a7 7 0 0 0-14 0c0 5.9 7 12 7 12Z"
                 stroke="currentColor"
@@ -86,7 +88,7 @@ function PlaceIcon() {
 
 function WeatherIcon() {
     return (
-        <svg width="29" height="29" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
                 d="M7.8 18h8.8a4 4 0 0 0 .2-8 5.8 5.8 0 0 0-11.1 1.8A3.2 3.2 0 0 0 7.8 18Z"
                 fill="currentColor"
@@ -98,7 +100,7 @@ function WeatherIcon() {
 
 function SunIcon() {
     return (
-        <svg width="29" height="29" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
                 d="M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z"
                 stroke="currentColor"
@@ -116,7 +118,7 @@ function SunIcon() {
 
 function AirIcon() {
     return (
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
                 d="M4 8h10.5a2.5 2.5 0 1 0-2.2-3.7"
                 stroke="currentColor"
@@ -141,7 +143,7 @@ function AirIcon() {
 
 function AltitudeIcon() {
     return (
-        <svg width="30" height="30" viewBox="0 2 22 24" fill="none" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 2 22 24" fill="none" aria-hidden="true">
             <path
                 d="M3.5 18.5 9 8.5l3.7 6 2-3.3 5.8 7.3h-17Z"
                 stroke="currentColor"
@@ -155,7 +157,7 @@ function AltitudeIcon() {
 
 function SourceIcon() {
     return (
-        <svg width="29" height="29" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
                 d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
                 stroke="currentColor"
@@ -179,36 +181,30 @@ export default function EnvironmentSummaryTile({
 }: EnvironmentSummaryTileProps) {
     const TILE_STYLE: CSSProperties = {
         position: "relative",
-        height: 104,
+        height: 68,
         display: "grid",
-        gridTemplateColumns: "auto 1fr auto",
-        columnGap: 10,
+        gridTemplateColumns: "auto minmax(0, 1fr) auto",
+        columnGap: 6,
         alignItems: "center",
-        padding: 12,
-        borderRadius: 22,
-        border: "1px solid rgba(255,255,255,0.08)",
+        padding: 8,
+        borderRadius: 17,
+        border: "1px solid rgba(255,255,255,0.07)",
         background:
-            "linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03))",
-        boxShadow: "0 14px 34px rgba(0,0,0,0.14)",
+            "linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.026))",
+        boxShadow: "0 10px 24px rgba(0,0,0,0.12)",
         overflow: "hidden",
     };
 
     const COPY_STYLE: CSSProperties = {
         minWidth: 0,
         display: "grid",
-        rowGap: 2,
+        rowGap: 0,
     };
 
     const TEXT_CLAMP_STYLE: CSSProperties = {
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
-    };
-
-    const EYEBROW_STYLE: CSSProperties = {
-        ...TEXT_CLAMP_STYLE,
-        color: "var(--text-tertiary)",
-        letterSpacing: "0.04em",
     };
 
     const TITLE_STYLE: CSSProperties = {
@@ -226,6 +222,10 @@ export default function EnvironmentSummaryTile({
         color: "var(--text-tertiary)",
     };
 
+    const CHEVRON_STYLE: CSSProperties = {
+        opacity: 0.5,
+    };
+
     return (
         <article style={TILE_STYLE}>
             <EnvironmentTileIcon title={model.title} accent={model.accent} />
@@ -235,11 +235,7 @@ export default function EnvironmentSummaryTile({
                     {model.title}
                 </Text>
 
-                <Text as="p" type="meta" style={EYEBROW_STYLE}>
-                    {model.eyebrow}
-                </Text>
-
-                <Text as="p" type="label" style={VALUE_STYLE}>
+                <Text as="p" type="meta" style={VALUE_STYLE}>
                     {model.value}
                 </Text>
 
@@ -248,7 +244,9 @@ export default function EnvironmentSummaryTile({
                 </Text>
             </div>
 
-            <Chevron direction="right" />
+            <span style={CHEVRON_STYLE}>
+                <Chevron direction="right" />
+            </span>
         </article>
     );
 }

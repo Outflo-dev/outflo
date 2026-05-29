@@ -6,9 +6,9 @@
    File: app/app/environment/main/view/sections/EnvironmentSummarySection.tsx
    Scope: Render Environment landing page summary tiles
    Last Updated:
-   - ms: 1779901409308
-   - iso: 2026-05-27T17:03:29.308Z
-   - note: restore Environment summary grid to mock-aligned layout
+   - ms: 1780011540053
+   - iso: 2026-05-28T23:39:00.053Z
+   - note: compress summary grid into one-screen Environment composition
    ========================================================== */
 
 /* ------------------------------
@@ -35,12 +35,12 @@ export default function EnvironmentSummarySection({
 }: EnvironmentSummarySectionProps) {
     const SECTION_STYLE: CSSProperties = {
         display: "grid",
-        rowGap: 14,
+        rowGap: 6,
     };
 
     const HEADER_STYLE: CSSProperties = {
         display: "grid",
-        rowGap: 4,
+        rowGap: 0,
     };
 
     const TITLE_STYLE: CSSProperties = {
@@ -56,7 +56,7 @@ export default function EnvironmentSummarySection({
     const GRID_STYLE: CSSProperties = {
         display: "grid",
         gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-        gap: 8,
+        gap: 6,
     };
 
     return (
