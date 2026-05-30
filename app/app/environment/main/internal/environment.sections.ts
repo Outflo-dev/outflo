@@ -1,4 +1,3 @@
-// app/app/environment/main/internal/environment.sections.ts
 /* ==========================================================
    OUTFLO — ENVIRONMENT SECTIONS
    File: app/app/environment/main/internal/environment.sections.ts
@@ -6,7 +5,7 @@
    Last Updated:
    - ms: 1780011540053
    - iso: 2026-05-28T23:39:00.053Z
-   - note: tighten Environment North Star model copy and tile density
+   - note: derive Environment scene model separately from hero display model
    ========================================================== */
 
 /* ------------------------------
@@ -17,6 +16,8 @@ import type {
     EnvironmentForecastModel,
     EnvironmentHeroModel,
     EnvironmentRecordModel,
+    EnvironmentSceneKey,
+    EnvironmentSceneModel,
     EnvironmentSnapshot,
     EnvironmentSummarySectionModel,
     EnvironmentSummaryTileModel,
@@ -32,6 +33,10 @@ export function getEnvironmentModel(
     if (!snapshot) {
         return {
             hasSnapshot: false,
+            scene: {
+                key: "empty",
+                label: "No snapshot",
+            },
             hero: {
                 place: "Environment",
                 temperature: "—",
@@ -39,7 +44,6 @@ export function getEnvironmentModel(
                 feelsLike: "Open OwnTracks to emit location.",
                 updated: "No current truth",
                 signal: "Emitter silent",
-                background: "empty",
             },
             forecast: getEmptyForecast(),
             summary: getEmptySummary(),
@@ -54,6 +58,7 @@ export function getEnvironmentModel(
 
     return {
         hasSnapshot: true,
+        scene: getScene(snapshot),
         hero: getHero(snapshot),
         forecast: getForecast(snapshot),
         summary: getSummary(snapshot),
@@ -62,14 +67,63 @@ export function getEnvironmentModel(
 }
 
 /* ------------------------------
+   Scene
+-------------------------------- */
+function getScene(snapshot: EnvironmentSnapshot): EnvironmentSceneModel {
+    const key = getSceneKey(snapshot);
+
+    return {
+        key,
+        label: getSceneLabel(key),
+    };
+}
+
+function getSceneKey(snapshot: EnvironmentSnapshot): EnvironmentSceneKey {
+    const code = String(snapshot.weather_code ?? "");
+    const cloud = numberValue(snapshot.cloud_cover_pct);
+    const rain = numberValue(snapshot.rain_mm);
+    const snow = numberValue(snapshot.snowfall_mm);
+    const isDay = snapshot.is_day === true;
+
+    if (snow && snow > 0) return "snow";
+    if (rain && rain > 0) return "rain";
+    if (isThunderstormCode(code)) return "thunderstorm";
+
+    if (!isDay) {
+        if (cloud !== null && cloud > 20) return "partly-cloudy-night";
+
+        return "clear-night";
+    }
+
+    if (cloud !== null && cloud > 60) return "cloudy-day";
+    if (cloud !== null && cloud > 20) return "partly-cloudy-day";
+
+    return "clear-day";
+}
+
+function getSceneLabel(key: EnvironmentSceneKey): string {
+    if (key === "empty") return "No snapshot";
+    if (key === "clear-day") return "Clear day";
+    if (key === "partly-cloudy-day") return "Partly cloudy day";
+    if (key === "cloudy-day") return "Cloudy day";
+    if (key === "rain") return "Rain";
+    if (key === "snow") return "Snow";
+    if (key === "thunderstorm") return "Thunderstorm";
+    if (key === "clear-night") return "Clear night";
+
+    return "Partly cloudy night";
+}
+
+function isThunderstormCode(code: string): boolean {
+    return code === "95" || code === "96" || code === "99";
+}
+
+/* ------------------------------
    Hero
 -------------------------------- */
 function getHero(snapshot: EnvironmentSnapshot): EnvironmentHeroModel {
     const temperature = display(snapshot.temperature_c, "°");
     const feelsLike = display(snapshot.apparent_temperature_c, "°C");
-    const cloud = numberValue(snapshot.cloud_cover_pct);
-    const rain = numberValue(snapshot.rain_mm);
-    const isDay = snapshot.is_day === true;
     const condition = getCondition(snapshot);
 
     return {
@@ -79,7 +133,6 @@ function getHero(snapshot: EnvironmentSnapshot): EnvironmentHeroModel {
         feelsLike: `Feels like ${feelsLike}`,
         updated: `Updated ${formatHeroTime(snapshot.environment_context_pulled_at_ms ?? snapshot.moment_ms)}`,
         signal: getSignal(snapshot),
-        background: rain && rain > 0 ? "rain" : isDay ? (cloud && cloud > 40 ? "cloud" : "day") : "night",
     };
 }
 
@@ -89,18 +142,19 @@ function getHero(snapshot: EnvironmentSnapshot): EnvironmentHeroModel {
 function getForecast(snapshot: EnvironmentSnapshot): EnvironmentForecastModel {
     const nowTemp = numberValue(snapshot.temperature_c);
     const baseTemp = nowTemp ?? 29;
+    const sceneKey = getSceneKey(snapshot);
 
     return {
         title: "Forecast",
         subtitle: "Next 24 hours",
         items: [
-            forecastItem("Now", baseTemp, getCondition(snapshot)),
-            forecastItem("9 PM", baseTemp - 1, "Clouds"),
-            forecastItem("10 PM", baseTemp - 2, "Clouds"),
-            forecastItem("11 PM", baseTemp - 2, "Clouds"),
-            forecastItem("12 AM", baseTemp - 3, "Clouds"),
-            forecastItem("1 AM", baseTemp - 3, "Clouds"),
-            forecastItem("2 AM", baseTemp - 4, "Clouds"),
+            forecastItem("Now", baseTemp, getCondition(snapshot), sceneKey),
+            forecastItem("9 PM", baseTemp - 1, "Clouds", "partly-cloudy-night"),
+            forecastItem("10 PM", baseTemp - 2, "Clouds", "partly-cloudy-night"),
+            forecastItem("11 PM", baseTemp - 2, "Clouds", "partly-cloudy-night"),
+            forecastItem("12 AM", baseTemp - 3, "Clouds", "partly-cloudy-night"),
+            forecastItem("1 AM", baseTemp - 3, "Clouds", "partly-cloudy-night"),
+            forecastItem("2 AM", baseTemp - 4, "Clouds", "partly-cloudy-night"),
         ],
     };
 }
@@ -108,12 +162,14 @@ function getForecast(snapshot: EnvironmentSnapshot): EnvironmentForecastModel {
 function forecastItem(
     label: string,
     temperature: number,
-    detail: string
+    detail: string,
+    sceneKey: EnvironmentSceneKey
 ): EnvironmentForecastItemModel {
     return {
         label,
         value: `${Math.round(temperature)}°`,
         detail,
+        sceneKey,
     };
 }
 
@@ -126,21 +182,25 @@ function getEmptyForecast(): EnvironmentForecastModel {
                 label: "Now",
                 value: "—",
                 detail: "No snapshot",
+                sceneKey: "empty",
             },
             {
                 label: "Feels",
                 value: "—",
                 detail: "Waiting",
+                sceneKey: "empty",
             },
             {
                 label: "Cloud",
                 value: "—",
                 detail: "Waiting",
+                sceneKey: "empty",
             },
             {
                 label: "Rain",
                 value: "—",
                 detail: "Waiting",
+                sceneKey: "empty",
             },
         ],
     };
@@ -322,8 +382,11 @@ function getCondition(snapshot: EnvironmentSnapshot): string {
     const code = String(snapshot.weather_code ?? "");
     const cloud = numberValue(snapshot.cloud_cover_pct);
     const rain = numberValue(snapshot.rain_mm);
+    const snow = numberValue(snapshot.snowfall_mm);
 
+    if (snow && snow > 0) return "Snow";
     if (rain && rain > 0) return "Rain";
+    if (isThunderstormCode(code)) return "Thunderstorm";
     if (code === "0" && cloud !== null && cloud < 15) return "Clear";
     if (cloud !== null && cloud > 60) return "Cloudy";
     if (cloud !== null && cloud > 20) return "Partly cloudy";

@@ -34,13 +34,9 @@ export default function EnvironmentForecastStrip({
 }: EnvironmentForecastStripProps) {
     const STRIP_STYLE: CSSProperties = {
         display: "flex",
+        gap: 5,
         overflowX: "auto",
-        padding: 4,
-        borderRadius: 20,
-        border: "1px solid rgba(255,255,255,0.07)",
-        background:
-            "linear-gradient(180deg, rgba(255,255,255,0.052), rgba(255,255,255,0.022))",
-        boxShadow: "0 10px 26px rgba(0,0,0,0.12)",
+        padding: "0 1px 2px",
         scrollbarWidth: "none",
     };
 

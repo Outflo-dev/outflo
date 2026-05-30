@@ -4,11 +4,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT HERO STAGE
    File: app/app/environment/main/view/sections/hero/stage/EnvironmentHeroStage.tsx
-   Scope: Own relationship between hero data card and weather object
+   Scope: Own centered hero card lane
    Last Updated:
    - ms: 1780011540053
    - iso: 2026-05-28T23:39:00.053Z
-   - note: create hero stage as card-object relationship owner
+   - note: center hero card within stage lane
    ========================================================== */
 
 /* ------------------------------
@@ -32,6 +32,8 @@ export default function EnvironmentHeroStage({
     const STAGE_STYLE: CSSProperties = {
         position: "relative",
         minHeight: 146,
+        display: "grid",
+        justifyItems: "center",
         isolation: "isolate",
     };
 

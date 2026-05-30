@@ -4,11 +4,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT RECORD CARD
    File: app/app/environment/main/view/sections/records/EnvironmentRecordCard.tsx
-   Scope: Own Environment latest snapshot proof card
+   Scope: Own Environment latest snapshot proof overlay
    Last Updated:
    - ms: 1780011540053
    - iso: 2026-05-28T23:39:00.053Z
-   - note: extract record card ownership from record section
+   - note: soften record card into atmospheric proof overlay
    ========================================================== */
 
 /* ------------------------------
@@ -32,7 +32,13 @@ type EnvironmentRecordCardProps = {
 -------------------------------- */
 function RecordIcon() {
     return (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+        >
             <path
                 d="M7 3.8h7.2L18 7.6V20a.8.8 0 0 1-.8.8H7A.8.8 0 0 1 6.2 20V4.6A.8.8 0 0 1 7 3.8Z"
                 stroke="currentColor"
@@ -63,15 +69,17 @@ export default function EnvironmentRecordCard({
 }: EnvironmentRecordCardProps) {
     const CARD_STYLE: CSSProperties = {
         display: "grid",
-        gridTemplateColumns: "auto 1fr auto",
+        gridTemplateColumns: "auto minmax(0, 1fr) auto",
         alignItems: "center",
         gap: 9,
         padding: 9,
         borderRadius: 18,
-        border: "1px solid rgba(255,255,255,0.075)",
+        border: "1px solid rgba(255,255,255,0.04)",
         background:
-            "linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.026))",
-        boxShadow: "0 10px 24px rgba(0,0,0,0.13)",
+            "linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.012))",
+        boxShadow: "none",
+        backdropFilter: "blur(8px)",
+        overflow: "hidden",
     };
 
     const ICON_STYLE: CSSProperties = {
@@ -80,9 +88,10 @@ export default function EnvironmentRecordCard({
         display: "grid",
         placeItems: "center",
         borderRadius: 12,
-        color: "rgba(255,255,255,0.74)",
-        background: "rgba(255,255,255,0.07)",
-        boxShadow: "0 0 22px rgba(255,255,255,0.06)",
+        color: "rgba(255,255,255,0.66)",
+        background: "rgba(255,255,255,0.035)",
+        boxShadow: "none",
+        flexShrink: 0,
     };
 
     const COPY_STYLE: CSSProperties = {
@@ -91,18 +100,29 @@ export default function EnvironmentRecordCard({
         rowGap: 1,
     };
 
-    const SUBTITLE_STYLE: CSSProperties = {
-        color: "var(--text-secondary)",
+    const TEXT_CLAMP_STYLE: CSSProperties = {
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
     };
 
+    const TITLE_STYLE: CSSProperties = {
+        ...TEXT_CLAMP_STYLE,
+        color: "var(--text-primary)",
+    };
+
+    const SUBTITLE_STYLE: CSSProperties = {
+        ...TEXT_CLAMP_STYLE,
+        color: "var(--text-secondary)",
+    };
+
     const SECONDARY_STYLE: CSSProperties = {
+        ...TEXT_CLAMP_STYLE,
         color: "var(--text-tertiary)",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
+    };
+
+    const CHEVRON_WRAP_STYLE: CSSProperties = {
+        opacity: 0.46,
     };
 
     return (
@@ -112,7 +132,7 @@ export default function EnvironmentRecordCard({
             </div>
 
             <div style={COPY_STYLE}>
-                <Text as="h3" type="label">
+                <Text as="h3" type="label" style={TITLE_STYLE}>
                     {model.title}
                 </Text>
 
@@ -125,7 +145,9 @@ export default function EnvironmentRecordCard({
                 </Text>
             </div>
 
-            <Chevron direction="right" />
+            <span style={CHEVRON_WRAP_STYLE}>
+                <Chevron direction="right" />
+            </span>
         </article>
     );
 }

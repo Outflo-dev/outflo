@@ -1,31 +1,35 @@
-// app/app/environment/main/view/sections/EnvironmentHeroSection.tsx
+// app/app/environment/main/view/sections/hero/EnvironmentHeroSection.tsx
 "use client";
 
 /* ==========================================================
    OUTFLO — ENVIRONMENT HERO SECTION
-   File: app/app/environment/main/view/sections/EnvironmentHeroSection.tsx
+   File: app/app/environment/main/view/sections/hero/EnvironmentHeroSection.tsx
    Scope: Compose Environment current condition hero
    Last Updated:
    - ms: 1780011540053
    - iso: 2026-05-28T23:39:00.053Z
-   - note: move weather object out of hero card into hero stage
+   - note: pass weather object as hero card slot
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { EnvironmentHeroModel } from "../../internal/environment.types";
+import type {
+    EnvironmentHeroModel,
+    EnvironmentSceneModel,
+} from "../../../internal/environment.types";
 
-import EnvironmentHeroStage from "./hero/stage/EnvironmentHeroStage";
-import EnvironmentHeroCard from "./hero/EnvironmentHeroCard";
-import EnvironmentHeroContent from "./hero/content/EnvironmentHeroContent";
-import EnvironmentHeroWeatherObject from "./hero/weather-object/EnvironmentHeroWeatherObject";
+import EnvironmentHeroStage from "./stage/EnvironmentHeroStage";
+import EnvironmentHeroCard from "./EnvironmentHeroCard";
+import EnvironmentHeroContent from "./content/EnvironmentHeroContent";
+import EnvironmentHeroWeatherObject from "./weather-object/EnvironmentHeroWeatherObject";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type EnvironmentHeroSectionProps = {
     model: EnvironmentHeroModel;
+    scene: EnvironmentSceneModel;
 };
 
 /* ------------------------------
@@ -33,14 +37,17 @@ type EnvironmentHeroSectionProps = {
 -------------------------------- */
 export default function EnvironmentHeroSection({
     model,
+    scene,
 }: EnvironmentHeroSectionProps) {
     return (
         <EnvironmentHeroStage>
-            <EnvironmentHeroCard>
+            <EnvironmentHeroCard
+                weatherObject={
+                    <EnvironmentHeroWeatherObject sceneKey={scene.key} />
+                }
+            >
                 <EnvironmentHeroContent model={model} />
             </EnvironmentHeroCard>
-
-            <EnvironmentHeroWeatherObject background={model.background} />
         </EnvironmentHeroStage>
     );
 }

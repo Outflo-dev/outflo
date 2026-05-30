@@ -1,6 +1,6 @@
 ﻿OUTFLO - REPOSITORY TREE
-Generated: 2026-05-30 21:45:09.642 UTC
-Unix: 1780177509642
+Generated: 2026-05-30 03:15:39.430 UTC
+Unix: 1780110939430
 Root: C:\dev\Outflo
 
 app\
@@ -226,7 +226,8 @@ app\
 |   |   |       +-- footer\
 |   |   |       |   +-- EnvironmentFooter.tsx
 |   |   |       +-- frame\
-|   |   |       |   +-- EnvironmentRouteFrame.tsx
+|   |   |       |   +-- EnvironmentSceneFrame.tsx
+|   |   |       |   +-- EnvironmentScreenFrame.tsx
 |   |   |       +-- header\
 |   |   |       |   +-- internal\
 |   |   |       |   +-- EnvironmentBackAction.tsx
@@ -235,13 +236,14 @@ app\
 |   |   |       +-- rows\
 |   |   |       |   +-- EnvironmentFieldCard.tsx
 |   |   |       |   +-- EnvironmentSummaryTile.tsx
-|   |   |       +-- scene\
-|   |   |       |   +-- EnvironmentAtmosphere.tsx
 |   |   |       +-- sections\
 |   |   |       |   +-- forecast\
 |   |   |       |   +-- hero\
 |   |   |       |   +-- records\
 |   |   |       |   +-- EnvironmentDataSection.tsx
+|   |   |       |   +-- EnvironmentForecastSection.tsx
+|   |   |       |   +-- EnvironmentHeroSection.tsx
+|   |   |       |   +-- EnvironmentRecordSection.tsx
 |   |   |       |   +-- EnvironmentSummarySection.tsx
 |   |   |       +-- EnvironmentView.tsx
 |   |   +-- page.tsx
@@ -681,8 +683,6 @@ docs\
 |   |   +-- 1779927558973__2026-05-28_00-19-18-973.txt
 |   |   +-- 1780009081175__2026-05-28_22-58-01-175.txt
 |   |   +-- 1780011540053__2026-05-28_23-39-00-053.txt
-|   |   +-- 1780110939430__2026-05-30_03-15-39-430.txt
-|   |   +-- 1780162213965__2026-05-30_17-30-13-965.txt
 |   +-- README.md
 +-- README.md
 

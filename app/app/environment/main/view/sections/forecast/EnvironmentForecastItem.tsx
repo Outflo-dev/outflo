@@ -8,7 +8,7 @@
    Last Updated:
    - ms: 1780011540053
    - iso: 2026-05-28T23:39:00.053Z
-   - note: extract forecast item ownership from forecast strip
+   - note: render forecast icon from semantic scene key
    ========================================================== */
 
 /* ------------------------------
@@ -17,7 +17,10 @@
 import type { CSSProperties } from "react";
 
 import Text from "@/components/system/primitives/display/type/Text";
-import type { EnvironmentForecastItemModel } from "../../../internal/environment.types";
+import type {
+    EnvironmentForecastItemModel,
+    EnvironmentSceneKey,
+} from "../../../internal/environment.types";
 
 /* ------------------------------
    Types
@@ -30,12 +33,14 @@ type EnvironmentForecastItemProps = {
 /* ------------------------------
    Helpers
 -------------------------------- */
-function getForecastIconSrc(detail: string): string {
-    const key = detail.toLowerCase();
-
-    if (key.includes("rain")) return "/environment/rain.png";
-    if (key.includes("clear")) return "/environment/clear-day.png";
-    if (key.includes("cloud")) return "/environment/cloudy.png";
+function getForecastIconSrc(sceneKey: EnvironmentSceneKey): string {
+    if (sceneKey === "rain") return "/environment/rain.png";
+    if (sceneKey === "snow") return "/environment/snow.png";
+    if (sceneKey === "thunderstorm") return "/environment/thunderstorm.png";
+    if (sceneKey === "clear-day") return "/environment/clear-day.png";
+    if (sceneKey === "cloudy-day") return "/environment/cloudy.png";
+    if (sceneKey === "clear-night") return "/environment/clear-night.png";
+    if (sceneKey === "partly-cloudy-night") return "/environment/partly-cloudy-night.png";
 
     return "/environment/partly-cloudy-day.png";
 }
@@ -48,35 +53,43 @@ export default function EnvironmentForecastItem({
     active,
 }: EnvironmentForecastItemProps) {
     const ITEM_STYLE: CSSProperties = {
-        minWidth: 58,
-        minHeight: 66,
+        flex: "0 0 auto",
+        minWidth: 52,
+        minHeight: 60,
         display: "grid",
         justifyItems: "center",
         alignContent: "space-between",
-        rowGap: 3,
-        padding: "7px 5px",
-        borderRadius: 16,
+        rowGap: 2,
+        padding: "6px 5px",
+        borderRadius: 14,
         color: "var(--text-primary)",
-        background: active ? "rgba(99,136,210,0.22)" : "rgba(255,255,255,0.024)",
-        borderRight: "1px solid rgba(255,255,255,0.04)",
+        border: active
+            ? "1px solid rgba(255,255,255,0.12)"
+            : "1px solid rgba(255,255,255,0.06)",
+        background: active
+            ? "rgba(99,136,210,0.2)"
+            : "rgba(255,255,255,0.038)",
+        boxShadow: active ? "0 8px 18px rgba(0,0,0,0.14)" : "none",
     };
 
     const LABEL_STYLE: CSSProperties = {
         color: "var(--text-secondary)",
         whiteSpace: "nowrap",
+        lineHeight: 1,
     };
 
     const ICON_STYLE: CSSProperties = {
-        width: 20,
-        height: 20,
+        width: 19,
+        height: 19,
         objectFit: "contain",
         opacity: 0.92,
-        filter: "drop-shadow(0 6px 12px rgba(0,0,0,0.2))",
+        filter: "drop-shadow(0 5px 10px rgba(0,0,0,0.2))",
     };
 
     const VALUE_STYLE: CSSProperties = {
         color: "var(--text-primary)",
         whiteSpace: "nowrap",
+        lineHeight: 1,
     };
 
     return (
@@ -88,7 +101,7 @@ export default function EnvironmentForecastItem({
             <img
                 alt=""
                 aria-hidden="true"
-                src={getForecastIconSrc(item.detail)}
+                src={getForecastIconSrc(item.sceneKey)}
                 style={ICON_STYLE}
             />
 
