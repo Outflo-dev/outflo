@@ -19,7 +19,7 @@ import {
     computeEnvironmentPingsDrill,
     computeEnvironmentPingsProofRows,
 } from "./environment-drill.compute";
-import type { EnvironmentDrillSnapshotRow } from "./environment-drill.types";
+import type { EnvironmentDrillEmitterRow } from "./environment-drill.types";
 import EnvironmentDrillView from "../view/EnvironmentDrillView";
 
 /* ------------------------------
@@ -28,7 +28,7 @@ import EnvironmentDrillView from "../view/EnvironmentDrillView";
 type EnvironmentDrillControllerProps = {
     beginMs: number | null;
     nowMs: number;
-    rows: EnvironmentDrillSnapshotRow[];
+    rows: EnvironmentDrillEmitterRow[];
     errorMessage: string | null;
 };
 
