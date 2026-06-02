@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: define environment category doorway rows
+   - note: add display section rows to environment doorway model
    ========================================================== */
 
 /* ------------------------------
@@ -20,6 +20,8 @@ export type EnvironmentInfoRowMarkKind =
     | "weather"
     | "air"
     | "altitude"
+    | "units"
+    | "time"
     | "snapshot"
     | "receipt";
 
@@ -34,5 +36,6 @@ export type EnvironmentInfoRowData = {
 export type EnvironmentViewModel = {
     participation: EnvironmentInfoRowData[];
     signals: EnvironmentInfoRowData[];
+    display: EnvironmentInfoRowData[];
     records: EnvironmentInfoRowData[];
 };

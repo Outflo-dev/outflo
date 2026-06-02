@@ -1,6 +1,6 @@
 ﻿OUTFLO - REPOSITORY TREE
-Generated: 2026-06-02 16:09:04.114 UTC
-Unix: 1780416544114
+Generated: 2026-06-02 15:00:55.093 UTC
+Unix: 1780412455093
 Root: C:\dev\Outflo
 
 app\
@@ -278,18 +278,6 @@ app\
 +-- dev\
 |   +-- environment\
 |       +-- drill\
-|       |   +-- main\
-|       |   |   +-- actions\
-|       |   |   +-- internal\
-|       |   |   |   +-- environment-drill.compute.ts
-|       |   |   |   +-- environment-drill.types.ts
-|       |   |   |   +-- EnvironmentDrillController.tsx
-|       |   |   +-- view\
-|       |   |       +-- EnvironmentDrillHeader.tsx
-|       |   |       +-- EnvironmentDrillProofTable.tsx
-|       |   |       +-- EnvironmentDrillSentence.tsx
-|       |   |       +-- EnvironmentDrillView.tsx
-|       |   +-- page.tsx
 |       +-- raw\
 |       |   +-- header\
 |       |   |   +-- RawEnvironmentBackAction.tsx
@@ -705,7 +693,6 @@ docs\
 |   |   +-- 1780162213965__2026-05-30_17-30-13-965.txt
 |   |   +-- 1780177509642__2026-05-30_21-45-09-642.txt
 |   |   +-- 1780331941216__2026-06-01_16-39-01-216.txt
-|   |   +-- 1780412455093__2026-06-02_15-00-55-093.txt
 |   +-- README.md
 +-- README.md
 

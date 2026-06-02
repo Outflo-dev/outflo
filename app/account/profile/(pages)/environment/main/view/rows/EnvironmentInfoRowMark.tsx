@@ -18,6 +18,7 @@ import type { CSSProperties } from "react";
 import SunMark from "@/components/system/primitives/marks/icons/SunMark";
 
 import type { EnvironmentInfoRowMarkKind } from "../../internal/environment.types";
+import TimeMark from "@/components/system/primitives/marks/icons/TimeMark";
 
 /* ------------------------------
    Types
@@ -50,6 +51,8 @@ export default function EnvironmentInfoRowMark({
     if (mark === "weather") return <WeatherMark />;
     if (mark === "air") return <AirMark />;
     if (mark === "altitude") return <AltitudeMark />;
+    if (mark === "units") return <UnitsMark />;
+    if (mark === "time") return <TimeMark />;
     if (mark === "snapshot") return <SnapshotMark />;
 
     return <ReceiptMark />;
@@ -146,6 +149,19 @@ function ReceiptMark() {
             <path d="M7 4.5h8a1.5 1.5 0 0 1 1.5 1.5v11.5l-2-1.2-2 1.2-2-1.2-2 1.2-2-1.2-2 1.2V6A1.5 1.5 0 0 1 7 4.5Z" />
             <path d="M8 9h6" />
             <path d="M8 12h5" />
+        </svg>
+    );
+}
+
+function UnitsMark() {
+    return (
+        <svg aria-hidden="true" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" style={MARK_ICON_STYLE}>
+            <path d="M5.5 16.5 16.5 5.5" />
+            <path d="m7.2 14.8 1.4 1.4" />
+            <path d="m9.8 12.2 1.4 1.4" />
+            <path d="m12.4 9.6 1.4 1.4" />
+            <path d="M4.5 15.5 6.5 17.5" />
+            <path d="M15.5 4.5 17.5 6.5" />
         </svg>
     );
 }

@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: nest header and footer under environment view ownership
+   - note: render Display section in environment doorway
    ========================================================== */
 
 /* ------------------------------
@@ -20,6 +20,7 @@ import EnvironmentHeader from "./header/EnvironmentHeader";
 import EnvironmentFooter from "./footer/EnvironmentFooter";
 import EnvironmentParticipationSection from "./sections/EnvironmentParticipationSection";
 import EnvironmentSignalsSection from "./sections/EnvironmentSignalsSection";
+import EnvironmentDisplaySection from "./sections/EnvironmentDisplaySection";
 import EnvironmentRecordsSection from "./sections/EnvironmentRecordsSection";
 
 /* ------------------------------
@@ -53,6 +54,8 @@ export default function EnvironmentView({
             <EnvironmentParticipationSection model={model} />
 
             <EnvironmentSignalsSection model={model} />
+
+            <EnvironmentDisplaySection model={model} />
 
             <EnvironmentRecordsSection model={model} />
 
