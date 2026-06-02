@@ -341,6 +341,8 @@ export default async function SystemsPage() {
             <ControlButton href="/account/profile" label="Profile" />
             <ControlButton href="/app/environment" label="Environment" />
             <ControlButton href="/dev/environment/raw" label="Environment Raw" />
+            <ControlButton href="/dev/environment/window" label="Environment Window" />
+            <ControlButton href="/dev/environment/drill" label="Environment Drill" />
             <ControlButton href="/" label="Portal" />
           </nav>
         </section>
