@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1779411840000
    - iso: 2026-05-22T01:04:00.000Z
-   - note: preserve inactive manual place and harden environment defaults
+   - note: allow partial environment preference patches
    ========================================================== */
 
 /* ------------------------------
@@ -13,18 +13,22 @@
 -------------------------------- */
 import { NextResponse } from "next/server";
 
-import { DEFAULT_THEME_PREFERENCE } from "@/lib/app-state/theme-preference";
+import {
+    DEFAULT_ENVIRONMENT_PREFERENCES,
+    DEFAULT_USER_PREFERENCES,
+    type EnvironmentPreferences,
+    isCaptureMode,
+    isLocationMode,
+    isLocationPrecision,
+    isSignalMode,
+    isWeatherMode,
+    normalizeManualCity,
+} from "@/lib/app-state/environment-preferences";
 import { supabaseServer } from "@/lib/supabase/server";
 
 /* ------------------------------
    Types
 -------------------------------- */
-type LocationMode = "off" | "device" | "manual_city";
-type WeatherMode = "off" | "on";
-type LocationPrecision = "city" | "approximate" | "precise";
-type CaptureMode = "off" | "moment" | "continuous";
-type SignalMode = "off" | "on";
-
 type EnvironmentRequestBody = {
     location_mode?: unknown;
     manual_city?: unknown;
@@ -38,36 +42,9 @@ type EnvironmentRequestBody = {
     snapshots_mode?: unknown;
 };
 
-type PreferenceRow = {
+type PreferenceRow = EnvironmentPreferences & {
     user_id: string;
 };
-
-/* ------------------------------
-   Constants
--------------------------------- */
-const LOCATION_MODES = ["off", "device", "manual_city"] as const;
-const WEATHER_MODES = ["off", "on"] as const;
-const LOCATION_PRECISIONS = ["city", "approximate", "precise"] as const;
-const CAPTURE_MODES = ["off", "moment", "continuous"] as const;
-const SIGNAL_MODES = ["off", "on"] as const;
-
-const DEFAULT_USER_PREFERENCES = {
-    base_currency: "USD",
-    time_display: "auto",
-    location_mode: "off",
-    manual_city: null,
-    weather_mode: "off",
-    theme_preference: DEFAULT_THEME_PREFERENCE,
-    text_scale: "compact",
-    glow_preference: "soft",
-    location_precision: "city",
-    capture_mode: "off",
-    sun_mode: "off",
-    precipitation_mode: "off",
-    air_quality_mode: "off",
-    receipt_links_mode: "off",
-    snapshots_mode: "off",
-} as const;
 
 /* ------------------------------
    Helpers
@@ -88,49 +65,17 @@ async function readEnvironmentRequestBody(
     }
 }
 
-function isLocationMode(value: unknown): value is LocationMode {
-    return (
-        typeof value === "string" &&
-        LOCATION_MODES.includes(value as LocationMode)
-    );
-}
+function resolveEnvironmentPreferences(args: {
+    body: EnvironmentRequestBody;
+    existing: PreferenceRow | null;
+}) {
+    const { body, existing } = args;
 
-function isWeatherMode(value: unknown): value is WeatherMode {
-    return (
-        typeof value === "string" &&
-        WEATHER_MODES.includes(value as WeatherMode)
-    );
-}
-
-function isLocationPrecision(value: unknown): value is LocationPrecision {
-    return (
-        typeof value === "string" &&
-        LOCATION_PRECISIONS.includes(value as LocationPrecision)
-    );
-}
-
-function isCaptureMode(value: unknown): value is CaptureMode {
-    return (
-        typeof value === "string" &&
-        CAPTURE_MODES.includes(value as CaptureMode)
-    );
-}
-
-function isSignalMode(value: unknown): value is SignalMode {
-    return (
-        typeof value === "string" &&
-        SIGNAL_MODES.includes(value as SignalMode)
-    );
-}
-
-function normalizeManualCity(value: unknown): string | null {
-    if (typeof value !== "string") {
-        return null;
-    }
-
-    const clean = value.trim();
-
-    return clean ? clean : null;
+    return {
+        ...DEFAULT_ENVIRONMENT_PREFERENCES,
+        ...(existing ?? {}),
+        ...body,
+    };
 }
 
 /* ------------------------------
@@ -156,15 +101,47 @@ export async function PATCH(req: Request) {
 
     const body = await readEnvironmentRequestBody(req);
 
-    const locationMode = body.location_mode;
-    const locationPrecision = body.location_precision;
-    const weatherMode = body.weather_mode;
-    const captureMode = body.capture_mode;
-    const sunMode = body.sun_mode;
-    const precipitationMode = body.precipitation_mode;
-    const airQualityMode = body.air_quality_mode;
-    const receiptLinksMode = body.receipt_links_mode;
-    const snapshotsMode = body.snapshots_mode;
+    const { data: existingPreference, error: readError } = await supabase
+        .from("user_preferences")
+        .select(
+            [
+                "user_id",
+                "location_mode",
+                "manual_city",
+                "location_precision",
+                "weather_mode",
+                "capture_mode",
+                "sun_mode",
+                "precipitation_mode",
+                "air_quality_mode",
+                "receipt_links_mode",
+                "snapshots_mode",
+            ].join(",")
+        )
+        .eq("user_id", user.id)
+        .maybeSingle<PreferenceRow>();
+
+    if (readError) {
+        return NextResponse.json(
+            { error: readError.message },
+            { status: 500 }
+        );
+    }
+
+    const resolved = resolveEnvironmentPreferences({
+        body,
+        existing: existingPreference ?? null,
+    });
+
+    const locationMode = resolved.location_mode;
+    const locationPrecision = resolved.location_precision;
+    const weatherMode = resolved.weather_mode;
+    const captureMode = resolved.capture_mode;
+    const sunMode = resolved.sun_mode;
+    const precipitationMode = resolved.precipitation_mode;
+    const airQualityMode = resolved.air_quality_mode;
+    const receiptLinksMode = resolved.receipt_links_mode;
+    const snapshotsMode = resolved.snapshots_mode;
 
     if (!isLocationMode(locationMode)) {
         return NextResponse.json(
@@ -207,7 +184,7 @@ export async function PATCH(req: Request) {
         );
     }
 
-    const manualCity = normalizeManualCity(body.manual_city);
+    const manualCity = normalizeManualCity(resolved.manual_city);
 
     if (locationMode === "manual_city" && !manualCity) {
         return NextResponse.json(
@@ -234,19 +211,6 @@ export async function PATCH(req: Request) {
         snapshots_mode: snapshotsMode,
         updated_at: updatedAt,
     };
-
-    const { data: existingPreference, error: readError } = await supabase
-        .from("user_preferences")
-        .select("user_id")
-        .eq("user_id", user.id)
-        .maybeSingle<PreferenceRow>();
-
-    if (readError) {
-        return NextResponse.json(
-            { error: readError.message },
-            { status: 500 }
-        );
-    }
 
     if (existingPreference) {
         const { error: updateError } = await supabase

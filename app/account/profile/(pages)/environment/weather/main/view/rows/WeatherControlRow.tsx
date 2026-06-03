@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: make weather switch row locally interactive
+   - note: make full weather control row interactive
    ========================================================== */
 
 /* ------------------------------
@@ -35,11 +35,18 @@ type WeatherControlRowProps = {
    Constants
 -------------------------------- */
 const ROW_STYLE: CSSProperties = {
+    width: "100%",
     minHeight: 76,
     display: "grid",
     gridTemplateColumns: "minmax(0, 1fr) auto",
     alignItems: "center",
     columnGap: 18,
+    border: 0,
+    padding: 0,
+    background: "transparent",
+    color: "inherit",
+    textAlign: "left",
+    cursor: "pointer",
 };
 
 const TEXT_STACK_STYLE: CSSProperties = {
@@ -61,6 +68,7 @@ const SWITCH_STYLE: CSSProperties = {
     borderRadius: 999,
     padding: 2,
     background: "var(--surface-muted)",
+    pointerEvents: "none",
 };
 
 const SWITCH_ON_STYLE: CSSProperties = {
@@ -102,7 +110,13 @@ export default function WeatherControlRow({
     };
 
     return (
-        <div style={{ ...ROW_STYLE, ...style }}>
+        <button
+            type="button"
+            aria-label={`${row.label} ${row.enabled ? "on" : "off"}`}
+            aria-pressed={row.enabled}
+            onClick={() => onToggle(row.key)}
+            style={{ ...ROW_STYLE, ...style }}
+        >
             <div style={TEXT_STACK_STYLE}>
                 <Text as="h3" type="label">
                     {row.label}
@@ -113,16 +127,13 @@ export default function WeatherControlRow({
                 </Text>
             </div>
 
-            <button
-                type="button"
-                aria-label={`${row.label} ${row.enabled ? "on" : "off"}`}
+            <span
                 role="switch"
                 aria-checked={row.enabled}
-                onClick={() => onToggle(row.key)}
                 style={switchStyle}
             >
                 <span style={dotStyle} />
-            </button>
-        </div>
+            </span>
+        </button>
     );
 }

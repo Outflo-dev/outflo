@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: wire weather controls to local toggle state
+   - note: persist master weather control to environment preferences
    ========================================================== */
 
 /* ------------------------------
@@ -20,6 +20,7 @@ import Motion, {
     MOTION_DURATION_MS,
 } from "@/components/system/primitives/motion/Motion";
 import AppFrame from "@/components/system/shell/app/AppFrame";
+import { patchProfileEnvironmentPreferences } from "../../../main/internal/profile-environment.client";
 
 import WeatherView from "../view/WeatherView";
 import { getWeatherModel } from "./weather.sections";
@@ -62,11 +63,28 @@ export default function WeatherController() {
         })),
     };
 
-    function handleToggle(key: WeatherControlKey) {
+    async function handleToggle(key: WeatherControlKey) {
+        const nextEnabled = !enabledByKey[key];
+
         setEnabledByKey((current) => ({
             ...current,
-            [key]: !current[key],
+            [key]: nextEnabled,
         }));
+
+        if (key !== "master" && key !== "weather") return;
+
+        try {
+            await patchProfileEnvironmentPreferences({
+                weather_mode: nextEnabled ? "on" : "off",
+            });
+        } catch (error) {
+            console.error("Weather preference patch failed", error);
+
+            setEnabledByKey((current) => ({
+                ...current,
+                [key]: !nextEnabled,
+            }));
+        }
     }
 
     function handleBack() {
