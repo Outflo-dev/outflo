@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: add inert weather switch row
+   - note: make weather switch row locally interactive
    ========================================================== */
 
 /* ------------------------------
@@ -17,13 +17,17 @@ import type { CSSProperties } from "react";
 
 import Text from "@/components/system/primitives/display/type/Text";
 
-import type { WeatherControlRowData } from "../../internal/weather.types";
+import type {
+    WeatherControlKey,
+    WeatherControlRowData,
+} from "../../internal/weather.types";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type WeatherControlRowProps = {
     row: WeatherControlRowData;
+    onToggle: (key: WeatherControlKey) => void;
     style?: CSSProperties;
 };
 
@@ -53,11 +57,19 @@ const SWITCH_STYLE: CSSProperties = {
     height: 28,
     display: "inline-flex",
     alignItems: "center",
-    justifyContent: "flex-start",
     border: "1px solid var(--border-soft)",
     borderRadius: 999,
     padding: 2,
     background: "var(--surface-muted)",
+};
+
+const SWITCH_ON_STYLE: CSSProperties = {
+    justifyContent: "flex-end",
+    background: "var(--surface-raised)",
+};
+
+const SWITCH_OFF_STYLE: CSSProperties = {
+    justifyContent: "flex-start",
 };
 
 const SWITCH_DOT_STYLE: CSSProperties = {
@@ -67,13 +79,28 @@ const SWITCH_DOT_STYLE: CSSProperties = {
     background: "var(--text-tertiary)",
 };
 
+const SWITCH_DOT_ON_STYLE: CSSProperties = {
+    background: "var(--text-primary)",
+};
+
 /* ------------------------------
    Component
 -------------------------------- */
 export default function WeatherControlRow({
     row,
+    onToggle,
     style,
 }: WeatherControlRowProps) {
+    const switchStyle = {
+        ...SWITCH_STYLE,
+        ...(row.enabled ? SWITCH_ON_STYLE : SWITCH_OFF_STYLE),
+    };
+
+    const dotStyle = {
+        ...SWITCH_DOT_STYLE,
+        ...(row.enabled ? SWITCH_DOT_ON_STYLE : undefined),
+    };
+
     return (
         <div style={{ ...ROW_STYLE, ...style }}>
             <div style={TEXT_STACK_STYLE}>
@@ -86,14 +113,16 @@ export default function WeatherControlRow({
                 </Text>
             </div>
 
-            <span
-                aria-label={`${row.label} off`}
+            <button
+                type="button"
+                aria-label={`${row.label} ${row.enabled ? "on" : "off"}`}
                 role="switch"
                 aria-checked={row.enabled}
-                style={SWITCH_STYLE}
+                onClick={() => onToggle(row.key)}
+                style={switchStyle}
             >
-                <span style={SWITCH_DOT_STYLE} />
-            </span>
+                <span style={dotStyle} />
+            </button>
         </div>
     );
 }

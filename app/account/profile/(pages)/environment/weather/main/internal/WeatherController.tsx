@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: add weather control controller
+   - note: wire weather controls to local toggle state
    ========================================================== */
 
 /* ------------------------------
@@ -23,6 +23,7 @@ import AppFrame from "@/components/system/shell/app/AppFrame";
 
 import WeatherView from "../view/WeatherView";
 import { getWeatherModel } from "./weather.sections";
+import type { WeatherControlKey } from "./weather.types";
 
 /* ------------------------------
    Constants
@@ -41,8 +42,32 @@ const MAIN_STYLE: CSSProperties = {
 export default function WeatherController() {
     const [show, setShow] = useState(true);
     const [direction, setDirection] = useState<"left" | "right">("left");
+    const [enabledByKey, setEnabledByKey] = useState<
+        Record<WeatherControlKey, boolean>
+    >({
+        master: false,
+        weather: false,
+        temperature: false,
+        dew_point: false,
+        precipitation: false,
+        forecast: false,
+    });
 
-    const model = getWeatherModel();
+    const baseModel = getWeatherModel();
+
+    const model = {
+        controls: baseModel.controls.map((control) => ({
+            ...control,
+            enabled: enabledByKey[control.key],
+        })),
+    };
+
+    function handleToggle(key: WeatherControlKey) {
+        setEnabledByKey((current) => ({
+            ...current,
+            [key]: !current[key],
+        }));
+    }
 
     function handleBack() {
         setDirection("right");
@@ -57,7 +82,11 @@ export default function WeatherController() {
         <Motion show={show} direction={direction}>
             <main style={MAIN_STYLE}>
                 <AppFrame>
-                    <WeatherView model={model} onBack={handleBack} />
+                    <WeatherView
+                        model={model}
+                        onBack={handleBack}
+                        onToggle={handleToggle}
+                    />
                 </AppFrame>
             </main>
         </Motion>

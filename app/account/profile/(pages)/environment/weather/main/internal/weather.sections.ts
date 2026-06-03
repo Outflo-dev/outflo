@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: define weather signal control rows
+   - note: align weather controls to middle split signal grammar
    ========================================================== */
 
 /* ------------------------------
@@ -20,28 +20,39 @@ export function getWeatherModel(): WeatherViewModel {
     return {
         controls: [
             {
-                label: "Weather signal",
-                value: "Master weather participation.",
+                key: "master",
+                label: "Master",
+                value: "Master Weather control.",
                 enabled: false,
             },
             {
+                key: "weather",
+                label: "Weather",
+                value: "Forecast-facing weather state.",
+                enabled: false,
+            },
+            {
+                key: "temperature",
                 label: "Temperature",
                 value: "Ambient temperature at the resolved context.",
                 enabled: false,
             },
             {
-                label: "Humidity",
-                value: "Moisture level in the air.",
+                key: "dew_point",
+                label: "Dew point",
+                value: "Dew point at the resolved context.",
                 enabled: false,
             },
             {
-                label: "Wind",
-                value: "Speed, gusts, and direction.",
+                key: "precipitation",
+                label: "Precipitation",
+                value: "Rain and related weather amount context.",
                 enabled: false,
             },
             {
-                label: "Pressure",
-                value: "Atmospheric pressure context.",
+                key: "forecast",
+                label: "Forecast",
+                value: "Forecast remains in its existing Weather surface.",
                 enabled: false,
             },
         ],

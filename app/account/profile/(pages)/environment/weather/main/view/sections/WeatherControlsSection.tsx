@@ -7,7 +7,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: add weather controls section
+   - note: pass weather toggle action to rows
    ========================================================== */
 
 /* ------------------------------
@@ -17,7 +17,10 @@ import type { CSSProperties } from "react";
 
 import Text from "@/components/system/primitives/display/type/Text";
 
-import type { WeatherViewModel } from "../../internal/weather.types";
+import type {
+    WeatherControlKey,
+    WeatherViewModel,
+} from "../../internal/weather.types";
 import WeatherControlRow from "../rows/WeatherControlRow";
 
 /* ------------------------------
@@ -25,6 +28,7 @@ import WeatherControlRow from "../rows/WeatherControlRow";
 -------------------------------- */
 type WeatherControlsSectionProps = {
     model: WeatherViewModel;
+    onToggle: (key: WeatherControlKey) => void;
 };
 
 /* ------------------------------
@@ -50,6 +54,7 @@ const ROW_DIVIDER_STYLE: CSSProperties = {
 -------------------------------- */
 export default function WeatherControlsSection({
     model,
+    onToggle,
 }: WeatherControlsSectionProps) {
     return (
         <section style={SECTION_STYLE}>
@@ -60,8 +65,9 @@ export default function WeatherControlsSection({
             <div>
                 {model.controls.map((row, index) => (
                     <WeatherControlRow
-                        key={row.label}
+                        key={row.key}
                         row={row}
+                        onToggle={onToggle}
                         style={
                             index < model.controls.length - 1
                                 ? ROW_DIVIDER_STYLE
