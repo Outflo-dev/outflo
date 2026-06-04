@@ -28,7 +28,8 @@ import type {
    Model
 -------------------------------- */
 export function getEnvironmentModel(
-    snapshot: EnvironmentSnapshot | null
+    snapshot: EnvironmentSnapshot | null,
+    environmentEnabled: boolean,
 ): EnvironmentViewModel {
     if (!snapshot) {
         return {

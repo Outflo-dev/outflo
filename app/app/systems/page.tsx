@@ -59,7 +59,7 @@ type SectionLabelProps = {
 -------------------------------- */
 const SYSTEMS_PAGE_STYLE: React.CSSProperties = {
   minHeight: "100svh",
-  background: "var(--glow-atmosphere)",
+  background: "var(--bg-primary)",
   color: "var(--text-primary)",
   padding:
     "calc(env(safe-area-inset-top) + 18px) 0px max(32px, env(safe-area-inset-bottom))",
@@ -120,8 +120,7 @@ const HERO_COPY_STYLE: React.CSSProperties = {
 
 const SURFACE_STYLE: React.CSSProperties = {
   border: "1px solid var(--border-soft)",
-  background:
-    "linear-gradient(180deg, var(--surface-soft), var(--surface-muted))",
+  background: "var(--surface-soft)",
   borderRadius: 28,
   boxShadow: "var(--glow-surface), var(--glow-ring)",
   boxSizing: "border-box",
@@ -213,7 +212,6 @@ const CONTROL_BUTTON_STYLE: React.CSSProperties = {
   border: "1px solid var(--border-soft)",
   background: "var(--surface-soft)",
   borderRadius: 999,
-  boxShadow: "var(--glow-ring)",
   padding: "9px 14px",
 };
 
@@ -302,16 +300,16 @@ export default async function SystemsPage() {
               />
 
               <Tile
-                href="/app/weather"
-                label="Weather"
-                detail="Atmospheric substrate"
-                enabled={false}
+                href="/account/profile/environment"
+                label="Environment Settings"
+                detail="Controls and participation"
+                enabled
               />
 
               <Tile
-                href="/account/profile/environment/live-test"
+                href="/app/environment"
                 label="Environment"
-                detail="Live OwnTracks test"
+                detail="Environment substrate"
                 enabled
               />
             </div>
@@ -338,11 +336,9 @@ export default async function SystemsPage() {
           </div>
 
           <nav aria-label="System navigation" style={CONTROL_NAV_STYLE}>
-            <ControlButton href="/account/profile" label="Profile" />
-            <ControlButton href="/app/environment" label="Environment" />
+            <ControlButton href="/account/profile/environment/live-test" label="OwnTracks Test" />
             <ControlButton href="/dev/environment/raw" label="Environment Raw" />
             <ControlButton href="/dev/environment/window" label="Environment Window" />
-            <ControlButton href="/dev/environment/drill" label="Environment Drill" />
             <ControlButton href="/" label="Portal" />
           </nav>
         </section>

@@ -27,6 +27,7 @@ import type { EnvironmentSnapshot } from "./environment.types";
 -------------------------------- */
 type EnvironmentControllerProps = {
     snapshot: EnvironmentSnapshot | null;
+    environmentEnabled: boolean;
 };
 
 /* ------------------------------
@@ -34,14 +35,18 @@ type EnvironmentControllerProps = {
 -------------------------------- */
 export default function EnvironmentController({
     snapshot,
+    environmentEnabled,
 }: EnvironmentControllerProps) {
     const router = useRouter();
 
     const [refreshing, setRefreshing] = useState(false);
 
     const model = useMemo(() => {
-        return getEnvironmentModel(snapshot);
-    }, [snapshot]);
+        return getEnvironmentModel(
+            snapshot,
+            environmentEnabled,
+        );
+    }, [snapshot, environmentEnabled]);
 
     function handleBack() {
         window.history.back();
@@ -49,6 +54,10 @@ export default function EnvironmentController({
 
     async function handleRefresh() {
         if (refreshing) return;
+
+        if (!environmentEnabled) {
+            return;
+        }
 
         setRefreshing(true);
 

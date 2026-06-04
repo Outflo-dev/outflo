@@ -33,14 +33,35 @@ export default async function Page() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-        return <EnvironmentController snapshot={null} />;
+        return (
+            <EnvironmentController
+                snapshot={null}
+                environmentEnabled={false}
+            />
+        );
     }
 
-    const { data } = await supabase
-        .from("environment_snapshots")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
+    const [{ data: snapshot }, { data: preferences }] = await Promise.all([
+        supabase
+            .from("environment_snapshots")
+            .select("*")
+            .eq("user_id", user.id)
+            .maybeSingle(),
 
-    return <EnvironmentController snapshot={(data ?? null) as EnvironmentSnapshot | null} />;
+        supabase
+            .from("user_preferences")
+            .select("location_mode")
+            .eq("user_id", user.id)
+            .maybeSingle(),
+    ]);
+
+    const environmentEnabled =
+        preferences?.location_mode !== "off";
+
+    return (
+        <EnvironmentController
+            snapshot={(snapshot ?? null) as EnvironmentSnapshot | null}
+            environmentEnabled={environmentEnabled}
+        />
+    );
 }
