@@ -75,7 +75,7 @@ export default function EnvironmentRecordCard({
         padding: 9,
         borderRadius: 18,
         border: "1px solid var(--border-soft)",
-        background: "var(--surface-soft)",
+        background: "var(--surface-muted)",
         boxShadow: "var(--glow-ring)",
         overflow: "hidden",
     };

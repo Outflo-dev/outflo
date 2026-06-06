@@ -48,7 +48,7 @@ export default function EnvironmentSummaryTile({
         padding: 8,
         borderRadius: 17,
         border: "1px solid var(--border-soft)",
-        background: "var(--surface-soft)",
+        background: "var(--surface-muted)",
         boxShadow: "var(--glow-ring)",
         overflow: "hidden",
     };

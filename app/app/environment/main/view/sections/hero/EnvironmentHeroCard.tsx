@@ -34,14 +34,14 @@ export default function EnvironmentHeroCard({
     const CARD_STYLE: CSSProperties = {
         position: "relative",
         zIndex: 2,
-        minHeight: 146,
+        minHeight: 165,
         width: "100%",
         display: "grid",
         alignItems: "center",
         padding: "12px 14px 11px",
         borderRadius: 24,
         border: "1px solid var(--border-soft)",
-        background: "var(--surface-soft)",
+        background: "var(--surface-muted)",
         boxShadow: "var(--glow-ring)",
         overflow: "hidden",
         isolation: "isolate",
@@ -53,7 +53,7 @@ export default function EnvironmentHeroCard({
         minWidth: 0,
         display: "grid",
         alignItems: "center",
-        minHeight: 122,
+        minHeight: 132,
         paddingRight: 124,
     };
 

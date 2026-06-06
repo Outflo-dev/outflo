@@ -70,9 +70,14 @@ export default function EnvironmentForecastStrip({
     const STRIP_STYLE: CSSProperties = {
         display: "grid",
         gridTemplateColumns: `repeat(${visibleItems.length}, minmax(0, 1fr))`,
-        gap: 5,
+        gap: 0,
         width: "100%",
-        padding: "0 1px 2px",
+        minHeight: 66,
+        padding: 0,
+        borderRadius: 18,
+        border: "1px solid var(--border-soft)",
+        background: "var(--surface-muted)",
+        boxShadow: "var(--glow-ring)",
         overflow: "hidden",
     };
 

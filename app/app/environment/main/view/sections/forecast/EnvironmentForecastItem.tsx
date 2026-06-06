@@ -66,7 +66,7 @@ export default function EnvironmentForecastItem({
         border: active
             ? "1px solid var(--border-soft)"
             : "1px solid var(--border-subtle)",
-        background: active ? "var(--surface-soft)" : "var(--surface-muted)",
+        background: active ? "var(--surface-muted)" : "var(--surface-muted)",
         boxShadow: active ? "var(--glow-ring)" : "none",
     };
 
@@ -77,8 +77,8 @@ export default function EnvironmentForecastItem({
     };
 
     const ICON_STYLE: CSSProperties = {
-        width: 19,
-        height: 19,
+        width: 35,
+        height: 35,
         objectFit: "contain",
         opacity: 0.92,
     };
