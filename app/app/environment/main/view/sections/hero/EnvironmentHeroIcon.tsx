@@ -47,8 +47,8 @@ export default function EnvironmentHeroIcon({
     sceneKey,
 }: EnvironmentHeroIconProps) {
     const ICON_STYLE: CSSProperties = {
-        width: 124,
-        height: 124,
+        width: 175,
+        height: 175,
         objectFit: "contain",
         opacity: 0.97,
         filter: "drop-shadow(0 14px 24px rgba(0,0,0,0.26))",

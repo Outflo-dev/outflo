@@ -34,7 +34,7 @@ export default function EnvironmentHeroCard({
     const CARD_STYLE: CSSProperties = {
         position: "relative",
         zIndex: 2,
-        minHeight: 165,
+        minHeight: 175,
         width: "100%",
         display: "grid",
         alignItems: "center",
@@ -53,7 +53,7 @@ export default function EnvironmentHeroCard({
         minWidth: 0,
         display: "grid",
         alignItems: "center",
-        minHeight: 132,
+        minHeight: 165,
         paddingRight: 124,
     };
 

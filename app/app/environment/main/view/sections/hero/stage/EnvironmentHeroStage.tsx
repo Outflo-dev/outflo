@@ -31,7 +31,7 @@ export default function EnvironmentHeroStage({
 }: EnvironmentHeroStageProps) {
     const STAGE_STYLE: CSSProperties = {
         position: "relative",
-        minHeight: 146,
+        minHeight: 235,
         display: "grid",
         justifyItems: "center",
         isolation: "isolate",
