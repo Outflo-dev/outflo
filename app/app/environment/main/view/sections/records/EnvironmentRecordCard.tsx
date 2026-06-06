@@ -74,11 +74,9 @@ export default function EnvironmentRecordCard({
         gap: 9,
         padding: 9,
         borderRadius: 18,
-        border: "1px solid rgba(255,255,255,0.04)",
-        background:
-            "linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.012))",
-        boxShadow: "none",
-        backdropFilter: "blur(8px)",
+        border: "1px solid var(--border-soft)",
+        background: "var(--surface-soft)",
+        boxShadow: "var(--glow-ring)",
         overflow: "hidden",
     };
 
@@ -88,8 +86,8 @@ export default function EnvironmentRecordCard({
         display: "grid",
         placeItems: "center",
         borderRadius: 12,
-        color: "rgba(255,255,255,0.66)",
-        background: "rgba(255,255,255,0.035)",
+        color: "var(--text-secondary)",
+        background: "var(--surface-muted)",
         boxShadow: "none",
         flexShrink: 0,
     };

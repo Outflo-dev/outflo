@@ -43,13 +43,11 @@ export default function EnvironmentHeroTemperature({
         fontSize: "clamp(48px, 12vw, 62px)",
         lineHeight: 0.88,
         letterSpacing: "-0.07em",
-        color: "rgba(255,248,218,0.98)",
-        textShadow: "0 10px 26px rgba(0,0,0,0.28)",
+        color: "var(--text-primary)",
     };
 
     const CONDITION_STYLE: CSSProperties = {
-        color: "rgba(255,248,218,0.96)",
-        textShadow: "0 8px 18px rgba(0,0,0,0.28)",
+        color: "var(--text-secondary)",
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",

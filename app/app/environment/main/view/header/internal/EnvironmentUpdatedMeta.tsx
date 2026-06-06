@@ -32,7 +32,7 @@ export default function EnvironmentUpdatedMeta({
     refreshing,
 }: EnvironmentUpdatedMetaProps) {
     const META_STYLE: CSSProperties = {
-        color: "rgba(255,255,255,0.64)",
+        color: "var(--text-tertiary)",
         textAlign: "right",
         whiteSpace: "nowrap",
     };

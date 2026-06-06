@@ -62,10 +62,9 @@ export default function EnvironmentFieldCard({
         rowGap: 14,
         padding: 16,
         borderRadius: 24,
-        border: "1px solid rgba(255,255,255,0.09)",
-        background:
-            "linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.035))",
-        boxShadow: "0 18px 44px rgba(0,0,0,0.18)",
+        border: "1px solid var(--border-soft)",
+        background: "var(--surface-soft)",
+        boxShadow: "var(--glow-ring)",
         overflow: "hidden",
     };
 

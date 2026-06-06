@@ -47,12 +47,10 @@ export default function EnvironmentSummaryTile({
         alignItems: "center",
         padding: 8,
         borderRadius: 17,
-        border: "1px solid rgba(255,255,255,0.035)",
-        background:
-            "linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.010))",
-        boxShadow: "none",
+        border: "1px solid var(--border-soft)",
+        background: "var(--surface-soft)",
+        boxShadow: "var(--glow-ring)",
         overflow: "hidden",
-        backdropFilter: "blur(8px)",
     };
 
     const COPY_STYLE: CSSProperties = {

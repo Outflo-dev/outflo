@@ -36,11 +36,11 @@ export default function EnvironmentBackButton({
         height: 42,
         display: "grid",
         placeItems: "center",
-        border: "1px solid rgba(255,255,255,0.1)",
+        border: "1px solid var(--border-soft)",
         borderRadius: 999,
-        background: "rgba(3,8,18,0.18)",
-        color: "rgba(255,255,255,0.86)",
-        boxShadow: "0 12px 28px rgba(0,0,0,0.16)",
+        background: "var(--surface-soft)",
+        color: "var(--text-primary)",
+        boxShadow: "var(--glow-ring)",
         WebkitTapHighlightColor: "transparent",
     };
 

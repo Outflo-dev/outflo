@@ -64,12 +64,10 @@ export default function EnvironmentForecastItem({
         borderRadius: 14,
         color: "var(--text-primary)",
         border: active
-            ? "1px solid rgba(255,255,255,0.12)"
-            : "1px solid rgba(255,255,255,0.06)",
-        background: active
-            ? "rgba(99,136,210,0.2)"
-            : "rgba(255,255,255,0.038)",
-        boxShadow: active ? "0 8px 18px rgba(0,0,0,0.14)" : "none",
+            ? "1px solid var(--border-soft)"
+            : "1px solid var(--border-subtle)",
+        background: active ? "var(--surface-soft)" : "var(--surface-muted)",
+        boxShadow: active ? "var(--glow-ring)" : "none",
     };
 
     const LABEL_STYLE: CSSProperties = {
@@ -83,7 +81,6 @@ export default function EnvironmentForecastItem({
         height: 19,
         objectFit: "contain",
         opacity: 0.92,
-        filter: "drop-shadow(0 5px 10px rgba(0,0,0,0.2))",
     };
 
     const VALUE_STYLE: CSSProperties = {

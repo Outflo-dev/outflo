@@ -43,8 +43,8 @@ export default function EnvironmentRecordHeader() {
         padding: "5px 8px",
         borderRadius: 999,
         color: "var(--text-secondary)",
-        background: "rgba(255,255,255,0.052)",
-        border: "1px solid rgba(255,255,255,0.07)",
+        background: "var(--surface-muted)",
+        border: "1px solid var(--border-soft)",
     };
 
     return (

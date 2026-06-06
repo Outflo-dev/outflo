@@ -39,7 +39,7 @@ export default function EnvironmentHeroMeta({
     };
 
     const META_STYLE: CSSProperties = {
-        color: "rgba(255,255,255,0.76)",
+        color: "var(--text-tertiary)",
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
@@ -47,7 +47,7 @@ export default function EnvironmentHeroMeta({
 
     const PLACE_STYLE: CSSProperties = {
         ...META_STYLE,
-        color: "rgba(255,255,255,0.84)",
+        color: "var(--text-secondary)",
     };
 
     return (

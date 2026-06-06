@@ -40,19 +40,11 @@ export default function EnvironmentHeroCard({
         alignItems: "center",
         padding: "12px 14px 11px",
         borderRadius: 24,
-        border: "1px solid rgba(255,255,255,0.13)",
-        background: "rgba(3,8,18,0.13)",
-        boxShadow: "0 16px 38px rgba(0,0,0,0.18)",
+        border: "1px solid var(--border-soft)",
+        background: "var(--surface-soft)",
+        boxShadow: "var(--glow-ring)",
         overflow: "hidden",
         isolation: "isolate",
-    };
-
-    const GLASS_STYLE: CSSProperties = {
-        position: "absolute",
-        inset: 0,
-        zIndex: 0,
-        background:
-            "linear-gradient(90deg, rgba(3,8,18,0.72), rgba(3,8,18,0.38) 62%, rgba(3,8,18,0.1))",
     };
 
     const CONTENT_STYLE: CSSProperties = {
@@ -67,8 +59,6 @@ export default function EnvironmentHeroCard({
 
     return (
         <div style={CARD_STYLE}>
-            <div style={GLASS_STYLE} />
-
             <div style={CONTENT_STYLE}>{children}</div>
 
             {weatherObject}
