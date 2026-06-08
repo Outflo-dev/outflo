@@ -13,6 +13,7 @@
 /* ------------------------------
    Imports
 -------------------------------- */
+import { memo } from "react";
 import type { CSSProperties } from "react";
 
 import Text from "@/components/system/primitives/display/type/Text";
@@ -46,7 +47,7 @@ function getForecastIconSrc(sceneKey: EnvironmentSceneKey): string {
 /* ------------------------------
    Component
 -------------------------------- */
-export default function EnvironmentForecastItem({
+function EnvironmentForecastItem({
     item,
 }: EnvironmentForecastItemProps) {
     const ITEM_STYLE: CSSProperties = {
@@ -62,6 +63,9 @@ export default function EnvironmentForecastItem({
         border: "1px solid var(--border-subtle)",
         background: "var(--surface-soft)",
         scrollSnapAlign: "start",
+        contain: "layout paint style",
+        contentVisibility: "auto",
+        containIntrinsicSize: "68px 58px",
     };
 
     const LABEL_STYLE: CSSProperties = {
@@ -72,12 +76,10 @@ export default function EnvironmentForecastItem({
     };
 
     const ICON_STYLE: CSSProperties = {
-        width: 42,
+        width: 54,
         height: 42,
         objectFit: "contain",
         opacity: 0.94,
-        transform: "scale(1.32)",
-        transformOrigin: "center",
     };
 
     const VALUE_STYLE: CSSProperties = {
@@ -108,3 +110,5 @@ export default function EnvironmentForecastItem({
         </article>
     );
 }
+
+export default memo(EnvironmentForecastItem);
