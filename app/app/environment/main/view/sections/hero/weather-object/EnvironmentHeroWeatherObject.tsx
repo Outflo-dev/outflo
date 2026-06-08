@@ -1,4 +1,3 @@
-// app/app/environment/main/view/sections/hero/weather-object/EnvironmentHeroWeatherObject.tsx
 "use client";
 
 /* ==========================================================
@@ -8,7 +7,7 @@
    Last Updated:
    - ms: 1780011540053
    - iso: 2026-05-28T23:39:00.053Z
-   - note: tune hero weather object scale and placement
+   - note: move hero weather object slightly right and enlarge zone
    ========================================================== */
 
 /* ------------------------------
@@ -35,10 +34,10 @@ export default function EnvironmentHeroWeatherObject({
     const ZONE_STYLE: CSSProperties = {
         position: "absolute",
         zIndex: 2,
-        right: 20,
+        right: 10,
         top: "50%",
-        width: 175,
-        height: 175,
+        width: 188,
+        height: 188,
         display: "grid",
         placeItems: "center",
         transform: "translateY(-54%)",

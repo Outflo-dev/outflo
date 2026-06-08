@@ -141,34 +141,141 @@ function getHero(snapshot: EnvironmentSnapshot): EnvironmentHeroModel {
    Forecast
 -------------------------------- */
 function getForecast(snapshot: EnvironmentSnapshot): EnvironmentForecastModel {
-    const nowTemp = numberValue(snapshot.temperature_c);
-    const baseTemp = nowTemp ?? 29;
-    const sceneKey = getSceneKey(snapshot);
+    const hourlyItems = getHourlyForecastItems(snapshot);
+
+    if (hourlyItems.length > 0) {
+        return {
+            title: "Forecast",
+            subtitle: "Next 24 hours",
+            items: hourlyItems,
+        };
+    }
 
     return {
         title: "Forecast",
-        subtitle: "Next 24 hours",
-        items: [
-            forecastItem("Now", baseTemp, getCondition(snapshot), sceneKey),
-            forecastItem("9 PM", baseTemp - 1, "Clouds", "partly-cloudy-night"),
-            forecastItem("10 PM", baseTemp - 2, "Clouds", "partly-cloudy-night"),
-            forecastItem("11 PM", baseTemp - 2, "Clouds", "partly-cloudy-night"),
-            forecastItem("12 AM", baseTemp - 3, "Clouds", "partly-cloudy-night"),
-            forecastItem("1 AM", baseTemp - 3, "Clouds", "partly-cloudy-night"),
-            forecastItem("2 AM", baseTemp - 4, "Clouds", "partly-cloudy-night"),
-        ],
+        subtitle: "Hourly forecast pending",
+        items: getPendingForecastItems(snapshot),
     };
+}
+
+function getHourlyForecastItems(
+    snapshot: EnvironmentSnapshot
+): EnvironmentForecastItemModel[] {
+    const context = snapshot.latest_environment_context;
+
+    if (!context || typeof context !== "object") return [];
+
+    const hourly = (context as Record<string, unknown>).hourly_forecast;
+
+    if (!Array.isArray(hourly)) return [];
+
+    const startMs = numberValue(
+        snapshot.environment_context_pulled_at_ms ?? snapshot.moment_ms
+    );
+    const startDate = startMs ? new Date(startMs) : null;
+
+    return hourly
+        .filter((item) => {
+            if (!item || typeof item !== "object") return false;
+            if (!startDate) return true;
+
+            const time = (item as Record<string, unknown>).time_local;
+            if (typeof time !== "string") return false;
+
+            return new Date(time).getTime() >= startDate.getTime() - 60 * 60 * 1000;
+        })
+        .slice(0, 24)
+        .map((item, index) => {
+            const row = item as Record<string, unknown>;
+            const label = index === 0 ? "Now" : formatForecastHour(row.time_local);
+            const sceneKey = getSceneKeyFromForecastRow(row);
+
+            return forecastItem(
+                label,
+                numberValue(row.temperature_c),
+                getSceneLabel(sceneKey),
+                sceneKey
+            );
+        });
+}
+
+function getPendingForecastItems(
+    snapshot: EnvironmentSnapshot
+): EnvironmentForecastItemModel[] {
+    const startMs = numberValue(
+        snapshot.environment_context_pulled_at_ms ?? snapshot.moment_ms
+    );
+    const startDate = startMs ? new Date(startMs) : new Date();
+
+    return Array.from({ length: 24 }, (_, index) => {
+        const hourDate = new Date(startDate.getTime() + index * 60 * 60 * 1000);
+        const label = index === 0 ? "Now" : formatForecastHour(hourDate.toISOString());
+
+        if (index === 0) {
+            return forecastItem(
+                label,
+                numberValue(snapshot.temperature_c),
+                getCondition(snapshot),
+                getSceneKey(snapshot)
+            );
+        }
+
+        return {
+            label,
+            value: "—",
+            detail: "Pending",
+            sceneKey: "empty",
+        };
+    });
+}
+
+function getSceneKeyFromForecastRow(
+    row: Record<string, unknown>
+): EnvironmentSceneKey {
+    const code = String(row.weather_code ?? "");
+    const cloud = numberValue(row.cloud_cover_pct);
+    const rain = numberValue(row.rain_mm);
+    const precipitation = numberValue(row.precipitation_mm);
+    const snow = numberValue(row.snowfall_mm);
+    const isDay = row.is_day === true;
+
+    if (snow && snow > 0) return "snow";
+    if ((rain && rain > 0) || (precipitation && precipitation > 0)) return "rain";
+    if (isThunderstormCode(code)) return "thunderstorm";
+
+    if (!isDay) {
+        if (cloud !== null && cloud > 20) return "partly-cloudy-night";
+
+        return "clear-night";
+    }
+
+    if (cloud !== null && cloud > 60) return "cloudy-day";
+    if (cloud !== null && cloud > 20) return "partly-cloudy-day";
+
+    return "clear-day";
+}
+
+function formatForecastHour(value: unknown): string {
+    if (typeof value !== "string") return "—";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return "—";
+
+    return date.toLocaleTimeString([], {
+        hour: "numeric",
+    });
 }
 
 function forecastItem(
     label: string,
-    temperature: number,
+    temperature: number | null,
     detail: string,
     sceneKey: EnvironmentSceneKey
 ): EnvironmentForecastItemModel {
     return {
         label,
-        value: `${Math.round(temperature)}°`,
+        value: temperature === null ? "—" : `${Math.round(temperature)}°`,
         detail,
         sceneKey,
     };
@@ -186,19 +293,19 @@ function getEmptyForecast(): EnvironmentForecastModel {
                 sceneKey: "empty",
             },
             {
-                label: "Feels",
+                label: "Next",
                 value: "—",
                 detail: "Waiting",
                 sceneKey: "empty",
             },
             {
-                label: "Cloud",
+                label: "Later",
                 value: "—",
                 detail: "Waiting",
                 sceneKey: "empty",
             },
             {
-                label: "Rain",
+                label: "Future",
                 value: "—",
                 detail: "Waiting",
                 sceneKey: "empty",

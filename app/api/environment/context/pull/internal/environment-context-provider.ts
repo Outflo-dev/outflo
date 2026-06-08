@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1779269374486
    - iso: 2026-05-20T09:29:34.486Z
-   - note: extract provider fetch and normalization from context pull route
+   - note: add real hourly forecast normalization from provider payload
    ========================================================== */
 
 /* ------------------------------
@@ -16,6 +16,19 @@ export type ProviderResult = {
     status: number;
     url: string;
     json: any;
+};
+
+export type NormalizedHourlyForecastItem = {
+    time_local: string;
+    temperature_c: number | null;
+    apparent_temperature_c: number | null;
+    precipitation_mm: number | null;
+    rain_mm: number | null;
+    showers_mm: number | null;
+    snowfall_mm: number | null;
+    weather_code: number | null;
+    cloud_cover_pct: number | null;
+    is_day: boolean | null;
 };
 
 export type NormalizedContext = {
@@ -66,6 +79,7 @@ export type NormalizedContext = {
         wind_direction_deg: number | null;
         wind_gusts_kmh: number | null;
     };
+    hourly_forecast: NormalizedHourlyForecastItem[];
     sun: {
         sunrise_local: string | null;
         sunset_local: string | null;
@@ -86,6 +100,7 @@ export type NormalizedContext = {
     };
     units: {
         forecast: Record<string, unknown>;
+        hourly: Record<string, unknown>;
         daily: Record<string, unknown>;
         air_quality: Record<string, unknown>;
     };
@@ -122,6 +137,10 @@ function firstArrayValue(value: unknown): unknown {
     return Array.isArray(value) ? value[0] ?? null : null;
 }
 
+function arrayValue(value: unknown): unknown[] {
+    return Array.isArray(value) ? value : [];
+}
+
 export function kmhToMps(value: number | null): number | null {
     return value === null ? null : value / 3.6;
 }
@@ -135,7 +154,7 @@ function buildForecastUrl(lat: number, lng: number) {
     url.searchParams.set("latitude", String(lat));
     url.searchParams.set("longitude", String(lng));
     url.searchParams.set("timezone", "auto");
-    url.searchParams.set("forecast_days", "1");
+    url.searchParams.set("forecast_days", "2");
 
     url.searchParams.set(
         "current",
@@ -154,6 +173,21 @@ function buildForecastUrl(lat: number, lng: number) {
             "wind_speed_10m",
             "wind_direction_10m",
             "wind_gusts_10m",
+        ].join(","),
+    );
+
+    url.searchParams.set(
+        "hourly",
+        [
+            "temperature_2m",
+            "apparent_temperature",
+            "precipitation",
+            "rain",
+            "showers",
+            "snowfall",
+            "weather_code",
+            "cloud_cover",
+            "is_day",
         ].join(","),
     );
 
@@ -229,6 +263,34 @@ async function readJson(url: URL): Promise<ProviderResult> {
 /* ------------------------------
    Mapper
 -------------------------------- */
+function normalizeHourlyForecast(value: unknown): NormalizedHourlyForecastItem[] {
+    if (!value || typeof value !== "object") return [];
+
+    const hourly = value as Record<string, unknown>;
+    const times = arrayValue(hourly.time);
+
+    return times
+        .map((time, index) => {
+            if (typeof time !== "string") return null;
+
+            return {
+                time_local: time,
+                temperature_c: toNumber(arrayValue(hourly.temperature_2m)[index]),
+                apparent_temperature_c: toNumber(
+                    arrayValue(hourly.apparent_temperature)[index],
+                ),
+                precipitation_mm: toNumber(arrayValue(hourly.precipitation)[index]),
+                rain_mm: toNumber(arrayValue(hourly.rain)[index]),
+                showers_mm: toNumber(arrayValue(hourly.showers)[index]),
+                snowfall_mm: toNumber(arrayValue(hourly.snowfall)[index]),
+                weather_code: toInteger(arrayValue(hourly.weather_code)[index]),
+                cloud_cover_pct: toNumber(arrayValue(hourly.cloud_cover)[index]),
+                is_day: toBooleanFromDay(arrayValue(hourly.is_day)[index]),
+            };
+        })
+        .filter((item): item is NormalizedHourlyForecastItem => item !== null);
+}
+
 function normalizeContext(args: {
     input: {
         snapshot_id: string;
@@ -323,6 +385,7 @@ function normalizeContext(args: {
         input: args.input,
         provider,
         weather,
+        hourly_forecast: normalizeHourlyForecast(forecastJson.hourly),
         sun,
         air,
         units: {
@@ -330,6 +393,11 @@ function normalizeContext(args: {
                 forecastJson.current_units &&
                     typeof forecastJson.current_units === "object"
                     ? forecastJson.current_units
+                    : {},
+            hourly:
+                forecastJson.hourly_units &&
+                    typeof forecastJson.hourly_units === "object"
+                    ? forecastJson.hourly_units
                     : {},
             daily:
                 forecastJson.daily_units && typeof forecastJson.daily_units === "object"

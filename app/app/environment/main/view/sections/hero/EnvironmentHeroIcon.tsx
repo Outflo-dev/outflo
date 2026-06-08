@@ -1,4 +1,3 @@
-// app/app/environment/main/view/sections/hero/EnvironmentHeroIcon.tsx
 "use client";
 
 /* ==========================================================
@@ -8,7 +7,7 @@
    Last Updated:
    - ms: 1780011540053
    - iso: 2026-05-28T23:39:00.053Z
-   - note: render hero icon from Environment scene key
+   - note: enlarge hero weather icon slightly
    ========================================================== */
 
 /* ------------------------------
@@ -47,8 +46,8 @@ export default function EnvironmentHeroIcon({
     sceneKey,
 }: EnvironmentHeroIconProps) {
     const ICON_STYLE: CSSProperties = {
-        width: 175,
-        height: 175,
+        width: 188,
+        height: 188,
         objectFit: "contain",
         opacity: 0.97,
         filter: "drop-shadow(0 14px 24px rgba(0,0,0,0.26))",

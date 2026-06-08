@@ -1,4 +1,3 @@
-// app/app/environment/main/view/sections/forecast/EnvironmentForecastItem.tsx
 "use client";
 
 /* ==========================================================
@@ -8,7 +7,7 @@
    Last Updated:
    - ms: 1780011540053
    - iso: 2026-05-28T23:39:00.053Z
-   - note: render forecast icon from semantic scene key
+   - note: widen forecast item for scroll rail rendering
    ========================================================== */
 
 /* ------------------------------
@@ -27,7 +26,6 @@ import type {
 -------------------------------- */
 type EnvironmentForecastItemProps = {
     item: EnvironmentForecastItemModel;
-    active: boolean;
 };
 
 /* ------------------------------
@@ -50,24 +48,20 @@ function getForecastIconSrc(sceneKey: EnvironmentSceneKey): string {
 -------------------------------- */
 export default function EnvironmentForecastItem({
     item,
-    active,
 }: EnvironmentForecastItemProps) {
     const ITEM_STYLE: CSSProperties = {
-        flex: "0 0 auto",
-        minWidth: 52,
-        minHeight: 60,
+        flex: "0 0 74px",
+        minHeight: 76,
         display: "grid",
         justifyItems: "center",
         alignContent: "space-between",
-        rowGap: 2,
-        padding: "6px 5px",
-        borderRadius: 14,
+        rowGap: 3,
+        padding: "7px 6px",
+        borderRadius: 15,
         color: "var(--text-primary)",
-        border: active
-            ? "1px solid var(--border-soft)"
-            : "1px solid var(--border-subtle)",
-        background: active ? "var(--surface-muted)" : "var(--surface-muted)",
-        boxShadow: active ? "var(--glow-ring)" : "none",
+        border: "1px solid var(--border-subtle)",
+        background: "var(--surface-soft)",
+        scrollSnapAlign: "start",
     };
 
     const LABEL_STYLE: CSSProperties = {
@@ -77,10 +71,12 @@ export default function EnvironmentForecastItem({
     };
 
     const ICON_STYLE: CSSProperties = {
-        width: 35,
-        height: 35,
+        width: 42,
+        height: 42,
         objectFit: "contain",
-        opacity: 0.92,
+        opacity: 0.94,
+        transform: "scale(1.55)",
+        transformOrigin: "center",
     };
 
     const VALUE_STYLE: CSSProperties = {
