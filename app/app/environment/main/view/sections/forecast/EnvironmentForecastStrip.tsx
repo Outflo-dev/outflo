@@ -54,7 +54,7 @@ export default function EnvironmentForecastStrip({
     return (
         <ScrollRail
             ariaLabel="Hourly forecast"
-            gap={8}
+            gap={5}
             style={STRIP_STYLE}
             contentStyle={CONTENT_STYLE}
         >
