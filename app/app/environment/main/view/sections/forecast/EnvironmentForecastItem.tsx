@@ -50,12 +50,12 @@ export default function EnvironmentForecastItem({
     item,
 }: EnvironmentForecastItemProps) {
     const ITEM_STYLE: CSSProperties = {
-        flex: "0 0 74px",
-        minHeight: 76,
+        flex: "0 0 60px",
+        minHeight: 54,
         display: "grid",
         justifyItems: "center",
         alignContent: "space-between",
-        rowGap: 3,
+        rowGap: 0,
         padding: "7px 6px",
         borderRadius: 15,
         color: "var(--text-primary)",
@@ -65,6 +65,7 @@ export default function EnvironmentForecastItem({
     };
 
     const LABEL_STYLE: CSSProperties = {
+        margin: 0,
         color: "var(--text-secondary)",
         whiteSpace: "nowrap",
         lineHeight: 1,
@@ -75,11 +76,12 @@ export default function EnvironmentForecastItem({
         height: 42,
         objectFit: "contain",
         opacity: 0.94,
-        transform: "scale(1.55)",
+        transform: "scale(1.32)",
         transformOrigin: "center",
     };
 
     const VALUE_STYLE: CSSProperties = {
+        margin: 0,
         color: "var(--text-primary)",
         whiteSpace: "nowrap",
         lineHeight: 1,
@@ -96,6 +98,8 @@ export default function EnvironmentForecastItem({
                 aria-hidden="true"
                 src={getForecastIconSrc(item.sceneKey)}
                 style={ICON_STYLE}
+                loading="lazy"
+                decoding="async"
             />
 
             <Text as="p" type="label" style={VALUE_STYLE}>

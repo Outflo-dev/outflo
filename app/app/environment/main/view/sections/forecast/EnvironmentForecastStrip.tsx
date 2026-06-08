@@ -33,8 +33,8 @@ export default function EnvironmentForecastStrip({
     items,
 }: EnvironmentForecastStripProps) {
     const STRIP_STYLE: CSSProperties = {
-        minHeight: 82,
-        padding: 8,
+        minHeight: 68,
+        padding: 6,
         borderRadius: 18,
         border: "1px solid var(--border-soft)",
         background: "var(--surface-muted)",
@@ -42,6 +42,7 @@ export default function EnvironmentForecastStrip({
     };
 
     const CONTENT_STYLE: CSSProperties = {
+        height: "100%",
         paddingBottom: 1,
         scrollPaddingInline: 8,
     };
