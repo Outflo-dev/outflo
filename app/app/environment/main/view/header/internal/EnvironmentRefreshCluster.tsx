@@ -4,11 +4,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT REFRESH CLUSTER
    File: app/app/environment/main/view/header/internal/EnvironmentRefreshCluster.tsx
-   Scope: Own Environment refresh action and updated meta stack
+   Scope: Own Environment header refresh action placement
    Last Updated:
-   - ms: 1780011540053
-   - iso: 2026-05-28T23:39:00.053Z
-   - note: extract Environment refresh cluster ownership
+   - ms: 1780958934391
+   - iso: 2026-06-08T22:48:54.391Z
+   - note: remove updated meta from header refresh cluster
    ========================================================== */
 
 /* ------------------------------
@@ -17,7 +17,6 @@
 import type { CSSProperties } from "react";
 
 import EnvironmentRefreshButton from "./EnvironmentRefreshButton";
-import EnvironmentUpdatedMeta from "./EnvironmentUpdatedMeta";
 
 /* ------------------------------
    Types
@@ -36,9 +35,8 @@ export default function EnvironmentRefreshCluster({
 }: EnvironmentRefreshClusterProps) {
     const CLUSTER_STYLE: CSSProperties = {
         justifySelf: "end",
-        display: "grid",
-        justifyItems: "end",
-        rowGap: 5,
+        display: "flex",
+        alignItems: "center",
     };
 
     return (
@@ -47,8 +45,6 @@ export default function EnvironmentRefreshCluster({
                 onRefresh={onRefresh}
                 refreshing={refreshing}
             />
-
-            <EnvironmentUpdatedMeta refreshing={refreshing} />
         </div>
     );
 }

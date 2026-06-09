@@ -4,19 +4,25 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER
    File: app/app/environment/main/view/header/EnvironmentHeader.tsx
-   Scope: Compose Environment scene header controls
+   Scope: Compose Environment sticky header controls
    Last Updated:
-   - ms: 1780011540053
-   - iso: 2026-05-28T23:39:00.053Z
-   - note: delegate Environment header internals to local owners
+   - ms: 1780958934391
+   - iso: 2026-06-08T22:48:54.391Z
+   - note: compose Environment header with shared right action pill
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
+import type { CSSProperties } from "react";
+
+import { GlassShell } from "@/components/system/shell/glass";
+
 import EnvironmentHeaderFrame from "./internal/EnvironmentHeaderFrame";
 import EnvironmentBackButton from "./internal/EnvironmentBackButton";
-import EnvironmentRefreshCluster from "./internal/EnvironmentRefreshCluster";
+import EnvironmentMenuButton from "./internal/EnvironmentMenuButton";
+import EnvironmentRefreshButton from "./internal/EnvironmentRefreshButton";
+import EnvironmentSubstrateSelector from "./internal/EnvironmentSubstrateSelector";
 
 /* ------------------------------
    Types
@@ -28,6 +34,23 @@ type EnvironmentHeaderProps = {
 };
 
 /* ------------------------------
+   Styles
+-------------------------------- */
+const ACTION_PILL_INNER_STYLE: CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 0,
+    padding: 2,
+};
+
+const ACTION_DIVIDER_STYLE: CSSProperties = {
+    width: 1,
+    height: 18,
+    background: "color-mix(in srgb, var(--text-primary) 14%, transparent)",
+};
+
+/* ------------------------------
    Component
 -------------------------------- */
 export default function EnvironmentHeader({
@@ -36,13 +59,27 @@ export default function EnvironmentHeader({
     refreshing,
 }: EnvironmentHeaderProps) {
     return (
-        <EnvironmentHeaderFrame>
-            <EnvironmentBackButton onBack={onBack} />
+        <EnvironmentHeaderFrame
+            left={
+                <>
+                    <EnvironmentBackButton onBack={onBack} />
+                    <EnvironmentSubstrateSelector />
+                </>
+            }
+            right={
+                <GlassShell tone="soft" shape="pill" padding="none">
+                    <div style={ACTION_PILL_INNER_STYLE}>
+                        <EnvironmentRefreshButton
+                            onRefresh={onRefresh}
+                            refreshing={refreshing}
+                        />
 
-            <EnvironmentRefreshCluster
-                onRefresh={onRefresh}
-                refreshing={refreshing}
-            />
-        </EnvironmentHeaderFrame>
+                        <div style={ACTION_DIVIDER_STYLE} />
+
+                        <EnvironmentMenuButton />
+                    </div>
+                </GlassShell>
+            }
+        />
     );
 }

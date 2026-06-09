@@ -4,11 +4,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER FRAME
    File: app/app/environment/main/view/header/internal/EnvironmentHeaderFrame.tsx
-   Scope: Own Environment header layout and scene control zones
+   Scope: Own Environment sticky header layout and control zones
    Last Updated:
-   - ms: 1780011540053
-   - iso: 2026-05-28T23:39:00.053Z
-   - note: extract Environment header frame ownership
+   - ms: 1780958934391
+   - iso: 2026-06-08T22:48:54.391Z
+   - note: reshape Environment header into left and right control groups
    ========================================================== */
 
 /* ------------------------------
@@ -20,22 +20,45 @@ import type { CSSProperties, ReactNode } from "react";
    Types
 -------------------------------- */
 type EnvironmentHeaderFrameProps = {
-    children: ReactNode;
+    left: ReactNode;
+    right: ReactNode;
 };
 
 /* ------------------------------
    Component
 -------------------------------- */
 export default function EnvironmentHeaderFrame({
-    children,
+    left,
+    right,
 }: EnvironmentHeaderFrameProps) {
     const FRAME_STYLE: CSSProperties = {
-        minHeight: 42,
+        position: "sticky",
+        top: 0,
+        zIndex: 20,
+        minHeight: 48,
         display: "grid",
-        gridTemplateColumns: "auto 1fr",
-        alignItems: "start",
+        gridTemplateColumns: "minmax(0, 1fr) auto",
+        alignItems: "center",
         columnGap: 12,
+        padding: "2px 0 8px",
     };
 
-    return <header style={FRAME_STYLE}>{children}</header>;
+    const GROUP_STYLE: CSSProperties = {
+        minWidth: 0,
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+    };
+
+    const RIGHT_GROUP_STYLE: CSSProperties = {
+        ...GROUP_STYLE,
+        justifySelf: "end",
+    };
+
+    return (
+        <header style={FRAME_STYLE}>
+            <div style={GROUP_STYLE}>{left}</div>
+            <div style={RIGHT_GROUP_STYLE}>{right}</div>
+        </header>
+    );
 }
