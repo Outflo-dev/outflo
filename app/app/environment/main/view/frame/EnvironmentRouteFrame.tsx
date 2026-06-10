@@ -31,19 +31,5 @@ type EnvironmentRouteFrameProps = {
 export default function EnvironmentRouteFrame({
     children,
 }: EnvironmentRouteFrameProps) {
-    const MAIN_STYLE: CSSProperties = {
-        position: "relative",
-        minHeight: "100svh",
-        padding:
-            "calc(env(safe-area-inset-top) + 6px) 0 max(18px, env(safe-area-inset-bottom))",
-        color: "var(--text-primary)",
-        overflowX: "clip",
-        isolation: "isolate",
-    };
-
-    return (
-        <main style={MAIN_STYLE}>
-            <AppFrame>{children}</AppFrame>
-        </main>
-    );
+    return <AppFrame>{children}</AppFrame>;
 }

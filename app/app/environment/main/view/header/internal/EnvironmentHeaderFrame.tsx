@@ -32,9 +32,6 @@ export default function EnvironmentHeaderFrame({
     right,
 }: EnvironmentHeaderFrameProps) {
     const FRAME_STYLE: CSSProperties = {
-        position: "sticky",
-        top: 0,
-        zIndex: 20,
         minHeight: 48,
         display: "grid",
         gridTemplateColumns: "minmax(0, 1fr) auto",
