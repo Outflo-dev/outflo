@@ -3,54 +3,61 @@
 /* ==========================================================
    OUTFLO — ICON BUTTON LINK
    File: components/system/shell/buttons/types/icon/IconButtonLink.tsx
-   Scope: Link-owned icon button composed from IconButtonFrame
+   Scope: Own reusable icon button link wrapper with role-based frame selection
    Last Updated:
-   - ms: 1776222056208
-   - iso: 2026-04-15T03:00:56.208Z
-   - note: add link-owned icon button type using locked button syntax
+   - ms: 1780958934391
+   - iso: 2026-06-08T22:48:54.391Z
+   - note: align icon button link to frame size roles
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
-import IconButtonFrame from "@/components/system/shell/buttons/types/icon/IconButtonFrame";
+import type { CSSProperties, ReactNode } from "react";
+
+import IconButtonFrame, {
+  type IconButtonFrameSize,
+  type IconButtonFrameTone,
+} from "@/components/system/shell/buttons/types/icon/IconButtonFrame";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type IconButtonLinkProps = {
-  href: string;
   children: ReactNode;
+  href: string;
   ariaLabel: string;
-  size?: number;
+  size?: IconButtonFrameSize;
+  tone?: IconButtonFrameTone;
   style?: CSSProperties;
-  prefetch?: boolean;
 };
 
 /* ------------------------------
    Component
 -------------------------------- */
 export default function IconButtonLink({
-  href,
   children,
+  href,
   ariaLabel,
-  size = 40,
+  size = "md",
+  tone = "plain",
   style,
-  prefetch,
 }: IconButtonLinkProps) {
   return (
     <Link
       href={href}
       aria-label={ariaLabel}
-      prefetch={prefetch}
       style={{
+        all: "unset",
+        cursor: "pointer",
         display: "inline-flex",
-        textDecoration: "none",
+        alignItems: "center",
+        justifyContent: "center",
+        lineHeight: 0,
       }}
     >
-      <IconButtonFrame size={size} style={style}>
+      <IconButtonFrame size={size} tone={tone} style={style}>
         {children}
       </IconButtonFrame>
     </Link>

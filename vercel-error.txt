@@ -1,0 +1,3 @@
+Vercel CLI 54.10.3 (Node.js 24.12.0)
+Fetching deployment "outflo-nfqt7u0ts-outflo.vercel.app" in outflo
+status	● Error
