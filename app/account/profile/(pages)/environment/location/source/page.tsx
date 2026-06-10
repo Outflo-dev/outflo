@@ -36,6 +36,11 @@ const DEFAULT_ENVIRONMENT_PREFERENCES: ProfileEnvironmentPreferences = {
    air_quality_mode: "on",
    receipt_links_mode: "on",
    snapshots_mode: "on",
+   temperature_unit: "system",
+   wind_unit: "system",
+   precipitation_unit: "system",
+   pressure_unit: "system",
+   distance_unit: "system",
 };
 
 /* ------------------------------
