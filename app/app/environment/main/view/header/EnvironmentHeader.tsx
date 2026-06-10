@@ -1,4 +1,5 @@
 // app/app/environment/main/view/header/EnvironmentHeader.tsx
+
 "use client";
 
 /* ==========================================================
@@ -6,9 +7,9 @@
    File: app/app/environment/main/view/header/EnvironmentHeader.tsx
    Scope: Compose Environment sticky header controls
    Last Updated:
-   - ms: 1780958934391
-   - iso: 2026-06-08T22:48:54.391Z
-   - note: compose Environment header with shared right action pill
+   - ms: 1781108888881
+   - iso: 2026-06-10T16:28:08.881Z
+   - note: restore shared Environment header action pill
    ========================================================== */
 
 /* ------------------------------
@@ -20,9 +21,9 @@ import { GlassShell } from "@/components/system/shell/glass";
 
 import EnvironmentHeaderFrame from "./internal/EnvironmentHeaderFrame";
 import EnvironmentBackButton from "./internal/EnvironmentBackButton";
-import EnvironmentMenuButton from "./internal/EnvironmentMenuButton";
 import EnvironmentRefreshButton from "./internal/EnvironmentRefreshButton";
 import EnvironmentSubstrateSelector from "./internal/EnvironmentSubstrateSelector";
+import EnvironmentSettingsMenu from "./menu/settings/EnvironmentSettingsMenu";
 
 /* ------------------------------
    Types
@@ -76,7 +77,7 @@ export default function EnvironmentHeader({
 
                         <div style={ACTION_DIVIDER_STYLE} />
 
-                        <EnvironmentMenuButton />
+                        <EnvironmentSettingsMenu />
                     </div>
                 </GlassShell>
             }

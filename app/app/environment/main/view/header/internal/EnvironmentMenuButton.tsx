@@ -6,40 +6,22 @@
    File: app/app/environment/main/view/header/internal/EnvironmentMenuButton.tsx
    Scope: Own Environment header menu affordance inside header action group
    Last Updated:
-   - ms: 1780958934391
-   - iso: 2026-06-08T22:48:54.391Z
-   - note: consume system icon button primitive inside shared header pill
+   - ms: 1781108888881
+   - iso: 2026-06-10T16:28:08.881Z
+   - note: consume reusable MenuMark primitive
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CSSProperties } from "react";
-
 import IconButton from "@/components/system/shell/buttons/types/icon/IconButton";
+import MenuMark from "@/components/system/primitives/marks/icons/MenuMark";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type EnvironmentMenuButtonProps = {
     onOpenMenu?: () => void;
-};
-
-/* ------------------------------
-   Styles
--------------------------------- */
-const DOTS_STYLE: CSSProperties = {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 3,
-};
-
-const DOT_STYLE: CSSProperties = {
-    width: 3.5,
-    height: 3.5,
-    borderRadius: 999,
-    background: "currentColor",
-    opacity: 0.86,
 };
 
 /* ------------------------------
@@ -55,11 +37,7 @@ export default function EnvironmentMenuButton({
             size="lg"
             tone="plain"
         >
-            <span aria-hidden="true" style={DOTS_STYLE}>
-                <span style={DOT_STYLE} />
-                <span style={DOT_STYLE} />
-                <span style={DOT_STYLE} />
-            </span>
+            <MenuMark />
         </IconButton>
     );
 }

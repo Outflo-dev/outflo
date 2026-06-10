@@ -1,14 +1,15 @@
 // app/app/environment/main/view/header/internal/EnvironmentHeaderFrame.tsx
+
 "use client";
 
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER FRAME
    File: app/app/environment/main/view/header/internal/EnvironmentHeaderFrame.tsx
-   Scope: Own Environment sticky header layout and control zones
+   Scope: Own Environment sticky header layout, layer, and control zones
    Last Updated:
-   - ms: 1780958934391
-   - iso: 2026-06-08T22:48:54.391Z
-   - note: restore stable Environment header control layout
+   - ms: 1781108888881
+   - iso: 2026-06-10T16:28:08.881Z
+   - note: give header explicit layer ownership above Environment content
    ========================================================== */
 
 /* ------------------------------
@@ -32,12 +33,15 @@ export default function EnvironmentHeaderFrame({
     right,
 }: EnvironmentHeaderFrameProps) {
     const FRAME_STYLE: CSSProperties = {
+        position: "relative",
+        zIndex: 80,
         minHeight: 48,
         display: "grid",
         gridTemplateColumns: "minmax(0, 1fr) auto",
         alignItems: "center",
         columnGap: 12,
         padding: "2px 0 8px",
+        overflow: "visible",
     };
 
     const GROUP_STYLE: CSSProperties = {
@@ -50,6 +54,8 @@ export default function EnvironmentHeaderFrame({
     const RIGHT_GROUP_STYLE: CSSProperties = {
         ...GROUP_STYLE,
         justifySelf: "end",
+        position: "relative",
+        zIndex: 1,
     };
 
     return (

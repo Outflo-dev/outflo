@@ -1,0 +1,23 @@
+/* ==========================================================
+   OUTFLO — MENU CARD TOKENS
+   File: components/system/surfaces/card/types/menu/menu-card.tokens.css
+   Scope: Define opaque reusable menu card surface tokens
+   Last Updated:
+   - ms: 1781108888881
+   - iso: 2026-06-10T16:28:08.881Z
+   - note: add opaque menu card surface tokens
+   ========================================================== */
+
+:root {
+    --menu-card-background: color-mix(in srgb,
+            var(--bg-primary) 82%,
+            var(--text-primary) 18%);
+
+    --menu-card-border: color-mix(in srgb,
+            var(--text-primary) 12%,
+            var(--bg-primary) 88%);
+
+    --menu-card-shadow: 0 22px 60px color-mix(in srgb,
+            #000 32%,
+            transparent);
+}

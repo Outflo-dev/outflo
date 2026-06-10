@@ -11,7 +11,7 @@
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { EnvironmentPreferences } from "@/lib/app-state/environment-preferences";
+import type { EnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences";
 
 /* ------------------------------
    Types

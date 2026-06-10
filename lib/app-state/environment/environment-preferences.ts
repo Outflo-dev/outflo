@@ -1,6 +1,6 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT PREFERENCES
-   File: lib/app-state/environment-preferences.ts
+   File: lib/app-state/environment/environment-preferences.ts
    Scope: Own environment preference types, defaults, and validators
    Last Updated:
    - ms: 1779269374486
@@ -12,6 +12,14 @@
    Imports
 -------------------------------- */
 import { DEFAULT_THEME_PREFERENCE } from "@/lib/app-state/theme-preference";
+import {
+    DEFAULT_ENVIRONMENT_UNITS,
+    type TemperatureUnit,
+    type WindUnit,
+    type PrecipitationUnit,
+    type PressureUnit,
+    type DistanceUnit,
+} from "./environment-units";
 
 /* ------------------------------
    Types
@@ -33,6 +41,11 @@ export type EnvironmentPreferences = {
     air_quality_mode: SignalMode;
     receipt_links_mode: SignalMode;
     snapshots_mode: SignalMode;
+    temperature_unit: TemperatureUnit;
+    wind_unit: WindUnit;
+    precipitation_unit: PrecipitationUnit;
+    pressure_unit: PressureUnit;
+    distance_unit: DistanceUnit;
 };
 
 /* ------------------------------
@@ -55,6 +68,7 @@ export const DEFAULT_ENVIRONMENT_PREFERENCES: EnvironmentPreferences = {
     air_quality_mode: "off",
     receipt_links_mode: "off",
     snapshots_mode: "off",
+    ...DEFAULT_ENVIRONMENT_UNITS,
 };
 
 export const DEFAULT_USER_PREFERENCES = {
