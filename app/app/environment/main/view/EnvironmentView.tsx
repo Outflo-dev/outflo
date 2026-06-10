@@ -6,15 +6,17 @@
    File: app/app/environment/main/view/EnvironmentView.tsx
    Scope: Compose Environment substrate landing page surface
    Last Updated:
-   - ms: 1780011540053
-   - iso: 2026-05-28T23:39:00.053Z
-   - note: pass Environment scene model to atmosphere and hero owners
+   - ms: 1781108888881
+   - iso: 2026-06-10T16:28:08.881Z
+   - note: pass Environment preferences into header controls
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type { CSSProperties } from "react";
+
+import type { EnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences";
 
 import type { EnvironmentViewModel } from "../internal/environment.types";
 import EnvironmentHeader from "./header/EnvironmentHeader";
@@ -33,6 +35,7 @@ type EnvironmentViewProps = {
     onBack: () => void;
     onRefresh: () => void;
     refreshing: boolean;
+    environmentPreferences: EnvironmentPreferences;
 };
 
 /* ------------------------------
@@ -43,6 +46,7 @@ export default function EnvironmentView({
     onBack,
     onRefresh,
     refreshing,
+    environmentPreferences,
 }: EnvironmentViewProps) {
     const ROOT_STYLE: CSSProperties = {
         position: "relative",
@@ -66,6 +70,7 @@ export default function EnvironmentView({
                     onBack={onBack}
                     onRefresh={onRefresh}
                     refreshing={refreshing}
+                    environmentPreferences={environmentPreferences}
                 />
 
                 <EnvironmentHeroSection

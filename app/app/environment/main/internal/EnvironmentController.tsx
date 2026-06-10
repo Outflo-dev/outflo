@@ -1,4 +1,3 @@
-// app/app/environment/main/internal/EnvironmentController.tsx
 "use client";
 
 /* ==========================================================
@@ -6,9 +5,9 @@
    File: app/app/environment/main/internal/EnvironmentController.tsx
    Scope: Own Environment model preparation navigation and refresh action
    Last Updated:
-   - ms: 1780011540053
-   - iso: 2026-05-28T23:39:00.053Z
-   - note: demote controller from route frame and visual surface ownership
+   - ms: 1781108888881
+   - iso: 2026-06-10T16:28:08.881Z
+   - note: pass persisted Environment preferences into compiler
    ========================================================== */
 
 /* ------------------------------
@@ -16,6 +15,8 @@
 -------------------------------- */
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+
+import type { EnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences";
 
 import EnvironmentRouteFrame from "../view/frame/EnvironmentRouteFrame";
 import EnvironmentView from "../view/EnvironmentView";
@@ -28,6 +29,7 @@ import type { EnvironmentSnapshot } from "./environment.types";
 type EnvironmentControllerProps = {
     snapshot: EnvironmentSnapshot | null;
     environmentEnabled: boolean;
+    environmentPreferences: EnvironmentPreferences;
 };
 
 /* ------------------------------
@@ -36,6 +38,7 @@ type EnvironmentControllerProps = {
 export default function EnvironmentController({
     snapshot,
     environmentEnabled,
+    environmentPreferences,
 }: EnvironmentControllerProps) {
     const router = useRouter();
 
@@ -45,8 +48,9 @@ export default function EnvironmentController({
         return getEnvironmentModel(
             snapshot,
             environmentEnabled,
+            environmentPreferences
         );
-    }, [snapshot, environmentEnabled]);
+    }, [snapshot, environmentEnabled, environmentPreferences]);
 
     function handleBack() {
         window.history.back();
@@ -80,6 +84,7 @@ export default function EnvironmentController({
                 onBack={handleBack}
                 onRefresh={handleRefresh}
                 refreshing={refreshing}
+                environmentPreferences={environmentPreferences}
             />
         </EnvironmentRouteFrame>
     );

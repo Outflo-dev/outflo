@@ -4,14 +4,16 @@
    File: app/app/environment/page.tsx
    Scope: Server route entry for Environment substrate surface
    Last Updated:
-   - ms: 1779901409308
-   - iso: 2026-05-27T17:03:29.308Z
-   - note: create Environment substrate consumer route packet
+   - ms: 1781108888881
+   - iso: 2026-06-10T16:28:08.881Z
+   - note: verify persisted Environment preference read path
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
+import { DEFAULT_ENVIRONMENT_PREFERENCES } from "@/lib/app-state/environment/environment-preferences";
+import { getEnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences.server";
 import { supabaseServer } from "@/lib/supabase/server";
 
 import EnvironmentController from "./main/internal/EnvironmentController";
@@ -37,11 +39,16 @@ export default async function Page() {
             <EnvironmentController
                 snapshot={null}
                 environmentEnabled={false}
+                environmentPreferences={DEFAULT_ENVIRONMENT_PREFERENCES}
             />
         );
     }
 
-    const [{ data: snapshot }, { data: preferences }] = await Promise.all([
+    const [
+        { data: snapshot },
+        { data: preferences },
+        environmentPreferences,
+    ] = await Promise.all([
         supabase
             .from("environment_snapshots")
             .select("*")
@@ -53,6 +60,8 @@ export default async function Page() {
             .select("location_mode")
             .eq("user_id", user.id)
             .maybeSingle(),
+
+        getEnvironmentPreferences(),
     ]);
 
     const environmentEnabled =
@@ -62,6 +71,7 @@ export default async function Page() {
         <EnvironmentController
             snapshot={(snapshot ?? null) as EnvironmentSnapshot | null}
             environmentEnabled={environmentEnabled}
+            environmentPreferences={environmentPreferences}
         />
     );
 }

@@ -9,7 +9,7 @@
    Last Updated:
    - ms: 1781108888881
    - iso: 2026-06-10T16:28:08.881Z
-   - note: restore shared Environment header action pill
+   - note: normalize Environment preferences before menu handoff
    ========================================================== */
 
 /* ------------------------------
@@ -17,6 +17,10 @@
 -------------------------------- */
 import type { CSSProperties } from "react";
 
+import {
+    DEFAULT_ENVIRONMENT_PREFERENCES,
+    type EnvironmentPreferences,
+} from "@/lib/app-state/environment/environment-preferences";
 import { GlassShell } from "@/components/system/shell/glass";
 
 import EnvironmentHeaderFrame from "./internal/EnvironmentHeaderFrame";
@@ -32,6 +36,7 @@ type EnvironmentHeaderProps = {
     onBack: () => void;
     onRefresh: () => void;
     refreshing: boolean;
+    environmentPreferences?: EnvironmentPreferences;
 };
 
 /* ------------------------------
@@ -58,7 +63,11 @@ export default function EnvironmentHeader({
     onBack,
     onRefresh,
     refreshing,
+    environmentPreferences,
 }: EnvironmentHeaderProps) {
+    const resolvedPreferences =
+        environmentPreferences ?? DEFAULT_ENVIRONMENT_PREFERENCES;
+
     return (
         <EnvironmentHeaderFrame
             left={
@@ -77,7 +86,9 @@ export default function EnvironmentHeader({
 
                         <div style={ACTION_DIVIDER_STYLE} />
 
-                        <EnvironmentSettingsMenu />
+                        <EnvironmentSettingsMenu
+                            temperatureUnit={resolvedPreferences.temperature_unit}
+                        />
                     </div>
                 </GlassShell>
             }
