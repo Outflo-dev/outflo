@@ -8,7 +8,7 @@
    Last Updated:
    - ms: 1780958934391
    - iso: 2026-06-08T22:48:54.391Z
-   - note: restore stable sticky header without glass fade layer
+   - note: restore stable Environment header control layout
    ========================================================== */
 
 /* ------------------------------
@@ -25,42 +25,36 @@ type EnvironmentHeaderFrameProps = {
 };
 
 /* ------------------------------
-   Styles
--------------------------------- */
-const FRAME_STYLE: CSSProperties = {
-    position: "sticky",
-    top: -1,
-    zIndex: 20,
-    minHeight: 44,
-    display: "grid",
-    gridTemplateColumns: "minmax(0, 1fr) auto",
-    alignItems: "center",
-    columnGap: 12,
-    background: "var(--bg-primary)",
-    paddingTop: 10,
-    paddingBottom: 12,
-    marginBottom: 6,
-};
-
-const GROUP_STYLE: CSSProperties = {
-    minWidth: 0,
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-};
-
-const RIGHT_GROUP_STYLE: CSSProperties = {
-    ...GROUP_STYLE,
-    justifySelf: "end",
-};
-
-/* ------------------------------
    Component
 -------------------------------- */
 export default function EnvironmentHeaderFrame({
     left,
     right,
 }: EnvironmentHeaderFrameProps) {
+    const FRAME_STYLE: CSSProperties = {
+        position: "sticky",
+        top: 0,
+        zIndex: 20,
+        minHeight: 48,
+        display: "grid",
+        gridTemplateColumns: "minmax(0, 1fr) auto",
+        alignItems: "center",
+        columnGap: 12,
+        padding: "2px 0 8px",
+    };
+
+    const GROUP_STYLE: CSSProperties = {
+        minWidth: 0,
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+    };
+
+    const RIGHT_GROUP_STYLE: CSSProperties = {
+        ...GROUP_STYLE,
+        justifySelf: "end",
+    };
+
     return (
         <header style={FRAME_STYLE}>
             <div style={GROUP_STYLE}>{left}</div>
