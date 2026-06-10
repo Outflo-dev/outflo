@@ -1,0 +1,23 @@
+
+> outflo@0.1.0 build
+> next build
+
+▲ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 6.0s
+  Running TypeScript ...
+Failed to compile.
+
+./app/account/profile/(pages)/environment/location/manual-city/page.tsx:28:7
+Type error: Type '{ location_mode: "device"; manual_city: null; location_precision: "city"; weather_mode: "on"; capture_mode: "off"; sun_mode: "on"; precipitation_mode: "on"; air_quality_mode: "on"; receipt_links_mode: "on"; snapshots_mode: "on"; }' is missing the following properties from type 'EnvironmentPreferences': temperature_unit, wind_unit, precipitation_unit, pressure_unit, distance_unit
+
+[0m [90m 26 |[39m [90m   Constants[39m
+ [90m 27 |[39m [90m-------------------------------- */[39m
+[31m[1m>[22m[39m[90m 28 |[39m [36mconst[39m [33mDEFAULT_ENVIRONMENT_PREFERENCES[39m[33m:[39m [33mProfileEnvironmentPreferences[39m [33m=[39m {
+ [90m    |[39m       [31m[1m^[22m[39m
+ [90m 29 |[39m     location_mode[33m:[39m [32m"device"[39m[33m,[39m
+ [90m 30 |[39m     manual_city[33m:[39m [36mnull[39m[33m,[39m
+ [90m 31 |[39m     location_precision[33m:[39m [32m"city"[39m[33m,[39m[0m
+Next.js build worker exited with code: 1 and signal: null
