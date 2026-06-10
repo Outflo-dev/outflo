@@ -4,17 +4,19 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT REFRESH BUTTON
    File: app/app/environment/main/view/header/internal/EnvironmentRefreshButton.tsx
-   Scope: Own Environment refresh button interaction inside header action group
+   Scope: Own Environment refresh interaction inside header action group
    Last Updated:
    - ms: 1780958934391
    - iso: 2026-06-08T22:48:54.391Z
-   - note: remove local glass frame so header can own shared action pill
+   - note: consume system icon button primitive inside shared header pill
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type { CSSProperties } from "react";
+
+import IconButton from "@/components/system/shell/buttons/types/icon/IconButton";
 
 /* ------------------------------
    Types
@@ -31,22 +33,6 @@ export default function EnvironmentRefreshButton({
     onRefresh,
     refreshing,
 }: EnvironmentRefreshButtonProps) {
-    const BUTTON_STYLE: CSSProperties = {
-        width: 40,
-        height: 40,
-        display: "grid",
-        placeItems: "center",
-        padding: 0,
-        border: "none",
-        borderRadius: 999,
-        background: "transparent",
-        color: "var(--text-primary)",
-        font: "inherit",
-        cursor: refreshing ? "default" : "pointer",
-        opacity: refreshing ? 0.72 : 1,
-        WebkitTapHighlightColor: "transparent",
-    };
-
     const ICON_STYLE: CSSProperties = {
         display: "inline-block",
         fontSize: 18,
@@ -56,16 +42,16 @@ export default function EnvironmentRefreshButton({
     };
 
     return (
-        <button
-            type="button"
-            aria-label={refreshing ? "Refreshing environment" : "Refresh environment"}
+        <IconButton
+            ariaLabel={refreshing ? "Refreshing environment" : "Refresh environment"}
             onClick={onRefresh}
+            size="lg"
+            tone="plain"
             disabled={refreshing}
-            style={BUTTON_STYLE}
         >
             <span aria-hidden="true" style={ICON_STYLE}>
                 ↻
             </span>
-        </button>
+        </IconButton>
     );
 }

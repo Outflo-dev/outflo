@@ -1,56 +1,101 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — ICON BUTTON SHELL
-   File: components/system/shell/buttons/containers/IconButtonShell.tsx
-   Scope: Reusable circular icon button container with no action or domain ownership
+   OUTFLO — ICON BUTTON FRAME
+   File: components/system/shell/buttons/types/icon/IconButtonFrame.tsx
+   Scope: Own reusable icon button visual frame with role-based sizing
    Last Updated:
-   - ms: 1776222056208
-   - iso: 2026-04-15T03:00:56.208Z
-   - note: extract icon-only button container after base button shell
+   - ms: 1780958934391
+   - iso: 2026-06-08T22:48:54.391Z
+   - note: replace raw icon button sizing with system-owned size and tone roles
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type { CSSProperties, ReactNode } from "react";
+
 import ButtonShell from "@/components/system/shell/buttons/base/ButtonBase";
+import { GlassShell } from "@/components/system/shell/glass";
 
 /* ------------------------------
    Types
 -------------------------------- */
-type IconButtonShellProps = {
+export type IconButtonFrameSize = "sm" | "md" | "lg";
+
+export type IconButtonFrameTone = "plain" | "glass";
+
+type IconButtonFrameProps = {
   children: ReactNode;
-  size?: number;
-  borderRadius?: number | string;
-  background?: string;
-  color?: string;
-  border?: string;
+  size?: IconButtonFrameSize;
+  tone?: IconButtonFrameTone;
   flexShrink?: number;
   style?: CSSProperties;
 };
 
 /* ------------------------------
+   Constants
+-------------------------------- */
+const SIZE_STYLES: Record<IconButtonFrameSize, CSSProperties> = {
+  sm: {
+    width: "var(--icon-button-size-sm, 36px)",
+    height: "var(--icon-button-size-sm, 36px)",
+  },
+  md: {
+    width: "var(--icon-button-size-md, 40px)",
+    height: "var(--icon-button-size-md, 40px)",
+  },
+  lg: {
+    width: "var(--icon-button-size-lg, 44px)",
+    height: "var(--icon-button-size-lg, 44px)",
+  },
+};
+
+/* ------------------------------
    Component
 -------------------------------- */
-export default function IconButtonShell({
+export default function IconButtonFrame({
   children,
-  size = 40,
-  borderRadius = "50%",
-  background = "rgba(255,255,255,0.08)",
-  color = "currentColor",
-  border = "none",
+  size = "md",
+  tone = "plain",
   flexShrink = 0,
   style,
-}: IconButtonShellProps) {
+}: IconButtonFrameProps) {
+  const sizeStyle = SIZE_STYLES[size];
+
+  if (tone === "glass") {
+    return (
+      <GlassShell
+        tone="soft"
+        shape="pill"
+        padding="none"
+        style={{
+          ...sizeStyle,
+          flexShrink,
+          ...style,
+        }}
+      >
+        <ButtonShell
+          width="100%"
+          height="100%"
+          borderRadius={999}
+          background="transparent"
+          color="currentColor"
+        >
+          {children}
+        </ButtonShell>
+      </GlassShell>
+    );
+  }
+
   return (
     <ButtonShell
-      width={size}
-      height={size}
-      borderRadius={borderRadius}
-      background={background}
-      color={color}
-      border={border}
+      width={sizeStyle.width}
+      height={sizeStyle.height}
+      borderRadius={999}
+      background="transparent"
+      color="currentColor"
+      border="none"
       flexShrink={flexShrink}
       style={style}
     >
