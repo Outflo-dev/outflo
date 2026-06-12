@@ -5,7 +5,7 @@
    Last Updated:
    - ms: 1781108888881
    - iso: 2026-06-10T16:28:08.881Z
-   - note: restore summary tiles against current snapshot field ownership
+   - note: lock live Environment tiles to Weather plus Atmosphere taxonomy
    ========================================================== */
 
 /* ------------------------------
@@ -22,7 +22,6 @@ import { displayValue } from "./environment.compiler.utils";
 import {
     getEnvironmentCoordinates,
     getEnvironmentPlace,
-    getEnvironmentSignal,
 } from "./environment.location";
 import { getEnvironmentCondition } from "./environment.weather";
 
@@ -39,10 +38,10 @@ export function compileEnvironmentSummary(
         tiles: [
             getPlaceTile(snapshot),
             getWeatherTile(snapshot, displayContext),
+            getAtmosphereTile(snapshot),
             getSunTile(snapshot),
-            getAirTile(snapshot),
+            getAirQualityTile(snapshot),
             getAltitudeTile(snapshot),
-            getSourceTile(snapshot),
         ],
     };
 }
@@ -59,7 +58,7 @@ function getPlaceTile(snapshot: EnvironmentSnapshot): EnvironmentSummaryTileMode
         "Location",
         getEnvironmentPlace(snapshot),
         coordinates !== "Coordinates pending"
-            ? `${precision} · ${coordinates}`
+            ? compactJoin([precision, coordinates])
             : precision,
         "rgba(140,215,255,0.68)"
     );
@@ -77,13 +76,57 @@ function getWeatherTile(
         snapshot.apparent_temperature_c,
         displayContext.temperatureUnit
     );
+    const precipitation = displayValue(snapshot.precipitation_mm, " mm");
+    const rain = displayValue(snapshot.rain_mm, " mm");
+    const snow = displayValue(snapshot.snowfall_mm, " mm");
+    const probability = displayValue(snapshot.precipitation_probability_pct, "%");
 
     return tile(
         "Weather",
-        "Atmosphere",
+        "Condition",
         getEnvironmentCondition(snapshot),
-        `${temperature} · feels ${feelsLike}`,
+        compactJoin([
+            `${temperature} · feels ${feelsLike}`,
+            precipitation !== "—" ? `precip ${precipitation}` : null,
+            rain !== "—" ? `rain ${rain}` : null,
+            snow !== "—" ? `snow ${snow}` : null,
+            probability !== "—" ? `chance ${probability}` : null,
+        ]),
         "rgba(255,196,118,0.72)"
+    );
+}
+
+function getAtmosphereTile(
+    snapshot: EnvironmentSnapshot
+): EnvironmentSummaryTileModel {
+    const humidity = displayValue(snapshot.humidity_pct, "%");
+    const pressure = displayValue(snapshot.pressure_hpa, " hPa");
+    const wind = displayValue(snapshot.wind_speed_mps, " m/s");
+    const gust = displayValue(snapshot.wind_gust_mps, " m/s");
+    const visibility = displayValue(snapshot.visibility_m, " m");
+    const cloud = displayValue(snapshot.cloud_cover_pct, "%");
+
+    const primary =
+        humidity !== "—"
+            ? `Humidity ${humidity}`
+            : pressure !== "—"
+                ? `Pressure ${pressure}`
+                : wind !== "—"
+                    ? `Wind ${wind}`
+                    : "Atmosphere pending";
+
+    return tile(
+        "Atmosphere",
+        "Air state",
+        primary,
+        compactJoin([
+            pressure !== "—" ? `pressure ${pressure}` : null,
+            wind !== "—" ? `wind ${wind}` : null,
+            gust !== "—" ? `gust ${gust}` : null,
+            visibility !== "—" ? `visibility ${visibility}` : null,
+            cloud !== "—" ? `cloud ${cloud}` : null,
+        ]),
+        "rgba(174,214,255,0.72)"
     );
 }
 
@@ -91,25 +134,40 @@ function getSunTile(snapshot: EnvironmentSnapshot): EnvironmentSummaryTileModel 
     const daylight = snapshot.is_day === true ? "Daylight" : "Night";
     const uv = displayValue(snapshot.uv_index);
     const sunset = displayValue(snapshot.sunset_local);
+    const altitude = displayValue(snapshot.sun_altitude_deg, "°");
+    const azimuth = displayValue(snapshot.sun_azimuth_deg, "°");
 
     return tile(
         "Sun",
         "Light",
         daylight,
-        `UV ${uv} · sunset ${sunset}`,
+        compactJoin([
+            uv !== "—" ? `UV ${uv}` : null,
+            sunset !== "—" ? `sunset ${sunset}` : null,
+            altitude !== "—" ? `alt ${altitude}` : null,
+            azimuth !== "—" ? `az ${azimuth}` : null,
+        ]),
         "rgba(255,203,122,0.78)"
     );
 }
 
-function getAirTile(snapshot: EnvironmentSnapshot): EnvironmentSummaryTileModel {
+function getAirQualityTile(
+    snapshot: EnvironmentSnapshot
+): EnvironmentSummaryTileModel {
     const aqi = displayValue(snapshot.us_aqi ?? snapshot.aqi);
     const pm25 = displayValue(snapshot.pm2_5, " μg/m³");
+    const pm10 = displayValue(snapshot.pm10, " μg/m³");
+    const ozone = displayValue(snapshot.ozone_ppb, " ppb");
 
     return tile(
-        "Air",
-        "Quality",
+        "Air quality",
+        "Outdoor air",
         aqi === "—" ? "No AQI" : `AQI ${aqi}`,
-        `PM2.5 ${pm25}`,
+        compactJoin([
+            pm25 !== "—" ? `PM2.5 ${pm25}` : null,
+            pm10 !== "—" ? `PM10 ${pm10}` : null,
+            ozone !== "—" ? `O₃ ${ozone}` : null,
+        ]),
         "rgba(126,231,181,0.72)"
     );
 }
@@ -118,27 +176,15 @@ function getAltitudeTile(
     snapshot: EnvironmentSnapshot
 ): EnvironmentSummaryTileModel {
     const elevation = displayValue(snapshot.elevation_m, " m");
+    const altitude = displayValue(snapshot.altitude_m, " m");
     const accuracy = displayValue(snapshot.vertical_accuracy_m, " m");
 
     return tile(
         "Altitude",
         "Elevation",
-        elevation,
-        `Vertical accuracy ${accuracy}`,
+        elevation !== "—" ? elevation : altitude,
+        accuracy !== "—" ? `Vertical accuracy ${accuracy}` : "Accuracy pending",
         "rgba(196,173,255,0.72)"
-    );
-}
-
-function getSourceTile(snapshot: EnvironmentSnapshot): EnvironmentSummaryTileModel {
-    const provider = displayValue(snapshot.environment_context_provider);
-    const signal = getEnvironmentSignal(snapshot);
-
-    return tile(
-        "Source",
-        "Signal",
-        provider,
-        signal,
-        "rgba(255,255,255,0.52)"
     );
 }
 
@@ -159,4 +205,16 @@ function tile(
         detail,
         accent,
     };
+}
+
+function compactJoin(values: Array<string | null>): string {
+    const clean = values.filter((value): value is string => {
+        return Boolean(value && value !== "—");
+    });
+
+    if (clean.length === 0) {
+        return "—";
+    }
+
+    return clean.join(" · ");
 }
