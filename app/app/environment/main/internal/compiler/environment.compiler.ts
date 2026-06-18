@@ -60,13 +60,6 @@ export function compileEnvironmentModel(
         environmentPreferences
     );
 
-    console.log("ENVIRONMENT COMPILER DISPLAY", {
-        preference: environmentPreferences.temperature_unit,
-        resolvedUnit: displayContext.temperatureUnit,
-        rawTemperatureC: snapshot.temperature_c,
-        rawFeelsLikeC: snapshot.apparent_temperature_c,
-    });
-
     return {
         hasSnapshot: true,
         scene: compileEnvironmentScene(snapshot),

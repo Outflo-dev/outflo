@@ -1,40 +1,66 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT CONTEXT PERMISSIONS
    File: app/api/environment/context/pull/internal/environment-context-permissions.ts
-   Scope: Filter environment context persistence rows by user participation controls
+   Scope: Filter Environment context persistence rows by participation state
    Last Updated:
-   - ms: 1779269374486
-   - iso: 2026-05-20T09:29:34.486Z
-   - note: extract weather persistence filtering from context pull route
+   - ms: 1781741862076
+   - iso: 2026-06-18T00:17:42.076Z
+   - note: split Environment runtime ownership while preserving behavior
    ========================================================== */
 
-/* ------------------------------
-   Types
--------------------------------- */
-type JsonRecord = Record<string, unknown>;
+import type { EnvironmentContextPersistenceParticipation } from "./environment-context-permissions.types";
 
 /* ------------------------------
-   Weather
+   Weather Fields
 -------------------------------- */
-export function filterWeatherPersistenceRow<T extends JsonRecord>(args: {
-    row: T;
-    weatherEnabled: boolean;
-}) {
-    const { row, weatherEnabled } = args;
 
-    if (weatherEnabled) return row;
+const WEATHER_PERSISTENCE_FIELDS = [
+   "weather_code",
+   "temperature_c",
+   "apparent_temperature_c",
+   "dew_point_c",
+   "precipitation_mm",
+   "rain_mm",
+   "showers_mm",
+   "forecast_raw",
+   "forecast_units",
+] as const;
 
-    const filtered = { ...row };
+/* ------------------------------
+   Public Filter
+-------------------------------- */
 
-    delete filtered.weather_code;
-    delete filtered.temperature_c;
-    delete filtered.apparent_temperature_c;
-    delete filtered.dew_point_c;
-    delete filtered.precipitation_mm;
-    delete filtered.rain_mm;
-    delete filtered.showers_mm;
-    delete filtered.forecast_raw;
-    delete filtered.forecast_units;
+export function filterEnvironmentContextPersistenceRow<
+   Row extends Record<string, unknown>,
+>(args: {
+   row: Row;
+   participation: EnvironmentContextPersistenceParticipation;
+}): Partial<Row> {
+   const next: Partial<Row> = { ...args.row };
 
-    return filtered;
+   if (!args.participation.weather) {
+      for (const field of WEATHER_PERSISTENCE_FIELDS) {
+         delete next[field];
+      }
+   }
+
+   return next;
+}
+
+/* ------------------------------
+   Compatibility Filter
+-------------------------------- */
+
+export function filterWeatherPersistenceRow<Row extends Record<string, unknown>>(
+   args: {
+      row: Row;
+      weatherEnabled: boolean;
+   },
+): Partial<Row> {
+   return filterEnvironmentContextPersistenceRow({
+      row: args.row,
+      participation: {
+         weather: args.weatherEnabled,
+      },
+   });
 }

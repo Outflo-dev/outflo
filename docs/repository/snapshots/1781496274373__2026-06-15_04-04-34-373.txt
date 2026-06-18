@@ -1,6 +1,6 @@
 ﻿OUTFLO - REPOSITORY TREE
-Generated: 2026-06-17 23:49:10.407 UTC
-Unix: 1781740150407
+Generated: 2026-06-15 04:04:34.373 UTC
+Unix: 1781496274373
 Root: C:\dev\Outflo
 
 app\
@@ -524,16 +524,45 @@ public\
 +-- window.svg
 
 docs\
++-- architecture\
+|   +-- attention\
+|   |   +-- outflo-screen-time-contract-v1__1775185749429__2026-04-03_03-09-09-429.md
+|   +-- compute\
+|   |   +-- outflo-computation\
+|   |       +-- outflo-computation-v2__1774724352801__2026-03-28_18-59-12-801.md
+|   +-- environment\
+|   |   +-- environment-contract-v1__1774818390025__2026-03-29_21-06-30-025.md
+|   |   +-- environment-contract-v2__1775183865380__2026-04-03_02-37-45-380.md
+|   |   +-- environment-system-map-v2__1775181005607__2026-04-03_01-50-05-607.md
+|   +-- ingest\
+|   |   +-- ingest-pipeline\
+|   |   |   +-- ingest-pipeline-v2__1774725263717__2026-03-28_19-14-23-717.md
+|   |   +-- ingest-system-map-v1.md
+|   +-- storage\
+|   |   +-- database\
+|   |   |   +-- database-v4__1774819647127__2026-03-29_21-27-27-127.md
+|   |   +-- money-substrate\
+|   |       +-- money-substrate-v2__1774724352801__2026-03-28_18-59-12-801.md
+|   +-- system\
+|   |   +-- component-tree\
+|   |   |   +-- component-tree-v1.md
+|   |   +-- file-system\
+|   |   |   +-- file-system-contract-v1__1775958540581__2026-04-12_01-49-00-581.md
+|   |   +-- outflo-system\
+|   |   |   +-- outflo-system-v2__1774729338123__2026-03-28_20-22-18-123.md
+|   |   +-- routes\
+|   |       +-- routes-v1__1774732215252__2026-03-28_21-10-15-252.md
+|   +-- time\
+|       +-- time-contract\
+|           +-- time-contract-v1__1774244458590__2026-03-23_04-20-58-590.md
 +-- archive\
 |   +-- architecture\
 |   |   +-- ai\
 |   |   |   +-- thread-transition\
 |   |   |       +-- thread-transition-sop-v1.md
 |   |   |       +-- thread-transition-sop-v2.md
-|   |   +-- attention\
 |   |   +-- compute\
 |   |   |   +-- outflo-computation-v1__1774216381422__2026-03-22_21-53-01-422.md
-|   |   |   +-- outflo-computation-v2__1774724352801__2026-03-28_18-59-12-801.md
 |   |   +-- conventions\
 |   |   |   +-- code-style\
 |   |   |   |   +-- code-style-v1.md
@@ -544,12 +573,8 @@ docs\
 |   |   |   +-- database-v1.md
 |   |   |   +-- database-v2.md
 |   |   |   +-- database-v3__1774304629401__2026-03-24_02-23-49-401.md
-|   |   |   +-- database-v4__1774819647127__2026-03-29_21-27-27-127.md
-|   |   +-- environment\
-|   |   |   +-- environment-system-map-v2__1775181005607__2026-04-03_01-50-05-607.md
 |   |   +-- ingest\
 |   |   |   +-- ingest-pipeline-v1__1774216629034__2026-03-22_21-57-09-034.md
-|   |   |   +-- ingest-system-map-v1.md
 |   |   +-- locks\
 |   |   |   +-- architecture\
 |   |   |       +-- architecture-pass-lock-v1__1774204230127__2026-03-22_14-30.md
@@ -557,19 +582,8 @@ docs\
 |   |   |   +-- money-substrate-v1.md
 |   |   +-- outflo-ledger\
 |   |   |   +-- outflo-ledger-v1.md
-|   |   +-- storage\
-|   |   |   +-- database\
-|   |   |   +-- money-substrate\
-|   |   +-- substrates\
-|   |   |   +-- attention\
-|   |   |   |   +-- outflo-screen-time-contract-v1__1775185749429__2026-04-03_03-09-09-429.md
-|   |   |   +-- environment\
-|   |   |   +-- money\
 |   |   +-- system\
-|   |   |   +-- outflo-system-v1.md
-|   |   +-- time\
-|   |       +-- time-contract\
-|   |           +-- time-contract-v1__1774244458590__2026-03-23_04-20-58-590.md
+|   |       +-- outflo-system-v1.md
 |   +-- conventions\
 |   |   +-- ai\
 |   |   |   +-- thread-transition\
@@ -579,88 +593,53 @@ docs\
 |   |       +-- code-style-v2.md
 |   +-- environment-engine\
 |   |   +-- environment-engine-v1.md
-|   +-- historical\
-|   |   +-- environment-contract-v1__1774818390025__2026-03-29_21-06-30-025.md
-|   |   +-- environment-contract-v2__1775183865380__2026-04-03_02-37-45-380.md
-|   |   +-- ingest-pipeline-v2__1774725263717__2026-03-28_19-14-23-717.md
-|   |   +-- money-substrate-v2__1774724352801__2026-03-28_18-59-12-801.md
-|   |   +-- outflo-system-v2__1774729338123__2026-03-28_20-22-18-123.md
-|   |   +-- profile-v2__1774728285164__2026-03-28_20-04-45-164.md
-|   |   +-- receipts-v2__1774725724327__2026-03-28_19-22-04-327.md
 |   +-- home-environment\
 |   |   +-- home-environment-v1.md
 |   +-- home-integration-flow\
 |   |   +-- home-integration-flow-v1.md
 |   +-- product\
 |       +-- domains\
-|       |   +-- profile\
-|       |   |   +-- profile-v1.md
-|       |   +-- receipts\
-|       |       +-- receipts-v1.md
-|       +-- routes\
-|       |   +-- routes-v1__1774732215252__2026-03-28_21-10-15-252.md
-|       +-- ui\
-|           +-- contract\
-|           |   +-- ui-system-v2__1775410402598__2026-04-05_17-33-22-598.md.md
 |           +-- profile\
-|           |   +-- page\
-|           |       +-- profile-page-v1.md
+|           |   +-- profile-v1.md
 |           +-- receipts\
-|           |   +-- detail\
-|           |       +-- receipts-detail-v1.md
-|           +-- README.md
-+-- audits\
-|   +-- database\
-|   |   +-- db-ownership-freeze-v1.md
-|   +-- environment\
-|       +-- placement\
-|       |   +-- environment-placement-audit-freeze-v1.md
-|       +-- runtime\
-|           +-- environment-runtime-audit-freeze-v1.md
+|               +-- receipts-v1.md
 +-- conventions\
 |   +-- ai\
 |   |   +-- thread-transition\
+|   |       +-- thread-transition-sop-v5__1774804792769__2026-03-29_17-19-52-769.md
+|   |       +-- thread-transition-sop-v6__1776222056208__2026-04-15_03-00-56-208.md
+|   |       +-- thread-transition-sop-v7.md
 |   +-- canon\
 |   |   +-- code\
+|   |   |   +-- code-style-sop-v3__1774806144569__2026-03-29_17-42-24-569.md
 |   |   +-- naming\
-|   +-- templates\
-|   +-- README.md
-+-- engineering\
-|   +-- code-style\
-|   |   +-- code-style-sop-v3__1774806144569__2026-03-29_17-42-24-569.md
-|   +-- component-tree\
-|   |   +-- component-tree-v1.md
-|   +-- file-system\
-|   |   +-- file-system-contract-v1__1775958540581__2026-04-12_01-49-00-581.md
+|   |       +-- naming-canon-locked-v3__1774217305123__2026-03-22_22-08-25-123.md
 |   +-- templates\
 |   |   +-- architecture-contract-template-v2__1774805494735__2026-03-29_17-31-34-735.md
 |   |   +-- command-reference.md
 |   |   +-- convention-contract-template.md
 |   |   +-- placeholder-readme-template.md
 |   |   +-- ui-contract-template.md
-|   +-- thread-transition\
-|   |   +-- thread-transition-sop-v5__1774804792769__2026-03-29_17-19-52-769.md
-|   |   +-- thread-transition-sop-v6__1776222056208__2026-04-15_03-00-56-208.md
-|   |   +-- thread-transition-sop-v7.md
-|   +-- ui-ownership\
-|       +-- ui-ownership-v1__1776181621000__2026-04-14_15-47-01-000.md
-+-- laws\
-|   +-- computation\
-|   |   +-- computation-law-v1.md
-|   +-- database\
-|   |   +-- database-contract-v5.md
-|   +-- emission\
-|   |   +-- emission-law-v1.md
-|   +-- naming\
-|   |   +-- naming-canon-locked-v3__1774217305123__2026-03-22_22-08-25-123.md
-|   +-- ownership\
-|   |   +-- ownership-law-v1.md
-|   +-- participation\
-|   |   +-- participation-law-v1.md
-|   +-- time\
-|       +-- time-contract-v1.md
+|   +-- README.md
 +-- philosophy\
 |   +-- outflo-way.md
++-- product\
+|   +-- domains\
+|   |   +-- profile\
+|   |   |   +-- profile-v2__1774728285164__2026-03-28_20-04-45-164.md
+|   |   +-- receipts\
+|   |       +-- receipts-v2__1774725724327__2026-03-28_19-22-04-327.md
+|   +-- ui\
+|       +-- contract\
+|       |   +-- ui-ownership-v1__1776181621000__2026-04-14_15-47-01-000.md
+|       |   +-- ui-system-v2__1775410402598__2026-04-05_17-33-22-598.md.md
+|       +-- profile\
+|       |   +-- page\
+|       |       +-- profile-page-v1.md
+|       +-- receipts\
+|       |   +-- detail\
+|       |       +-- receipts-detail-v1.md
+|       +-- README.md
 +-- repository\
 |   +-- current\
 |   |   +-- repository-tree.txt
@@ -752,8 +731,6 @@ docs\
 |   |   +-- 1781096852713__2026-06-10_13-07-32-713.txt
 |   |   +-- 1781108888881__2026-06-10_16-28-08-881.txt
 |   |   +-- 1781219065933__2026-06-11_23-04-25-933.txt
-|   |   +-- 1781496274373__2026-06-15_04-04-34-373.txt
-|   |   +-- 1781567499073__2026-06-15_23-51-39-073.txt
 |   +-- README.md
 +-- README.md
 

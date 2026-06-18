@@ -3,34 +3,28 @@
    File: app/api/ingest/location/owntracks/route.ts
    Scope: Legacy/fallback HTTP receiver for OwnTracks emitter payloads
    Status: Retained as fallback after MQTT ingest worker became primary
+   Last Updated:
+   - ms: 1781741862076
+   - iso: 2026-06-18T00:17:42.076Z
+   - note: split Environment runtime ownership while preserving behavior
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import { NextResponse } from "next/server";
+
 import { createAdminClient } from "@/lib/supabase/admin";
 
-/* ------------------------------
-   Types
--------------------------------- */
-type OwnTracksPayload = {
-    _type?: string;
-    tst?: number;
-    created_at?: number;
-    lat?: number;
-    lon?: number;
-    acc?: number;
-    vac?: number;
-    alt?: number;
-    p?: number;
-    batt?: number;
-    bs?: number;
-    conn?: string;
-    t?: string;
-    tid?: string;
-    [key: string]: any;
-};
+import { resolveEventMs } from "./internal/owntracks-normalize";
+import {
+    type OwnTracksPayload,
+    safeJsonParse,
+} from "./internal/owntracks-payload";
+import {
+    buildOwnTracksEmitterEventInsert,
+    buildOwnTracksSnapshotUpsert,
+} from "./internal/owntracks-rows";
 
 /* ------------------------------
    Constants
@@ -39,48 +33,6 @@ export const runtime = "nodejs";
 
 const PROVIDER = "owntracks";
 const VERSION = "owntracks-ingest-v5-snapshot";
-
-/* ------------------------------
-   Helpers
--------------------------------- */
-function safeJsonParse<T>(
-    raw: string
-): { ok: true; value: T } | { ok: false; error: string } {
-    try {
-        return { ok: true, value: JSON.parse(raw) as T };
-    } catch (error: any) {
-        return { ok: false, error: error?.message || "invalid json" };
-    }
-}
-
-function resolveEventMs(payload: OwnTracksPayload): number | null {
-    const unix = payload.created_at ?? payload.tst;
-    if (!unix || !Number.isFinite(unix)) return null;
-    return Math.round(unix * 1000);
-}
-
-function finiteNumber(value: unknown): number | null {
-    if (typeof value !== "number") return null;
-    if (!Number.isFinite(value)) return null;
-    return value;
-}
-
-function finiteInteger(value: unknown): number | null {
-    const num = finiteNumber(value);
-    if (num === null) return null;
-    return Math.round(num);
-}
-
-function pressureKpaToHpa(value: unknown): number | null {
-    const kpa = finiteNumber(value);
-    if (kpa === null) return null;
-    return kpa * 10;
-}
-
-function captureModeFromTrigger(trigger: string | undefined): string {
-    if (trigger === "u") return "manual";
-    return trigger || "unknown";
-}
 
 /* ------------------------------
    Handler
@@ -93,8 +45,13 @@ export async function POST(req: Request) {
 
     if (!parsed.ok) {
         return NextResponse.json(
-            { ok: false, where: "payload", message: parsed.error, version: VERSION },
-            { status: 400 }
+            {
+                ok: false,
+                where: "payload",
+                message: parsed.error,
+                version: VERSION,
+            },
+            { status: 400 },
         );
     }
 
@@ -104,8 +61,13 @@ export async function POST(req: Request) {
 
     if (!deviceId) {
         return NextResponse.json(
-            { ok: false, where: "headers", message: "Missing emitter device id", version: VERSION },
-            { status: 400 }
+            {
+                ok: false,
+                where: "headers",
+                message: "Missing emitter device id",
+                version: VERSION,
+            },
+            { status: 400 },
         );
     }
 
@@ -121,15 +83,27 @@ export async function POST(req: Request) {
 
     if (emitterErr) {
         return NextResponse.json(
-            { ok: false, where: "db", step: "lookup_emitter", message: emitterErr.message, version: VERSION },
-            { status: 500 }
+            {
+                ok: false,
+                where: "db",
+                step: "lookup_emitter",
+                message: emitterErr.message,
+                version: VERSION,
+            },
+            { status: 500 },
         );
     }
 
     if (!emitter?.user_id) {
         return NextResponse.json(
-            { ok: false, where: "ownership", message: "Emitter not registered", device_id: deviceId, version: VERSION },
-            { status: 403 }
+            {
+                ok: false,
+                where: "ownership",
+                message: "Emitter not registered",
+                device_id: deviceId,
+                version: VERSION,
+            },
+            { status: 403 },
         );
     }
 
@@ -137,33 +111,29 @@ export async function POST(req: Request) {
 
     const { data: eventRow, error: eventErr } = await supabase
         .from("environment_emitter_events")
-        .insert({
-            user_id: emitter.user_id,
-            provider: PROVIDER,
-            device_id: deviceId,
-            event_type: payload._type ?? "unknown",
-            event_ms: eventMs,
-            received_ms: receivedMs,
-            lat: finiteNumber(payload.lat),
-            lon: finiteNumber(payload.lon),
-            accuracy_m: finiteNumber(payload.acc),
-            altitude_m: finiteNumber(payload.alt),
-            vertical_accuracy_m: finiteNumber(payload.vac),
-            pressure_kpa: finiteNumber(payload.p),
-            battery_pct: finiteInteger(payload.batt),
-            battery_status: finiteInteger(payload.bs),
-            connection: typeof payload.conn === "string" ? payload.conn : null,
-            trigger: typeof payload.t === "string" ? payload.t : null,
-            tracker_id: typeof payload.tid === "string" ? payload.tid : null,
-            raw: payload,
-        })
+        .insert(
+            buildOwnTracksEmitterEventInsert({
+                userId: emitter.user_id,
+                provider: PROVIDER,
+                deviceId,
+                payload,
+                eventMs,
+                receivedMs,
+            }),
+        )
         .select("id")
         .single();
 
     if (eventErr) {
         return NextResponse.json(
-            { ok: false, where: "db", step: "insert_event", message: eventErr.message, version: VERSION },
-            { status: 500 }
+            {
+                ok: false,
+                where: "db",
+                step: "insert_event",
+                message: eventErr.message,
+                version: VERSION,
+            },
+            { status: 500 },
         );
     }
 
@@ -171,20 +141,14 @@ export async function POST(req: Request) {
         const { error: snapshotErr } = await supabase
             .from("environment_snapshots")
             .upsert(
-                {
-                    user_id: emitter.user_id,
-                    moment_ms: eventMs,
-                    location_precision: "device",
-                    lat: finiteNumber(payload.lat),
-                    lng: finiteNumber(payload.lon),
-                    pressure_hpa: pressureKpaToHpa(payload.p),
-                    elevation_m: finiteNumber(payload.alt),
-                    source_payload_ref: eventRow?.id ?? null,
-                    observation_type: "owntracks_location",
-                    capture_mode: captureModeFromTrigger(payload.t),
-                    source_mode: PROVIDER,
-                },
-                { onConflict: "user_id" }
+                buildOwnTracksSnapshotUpsert({
+                    userId: emitter.user_id,
+                    provider: PROVIDER,
+                    payload,
+                    eventMs,
+                    eventId: eventRow?.id ?? null,
+                }),
+                { onConflict: "user_id" },
             );
 
         if (snapshotErr) {
@@ -197,7 +161,7 @@ export async function POST(req: Request) {
                     event_id: eventRow?.id ?? null,
                     version: VERSION,
                 },
-                { status: 500 }
+                { status: 500 },
             );
         }
     }
@@ -212,6 +176,6 @@ export async function POST(req: Request) {
             event_id: eventRow?.id ?? null,
             version: VERSION,
         },
-        { status: 200 }
+        { status: 200 },
     );
 }
