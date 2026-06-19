@@ -21,7 +21,7 @@ const WRAP_STYLE: CSSProperties = {
     display: "grid",
     justifyItems: "center",
     alignContent: "center",
-    rowGap: "clamp(2px, 0.5vw, 5px)",
+    rowGap: "clamp(4px, 0.65vw, 7px)",
     textAlign: "center",
     whiteSpace: "nowrap",
     overflow: "visible",
@@ -57,6 +57,7 @@ const SUBTITLE_STYLE: CSSProperties = {
 const DEGREE_STYLE: CSSProperties = {
     display: "inline-block",
     marginLeft: "-0.1em",
+    color: "color-mix(in srgb, var(--text-primary) 65%, var(--environment-blue, #2f9bff) 35%)",
     fontSize: "0.9em",
     fontWeight: 200,
     lineHeight: 1,

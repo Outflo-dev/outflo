@@ -28,16 +28,15 @@ const BUTTON_STYLE: CSSProperties = {
     borderRadius: 999,
     border: "1.5px solid transparent",
     background: `
-        linear-gradient(rgba(4, 7, 18, 0.92), rgba(4, 7, 18, 0.92)) padding-box,
-        linear-gradient(135deg, #69c7ff 0%, #78a9ff 38%, #8d78ff 72%, #c7a2ff 100%) border-box
-    `,
+    linear-gradient(rgba(4, 7, 18, 0.92), rgba(4, 7, 18, 0.92)) padding-box,
+    linear-gradient(135deg,  #f2d27a 10%, #64c8ff 20%, #5f8dff 32%, #8d78ff 62%, #d09cff 82%, #f2d27a 100%) border-box
+`,
     color: "color-mix(in srgb, var(--text-primary) 95%, transparent)",
     display: "grid",
     placeItems: "center",
     padding: 0,
     boxShadow:
-        "0 0 0 1px rgba(105, 199, 255, 0.14), 0 0 18px rgba(105, 199, 255, 0.22), 0 0 30px rgba(141, 120, 255, 0.18)",
-    cursor: "pointer",
+        "0 0 0 1px rgba(100, 200, 255, 0.14), 0 0 18px rgba(100, 200, 255, 0.22), 0 0 30px rgba(141, 120, 255, 0.18), 0 0 18px rgba(242, 210, 122, 0.08)", cursor: "pointer",
     WebkitTapHighlightColor: "transparent",
 };
 

@@ -37,8 +37,8 @@ const BUTTON_STYLE: CSSProperties = {
 };
 
 const ICON_STYLE: CSSProperties = {
-    width: "clamp(17px, 4.4vw, 21px)",
-    height: "clamp(17px, 4.4vw, 21px)",
+    width: "clamp(22px, 5.7vw, 27px)",
+    height: "clamp(22px, 5.7vw, 27px)",
     display: "block",
 };
 
