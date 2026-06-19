@@ -189,7 +189,6 @@ export default function EnvironmentSettingsMenu({
     return (
         <div style={ROOT_STYLE}>
             <EnvironmentHeaderUtilityAction
-                active={open}
                 onPress={() => setOpen((current) => !current)}
             />
 

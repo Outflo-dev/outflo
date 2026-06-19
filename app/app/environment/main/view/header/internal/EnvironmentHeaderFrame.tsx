@@ -59,7 +59,7 @@ export default function EnvironmentHeaderFrame({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        transform: "translateY(2px)",
+        transform: "translateY(4px)",
     };
 
     const RIGHT_GROUP_STYLE: CSSProperties = {
@@ -71,7 +71,7 @@ export default function EnvironmentHeaderFrame({
         display: "flex",
         alignItems: "center",
         justifyContent: "end",
-        gap: "clamp(10px, 2.5vw, 14px)",
+        gap: "clamp(4px, 1vw, 7px)",
         zIndex: 1,
     };
     return (

@@ -1,111 +1,73 @@
+// app/app/environment/main/view/header/primitives/EnvironmentHeaderUtilityAction.tsx
 "use client";
 
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER UTILITY ACTION
    File: app/app/environment/main/view/header/primitives/EnvironmentHeaderUtilityAction.tsx
-   Scope: Local Environment header utility/menu trigger primitive
+   Scope: Local Environment header utility action primitive
    ========================================================== */
 
+/* ------------------------------
+   Imports
+-------------------------------- */
 import type { CSSProperties } from "react";
 
+/* ------------------------------
+   Types
+-------------------------------- */
 type EnvironmentHeaderUtilityActionProps = {
-    onPress: () => void;
-    active?: boolean;
+    onPress?: () => void;
 };
 
+/* ------------------------------
+   Styles
+-------------------------------- */
 const BUTTON_STYLE: CSSProperties = {
-    width: "clamp(34px, 8.8vw, 42px)",
-    height: "clamp(34px, 8.8vw, 42px)",
-    borderRadius: 999,
-    border: "1px solid color-mix(in srgb, var(--text-primary) 16%, transparent)",
-    background:
-        "radial-gradient(circle at 35% 25%, rgba(255,255,255,0.12), rgba(255,255,255,0.04) 42%, rgba(4,7,18,0.36) 100%)",
-    color: "color-mix(in srgb, var(--text-primary) 88%, transparent)",
+    width: "clamp(24px, 6.4vw, 30px)",
+    height: "clamp(24px, 6.4vw, 30px)",
+    border: "none",
+    background: "transparent",
+    color: "color-mix(in srgb, var(--text-primary) 82%, transparent)",
     display: "grid",
     placeItems: "center",
     padding: 0,
-    boxShadow:
-        "0 0 0 1px color-mix(in srgb, var(--text-primary) 7%, transparent), 0 0 18px rgba(255,255,255,0.08)",
+    boxShadow: "none",
     cursor: "pointer",
     WebkitTapHighlightColor: "transparent",
 };
 
-const ACTIVE_STYLE: CSSProperties = {
-    borderColor: "color-mix(in srgb, #67f0a2 38%, var(--text-primary) 18%)",
-    boxShadow:
-        "0 0 0 1px rgba(103,240,162,0.14), 0 0 18px rgba(103,240,162,0.12)",
-};
-
-const SVG_STYLE: CSSProperties = {
-    width: "58%",
-    height: "58%",
+const ICON_STYLE: CSSProperties = {
+    width: "clamp(17px, 4.4vw, 21px)",
+    height: "clamp(17px, 4.4vw, 21px)",
     display: "block",
 };
 
+/* ------------------------------
+   Component
+-------------------------------- */
 export default function EnvironmentHeaderUtilityAction({
     onPress,
-    active = false,
 }: EnvironmentHeaderUtilityActionProps) {
     return (
         <button
             type="button"
-            aria-label="Open Environment menu"
-            aria-pressed={active}
+            aria-label="Environment alerts"
             onClick={onPress}
-            style={active ? { ...BUTTON_STYLE, ...ACTIVE_STYLE } : BUTTON_STYLE}
+            style={BUTTON_STYLE}
         >
             <svg
                 viewBox="0 0 24 24"
-                fill="none"
                 aria-hidden="true"
-                style={SVG_STYLE}
+                style={ICON_STYLE}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.1"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             >
-                <path
-                    d="M7.25 5.75H5.75V7.25"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-                <path
-                    d="M16.75 5.75H18.25V7.25"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-                <path
-                    d="M7.25 18.25H5.75V16.75"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-                <path
-                    d="M16.75 18.25H18.25V16.75"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-                <path
-                    d="M9 9H15"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                />
-                <path
-                    d="M8 12H16"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                />
-                <path
-                    d="M10 15H14"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                />
+                <path d="M6.8 10.2C6.8 7 9 4.7 12 4.7s5.2 2.3 5.2 5.5v3.2c0 .8.28 1.55.78 2.15l.72.86c.34.4.05 1.02-.48 1.02H5.78c-.53 0-.82-.62-.48-1.02l.72-.86c.5-.6.78-1.35.78-2.15v-3.2Z" />
+                <path d="M9.9 19.1c.38.74 1.12 1.2 2.1 1.2s1.72-.46 2.1-1.2" />
+                <path d="M12 3.7v1" />
             </svg>
         </button>
     );
