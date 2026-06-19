@@ -18,7 +18,7 @@ import type { CSSProperties } from "react";
 const WRAP_STYLE: CSSProperties = {
     display: "inline-flex",
     alignItems: "center",
-    gap: "clamp(7px, 1.7vw, 9px)",
+    gap: "clamp(6px, 1.7vw, 9px)",
     minHeight: 20,
     transform: "translate(-6px, 2px)",
 };
