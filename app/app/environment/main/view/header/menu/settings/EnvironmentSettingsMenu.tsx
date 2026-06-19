@@ -26,7 +26,7 @@ import SettingsMark from "@/components/system/primitives/marks/icons/SettingsMar
 import UnitsMark from "@/components/system/primitives/marks/icons/UnitsMark";
 import MenuCardFrame from "@/components/system/surfaces/card/types/menu/MenuCardFrame";
 
-import EnvironmentMenuButton from "../../internal/EnvironmentMenuButton";
+import EnvironmentHeaderUtilityAction from "../../primitives/EnvironmentHeaderUtilityAction";
 import {
     ENVIRONMENT_SETTINGS_HREF,
     ENVIRONMENT_SETTINGS_MENU_LABELS,
@@ -188,8 +188,9 @@ export default function EnvironmentSettingsMenu({
 
     return (
         <div style={ROOT_STYLE}>
-            <EnvironmentMenuButton
-                onOpenMenu={() => setOpen((current) => !current)}
+            <EnvironmentHeaderUtilityAction
+                active={open}
+                onPress={() => setOpen((current) => !current)}
             />
 
             {open ? (

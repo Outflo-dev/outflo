@@ -7,9 +7,7 @@
    File: app/app/environment/main/view/header/internal/EnvironmentHeaderFrame.tsx
    Scope: Own Environment sticky header layout, layer, and control zones
    Last Updated:
-   - ms: 1781108888881
-   - iso: 2026-06-10T16:28:08.881Z
-   - note: give header explicit layer ownership above Environment content
+   - note: support Kelvin header mock layout with left / center / right zones
    ========================================================== */
 
 /* ------------------------------
@@ -22,6 +20,7 @@ import type { CSSProperties, ReactNode } from "react";
 -------------------------------- */
 type EnvironmentHeaderFrameProps = {
     left: ReactNode;
+    center: ReactNode;
     right: ReactNode;
 };
 
@@ -30,37 +29,55 @@ type EnvironmentHeaderFrameProps = {
 -------------------------------- */
 export default function EnvironmentHeaderFrame({
     left,
+    center,
     right,
 }: EnvironmentHeaderFrameProps) {
     const FRAME_STYLE: CSSProperties = {
         position: "relative",
         zIndex: 80,
-        minHeight: 48,
+        minHeight: "clamp(56px, 8.2vh, 70px)",
         display: "grid",
-        gridTemplateColumns: "minmax(0, 1fr) auto",
-        alignItems: "center",
-        columnGap: 12,
-        padding: "2px 0 8px",
+        placeItems: "center",
+        padding: "clamp(4px, 1vh, 8px) 0 clamp(6px, 1.15vh, 11px)",
         overflow: "visible",
     };
 
-    const GROUP_STYLE: CSSProperties = {
+    const LEFT_GROUP_STYLE: CSSProperties = {
+        position: "absolute",
+        left: 0,
+        top: "50%",
+        transform: "translateY(-50%)",
         minWidth: 0,
         display: "flex",
         alignItems: "center",
-        gap: 8,
+        justifyContent: "start",
+    };
+
+    const CENTER_GROUP_STYLE: CSSProperties = {
+        minWidth: 0,
+        maxWidth: "min(50vw, 300px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        transform: "translateY(2px)",
     };
 
     const RIGHT_GROUP_STYLE: CSSProperties = {
-        ...GROUP_STYLE,
-        justifySelf: "end",
-        position: "relative",
+        position: "absolute",
+        right: 0,
+        top: "50%",
+        transform: "translateY(-50%)",
+        minWidth: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "end",
+        gap: "clamp(10px, 2.5vw, 14px)",
         zIndex: 1,
     };
-
     return (
         <header style={FRAME_STYLE}>
-            <div style={GROUP_STYLE}>{left}</div>
+            <div style={LEFT_GROUP_STYLE}>{left}</div>
+            <div style={CENTER_GROUP_STYLE}>{center}</div>
             <div style={RIGHT_GROUP_STYLE}>{right}</div>
         </header>
     );

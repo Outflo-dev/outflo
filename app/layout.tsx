@@ -12,7 +12,7 @@
    Imports
 -------------------------------- */
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans } from "next/font/google";
+import { IBM_Plex_Sans, Nunito_Sans } from "next/font/google";
 import { supabaseServer } from "@/lib/supabase/server";
 import { resolveDisplayPreferences } from "@/lib/app-state/display-preferences";
 import { resolveThemePreference } from "@/lib/app-state/theme-preference";
@@ -27,6 +27,13 @@ const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   display: "swap",
+});
+
+const nunitoSans = Nunito_Sans({
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "700", "800"],
+  display: "swap",
+  variable: "--font-kelvin",
 });
 
 /* ------------------------------
@@ -106,7 +113,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={ibmPlexSans.className}
+      className={`${ibmPlexSans.className} ${nunitoSans.variable}`}
       data-theme={themePreference}
       data-text-scale={displayPreferences.textScale}
       data-glow={displayPreferences.glowPreference}

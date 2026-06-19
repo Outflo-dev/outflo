@@ -5,28 +5,23 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER
    File: app/app/environment/main/view/header/EnvironmentHeader.tsx
-   Scope: Compose Environment sticky header controls
+   Scope: Compose Environment Kelvin header controls
    Last Updated:
-   - ms: 1781108888881
-   - iso: 2026-06-10T16:28:08.881Z
-   - note: normalize Environment preferences before menu handoff
+   - note: compose local header primitives toward Kelvin mock
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CSSProperties } from "react";
-
 import {
     DEFAULT_ENVIRONMENT_PREFERENCES,
     type EnvironmentPreferences,
 } from "@/lib/app-state/environment/environment-preferences";
-import { GlassShell } from "@/components/system/shell/glass";
 
 import EnvironmentHeaderFrame from "./internal/EnvironmentHeaderFrame";
-import EnvironmentBackButton from "./internal/EnvironmentBackButton";
-import EnvironmentRefreshButton from "./internal/EnvironmentRefreshButton";
-import EnvironmentSubstrateSelector from "./internal/EnvironmentSubstrateSelector";
+import EnvironmentHeaderOrb from "./primitives/EnvironmentHeaderOrb";
+import EnvironmentHeaderWordmark from "./primitives/EnvironmentHeaderWordmark";
+import EnvironmentHeaderLiveStatus from "./primitives/EnvironmentHeaderLiveStatus";
 import EnvironmentSettingsMenu from "./menu/settings/EnvironmentSettingsMenu";
 
 /* ------------------------------
@@ -40,29 +35,10 @@ type EnvironmentHeaderProps = {
 };
 
 /* ------------------------------
-   Styles
--------------------------------- */
-const ACTION_PILL_INNER_STYLE: CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 0,
-    padding: 2,
-};
-
-const ACTION_DIVIDER_STYLE: CSSProperties = {
-    width: 1,
-    height: 18,
-    background: "color-mix(in srgb, var(--text-primary) 14%, transparent)",
-};
-
-/* ------------------------------
    Component
 -------------------------------- */
 export default function EnvironmentHeader({
     onBack,
-    onRefresh,
-    refreshing,
     environmentPreferences,
 }: EnvironmentHeaderProps) {
     const resolvedPreferences =
@@ -70,27 +46,16 @@ export default function EnvironmentHeader({
 
     return (
         <EnvironmentHeaderFrame
-            left={
-                <>
-                    <EnvironmentBackButton onBack={onBack} />
-                    <EnvironmentSubstrateSelector />
-                </>
-            }
+            left={<EnvironmentHeaderOrb onPress={onBack} />}
+            center={<EnvironmentHeaderWordmark />}
             right={
-                <GlassShell tone="soft" shape="pill" padding="none">
-                    <div style={ACTION_PILL_INNER_STYLE}>
-                        <EnvironmentRefreshButton
-                            onRefresh={onRefresh}
-                            refreshing={refreshing}
-                        />
+                <>
+                    <EnvironmentHeaderLiveStatus />
 
-                        <div style={ACTION_DIVIDER_STYLE} />
-
-                        <EnvironmentSettingsMenu
-                            temperatureUnit={resolvedPreferences.temperature_unit}
-                        />
-                    </div>
-                </GlassShell>
+                    <EnvironmentSettingsMenu
+                        temperatureUnit={resolvedPreferences.temperature_unit}
+                    />
+                </>
             }
         />
     );
