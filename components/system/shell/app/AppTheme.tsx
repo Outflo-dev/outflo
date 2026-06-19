@@ -5,9 +5,9 @@
    File: components/system/shell/app/AppTheme.tsx
    Scope: Apply resolved app theme preference to document runtime
    Last Updated:
-   - ms: 1778207400000
-   - iso: 2026-05-08T02:30:00.000Z
-   - note: sync document theme background and mobile theme-color chrome
+   - ms: 1781877616535
+   - iso: 2026-06-19T14:00:16.535Z
+   - note: verified support for Environment as full selectable Outflō theme
    ========================================================== */
 
 /* ------------------------------

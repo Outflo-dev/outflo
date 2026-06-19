@@ -1,0 +1,78 @@
+/* ==========================================================
+   OUTFLO — ENVIRONMENT THEME
+   File: app/styles/themes/environment.css
+   Scope: Full Outflō theme palette for Environment expression
+   Status: THEME CONTRACT v1 CANDIDATE
+   Created:
+   - unix_ms: 1781877616535
+   - iso_utc: 2026-06-19T14:00:16.535Z
+   - human: 2026-06-19 14:00:16.535 UTC
+   ========================================================== */
+
+:root[data-theme="environment"] {
+    /* ------------------------------
+     Room tokens
+  -------------------------------- */
+    --bg-primary: #000814;
+
+    --text-primary: #f8fbff;
+    --text-secondary: rgba(248, 251, 255, 0.72);
+    --text-tertiary: rgba(248, 251, 255, 0.50);
+
+    --glow-primary: rgba(0, 132, 255, 0.24);
+
+    --surface-soft: rgba(0, 132, 255, 0.12);
+    --surface-muted: rgba(248, 251, 255, 0.055);
+    --surface-icon: rgba(0, 132, 255, 0.16);
+
+    --border-subtle: rgba(248, 251, 255, 0.10);
+    --border-soft: rgba(0, 132, 255, 0.22);
+    --border-row: rgba(0, 132, 255, 0.14);
+
+    --danger-surface: rgba(255, 90, 110, 0.14);
+    --danger-text: rgba(255, 150, 165, 0.92);
+    --danger-border: rgba(255, 90, 110, 0.28);
+
+    /* ------------------------------
+     Theme Contract v1
+     13 required platform roles
+  -------------------------------- */
+    --theme-background: var(--bg-primary);
+    --theme-surface: var(--surface-muted);
+    --theme-text-primary: var(--text-primary);
+    --theme-text-secondary: var(--text-secondary);
+
+    --theme-accent: rgba(0, 132, 255, 0.95);
+    --theme-border: var(--border-soft);
+    --theme-glow: var(--glow-primary);
+
+    --theme-semantic-good: rgba(49, 255, 154, 0.92);
+    --theme-semantic-warning: rgba(255, 196, 78, 0.92);
+    --theme-semantic-danger: var(--danger-text);
+    --theme-semantic-sun: rgba(255, 174, 45, 0.94);
+    --theme-semantic-air: rgba(82, 255, 194, 0.88);
+    --theme-semantic-proof: rgba(151, 190, 255, 0.88);
+
+    /* ------------------------------
+     Environment theme extensions
+     Still theme-owned. Not component-owned.
+  -------------------------------- */
+    --environment-blue: var(--theme-accent);
+    --environment-blue-soft: rgba(0, 132, 255, 0.18);
+    --environment-blue-border: rgba(0, 132, 255, 0.34);
+    --environment-blue-glow: rgba(0, 132, 255, 0.42);
+
+    --environment-temperature-cool: rgba(0, 132, 255, 0.96);
+    --environment-temperature-warm: var(--theme-semantic-sun);
+
+    --environment-live: var(--theme-semantic-good);
+    --environment-precise: var(--theme-semantic-good);
+    --environment-stable: rgba(49, 255, 154, 0.76);
+
+    --environment-map-pin: var(--theme-accent);
+    --environment-orbit: var(--theme-semantic-proof);
+    --environment-air: var(--theme-semantic-air);
+    --environment-sun: var(--theme-semantic-sun);
+
+    color-scheme: dark;
+}

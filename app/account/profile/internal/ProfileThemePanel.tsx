@@ -63,6 +63,7 @@ const THEMES: ThemeOption[] = [
   { key: "dusk", title: "Dusk", meta: "Warm evening palette" },
   { key: "night", title: "Night", meta: "Low-light orbit palette" },
   { key: "funky", title: "Funky", meta: "High personality mode" },
+  { key: "environment", title: "Environment", meta: "Live blue atmosphere" },
 ];
 
 const TEXT_SCALES: TextScaleOption[] = [

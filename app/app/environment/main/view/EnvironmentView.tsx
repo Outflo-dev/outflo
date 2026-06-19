@@ -4,11 +4,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT VIEW
    File: app/app/environment/main/view/EnvironmentView.tsx
-   Scope: Compose Environment substrate landing page surface
+   Scope: Compose Environment substrate shell around launch surface
    Last Updated:
-   - ms: 1781108888881
-   - iso: 2026-06-10T16:28:08.881Z
-   - note: pass Environment preferences into header controls
+   - ms: 1781750277364
+   - iso: 2026-06-18T02:37:57.364Z
+   - note: move Environment section composition into launch surface seam
    ========================================================== */
 
 /* ------------------------------
@@ -22,10 +22,7 @@ import type { EnvironmentViewModel } from "../internal/environment.types";
 import EnvironmentHeader from "./header/EnvironmentHeader";
 import EnvironmentFooter from "./footer/EnvironmentFooter";
 import EnvironmentAtmosphere from "./scene/EnvironmentAtmosphere";
-import EnvironmentHeroSection from "./sections/hero/EnvironmentHeroSection";
-import EnvironmentForecastSection from "./sections/forecast/EnvironmentForecastSection";
-import EnvironmentSummarySection from "./sections/EnvironmentSummarySection";
-import EnvironmentRecordSection from "./sections/records/EnvironmentRecordSection";
+import EnvironmentLaunchSurface from "./launch/EnvironmentLaunchSurface";
 
 /* ------------------------------
    Types
@@ -73,16 +70,7 @@ export default function EnvironmentView({
                     environmentPreferences={environmentPreferences}
                 />
 
-                <EnvironmentHeroSection
-                    model={model.hero}
-                    scene={model.scene}
-                />
-
-                <EnvironmentForecastSection model={model.forecast} />
-
-                <EnvironmentSummarySection model={model.summary} />
-
-                <EnvironmentRecordSection model={model.record} />
+                <EnvironmentLaunchSurface model={model} />
 
                 <EnvironmentFooter hasSnapshot={model.hasSnapshot} />
             </section>

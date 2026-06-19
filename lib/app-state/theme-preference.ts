@@ -3,9 +3,9 @@
    File: lib/app-state/theme-preference.ts
    Scope: Validate and resolve persisted theme preference values
    Last Updated:
-   - ms: 1777946575170
-   - iso: 2026-05-05T02:02:55.170Z
-   - note: centralize theme preference validation for runtime propagation
+   - ms: 1781877616535
+   - iso: 2026-06-19T14:00:16.535Z
+   - note: add Environment as full selectable Outflō theme
    ========================================================== */
 
 /* ------------------------------
@@ -18,7 +18,8 @@ export type ThemePreference =
     | "day"
     | "dusk"
     | "night"
-    | "funky";
+    | "funky"
+    | "environment";
 
 /* ------------------------------
    Constants
@@ -33,6 +34,7 @@ export const THEME_PREFERENCES = [
     "dusk",
     "night",
     "funky",
+    "environment",
 ] as const;
 
 /* ------------------------------

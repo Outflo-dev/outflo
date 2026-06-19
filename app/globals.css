@@ -2,6 +2,10 @@
    OUTFLO — GLOBAL STYLESHEET
    File: app/globals.css
    Scope: CSS entrypoint only — imports global style fragments
+   Last Updated:
+   - ms: 1781877616535
+   - iso: 2026-06-19T14:00:16.535Z
+   - note: import Environment as full selectable Outflō theme
    ========================================================== */
 
 @import "./styles/base/reset.css";
@@ -16,6 +20,7 @@
 @import "./styles/themes/day.css";
 @import "./styles/themes/dusk.css";
 @import "./styles/themes/night.css";
+@import "./styles/themes/environment.css";
 
 @import "../components/system/primitives/display/type/font-family.tokens.css";
 @import "../components/system/primitives/display/type/font-weight.tokens.css";

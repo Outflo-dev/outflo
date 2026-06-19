@@ -9,6 +9,9 @@
    ========================================================== */
 
 :root[data-theme="light"] {
+  /* ------------------------------
+     Existing room tokens
+  -------------------------------- */
   --bg-primary: #FFFEFA;
   --text-primary: #050505;
   --text-secondary: rgba(5, 5, 5, 0.68);
@@ -26,6 +29,25 @@
   --danger-surface: rgba(180, 20, 20, 0.08);
   --danger-text: rgba(150, 20, 20, 0.92);
   --danger-border: rgba(180, 20, 20, 0.20);
+
+  /* ------------------------------
+     Outflō Theme Contract v1
+     13 required platform roles
+  -------------------------------- */
+  --theme-background: var(--bg-primary);
+  --theme-surface: var(--surface-muted);
+  --theme-text-primary: var(--text-primary);
+  --theme-text-secondary: var(--text-secondary);
+  --theme-accent: rgba(0, 102, 204, 0.92);
+  --theme-border: var(--border-soft);
+  --theme-glow: var(--glow-primary);
+
+  --theme-semantic-good: rgba(0, 120, 84, 0.92);
+  --theme-semantic-warning: rgba(174, 104, 0, 0.92);
+  --theme-semantic-danger: var(--danger-text);
+  --theme-semantic-sun: rgba(184, 105, 0, 0.94);
+  --theme-semantic-air: rgba(0, 112, 92, 0.90);
+  --theme-semantic-proof: rgba(92, 64, 170, 0.90);
 
   color-scheme: light;
 }
