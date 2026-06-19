@@ -42,9 +42,9 @@ const BUTTON_STYLE: CSSProperties = {
 
 const LETTER_STYLE: CSSProperties = {
     fontFamily:
-        "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+        '"Nunito Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
     fontSize: "clamp(15px, 4vw, 18px)",
-    fontWeight: 300,
+    fontWeight: 400,
     lineHeight: 1,
     letterSpacing: "0.01em",
 };

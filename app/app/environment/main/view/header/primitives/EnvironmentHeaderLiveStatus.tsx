@@ -18,8 +18,9 @@ import type { CSSProperties } from "react";
 const WRAP_STYLE: CSSProperties = {
     display: "inline-flex",
     alignItems: "center",
-    gap: 8,
-    minHeight: 32,
+    gap: "clamp(7px, 1.7vw, 9px)",
+    minHeight: 20,
+    transform: "translate(-6px, 2px)",
 };
 
 const DOT_STYLE: CSSProperties = {
@@ -33,7 +34,7 @@ const DOT_STYLE: CSSProperties = {
 const TEXT_STYLE: CSSProperties = {
     color: "color-mix(in srgb, var(--text-primary) 78%, transparent)",
     fontFamily:
-        "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+        '"Nunito Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
     fontSize: 9,
     fontWeight: 600,
     lineHeight: 1,
