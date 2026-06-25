@@ -5,9 +5,9 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER
    File: app/app/environment/main/view/header/EnvironmentHeader.tsx
-   Scope: Compose Environment Kelvin header controls
+   Scope: Compose Environment Kelvin header regions
    Last Updated:
-   - note: compose local header primitives toward Kelvin mock
+   - note: compose local header regions toward Kelvin mock
    ========================================================== */
 
 /* ------------------------------
@@ -19,10 +19,9 @@ import {
 } from "@/lib/app-state/environment/environment-preferences";
 
 import EnvironmentHeaderFrame from "./internal/EnvironmentHeaderFrame";
-import EnvironmentHeaderOrb from "./primitives/EnvironmentHeaderOrb";
-import EnvironmentHeaderWordmark from "./primitives/EnvironmentHeaderWordmark";
-import EnvironmentHeaderLiveStatus from "./primitives/EnvironmentHeaderLiveStatus";
-import EnvironmentSettingsMenu from "./menu/settings/EnvironmentSettingsMenu";
+import EnvironmentHeaderCenter from "./internal/regions/EnvironmentHeaderCenter";
+import EnvironmentHeaderLeft from "./internal/regions/EnvironmentHeaderLeft";
+import EnvironmentHeaderRight from "./internal/regions/EnvironmentHeaderRight";
 
 /* ------------------------------
    Types
@@ -46,16 +45,12 @@ export default function EnvironmentHeader({
 
     return (
         <EnvironmentHeaderFrame
-            left={<EnvironmentHeaderOrb onPress={onBack} />}
-            center={<EnvironmentHeaderWordmark />}
+            left={<EnvironmentHeaderLeft onBack={onBack} />}
+            center={<EnvironmentHeaderCenter />}
             right={
-                <>
-                    <EnvironmentHeaderLiveStatus />
-
-                    <EnvironmentSettingsMenu
-                        temperatureUnit={resolvedPreferences.temperature_unit}
-                    />
-                </>
+                <EnvironmentHeaderRight
+                    environmentPreferences={resolvedPreferences}
+                />
             }
         />
     );
