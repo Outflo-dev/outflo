@@ -29,7 +29,7 @@ const CARD_STYLE: CSSProperties = {
     position: "relative",
     overflow: "hidden",
     minHeight: 92,
-    borderRadius: 8,
+    borderRadius: 16,
     padding: "14px 16px 14px",
     border: "1px solid color-mix(in srgb, var(--text-primary) 10%, transparent)",
     background:
