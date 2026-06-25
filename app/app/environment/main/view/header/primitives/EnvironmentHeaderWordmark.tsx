@@ -15,6 +15,9 @@ import type { CSSProperties } from "react";
 /* ------------------------------
    Styles
 -------------------------------- */
+const KELVIN_FONT_FAMILY =
+    "var(--font-kelvin), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+
 const WRAP_STYLE: CSSProperties = {
     minWidth: 0,
     maxWidth: "100%",
@@ -29,9 +32,8 @@ const WRAP_STYLE: CSSProperties = {
 
 const TITLE_STYLE: CSSProperties = {
     margin: 0,
-    color: "var(--text-primary)",
-    fontFamily:
-        '"Nunito Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+    color: "var(--environment-header-text)",
+    fontFamily: KELVIN_FONT_FAMILY,
     fontSize: "clamp(22px, 6.4vw, 30px)",
     fontWeight: 200,
     lineHeight: 0.78,
@@ -42,9 +44,8 @@ const TITLE_STYLE: CSSProperties = {
 
 const SUBTITLE_STYLE: CSSProperties = {
     margin: 0,
-    color: "var(--environment-blue, #2f9bff)",
-    fontFamily:
-        '"Nunito Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+    color: "var(--environment-header-subtitle)",
+    fontFamily: KELVIN_FONT_FAMILY,
     fontSize: "clamp(8px, 1.9vw, 10px)",
     fontWeight: 700,
     lineHeight: 1,
@@ -57,7 +58,7 @@ const SUBTITLE_STYLE: CSSProperties = {
 const DEGREE_STYLE: CSSProperties = {
     display: "inline-block",
     marginLeft: "-0.1em",
-    color: "color-mix(in srgb, var(--text-primary) 65%, var(--environment-blue, #2f9bff) 35%)",
+    color: "var(--environment-header-degree)",
     fontSize: "0.9em",
     fontWeight: 200,
     lineHeight: 1,

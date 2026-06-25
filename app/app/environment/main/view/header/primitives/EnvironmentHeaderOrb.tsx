@@ -22,27 +22,45 @@ type EnvironmentHeaderOrbProps = {
 /* ------------------------------
    Styles
 -------------------------------- */
+const KELVIN_FONT_FAMILY =
+    "var(--font-kelvin), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+
 const BUTTON_STYLE: CSSProperties = {
     width: "clamp(36px, 9.4vw, 44px)",
     height: "clamp(36px, 9.4vw, 44px)",
     borderRadius: 999,
     border: "1.5px solid transparent",
     background: `
-    linear-gradient(rgba(4, 7, 18, 0.92), rgba(4, 7, 18, 0.92)) padding-box,
-    linear-gradient(135deg,  #f2d27a 10%, #64c8ff 20%, #5f8dff 32%, #8d78ff 62%, #d09cff 82%, #f2d27a 100%) border-box
-`,
-    color: "color-mix(in srgb, var(--text-primary) 95%, transparent)",
+        linear-gradient(
+            var(--environment-orb-fill),
+            var(--environment-orb-fill)
+        ) padding-box,
+        linear-gradient(
+            135deg,
+            var(--environment-orb-ring-1) 10%,
+            var(--environment-orb-ring-2) 20%,
+            var(--environment-orb-ring-3) 32%,
+            var(--environment-orb-ring-4) 62%,
+            var(--environment-orb-ring-5) 82%,
+            var(--environment-orb-ring-1) 100%
+        ) border-box
+    `,
+    color: "var(--environment-orb-mark)",
     display: "grid",
     placeItems: "center",
     padding: 0,
-    boxShadow:
-        "0 0 0 1px rgba(100, 200, 255, 0.14), 0 0 18px rgba(100, 200, 255, 0.22), 0 0 30px rgba(141, 120, 255, 0.18), 0 0 18px rgba(242, 210, 122, 0.08)", cursor: "pointer",
+    boxShadow: `
+        0 0 0 1px var(--environment-orb-shadow-1),
+        0 0 18px var(--environment-orb-shadow-2),
+        0 0 30px var(--environment-orb-shadow-3),
+        0 0 18px var(--environment-orb-shadow-4)
+    `,
+    cursor: "pointer",
     WebkitTapHighlightColor: "transparent",
 };
 
 const LETTER_STYLE: CSSProperties = {
-    fontFamily:
-        '"Nunito Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+    fontFamily: KELVIN_FONT_FAMILY,
     fontSize: "clamp(15px, 4vw, 18px)",
     fontWeight: 400,
     lineHeight: 1,

@@ -27,7 +27,7 @@ const BUTTON_STYLE: CSSProperties = {
     height: "clamp(24px, 6.4vw, 30px)",
     border: "none",
     background: "transparent",
-    color: "color-mix(in srgb, var(--text-primary) 82%, transparent)",
+    color: "color-mix(in srgb, var(--theme-text-primary) 82%, transparent)",
     display: "grid",
     placeItems: "center",
     padding: 0,

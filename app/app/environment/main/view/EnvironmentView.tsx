@@ -18,6 +18,7 @@ import type { CSSProperties } from "react";
 
 import type { EnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences";
 
+import EnvironmentContextCard from "./context/EnvironmentContextCard";
 import type { EnvironmentViewModel } from "../internal/environment.types";
 import EnvironmentHeader from "./header/EnvironmentHeader";
 import EnvironmentFooter from "./footer/EnvironmentFooter";
@@ -69,6 +70,8 @@ export default function EnvironmentView({
                     refreshing={refreshing}
                     environmentPreferences={environmentPreferences}
                 />
+
+                <EnvironmentContextCard model={model} />
 
                 <EnvironmentLaunchSurface model={model} />
 

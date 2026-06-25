@@ -15,6 +15,9 @@ import type { CSSProperties } from "react";
 /* ------------------------------
    Styles
 -------------------------------- */
+const KELVIN_FONT_FAMILY =
+    "var(--font-kelvin), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+
 const WRAP_STYLE: CSSProperties = {
     display: "inline-flex",
     alignItems: "center",
@@ -27,14 +30,13 @@ const DOT_STYLE: CSSProperties = {
     width: 6,
     height: 6,
     borderRadius: 999,
-    background: "#25f0a0",
-    boxShadow: "0 0 18px rgba(37, 240, 160, 0.42)",
+    background: "var(--environment-header-live)",
+    boxShadow: "0 0 18px var(--environment-header-live-glow)",
 };
 
 const TEXT_STYLE: CSSProperties = {
-    color: "color-mix(in srgb, var(--text-primary) 78%, transparent)",
-    fontFamily:
-        '"Nunito Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+    color: "var(--environment-header-action)",
+    fontFamily: KELVIN_FONT_FAMILY,
     fontSize: 9,
     fontWeight: 600,
     lineHeight: 1,
