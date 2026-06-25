@@ -28,9 +28,9 @@ type EnvironmentContextCardProps = {
 const CARD_STYLE: CSSProperties = {
     position: "relative",
     overflow: "hidden",
-    minHeight: 118,
-    borderRadius: 28,
-    padding: "18px 18px 16px",
+    minHeight: 92,
+    borderRadius: 8,
+    padding: "14px 16px 14px",
     border: "1px solid color-mix(in srgb, var(--text-primary) 10%, transparent)",
     background:
         "linear-gradient(135deg, rgba(18, 27, 46, 0.72), rgba(8, 12, 24, 0.86))",
@@ -76,19 +76,28 @@ const LIVE_STYLE: CSSProperties = {
     textTransform: "uppercase",
 };
 
-const DOT_STYLE: CSSProperties = {
+const LIVE_DOT_STYLE: CSSProperties = {
     width: 6,
     height: 6,
     borderRadius: 999,
-    background: "#67f0a2",
-    boxShadow: "0 0 10px rgba(103, 240, 162, 0.36)",
+    background: "var(--environment-header-live)",
+    boxShadow: "0 0 10px var(--environment-header-live-glow)",
+};
+
+const PRECISION_DOT_STYLE: CSSProperties = {
+    width: 7,
+    height: 7,
+    borderRadius: 999,
+    marginRight: 8,
+    background: "var(--environment-header-live)",
+    boxShadow: "0 0 12px var(--environment-header-live-glow)",
 };
 
 const PLACE_STYLE: CSSProperties = {
     margin: 0,
     color: "var(--text-primary)",
     fontFamily: "var(--font-kelvin), ui-sans-serif, system-ui, sans-serif",
-    fontSize: "clamp(22px, 6vw, 30px)",
+    fontSize: "clamp(16px, 4.2vw, 20px)",
     fontWeight: 300,
     lineHeight: 0.96,
     letterSpacing: "-0.02em",
@@ -96,11 +105,16 @@ const PLACE_STYLE: CSSProperties = {
 
 const META_STYLE: CSSProperties = {
     margin: 0,
-    maxWidth: 210,
-    color: "color-mix(in srgb, var(--text-primary) 58%, transparent)",
-    fontSize: 12,
-    fontWeight: 500,
-    lineHeight: 1.35,
+    display: "inline-flex",
+    alignItems: "center",
+    width: "fit-content",
+    color: "var(--environment-header-live)",
+    fontFamily: "var(--font-kelvin), ui-sans-serif, system-ui, sans-serif",
+    fontSize: 10,
+    fontWeight: 800,
+    lineHeight: 1,
+    letterSpacing: "0.16em",
+    textTransform: "uppercase",
 };
 
 /* ------------------------------
@@ -109,10 +123,8 @@ const META_STYLE: CSSProperties = {
 export default function EnvironmentContextCard({
     model,
 }: EnvironmentContextCardProps) {
-    const placeLabel = "Current Context";
-    const precisionLabel = model.hasSnapshot
-        ? "Live environment signal active"
-        : "Waiting for environment signal";
+    const placeLabel = model.hero.place;
+    const precisionLabel = model.hasSnapshot ? "PRECISE" : "WAITING";
 
     return (
         <section style={CARD_STYLE} aria-label="Current environment context">
@@ -123,14 +135,17 @@ export default function EnvironmentContextCard({
                     <p style={EYEBROW_STYLE}>Current Context</p>
 
                     <span style={LIVE_STYLE}>
-                        <span style={DOT_STYLE} aria-hidden="true" />
+                        <span style={LIVE_DOT_STYLE} aria-hidden="true" />
                         Live
                     </span>
                 </div>
 
                 <div>
                     <h2 style={PLACE_STYLE}>{placeLabel}</h2>
-                    <p style={META_STYLE}>{precisionLabel}</p>
+                    <p style={META_STYLE}>
+                        <span style={PRECISION_DOT_STYLE} aria-hidden="true" />
+                        {precisionLabel}
+                    </p>
                 </div>
             </div>
         </section>
