@@ -1,0 +1,26 @@
+/* ==========================================================
+   OUTFLO — ORB THEME / DAWN
+   File: app/styles/orb/dawn.css
+   Scope: Dawn theme Orb color values
+   Last Updated:
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: split reusable Orb values into per-theme ownership file
+   ========================================================== */
+
+:root[data-theme="dawn"] {
+    --orb-fill: rgba(26, 15, 46, 0.92);
+
+    --orb-ring-1: rgba(255, 174, 96, 0.92);
+    --orb-ring-2: rgba(126, 231, 181, 0.84);
+    --orb-ring-3: rgba(255, 180, 120, 0.90);
+    --orb-ring-4: rgba(140, 215, 255, 0.80);
+    --orb-ring-5: rgba(206, 170, 255, 0.82);
+
+    --orb-shadow-1: rgba(255, 180, 120, 0.22);
+    --orb-shadow-2: rgba(255, 140, 80, 0.18);
+    --orb-shadow-3: rgba(206, 170, 255, 0.20);
+    --orb-shadow-4: rgba(255, 174, 96, 0.14);
+
+    --orb-mark: rgba(255, 233, 214, 0.95);
+}

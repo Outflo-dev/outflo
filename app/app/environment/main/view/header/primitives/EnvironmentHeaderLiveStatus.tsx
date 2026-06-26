@@ -4,7 +4,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER LIVE STATUS
    File: app/app/environment/main/view/header/primitives/EnvironmentHeaderLiveStatus.tsx
-   Scope: Local Environment header live status primitive
+   Scope: Render Environment header live status primitive
+   Last Updated:
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: replace Environment header-private live status tokens with global theme roles
    ========================================================== */
 
 /* ------------------------------
@@ -30,12 +34,12 @@ const DOT_STYLE: CSSProperties = {
     width: 6,
     height: 6,
     borderRadius: 999,
-    background: "var(--environment-header-live)",
-    boxShadow: "0 0 18px var(--environment-header-live-glow)",
+    background: "var(--theme-semantic-good)",
+    boxShadow: "none",
 };
 
 const TEXT_STYLE: CSSProperties = {
-    color: "var(--environment-header-action)",
+    color: "var(--theme-text-secondary)",
     fontFamily: KELVIN_FONT_FAMILY,
     fontSize: 9,
     fontWeight: 600,

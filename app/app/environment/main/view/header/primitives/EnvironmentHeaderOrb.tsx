@@ -4,7 +4,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER ORB
    File: app/app/environment/main/view/header/primitives/EnvironmentHeaderOrb.tsx
-   Scope: Local Environment header Kelvin orb primitive
+   Scope: Consume reusable Orb theme values inside Environment header
+   Last Updated:
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: replace Environment header-private orb tokens with reusable Orb tokens
    ========================================================== */
 
 /* ------------------------------
@@ -32,28 +36,28 @@ const BUTTON_STYLE: CSSProperties = {
     border: "1.5px solid transparent",
     background: `
         linear-gradient(
-            var(--environment-orb-fill),
-            var(--environment-orb-fill)
+            var(--orb-fill),
+            var(--orb-fill)
         ) padding-box,
         linear-gradient(
             135deg,
-            var(--environment-orb-ring-1) 10%,
-            var(--environment-orb-ring-2) 20%,
-            var(--environment-orb-ring-3) 32%,
-            var(--environment-orb-ring-4) 62%,
-            var(--environment-orb-ring-5) 82%,
-            var(--environment-orb-ring-1) 100%
+            var(--orb-ring-1) 10%,
+            var(--orb-ring-2) 20%,
+            var(--orb-ring-3) 32%,
+            var(--orb-ring-4) 62%,
+            var(--orb-ring-5) 82%,
+            var(--orb-ring-1) 100%
         ) border-box
     `,
-    color: "var(--environment-orb-mark)",
+    color: "var(--orb-mark)",
     display: "grid",
     placeItems: "center",
     padding: 0,
     boxShadow: `
-        0 0 0 1px var(--environment-orb-shadow-1),
-        0 0 18px var(--environment-orb-shadow-2),
-        0 0 30px var(--environment-orb-shadow-3),
-        0 0 18px var(--environment-orb-shadow-4)
+        0 0 0 1px var(--orb-shadow-1),
+        0 0 18px var(--orb-shadow-2),
+        0 0 30px var(--orb-shadow-3),
+        0 0 18px var(--orb-shadow-4)
     `,
     cursor: "pointer",
     WebkitTapHighlightColor: "transparent",

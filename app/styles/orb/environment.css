@@ -1,0 +1,26 @@
+/* ==========================================================
+   OUTFLO — ORB THEME / ENVIRONMENT
+   File: app/styles/orb/environment.css
+   Scope: Environment theme Orb color values
+   Last Updated:
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: split reusable Orb values into per-theme ownership file
+   ========================================================== */
+
+:root[data-theme="environment"] {
+    --orb-fill: rgba(0, 8, 20, 0.92);
+
+    --orb-ring-1: rgba(255, 174, 45, 0.94);
+    --orb-ring-2: rgba(82, 255, 194, 0.88);
+    --orb-ring-3: rgba(0, 132, 255, 0.95);
+    --orb-ring-4: rgba(69, 159, 255, 0.92);
+    --orb-ring-5: rgba(151, 190, 255, 0.88);
+
+    --orb-shadow-1: rgba(0, 132, 255, 0.24);
+    --orb-shadow-2: rgba(0, 132, 255, 0.22);
+    --orb-shadow-3: rgba(151, 190, 255, 0.24);
+    --orb-shadow-4: rgba(255, 174, 45, 0.14);
+
+    --orb-mark: rgba(248, 251, 255, 0.95);
+}

@@ -1,0 +1,26 @@
+/* ==========================================================
+   OUTFLO — ORB THEME / FUNKY
+   File: app/styles/orb/funky.css
+   Scope: Funky theme Orb color values
+   Last Updated:
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: split reusable Orb values into per-theme ownership file
+   ========================================================== */
+
+:root[data-theme="funky"] {
+    --orb-fill: rgba(7, 0, 18, 0.92);
+
+    --orb-ring-1: rgba(255, 176, 72, 0.92);
+    --orb-ring-2: rgba(0, 245, 170, 0.86);
+    --orb-ring-3: rgba(0, 245, 212, 0.90);
+    --orb-ring-4: rgba(110, 160, 255, 0.90);
+    --orb-ring-5: rgba(199, 125, 255, 0.88);
+
+    --orb-shadow-1: rgba(0, 245, 212, 0.24);
+    --orb-shadow-2: rgba(199, 125, 255, 0.18);
+    --orb-shadow-3: rgba(199, 125, 255, 0.24);
+    --orb-shadow-4: rgba(255, 176, 72, 0.16);
+
+    --orb-mark: rgba(255, 247, 214, 0.96);
+}

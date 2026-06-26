@@ -3,51 +3,55 @@
    File: styles/themes/dawn.css
    Scope: Dawn theme color tokens only
    Last Updated:
-   - unix_ms: 1777409000000
-   - iso_utc: 2026-04-28T16:43:20.000Z
-   - human: 2026-04-28 16:43:20 UTC
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: add 15-role theme contract mappings for raised surface and muted text
    ========================================================== */
 
 :root[data-theme="dawn"] {
-  /* ------------------------------
+   /* ------------------------------
      Existing room tokens
   -------------------------------- */
-  --bg-primary: #1a0f2e;
-  --text-primary: #ffe9d6;
-  --text-secondary: rgba(255, 233, 214, 0.72);
-  --text-tertiary: rgba(255, 233, 214, 0.52);
-  --glow-primary: rgba(255, 140, 80, 0.18);
+   --bg-primary: #1a0f2e;
+   --text-primary: #ffe9d6;
+   --text-secondary: rgba(255, 233, 214, 0.72);
+   --text-tertiary: rgba(255, 233, 214, 0.52);
+   --glow-primary: rgba(255, 140, 80, 0.18);
 
-  --surface-soft: rgba(255, 140, 80, 0.14);
-  --surface-muted: rgba(255, 233, 214, 0.06);
-  --surface-icon: rgba(255, 180, 120, 0.18);
+   --surface-soft: rgba(255, 140, 80, 0.14);
+   --surface-muted: rgba(255, 233, 214, 0.06);
+   --surface-icon: rgba(255, 180, 120, 0.18);
 
-  --border-subtle: rgba(255, 233, 214, 0.10);
-  --border-soft: rgba(255, 140, 80, 0.18);
-  --border-row: rgba(255, 180, 120, 0.12);
+   --border-subtle: rgba(255, 233, 214, 0.10);
+   --border-soft: rgba(255, 140, 80, 0.18);
+   --border-row: rgba(255, 180, 120, 0.12);
 
-  --danger-surface: rgba(255, 90, 90, 0.14);
-  --danger-text: rgba(255, 150, 150, 0.92);
-  --danger-border: rgba(255, 90, 90, 0.28);
+   --danger-surface: rgba(255, 90, 90, 0.14);
+   --danger-text: rgba(255, 150, 150, 0.92);
+   --danger-border: rgba(255, 90, 90, 0.28);
 
-  /* ------------------------------
+   /* ------------------------------
      Outflō Theme Contract v1
-     13 required platform roles
+     15 required platform roles
   -------------------------------- */
-  --theme-background: var(--bg-primary);
-  --theme-surface: var(--surface-muted);
-  --theme-text-primary: var(--text-primary);
-  --theme-text-secondary: var(--text-secondary);
-  --theme-accent: rgba(255, 180, 120, 0.90);
-  --theme-border: var(--border-soft);
-  --theme-glow: var(--glow-primary);
+   --theme-background: var(--bg-primary);
+   --theme-surface: var(--surface-muted);
+   --theme-surface-raised: var(--surface-soft);
 
-  --theme-semantic-good: rgba(126, 231, 181, 0.84);
-  --theme-semantic-warning: rgba(255, 203, 122, 0.88);
-  --theme-semantic-danger: var(--danger-text);
-  --theme-semantic-sun: rgba(255, 174, 96, 0.92);
-  --theme-semantic-air: rgba(140, 215, 255, 0.80);
-  --theme-semantic-proof: rgba(206, 170, 255, 0.82);
+   --theme-text-primary: var(--text-primary);
+   --theme-text-secondary: var(--text-secondary);
+   --theme-text-muted: var(--text-tertiary);
 
-  color-scheme: dark;
+   --theme-accent: rgba(255, 180, 120, 0.90);
+   --theme-border: var(--border-soft);
+   --theme-glow: var(--glow-primary);
+
+   --theme-semantic-good: rgba(126, 231, 181, 0.84);
+   --theme-semantic-warning: rgba(255, 203, 122, 0.88);
+   --theme-semantic-danger: var(--danger-text);
+   --theme-semantic-sun: rgba(255, 174, 96, 0.92);
+   --theme-semantic-air: rgba(140, 215, 255, 0.80);
+   --theme-semantic-proof: rgba(206, 170, 255, 0.82);
+
+   color-scheme: dark;
 }

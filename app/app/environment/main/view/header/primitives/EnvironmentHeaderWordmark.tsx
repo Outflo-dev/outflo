@@ -4,7 +4,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER WORDMARK
    File: app/app/environment/main/view/header/primitives/EnvironmentHeaderWordmark.tsx
-   Scope: Local Environment header wordmark primitive
+   Scope: Render Environment header Kelvin wordmark
+   Last Updated:
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: replace Environment header-private wordmark tokens with global theme roles
    ========================================================== */
 
 /* ------------------------------
@@ -32,7 +36,7 @@ const WRAP_STYLE: CSSProperties = {
 
 const TITLE_STYLE: CSSProperties = {
     margin: 0,
-    color: "var(--environment-header-text)",
+    color: "var(--theme-text-primary)",
     fontFamily: KELVIN_FONT_FAMILY,
     fontSize: "clamp(22px, 6.4vw, 30px)",
     fontWeight: 200,
@@ -44,7 +48,7 @@ const TITLE_STYLE: CSSProperties = {
 
 const SUBTITLE_STYLE: CSSProperties = {
     margin: 0,
-    color: "var(--environment-header-subtitle)",
+    color: "var(--theme-accent)",
     fontFamily: KELVIN_FONT_FAMILY,
     fontSize: "clamp(8px, 1.9vw, 10px)",
     fontWeight: 700,
@@ -58,7 +62,7 @@ const SUBTITLE_STYLE: CSSProperties = {
 const DEGREE_STYLE: CSSProperties = {
     display: "inline-block",
     marginLeft: "-0.1em",
-    color: "var(--environment-header-degree)",
+    color: "var(--theme-semantic-proof)",
     fontSize: "0.9em",
     fontWeight: 200,
     lineHeight: 1,

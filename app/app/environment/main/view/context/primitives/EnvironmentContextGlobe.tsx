@@ -5,6 +5,10 @@
    OUTFLO — ENVIRONMENT CONTEXT GLOBE
    File: app/app/environment/main/view/context/primitives/EnvironmentContextGlobe.tsx
    Scope: Dotted world map visual with projected location ping
+   Last Updated:
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: replace header-private visual tokens with reusable Orb and theme roles
    ========================================================== */
 
 /* ------------------------------
@@ -47,7 +51,7 @@ const MAP_GLOW_STYLE: CSSProperties = {
     height: 58,
     borderRadius: 999,
     background:
-        "radial-gradient(circle, color-mix(in srgb, var(--environment-orb-ring-3) 32%, transparent), transparent 68%)",
+        "radial-gradient(circle, color-mix(in srgb, var(--orb-ring-3) 32%, transparent), transparent 68%)",
     filter: "blur(8px)",
 };
 
@@ -63,10 +67,10 @@ const PIN_STYLE: CSSProperties = {
     width: 12,
     height: 12,
     borderRadius: 999,
-    background: "var(--environment-orb-ring-3)",
+    background: "var(--orb-ring-3)",
     boxShadow: `
-        0 0 0 5px color-mix(in srgb, var(--environment-orb-ring-3) 18%, transparent),
-        0 0 18px color-mix(in srgb, var(--environment-orb-ring-3) 46%, transparent)
+        0 0 0 5px color-mix(in srgb, var(--orb-ring-3) 18%, transparent),
+        0 0 18px color-mix(in srgb, var(--orb-ring-3) 46%, transparent)
     `,
     transform: "translate(-50%, -50%)",
 };
@@ -118,7 +122,7 @@ export default function EnvironmentContextGlobe({
                             cx="1.6"
                             cy="1.6"
                             r="0.9"
-                            fill="var(--environment-header-action)"
+                            fill="var(--theme-text-secondary)"
                             opacity="0.42"
                         />
                     </pattern>

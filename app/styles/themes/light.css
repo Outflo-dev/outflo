@@ -3,51 +3,55 @@
    File: styles/themes/light.css
    Scope: Light theme color tokens only
    Last Updated:
-   - unix_ms: 1777409000000
-   - iso_utc: 2026-04-28T16:43:20.000Z
-   - human: 2026-04-28 16:43:20 UTC
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: add 15-role theme contract mappings for raised surface and muted text
    ========================================================== */
 
 :root[data-theme="light"] {
-  /* ------------------------------
+   /* ------------------------------
      Existing room tokens
   -------------------------------- */
-  --bg-primary: #FFFEFA;
-  --text-primary: #050505;
-  --text-secondary: rgba(5, 5, 5, 0.68);
-  --text-tertiary: rgba(5, 5, 5, 0.48);
-  --glow-primary: rgba(5, 5, 5, 0.06);
+   --bg-primary: #FFFEFA;
+   --text-primary: #050505;
+   --text-secondary: rgba(5, 5, 5, 0.68);
+   --text-tertiary: rgba(5, 5, 5, 0.48);
+   --glow-primary: rgba(5, 5, 5, 0.06);
 
-  --surface-soft: rgba(5, 5, 5, 0.07);
-  --surface-muted: rgba(5, 5, 5, 0.035);
-  --surface-icon: rgba(5, 5, 5, 0.08);
+   --surface-soft: rgba(5, 5, 5, 0.07);
+   --surface-muted: rgba(5, 5, 5, 0.035);
+   --surface-icon: rgba(5, 5, 5, 0.08);
 
-  --border-subtle: rgba(5, 5, 5, 0.08);
-  --border-soft: rgba(5, 5, 5, 0.08);
-  --border-row: rgba(5, 5, 5, 0.06);
+   --border-subtle: rgba(5, 5, 5, 0.08);
+   --border-soft: rgba(5, 5, 5, 0.08);
+   --border-row: rgba(5, 5, 5, 0.06);
 
-  --danger-surface: rgba(180, 20, 20, 0.08);
-  --danger-text: rgba(150, 20, 20, 0.92);
-  --danger-border: rgba(180, 20, 20, 0.20);
+   --danger-surface: rgba(180, 20, 20, 0.08);
+   --danger-text: rgba(150, 20, 20, 0.92);
+   --danger-border: rgba(180, 20, 20, 0.20);
 
-  /* ------------------------------
+   /* ------------------------------
      Outflō Theme Contract v1
-     13 required platform roles
+     15 required platform roles
   -------------------------------- */
-  --theme-background: var(--bg-primary);
-  --theme-surface: var(--surface-muted);
-  --theme-text-primary: var(--text-primary);
-  --theme-text-secondary: var(--text-secondary);
-  --theme-accent: rgba(0, 102, 204, 0.92);
-  --theme-border: var(--border-soft);
-  --theme-glow: var(--glow-primary);
+   --theme-background: var(--bg-primary);
+   --theme-surface: var(--surface-muted);
+   --theme-surface-raised: var(--surface-soft);
 
-  --theme-semantic-good: rgba(0, 120, 84, 0.92);
-  --theme-semantic-warning: rgba(174, 104, 0, 0.92);
-  --theme-semantic-danger: var(--danger-text);
-  --theme-semantic-sun: rgba(184, 105, 0, 0.94);
-  --theme-semantic-air: rgba(0, 112, 92, 0.90);
-  --theme-semantic-proof: rgba(92, 64, 170, 0.90);
+   --theme-text-primary: var(--text-primary);
+   --theme-text-secondary: var(--text-secondary);
+   --theme-text-muted: var(--text-tertiary);
 
-  color-scheme: light;
+   --theme-accent: rgba(0, 102, 204, 0.92);
+   --theme-border: var(--border-soft);
+   --theme-glow: var(--glow-primary);
+
+   --theme-semantic-good: rgba(0, 120, 84, 0.92);
+   --theme-semantic-warning: rgba(174, 104, 0, 0.92);
+   --theme-semantic-danger: var(--danger-text);
+   --theme-semantic-sun: rgba(184, 105, 0, 0.94);
+   --theme-semantic-air: rgba(0, 112, 92, 0.90);
+   --theme-semantic-proof: rgba(92, 64, 170, 0.90);
+
+   color-scheme: light;
 }

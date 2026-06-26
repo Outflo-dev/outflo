@@ -4,7 +4,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER UTILITY ACTION
    File: app/app/environment/main/view/header/primitives/EnvironmentHeaderUtilityAction.tsx
-   Scope: Local Environment header utility action primitive
+   Scope: Render Environment header utility action primitive
+   Last Updated:
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: bind utility action to global theme roles without private header palette
    ========================================================== */
 
 /* ------------------------------
@@ -27,7 +31,7 @@ const BUTTON_STYLE: CSSProperties = {
     height: "clamp(24px, 6.4vw, 30px)",
     border: "none",
     background: "transparent",
-    color: "color-mix(in srgb, var(--theme-text-primary) 82%, transparent)",
+    color: "var(--theme-text-secondary)",
     display: "grid",
     placeItems: "center",
     padding: 0,

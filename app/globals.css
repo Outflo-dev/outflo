@@ -3,16 +3,22 @@
    File: app/globals.css
    Scope: CSS entrypoint only — imports global style fragments
    Last Updated:
-   - ms: 1781877616535
-   - iso: 2026-06-19T14:00:16.535Z
-   - note: import Environment as full selectable Outflō theme
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: import split Orb theme value files after selectable Outflō themes
    ========================================================== */
 
+/* ------------------------------
+   Base Document Layer
+-------------------------------- */
 @import "./styles/base/reset.css";
 @import "./styles/base/document.css";
 @import "./styles/base/elements.css";
 @import "./styles/base/mobile.css";
 
+/* ------------------------------
+   Selectable Theme Layer
+-------------------------------- */
 @import "./styles/themes/dark.css";
 @import "./styles/themes/light.css";
 @import "./styles/themes/funky.css";
@@ -22,9 +28,28 @@
 @import "./styles/themes/night.css";
 @import "./styles/themes/environment.css";
 
-@import "./styles/environment/header.css";
-@import "./styles/environment/context.css";
+/* ------------------------------
+   Theme-Bound Visual Primitives
+-------------------------------- */
+@import "./styles/orb/dark.css";
+@import "./styles/orb/light.css";
+@import "./styles/orb/funky.css";
+@import "./styles/orb/dawn.css";
+@import "./styles/orb/day.css";
+@import "./styles/orb/dusk.css";
+@import "./styles/orb/night.css";
+@import "./styles/orb/environment.css";
 
+/* ------------------------------
+   Environment Legacy Fragments
+   Cleanup target: header/context private palettes
+-------------------------------- */
+
+
+
+/* ------------------------------
+   System Primitive Tokens
+-------------------------------- */
 @import "../components/system/primitives/display/type/font-family.tokens.css";
 @import "../components/system/primitives/display/type/font-weight.tokens.css";
 @import "../components/system/primitives/display/type/type.tokens.css";
@@ -32,7 +57,13 @@
 @import "../components/system/primitives/marks/frame/mark-frame.tokens.css";
 @import "../components/system/surfaces/rows/system-row.tokens.css";
 
+/* ------------------------------
+   App Token Fragments
+-------------------------------- */
 @import "./styles/tokens/buttons.css";
 @import "./styles/tokens/glow.css";
 
+/* ------------------------------
+   System Surface Tokens
+-------------------------------- */
 @import "../components/system/surfaces/card/types/bottom/bottom-card.tokens.css";

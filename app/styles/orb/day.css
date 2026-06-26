@@ -1,0 +1,26 @@
+/* ==========================================================
+   OUTFLO — ORB THEME / DAY
+   File: app/styles/orb/day.css
+   Scope: Day theme Orb color values
+   Last Updated:
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: split reusable Orb values into per-theme ownership file
+   ========================================================== */
+
+:root[data-theme="day"] {
+    --orb-fill: rgba(247, 251, 255, 0.92);
+
+    --orb-ring-1: rgba(184, 105, 0, 0.94);
+    --orb-ring-2: rgba(0, 112, 140, 0.92);
+    --orb-ring-3: rgba(0, 102, 204, 0.94);
+    --orb-ring-4: rgba(35, 96, 198, 0.92);
+    --orb-ring-5: rgba(70, 86, 190, 0.90);
+
+    --orb-shadow-1: rgba(0, 102, 204, 0.18);
+    --orb-shadow-2: rgba(0, 120, 255, 0.12);
+    --orb-shadow-3: rgba(70, 86, 190, 0.16);
+    --orb-shadow-4: rgba(184, 105, 0, 0.14);
+
+    --orb-mark: rgba(11, 26, 43, 0.88);
+}

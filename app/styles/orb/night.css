@@ -1,0 +1,26 @@
+/* ==========================================================
+   OUTFLO — ORB THEME / NIGHT
+   File: app/styles/orb/night.css
+   Scope: Night theme Orb color values
+   Last Updated:
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: split reusable Orb values into per-theme ownership file
+   ========================================================== */
+
+:root[data-theme="night"] {
+    --orb-fill: rgba(0, 0, 0, 0.92);
+
+    --orb-ring-1: rgba(255, 214, 128, 0.88);
+    --orb-ring-2: rgba(126, 231, 255, 0.82);
+    --orb-ring-3: rgba(120, 180, 255, 0.88);
+    --orb-ring-4: rgba(135, 185, 255, 0.86);
+    --orb-ring-5: rgba(150, 190, 255, 0.84);
+
+    --orb-shadow-1: rgba(120, 180, 255, 0.22);
+    --orb-shadow-2: rgba(80, 160, 255, 0.16);
+    --orb-shadow-3: rgba(150, 190, 255, 0.22);
+    --orb-shadow-4: rgba(255, 214, 128, 0.10);
+
+    --orb-mark: rgba(219, 234, 254, 0.95);
+}
