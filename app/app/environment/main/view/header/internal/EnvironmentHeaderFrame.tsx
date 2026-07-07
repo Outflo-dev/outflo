@@ -38,7 +38,7 @@ export default function EnvironmentHeaderFrame({
         minHeight: "clamp(56px, 8.2vh, 70px)",
         display: "grid",
         placeItems: "center",
-        padding: "clamp(4px, 1vh, 8px) 0 clamp(6px, 1.15vh, 11px)",
+        padding: "clamp(4px, 1vh, 8px) 0 clamp(2px, 0.7vh, 6px)",
         overflow: "visible",
     };
 

@@ -41,7 +41,7 @@ const TITLE_STYLE: CSSProperties = {
     fontSize: "clamp(22px, 6.4vw, 30px)",
     fontWeight: 200,
     lineHeight: 0.78,
-    letterSpacing: "clamp(0.32em, 1.17vw, 0.42em)",
+    letterSpacing: "clamp(0.36em, 1.28vw, 0.48em)",
     textTransform: "uppercase",
     transform: "translateX(clamp(0.17em, 0.9vw, 0.28em))",
 };
@@ -53,7 +53,7 @@ const SUBTITLE_STYLE: CSSProperties = {
     fontSize: "clamp(8px, 1.9vw, 10px)",
     fontWeight: 700,
     lineHeight: 1,
-    letterSpacing: "clamp(0.16em, 0.66vw, 0.22em)",
+    letterSpacing: "clamp(0.17em, 0.7vw, 0.24em)",
     textTransform: "uppercase",
     transform: "translateX(clamp(0.06em, 0.28vw, 0.09em))",
     whiteSpace: "nowrap",
@@ -61,13 +61,13 @@ const SUBTITLE_STYLE: CSSProperties = {
 
 const DEGREE_STYLE: CSSProperties = {
     display: "inline-block",
-    marginLeft: "-0.1em",
+    marginLeft: "-0.27em",
     color: "var(--theme-semantic-proof)",
     fontSize: "0.9em",
     fontWeight: 200,
     lineHeight: 1,
     verticalAlign: "top",
-    transform: "translateY(-0.34em)",
+    transform: "translateY(-0.42em)",
 };
 
 /* ------------------------------

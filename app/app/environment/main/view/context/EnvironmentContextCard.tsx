@@ -8,7 +8,7 @@
    Last Updated:
    - ms: 1782467976867
    - iso: 2026-06-26T09:59:36.867Z
-   - note: move card surface ownership to EnvironmentCard primitive
+   - note: compose Context Card content with vignetted map frame
    ========================================================== */
 
 /* ------------------------------
@@ -18,7 +18,7 @@ import type { CSSProperties } from "react";
 
 import type { EnvironmentViewModel } from "../../internal/environment.types";
 import EnvironmentCard from "../primitives/EnvironmentCard";
-import EnvironmentContextGlobe from "./primitives/EnvironmentContextGlobe";
+import EnvironmentContextMapFrame from "./primitives/EnvironmentContextMapFrame";
 
 /* ------------------------------
    Types
@@ -31,31 +31,34 @@ type EnvironmentContextCardProps = {
    Styles
 -------------------------------- */
 const CONTEXT_CARD_STYLE: CSSProperties = {
-    minHeight: 92,
-    padding: "14px 16px 14px",
+    position: "relative",
+    overflow: "hidden",
+    minHeight: 86,
+    padding: "12px 16px 12px",
+    background: "var(--environment-context-card-surface)",
 };
 
 const CONTENT_STYLE: CSSProperties = {
     position: "relative",
-    zIndex: 2,
+    zIndex: 4,
     display: "grid",
-    rowGap: 10,
+    rowGap: 11,
 };
 
 const EYEBROW_ROW_STYLE: CSSProperties = {
     display: "flex",
     alignItems: "center",
-    gap: 12,
+    gap: 16,
 };
 
 const EYEBROW_STYLE: CSSProperties = {
     margin: 0,
     color: "var(--theme-text-muted)",
     fontFamily: "var(--font-kelvin), ui-sans-serif, system-ui, sans-serif",
-    fontSize: 10,
+    fontSize: 6,
     fontWeight: 800,
     lineHeight: 1,
-    letterSpacing: "0.22em",
+    letterSpacing: "0.2em",
     textTransform: "uppercase",
 };
 
@@ -65,31 +68,31 @@ const PLACE_STYLE: CSSProperties = {
     fontFamily: "var(--font-kelvin), ui-sans-serif, system-ui, sans-serif",
     fontSize: "clamp(16px, 4.2vw, 20px)",
     fontWeight: 300,
-    lineHeight: 0.96,
+    lineHeight: 0.98,
     letterSpacing: "-0.02em",
 };
 
 const META_STYLE: CSSProperties = {
-    margin: 0,
+    margin: "6px 0 0",
     display: "inline-flex",
     alignItems: "center",
     width: "fit-content",
     color: "var(--theme-semantic-good)",
     fontFamily: "var(--font-kelvin), ui-sans-serif, system-ui, sans-serif",
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: 800,
     lineHeight: 1,
-    letterSpacing: "0.16em",
+    letterSpacing: "0.15em",
     textTransform: "uppercase",
 };
 
 const PRECISION_DOT_STYLE: CSSProperties = {
-    width: 7,
-    height: 7,
+    width: 6,
+    height: 6,
     borderRadius: 999,
     marginRight: 8,
     background: "var(--theme-semantic-good)",
-    boxShadow: "0 0 12px var(--theme-glow)",
+    boxShadow: "none",
 };
 
 /* ------------------------------
@@ -107,7 +110,10 @@ export default function EnvironmentContextCard({
             style={CONTEXT_CARD_STYLE}
             ariaLabel="Current environment context"
         >
-            <EnvironmentContextGlobe />
+            <EnvironmentContextMapFrame
+                latitude={model.location.latitude}
+                longitude={model.location.longitude}
+            />
 
             <div style={CONTENT_STYLE}>
                 <div style={EYEBROW_ROW_STYLE}>

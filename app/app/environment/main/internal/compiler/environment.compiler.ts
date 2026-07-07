@@ -3,9 +3,9 @@
    File: app/app/environment/main/internal/compiler/environment.compiler.ts
    Scope: Own Environment view model compilation from snapshot truth
    Last Updated:
-   - ms: 1781108888881
-   - iso: 2026-06-10T16:28:08.881Z
-   - note: consume persisted Environment preferences during model compilation
+   - ms: 1782467976867
+   - iso: 2026-06-26T09:59:36.867Z
+   - note: add location model compilation for Context Card globe projection
    ========================================================== */
 
 /* ------------------------------
@@ -16,12 +16,14 @@ import type { EnvironmentPreferences } from "@/lib/app-state/environment/environ
 import type {
     EnvironmentForecastModel,
     EnvironmentHeroModel,
+    EnvironmentLocationModel,
     EnvironmentRecordModel,
     EnvironmentSceneModel,
     EnvironmentSnapshot,
     EnvironmentSummarySectionModel,
     EnvironmentViewModel,
 } from "../environment.types";
+
 import {
     formatTemperatureC,
     getEnvironmentDisplayContext,
@@ -64,6 +66,7 @@ export function compileEnvironmentModel(
         hasSnapshot: true,
         scene: compileEnvironmentScene(snapshot),
         hero: compileEnvironmentHero(snapshot, displayContext),
+        location: compileEnvironmentLocation(snapshot),
         forecast: compileEnvironmentForecast(snapshot, displayContext),
         summary: compileEnvironmentSummary(snapshot, displayContext),
         record: compileEnvironmentRecord(snapshot),
@@ -99,6 +102,21 @@ function compileEnvironmentHero(
 }
 
 /* ------------------------------
+   Location
+-------------------------------- */
+function compileEnvironmentLocation(
+    snapshot: EnvironmentSnapshot
+): EnvironmentLocationModel {
+    const latitude = snapshot.latitude;
+    const longitude = snapshot.longitude;
+
+    return {
+        latitude: typeof latitude === "number" ? latitude : undefined,
+        longitude: typeof longitude === "number" ? longitude : undefined,
+    };
+}
+
+/* ------------------------------
    Empty States
 -------------------------------- */
 function getEmptyEnvironmentModel(): EnvironmentViewModel {
@@ -106,6 +124,7 @@ function getEmptyEnvironmentModel(): EnvironmentViewModel {
         hasSnapshot: false,
         scene: getEmptyScene(),
         hero: getEmptyHero(),
+        location: getEmptyLocation(),
         forecast: getEmptyForecast(),
         summary: getEmptySummary(),
         record: getEmptyRecord(),
@@ -122,6 +141,7 @@ function getDisabledEnvironmentModel(): EnvironmentViewModel {
             condition: "Environment is disabled",
             signal: "Enable Environment to resume signals",
         },
+        location: getEmptyLocation(),
         forecast: getEmptyForecast(),
         summary: {
             title: "Environment Details",
@@ -156,6 +176,10 @@ function getEmptyHero(): EnvironmentHeroModel {
         updated: "Updated —",
         signal: "Signal pending",
     };
+}
+
+function getEmptyLocation(): EnvironmentLocationModel {
+    return {};
 }
 
 function getEmptyForecast(): EnvironmentForecastModel {

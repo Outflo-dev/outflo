@@ -53,5 +53,19 @@
    --theme-semantic-air: rgba(0, 245, 212, 0.84);
    --theme-semantic-proof: rgba(199, 125, 255, 0.88);
 
+   /* ------------------------------
+           Environment Context Map
+   -------------------------------- */
+   --environment-context-map-fill: rgba(0, 245, 212, 0.58);
+   --environment-context-map-opacity: 0.82;
+   --environment-context-map-glow: rgba(199, 125, 255, 0.18);
+   --environment-context-map-glow-soft: rgba(0, 245, 212, 0.08);
+   --environment-context-map-fade: rgba(7, 0, 18, 0.70);
+
+   --environment-context-map-pin-fill: var(--theme-accent);
+   --environment-context-map-pin-core: var(--theme-background);
+   --environment-context-map-pin-ring: rgba(255, 247, 214, 0.56);
+   --environment-context-map-pin-shadow: rgba(0, 245, 212, 0.28);
+
    color-scheme: dark;
 }

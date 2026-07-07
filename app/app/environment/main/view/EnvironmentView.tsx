@@ -24,6 +24,7 @@ import EnvironmentHeader from "./header/EnvironmentHeader";
 import EnvironmentFooter from "./footer/EnvironmentFooter";
 import EnvironmentAtmosphere from "./scene/EnvironmentAtmosphere";
 import EnvironmentLaunchSurface from "./launch/EnvironmentLaunchSurface";
+import EnvironmentHero from "./hero/EnvironmentHero";
 
 /* ------------------------------
    Types
@@ -56,7 +57,7 @@ export default function EnvironmentView({
         position: "relative",
         zIndex: 1,
         display: "grid",
-        rowGap: 7,
+        rowGap: 4,
     };
 
     return (
@@ -72,6 +73,8 @@ export default function EnvironmentView({
                 />
 
                 <EnvironmentContextCard model={model} />
+
+                <EnvironmentHero />
 
                 <EnvironmentLaunchSurface model={model} />
 

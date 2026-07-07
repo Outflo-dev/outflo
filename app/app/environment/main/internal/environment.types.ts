@@ -38,6 +38,11 @@ export type EnvironmentHeroModel = {
     signal: string;
 };
 
+export type EnvironmentLocationModel = {
+    latitude?: number;
+    longitude?: number;
+};
+
 export type EnvironmentForecastItemModel = {
     label: string;
     value: string;
@@ -75,6 +80,7 @@ export type EnvironmentRecordModel = {
 export type EnvironmentViewModel = {
     scene: EnvironmentSceneModel;
     hero: EnvironmentHeroModel;
+    location: EnvironmentLocationModel;
     forecast: EnvironmentForecastModel;
     summary: EnvironmentSummarySectionModel;
     record: EnvironmentRecordModel;

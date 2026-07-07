@@ -41,13 +41,6 @@
 @import "./styles/orb/environment.css";
 
 /* ------------------------------
-   Environment Legacy Fragments
-   Cleanup target: header/context private palettes
--------------------------------- */
-
-
-
-/* ------------------------------
    System Primitive Tokens
 -------------------------------- */
 @import "../components/system/primitives/display/type/font-family.tokens.css";
