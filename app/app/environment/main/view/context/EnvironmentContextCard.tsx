@@ -4,11 +4,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT CONTEXT CARD
    File: app/app/environment/main/view/context/EnvironmentContextCard.tsx
-   Scope: Scope: Render Environment current context card above Kelvin center
+   Scope: Render Environment current context card above Kelvin center
    Last Updated:
-   - ms: 1782467976867
-   - iso: 2026-06-26T09:59:36.867Z
-   - note: compose Context Card content with vignetted map frame
+   - ms:
+   - iso:
+   - note: remove dead map frame from active context card
    ========================================================== */
 
 /* ------------------------------
@@ -18,7 +18,6 @@ import type { CSSProperties } from "react";
 
 import type { EnvironmentViewModel } from "../../internal/environment.types";
 import EnvironmentCard from "../primitives/EnvironmentCard";
-import EnvironmentContextMapFrame from "./primitives/EnvironmentContextMapFrame";
 
 /* ------------------------------
    Types
@@ -34,7 +33,7 @@ const CONTEXT_CARD_STYLE: CSSProperties = {
     position: "relative",
     overflow: "hidden",
     minHeight: 86,
-    padding: "12px 16px 12px",
+    padding: "12px 16px",
     background: "var(--environment-context-card-surface)",
 };
 
@@ -110,11 +109,6 @@ export default function EnvironmentContextCard({
             style={CONTEXT_CARD_STYLE}
             ariaLabel="Current environment context"
         >
-            <EnvironmentContextMapFrame
-                latitude={model.location.latitude}
-                longitude={model.location.longitude}
-            />
-
             <div style={CONTENT_STYLE}>
                 <div style={EYEBROW_ROW_STYLE}>
                     <p style={EYEBROW_STYLE}>Current Context</p>
