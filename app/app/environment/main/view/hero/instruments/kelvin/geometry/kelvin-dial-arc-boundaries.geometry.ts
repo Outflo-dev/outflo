@@ -12,8 +12,8 @@
    Constants
 -------------------------------- */
 export const KELVIN_DIAL_ARC_BOUNDARIES = {
-    start: 220,
-    coolEnd: 324,
-    warmStart: 34,
-    end: 137,
+    start: 226,
+    coolEnd: 337,
+    warmStart: 30,
+    end: 132,
 } as const;

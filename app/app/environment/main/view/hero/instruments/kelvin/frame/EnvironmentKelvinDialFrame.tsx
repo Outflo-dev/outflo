@@ -13,6 +13,7 @@ import EnvironmentKelvinDialCoolArc from "../arcs/EnvironmentKelvinDialCoolArc";
 import EnvironmentKelvinDialThermalTrack from "../arcs/EnvironmentKelvinDialThermalTrack";
 import EnvironmentKelvinDialWarmArc from "../arcs/EnvironmentKelvinDialWarmArc";
 import { KELVIN_DIAL_FRAME_GEOMETRY } from "../geometry/kelvin-dial-frame.geometry";
+import EnvironmentKelvinDialArcPaint from "../paint/EnvironmentKelvinDialArcPaint";
 
 /* ------------------------------
    Component
@@ -33,6 +34,8 @@ export default function EnvironmentKelvinDialFrame() {
                 overflow: "visible",
             }}
         >
+            <EnvironmentKelvinDialArcPaint />
+
             <circle
                 cx={center}
                 cy={center}
@@ -68,7 +71,6 @@ export default function EnvironmentKelvinDialFrame() {
                 stroke="var(--environment-kelvin-dial-face-guide-stroke)"
                 strokeWidth={strokes.faceGuide}
             />
-
             <EnvironmentKelvinDialThermalTrack />
             <EnvironmentKelvinDialCoolArc />
             <EnvironmentKelvinDialWarmArc />

@@ -27,6 +27,6 @@ export const KELVIN_DIAL_FRAME_GEOMETRY = {
         face: 1,
         faceGuide: 1,
 
-        thermalRail: 8,
+        thermalRail: 6,
     },
 } as const;

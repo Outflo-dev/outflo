@@ -30,7 +30,7 @@ export default function EnvironmentKelvinDialThermalTrack() {
                     fill="none"
                     stroke="var(--environment-kelvin-dial-thermal-track)"
                     strokeWidth={strokes.thermalRail}
-                    strokeLinecap="round"
+                    strokeLinecap="square"
                     pathLength={360}
                     strokeDasharray={`${segment.sweep} 360`}
                     strokeDashoffset={-segment.start}
