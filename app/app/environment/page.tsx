@@ -18,6 +18,7 @@ import { supabaseServer } from "@/lib/supabase/server";
 
 import EnvironmentController from "./main/internal/EnvironmentController";
 import type { EnvironmentSnapshot } from "./main/internal/environment.types";
+import EnvironmentRouteFrame from "./main/view/frame/EnvironmentRouteFrame";
 
 /* ------------------------------
    Runtime
@@ -36,11 +37,13 @@ export default async function Page() {
 
     if (!user) {
         return (
-            <EnvironmentController
-                snapshot={null}
-                environmentEnabled={false}
-                environmentPreferences={DEFAULT_ENVIRONMENT_PREFERENCES}
-            />
+            <EnvironmentRouteFrame>
+                <EnvironmentController
+                    snapshot={null}
+                    environmentEnabled={false}
+                    environmentPreferences={DEFAULT_ENVIRONMENT_PREFERENCES}
+                />
+            </EnvironmentRouteFrame>
         );
     }
 
@@ -68,10 +71,12 @@ export default async function Page() {
         preferences?.location_mode !== "off";
 
     return (
-        <EnvironmentController
-            snapshot={(snapshot ?? null) as EnvironmentSnapshot | null}
-            environmentEnabled={environmentEnabled}
-            environmentPreferences={environmentPreferences}
-        />
+        <EnvironmentRouteFrame>
+            <EnvironmentController
+                snapshot={(snapshot ?? null) as EnvironmentSnapshot | null}
+                environmentEnabled={environmentEnabled}
+                environmentPreferences={environmentPreferences}
+            />
+        </EnvironmentRouteFrame>
     );
 }
