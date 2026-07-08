@@ -15,7 +15,7 @@
 -------------------------------- */
 import type { CSSProperties } from "react";
 
-import EnvironmentKelvinDial from "./primitives/kelvindial/EnvironmentKelvinDial";
+import EnvironmentKelvinDial from "./instruments/kelvin/EnvironmentKelvinDial";
 
 /* ------------------------------
    Constants

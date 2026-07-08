@@ -1,0 +1,35 @@
+/* ==========================================================
+   OUTFLO — KELVIN DIAL THEME / NIGHT
+   File: app/styles/kelvin/night.css
+   Scope: Night theme Kelvin Dial color values
+   Last Updated:
+   - ms: 1783474331193
+   - iso: 2026-07-08T01:32:11.193Z
+   - note: introduce Kelvin Dial per-theme visual scheme ownership
+   ========================================================== */
+
+:root[data-theme="night"] {
+    --environment-kelvin-dial-frame-outer-fill: rgba(0, 0, 0, 0.66);
+    --environment-kelvin-dial-frame-outer-stroke: rgba(120, 180, 255, 0.24);
+
+    --environment-kelvin-dial-frame-inner-fill: rgba(0, 0, 0, 0.82);
+    --environment-kelvin-dial-frame-inner-stroke: rgba(219, 234, 254, 0.10);
+
+    --environment-kelvin-dial-face-fill: rgba(0, 0, 0, 0.92);
+    --environment-kelvin-dial-face-stroke: rgba(80, 160, 255, 0.18);
+    --environment-kelvin-dial-face-guide-stroke: rgba(219, 234, 254, 0.10);
+
+    --environment-kelvin-dial-thermal-track: rgba(219, 234, 254, 0.12);
+    --environment-kelvin-dial-cool-arc: rgba(126, 231, 255, 0.84);
+    --environment-kelvin-dial-warm-arc: rgba(255, 214, 128, 0.88);
+
+    --environment-kelvin-dial-cool-glow: rgba(126, 231, 255, 0.22);
+    --environment-kelvin-dial-warm-glow: rgba(255, 214, 128, 0.16);
+
+    --environment-kelvin-dial-text-primary: rgba(219, 234, 254, 0.95);
+    --environment-kelvin-dial-text-secondary: rgba(219, 234, 254, 0.66);
+    --environment-kelvin-dial-text-muted: rgba(219, 234, 254, 0.42);
+
+    --environment-kelvin-dial-tick-major: rgba(219, 234, 254, 0.34);
+    --environment-kelvin-dial-tick-minor: rgba(219, 234, 254, 0.16);
+}

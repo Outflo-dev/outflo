@@ -1,0 +1,35 @@
+/* ==========================================================
+   OUTFLO — KELVIN DIAL THEME / DUSK
+   File: app/styles/kelvin/dusk.css
+   Scope: Dusk theme Kelvin Dial color values
+   Last Updated:
+   - ms: 1783474331193
+   - iso: 2026-07-08T01:32:11.193Z
+   - note: introduce Kelvin Dial per-theme visual scheme ownership
+   ========================================================== */
+
+:root[data-theme="dusk"] {
+    --environment-kelvin-dial-frame-outer-fill: rgba(18, 11, 31, 0.66);
+    --environment-kelvin-dial-frame-outer-stroke: rgba(200, 160, 255, 0.24);
+
+    --environment-kelvin-dial-frame-inner-fill: rgba(18, 11, 31, 0.82);
+    --environment-kelvin-dial-frame-inner-stroke: rgba(243, 232, 255, 0.10);
+
+    --environment-kelvin-dial-face-fill: rgba(18, 11, 31, 0.92);
+    --environment-kelvin-dial-face-stroke: rgba(140, 90, 255, 0.18);
+    --environment-kelvin-dial-face-guide-stroke: rgba(243, 232, 255, 0.10);
+
+    --environment-kelvin-dial-thermal-track: rgba(243, 232, 255, 0.12);
+    --environment-kelvin-dial-cool-arc: rgba(140, 215, 255, 0.82);
+    --environment-kelvin-dial-warm-arc: rgba(255, 196, 118, 0.88);
+
+    --environment-kelvin-dial-cool-glow: rgba(140, 215, 255, 0.18);
+    --environment-kelvin-dial-warm-glow: rgba(255, 196, 118, 0.16);
+
+    --environment-kelvin-dial-text-primary: rgba(243, 232, 255, 0.95);
+    --environment-kelvin-dial-text-secondary: rgba(243, 232, 255, 0.68);
+    --environment-kelvin-dial-text-muted: rgba(243, 232, 255, 0.44);
+
+    --environment-kelvin-dial-tick-major: rgba(243, 232, 255, 0.34);
+    --environment-kelvin-dial-tick-minor: rgba(243, 232, 255, 0.16);
+}

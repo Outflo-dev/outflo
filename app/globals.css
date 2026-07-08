@@ -41,6 +41,18 @@
 @import "./styles/orb/environment.css";
 
 /* ------------------------------
+   Kelvin Dial Schemes
+-------------------------------- */
+@import "./styles/kelvin/dark.css";
+@import "./styles/kelvin/light.css";
+@import "./styles/kelvin/funky.css";
+@import "./styles/kelvin/dawn.css";
+@import "./styles/kelvin/day.css";
+@import "./styles/kelvin/dusk.css";
+@import "./styles/kelvin/night.css";
+@import "./styles/kelvin/environment.css";
+
+/* ------------------------------
    System Primitive Tokens
 -------------------------------- */
 @import "../components/system/primitives/display/type/font-family.tokens.css";

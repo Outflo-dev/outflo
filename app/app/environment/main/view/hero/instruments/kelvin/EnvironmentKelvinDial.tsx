@@ -2,12 +2,8 @@
 
 /* ==========================================================
    OUTFLO — ENVIRONMENT KELVIN DIAL
-   File: app/app/environment/main/view/hero/primitives/kelvindial/EnvironmentKelvinDial.tsx
-   Scope: Compose Kelvin dial face and readout
-   Last Updated:
-   - ms:
-   - iso:
-   - note: reduce Kelvin dial primitive to dial composition
+   File: app/app/environment/main/view/hero/instruments/kelvin/EnvironmentKelvinDial.tsx
+   Scope: Compose Kelvin dial instrument
    ========================================================== */
 
 /* ------------------------------
@@ -15,9 +11,9 @@
 -------------------------------- */
 import type { CSSProperties } from "react";
 
-import EnvironmentKelvinDialFace from "./EnvironmentKelvinDialFace";
-import EnvironmentKelvinDialReadout from "./EnvironmentKelvinDialReadout";
-import type { EnvironmentKelvinDialProps } from "./kelvin-dial.types";
+import EnvironmentKelvinDialFrame from "./frame/EnvironmentKelvinDialFrame";
+import type { EnvironmentKelvinDialProps } from "./geometry/kelvin-dial.types";
+import EnvironmentKelvinDialReadout from "./readout/EnvironmentKelvinDialReadout";
 
 /* ------------------------------
    Component
@@ -28,9 +24,6 @@ export default function EnvironmentKelvinDial({
     fahrenheit,
     kelvin,
     unitLabel,
-    indicatorValue,
-    min = 0,
-    max = 400,
 }: EnvironmentKelvinDialProps) {
     const ROOT_STYLE: CSSProperties = {
         position: "relative",
@@ -41,11 +34,7 @@ export default function EnvironmentKelvinDial({
 
     return (
         <div style={ROOT_STYLE} aria-label="Kelvin Environment dial">
-            <EnvironmentKelvinDialFace
-                indicatorValue={indicatorValue}
-                min={min}
-                max={max}
-            />
+            <EnvironmentKelvinDialFrame />
 
             <EnvironmentKelvinDialReadout
                 value={value}
