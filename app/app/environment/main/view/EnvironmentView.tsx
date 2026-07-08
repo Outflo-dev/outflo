@@ -8,7 +8,7 @@
    Last Updated:
    - ms:
    - iso:
-   - note: - note: compose Environment around Kelvin center
+   - note: compose Environment around Kelvin center
    ========================================================== */
 
 /* ------------------------------
@@ -21,7 +21,6 @@ import type { EnvironmentPreferences } from "@/lib/app-state/environment/environ
 import EnvironmentContextCard from "./context/EnvironmentContextCard";
 import type { EnvironmentViewModel } from "../internal/environment.types";
 import EnvironmentHeader from "./header/EnvironmentHeader";
-import EnvironmentFooter from "./footer/EnvironmentFooter";
 import EnvironmentAtmosphere from "./scene/EnvironmentAtmosphere";
 import EnvironmentHero from "./hero/EnvironmentHero";
 
@@ -74,8 +73,6 @@ export default function EnvironmentView({
                 <EnvironmentContextCard model={model} />
 
                 <EnvironmentHero />
-
-                <EnvironmentFooter hasSnapshot={model.hasSnapshot} />
             </section>
         </section>
     );
