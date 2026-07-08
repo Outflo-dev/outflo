@@ -8,7 +8,7 @@
    Last Updated:
    - ms:
    - iso:
-   - note: compose Environment around Kelvin center
+   - note: compose Context and Kelvin center with intentional overlap
    ========================================================== */
 
 /* ------------------------------
@@ -58,6 +58,16 @@ export default function EnvironmentView({
         rowGap: 4,
     };
 
+    const CONTEXT_SLOT_STYLE: CSSProperties = {
+        position: "relative",
+        zIndex: 2,
+    };
+
+    const HERO_SLOT_STYLE: CSSProperties = {
+        position: "relative",
+        zIndex: 4,
+        marginTop: -20,
+    };
     return (
         <section style={ROOT_STYLE}>
             <EnvironmentAtmosphere scene={model.scene} />
@@ -70,9 +80,13 @@ export default function EnvironmentView({
                     environmentPreferences={environmentPreferences}
                 />
 
-                <EnvironmentContextCard model={model} />
+                <div style={CONTEXT_SLOT_STYLE}>
+                    <EnvironmentContextCard model={model} />
+                </div>
 
-                <EnvironmentHero />
+                <div style={HERO_SLOT_STYLE}>
+                    <EnvironmentHero />
+                </div>
             </section>
         </section>
     );

@@ -27,7 +27,7 @@ export default function EnvironmentKelvinDial({
 }: EnvironmentKelvinDialProps) {
     const ROOT_STYLE: CSSProperties = {
         position: "relative",
-        width: "min(394px, 100%)",
+        width: "min(333px, 100%)",
         aspectRatio: "1",
         marginInline: "auto",
     };

@@ -3,11 +3,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT HERO
    File: app/app/environment/main/view/hero/EnvironmentHero.tsx
-   Scope: Compose fresh Environment hero around Kelvin dial proof only
+   Scope: Compose Environment Kelvin center
    Last Updated:
    - ms:
    - iso:
-   - note: remove duplicate context / PRECISE card from hero
+   - note: fit Kelvin dial center after active UI cleanup
    ========================================================== */
 
 /* ------------------------------
@@ -34,13 +34,14 @@ export default function EnvironmentHero() {
     const ROOT_STYLE: CSSProperties = {
         position: "relative",
         display: "grid",
-        placeItems: "center",
-        minHeight: 494,
-        padding: "14px 0 24px",
+        justifyItems: "center",
+        alignItems: "start",
+        minHeight: 374,
+        padding: "0 0 18px",
     };
 
     return (
-        <section style={ROOT_STYLE} aria-label="Environment Kelvin dial proof">
+        <section style={ROOT_STYLE} aria-label="Environment Kelvin center">
             <EnvironmentKelvinDial
                 value={HERO_PROOF_STATE.temperatureC}
                 celsius={HERO_PROOF_STATE.temperatureC}
