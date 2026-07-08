@@ -4,7 +4,7 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT CONTEXT CARD
    File: app/app/environment/main/view/context/EnvironmentContextCard.tsx
-   Scope: Render Environment current context card above launch surface
+   Scope: Scope: Render Environment current context card above Kelvin center
    Last Updated:
    - ms: 1782467976867
    - iso: 2026-06-26T09:59:36.867Z

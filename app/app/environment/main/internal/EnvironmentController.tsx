@@ -5,9 +5,9 @@
    File: app/app/environment/main/internal/EnvironmentController.tsx
    Scope: Own Environment model preparation navigation and refresh action
    Last Updated:
-   - ms: 1781108888881
-   - iso: 2026-06-10T16:28:08.881Z
-   - note: pass persisted Environment preferences into compiler
+   - ms:
+   - iso:
+   - note: remove route frame ownership from controller
    ========================================================== */
 
 /* ------------------------------
@@ -18,7 +18,6 @@ import { useRouter } from "next/navigation";
 
 import type { EnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences";
 
-import EnvironmentRouteFrame from "../view/frame/EnvironmentRouteFrame";
 import EnvironmentView from "../view/EnvironmentView";
 import { getEnvironmentModel } from "./environment.sections";
 import type { EnvironmentSnapshot } from "./environment.types";
@@ -78,14 +77,12 @@ export default function EnvironmentController({
     }
 
     return (
-        <EnvironmentRouteFrame>
-            <EnvironmentView
-                model={model}
-                onBack={handleBack}
-                onRefresh={handleRefresh}
-                refreshing={refreshing}
-                environmentPreferences={environmentPreferences}
-            />
-        </EnvironmentRouteFrame>
+        <EnvironmentView
+            model={model}
+            onBack={handleBack}
+            onRefresh={handleRefresh}
+            refreshing={refreshing}
+            environmentPreferences={environmentPreferences}
+        />
     );
 }

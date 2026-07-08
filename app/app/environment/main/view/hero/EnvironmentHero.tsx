@@ -36,7 +36,7 @@ export default function EnvironmentHero() {
         display: "grid",
         placeItems: "center",
         minHeight: 494,
-        padding: "14px 18px 24px",
+        padding: "14px 0 24px",
     };
 
     return (

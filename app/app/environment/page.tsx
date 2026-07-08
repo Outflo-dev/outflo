@@ -4,21 +4,21 @@
    File: app/app/environment/page.tsx
    Scope: Server route entry for Environment substrate surface
    Last Updated:
-   - ms: 1781108888881
-   - iso: 2026-06-10T16:28:08.881Z
-   - note: verify persisted Environment preference read path
+   - ms:
+   - iso:
+   - note: route applies AppFrame directly for Environment
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
+import AppFrame from "@/components/system/shell/app/AppFrame";
 import { DEFAULT_ENVIRONMENT_PREFERENCES } from "@/lib/app-state/environment/environment-preferences";
 import { getEnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences.server";
 import { supabaseServer } from "@/lib/supabase/server";
 
 import EnvironmentController from "./main/internal/EnvironmentController";
 import type { EnvironmentSnapshot } from "./main/internal/environment.types";
-import EnvironmentRouteFrame from "./main/view/frame/EnvironmentRouteFrame";
 
 /* ------------------------------
    Runtime
@@ -37,13 +37,13 @@ export default async function Page() {
 
     if (!user) {
         return (
-            <EnvironmentRouteFrame>
+            <AppFrame>
                 <EnvironmentController
                     snapshot={null}
                     environmentEnabled={false}
                     environmentPreferences={DEFAULT_ENVIRONMENT_PREFERENCES}
                 />
-            </EnvironmentRouteFrame>
+            </AppFrame>
         );
     }
 
@@ -71,12 +71,12 @@ export default async function Page() {
         preferences?.location_mode !== "off";
 
     return (
-        <EnvironmentRouteFrame>
+        <AppFrame>
             <EnvironmentController
                 snapshot={(snapshot ?? null) as EnvironmentSnapshot | null}
                 environmentEnabled={environmentEnabled}
                 environmentPreferences={environmentPreferences}
             />
-        </EnvironmentRouteFrame>
+        </AppFrame>
     );
 }

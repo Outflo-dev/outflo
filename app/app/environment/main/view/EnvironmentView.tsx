@@ -4,11 +4,11 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT VIEW
    File: app/app/environment/main/view/EnvironmentView.tsx
-   Scope: Compose Environment substrate shell around launch surface
+   Scope: Compose Environment substrate shell around Kelvin center
    Last Updated:
-   - ms: 1781750277364
-   - iso: 2026-06-18T02:37:57.364Z
-   - note: move Environment section composition into launch surface seam
+   - ms:
+   - iso:
+   - note: - note: compose Environment around Kelvin center
    ========================================================== */
 
 /* ------------------------------
@@ -23,7 +23,6 @@ import type { EnvironmentViewModel } from "../internal/environment.types";
 import EnvironmentHeader from "./header/EnvironmentHeader";
 import EnvironmentFooter from "./footer/EnvironmentFooter";
 import EnvironmentAtmosphere from "./scene/EnvironmentAtmosphere";
-import EnvironmentLaunchSurface from "./launch/EnvironmentLaunchSurface";
 import EnvironmentHero from "./hero/EnvironmentHero";
 
 /* ------------------------------
@@ -75,8 +74,6 @@ export default function EnvironmentView({
                 <EnvironmentContextCard model={model} />
 
                 <EnvironmentHero />
-
-                <EnvironmentLaunchSurface model={model} />
 
                 <EnvironmentFooter hasSnapshot={model.hasSnapshot} />
             </section>
