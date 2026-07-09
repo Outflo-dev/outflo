@@ -23,6 +23,7 @@ import type { EnvironmentViewModel } from "../internal/environment.types";
 import EnvironmentHeader from "./header/EnvironmentHeader";
 import EnvironmentAtmosphere from "./scene/EnvironmentAtmosphere";
 import EnvironmentHero from "./hero/EnvironmentHero";
+import EnvironmentTiles from "./tiles/EnvironmentTiles";
 
 /* ------------------------------
    Types
@@ -68,6 +69,13 @@ export default function EnvironmentView({
         zIndex: 4,
         marginTop: -20,
     };
+
+    const TILES_SLOT_STYLE: CSSProperties = {
+        position: "relative",
+        zIndex: 3,
+        marginTop: -30,
+    };
+
     return (
         <section style={ROOT_STYLE}>
             <EnvironmentAtmosphere scene={model.scene} />
@@ -86,6 +94,10 @@ export default function EnvironmentView({
 
                 <div style={HERO_SLOT_STYLE}>
                     <EnvironmentHero />
+                </div>
+
+                <div style={TILES_SLOT_STYLE}>
+                    <EnvironmentTiles model={model.tiles} />
                 </div>
             </section>
         </section>

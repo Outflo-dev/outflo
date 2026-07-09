@@ -24,6 +24,21 @@ export type EnvironmentSceneKey =
     | "clear-night"
     | "partly-cloudy-night";
 
+export type EnvironmentAirQualityStatus =
+    | "good"
+    | "moderate"
+    | "elevated"
+    | "unknown";
+
+export type EnvironmentAirTileModel = {
+    title: string;
+    eyebrow: string;
+    aqi: string;
+    status: EnvironmentAirQualityStatus;
+    statusLabel: string;
+    updated: string;
+};
+
 export type EnvironmentSceneModel = {
     key: EnvironmentSceneKey;
     label: string;
@@ -81,10 +96,15 @@ export type EnvironmentViewModel = {
     scene: EnvironmentSceneModel;
     hero: EnvironmentHeroModel;
     location: EnvironmentLocationModel;
+    tiles: EnvironmentTilesModel;
     forecast: EnvironmentForecastModel;
     summary: EnvironmentSummarySectionModel;
     record: EnvironmentRecordModel;
     hasSnapshot: boolean;
+};
+
+export type EnvironmentTilesModel = {
+    air: EnvironmentAirTileModel;
 };
 
 /* ------------------------------

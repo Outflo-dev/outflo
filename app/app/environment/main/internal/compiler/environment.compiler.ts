@@ -40,6 +40,10 @@ import {
     getEnvironmentCondition,
 } from "./environment.weather";
 import { formatHeroTime } from "./environment.compiler.utils";
+import {
+    compileEnvironmentTiles,
+    getEmptyEnvironmentTiles,
+} from "./environment.tiles";
 
 /* ------------------------------
    Public API
@@ -67,6 +71,7 @@ export function compileEnvironmentModel(
         scene: compileEnvironmentScene(snapshot),
         hero: compileEnvironmentHero(snapshot, displayContext),
         location: compileEnvironmentLocation(snapshot),
+        tiles: compileEnvironmentTiles(snapshot),
         forecast: compileEnvironmentForecast(snapshot, displayContext),
         summary: compileEnvironmentSummary(snapshot, displayContext),
         record: compileEnvironmentRecord(snapshot),
@@ -125,6 +130,7 @@ function getEmptyEnvironmentModel(): EnvironmentViewModel {
         scene: getEmptyScene(),
         hero: getEmptyHero(),
         location: getEmptyLocation(),
+        tiles: getEmptyEnvironmentTiles(),
         forecast: getEmptyForecast(),
         summary: getEmptySummary(),
         record: getEmptyRecord(),
@@ -142,6 +148,7 @@ function getDisabledEnvironmentModel(): EnvironmentViewModel {
             signal: "Enable Environment to resume signals",
         },
         location: getEmptyLocation(),
+        tiles: getEmptyEnvironmentTiles(),
         forecast: getEmptyForecast(),
         summary: {
             title: "Environment Details",
