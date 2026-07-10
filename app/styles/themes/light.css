@@ -53,19 +53,25 @@
    --theme-semantic-air: rgba(0, 112, 92, 0.90);
    --theme-semantic-proof: rgba(92, 64, 170, 0.90);
 
+
    /* ------------------------------
-           Environment Context Map
-   -------------------------------- */
-   --environment-context-map-fill: rgba(0, 72, 150, 0.34);
-   --environment-context-map-opacity: 0.72;
-   --environment-context-map-glow: rgba(0, 102, 204, 0.10);
-   --environment-context-map-glow-soft: rgba(0, 120, 84, 0.045);
-   --environment-context-map-fade: rgba(255, 254, 250, 0.64);
+           VISUAL Primitive Sources
+        -------------------------------- */
+   --visual-color-source: rgb(5, 5, 5);
+   --visual-fill-source: rgb(5, 5, 5);
+   --visual-text-source: rgb(5, 5, 5);
+   --visual-accent-source: rgb(0, 102, 204);
 
-   --environment-context-map-pin-fill: var(--theme-accent);
-   --environment-context-map-pin-core: var(--theme-background);
-   --environment-context-map-pin-ring: rgba(5, 5, 5, 0.22);
-   --environment-context-map-pin-shadow: rgba(0, 102, 204, 0.18);
+   --visual-border-color-source: rgb(5, 5, 5);
+   --visual-stroke-color-source: rgb(5, 5, 5);
 
-   color-scheme: light;
+   --visual-shadow-color-source: rgb(5, 5, 5);
+   --visual-glow-color-source: rgb(0, 102, 204);
+   --visual-inset-color-source: rgb(5, 5, 5);
+
+   --visual-state-normal-source: rgb(0, 102, 204);
+   --visual-state-good-source: rgb(0, 120, 84);
+   --visual-state-warning-source: rgb(174, 104, 0);
+   --visual-state-danger-source: rgb(150, 20, 20);
+   --visual-state-muted-source: rgb(5, 5, 5);
 }

@@ -1,0 +1,19 @@
+/* ==========================================================
+   OUTFLO — VISUAL RADIUS TOKENS
+   File: components/system/primitives/visuals/radius/visual-radius.tokens.css
+   Scope: Canonical corner radius dial
+   ========================================================== */
+
+:root {
+    --visual-radius-0: 0;
+    --visual-radius-1: 2px;
+    --visual-radius-2: 4px;
+    --visual-radius-3: 6px;
+    --visual-radius-4: 8px;
+    --visual-radius-5: 12px;
+    --visual-radius-6: 16px;
+    --visual-radius-7: 20px;
+    --visual-radius-8: 24px;
+    --visual-radius-9: 32px;
+    --visual-radius-10: 999px;
+}

@@ -1,20 +1,17 @@
-// app/app/environment/main/view/context/EnvironmentContextCard.tsx
 "use client";
 
 /* ==========================================================
    OUTFLO — ENVIRONMENT CONTEXT CARD
    File: app/app/environment/main/view/context/EnvironmentContextCard.tsx
-   Scope: Render Environment current context card above Kelvin center
-   Last Updated:
-   - ms:
-   - iso:
-   - note: remove dead map frame from active context card
+   Scope: Render current Environment context through shared card form
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type { CSSProperties } from "react";
+
+import { VISUAL } from "../../../../../../components/system/primitives/visuals";
 
 import type { EnvironmentViewModel } from "../../internal/environment.types";
 import EnvironmentCard from "../primitives/EnvironmentCard";
@@ -30,68 +27,64 @@ type EnvironmentContextCardProps = {
    Styles
 -------------------------------- */
 const CONTEXT_CARD_STYLE: CSSProperties = {
-    position: "relative",
-    overflow: "hidden",
     minHeight: 86,
-    padding: "12px 16px",
-    background: "var(--environment-context-card-surface)",
+    padding: `${VISUAL.spacing[5]} ${VISUAL.spacing[6]}`,
 };
 
 const CONTENT_STYLE: CSSProperties = {
-    position: "relative",
-    zIndex: 4,
     display: "grid",
-    rowGap: 11,
-};
-
-const EYEBROW_ROW_STYLE: CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: 16,
+    rowGap: VISUAL.spacing[5],
 };
 
 const EYEBROW_STYLE: CSSProperties = {
     margin: 0,
-    color: "var(--theme-text-muted)",
-    fontFamily: "var(--font-kelvin), ui-sans-serif, system-ui, sans-serif",
+    color: VISUAL.text[5],
+    fontFamily: VISUAL.type.family[2],
     fontSize: 6,
-    fontWeight: 800,
+    fontWeight: VISUAL.type.weight[8],
     lineHeight: 1,
     letterSpacing: "0.2em",
-    textTransform: "uppercase",
+    textTransform: VISUAL.type.transform[2],
 };
 
 const PLACE_STYLE: CSSProperties = {
     margin: 0,
-    color: "var(--theme-text-primary)",
-    fontFamily: "var(--font-kelvin), ui-sans-serif, system-ui, sans-serif",
+    color: VISUAL.text[10],
+    fontFamily: VISUAL.type.family[2],
     fontSize: "clamp(16px, 4.2vw, 20px)",
-    fontWeight: 300,
+    fontWeight: VISUAL.type.weight[3],
     lineHeight: 0.98,
-    letterSpacing: "-0.02em",
+    letterSpacing: VISUAL.type.tracking[2],
 };
 
 const META_STYLE: CSSProperties = {
-    margin: "6px 0 0",
+    margin: `${VISUAL.spacing[3]} 0 0`,
     display: "inline-flex",
     alignItems: "center",
     width: "fit-content",
-    color: "var(--theme-semantic-good)",
-    fontFamily: "var(--font-kelvin), ui-sans-serif, system-ui, sans-serif",
+    color: "var(--environment-context-state)",
+    fontFamily: VISUAL.type.family[2],
     fontSize: 9,
-    fontWeight: 800,
+    fontWeight: VISUAL.type.weight[8],
     lineHeight: 1,
     letterSpacing: "0.15em",
-    textTransform: "uppercase",
+    textTransform: VISUAL.type.transform[2],
 };
 
 const PRECISION_DOT_STYLE: CSSProperties = {
-    width: 6,
-    height: 6,
-    borderRadius: 999,
-    marginRight: 8,
-    background: "var(--theme-semantic-good)",
-    boxShadow: "none",
+    width: VISUAL.spacing[3],
+    height: VISUAL.spacing[3],
+    flex: "0 0 auto",
+    marginRight: VISUAL.spacing[4],
+    borderRadius: VISUAL.radius[10],
+    background: "var(--environment-context-state)",
+    boxShadow: `
+        ${VISUAL.glow.x[0]}
+        ${VISUAL.glow.y[0]}
+        ${VISUAL.glow.blur[2]}
+        ${VISUAL.glow.spread[0]}
+        var(--environment-context-state)
+    `,
 };
 
 /* ------------------------------
@@ -103,16 +96,23 @@ export default function EnvironmentContextCard({
     const placeLabel = model.hero.place;
     const precisionLabel = model.hasSnapshot ? "PRECISE" : "WAITING";
 
+    const precisionToken = model.hasSnapshot
+        ? VISUAL.state.good[9]
+        : VISUAL.state.muted[6];
+
     return (
         <EnvironmentCard
             variant="raised"
-            style={CONTEXT_CARD_STYLE}
+            style={
+                {
+                    ...CONTEXT_CARD_STYLE,
+                    "--environment-context-state": precisionToken,
+                } as CSSProperties
+            }
             ariaLabel="Current environment context"
         >
             <div style={CONTENT_STYLE}>
-                <div style={EYEBROW_ROW_STYLE}>
-                    <p style={EYEBROW_STYLE}>Current Context</p>
-                </div>
+                <p style={EYEBROW_STYLE}>Current Context</p>
 
                 <div>
                     <h2 style={PLACE_STYLE}>{placeLabel}</h2>

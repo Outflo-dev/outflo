@@ -11,6 +11,8 @@
 -------------------------------- */
 import type { CSSProperties } from "react";
 
+import { VISUAL } from "../../../../../../../components/system/primitives/visuals";
+
 import type {
     EnvironmentAirQualityStatus,
     EnvironmentAirTileModel,
@@ -36,58 +38,68 @@ const GAUGE_CIRCUMFERENCE = 2 * Math.PI * GAUGE_RADIUS;
    Styles
 -------------------------------- */
 const BODY_STYLE: CSSProperties = {
-    display: "grid",
-    placeItems: "center",
-    minHeight: 158,
-    paddingTop: 10,
+    minHeight: 166,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
 };
 
 const MARK_STYLE: CSSProperties = {
-    width: 8,
-    height: 8,
-    borderRadius: 999,
+    width: VISUAL.spacing[4],
+    height: VISUAL.spacing[4],
+    borderRadius: VISUAL.radius[10],
     background: "var(--environment-air-status)",
-    boxShadow: "0 0 14px var(--environment-air-status)",
+    boxShadow: `
+        ${VISUAL.glow.x[1]}
+        ${VISUAL.glow.y[1]}
+        ${VISUAL.glow.blur[3]}
+        ${VISUAL.glow.spread[0]}
+        var(--environment-air-status)
+    `,
 };
 
 const GAUGE_WRAP_STYLE: CSSProperties = {
-    position: "relative",
     width: GAUGE_SIZE,
     height: GAUGE_SIZE,
     display: "grid",
     placeItems: "center",
+    marginInline: "auto",
 };
 
 const GAUGE_SVG_STYLE: CSSProperties = {
-    position: "absolute",
-    inset: 0,
+    gridArea: "1 / 1",
+    width: GAUGE_SIZE,
+    height: GAUGE_SIZE,
     overflow: "visible",
 };
 
 const VALUE_WRAP_STYLE: CSSProperties = {
-    position: "relative",
+    gridArea: "1 / 1",
     zIndex: 1,
     display: "grid",
     placeItems: "center",
-    gap: 3,
+    gap: VISUAL.spacing[1],
 };
 
 const VALUE_STYLE: CSSProperties = {
     margin: 0,
-    color: "var(--theme-text-primary)",
-    fontSize: 30,
-    fontWeight: 500,
-    letterSpacing: "-0.045em",
-    lineHeight: 1,
+    color: VISUAL.text[10],
+    fontFamily: VISUAL.type.family[2],
+    fontSize: VISUAL.type.size[9],
+    fontWeight: VISUAL.type.weight[5],
+    letterSpacing: VISUAL.type.tracking[1],
+    lineHeight: VISUAL.type.line[1],
 };
 
 const STATUS_STYLE: CSSProperties = {
     margin: 0,
     color: "var(--environment-air-status)",
-    fontSize: 10,
-    fontWeight: 700,
-    letterSpacing: "0.18em",
-    textTransform: "uppercase",
+    fontFamily: VISUAL.type.family[2],
+    fontSize: VISUAL.type.size[1],
+    fontWeight: VISUAL.type.weight[5],
+    letterSpacing: VISUAL.type.tracking[10],
+    lineHeight: VISUAL.type.line[1],
+    textTransform: VISUAL.type.transform[2],
 };
 
 /* ------------------------------
@@ -126,9 +138,8 @@ export default function EnvironmentAirTile({ model }: EnvironmentAirTileProps) {
                             cy={GAUGE_SIZE / 2}
                             r={GAUGE_RADIUS}
                             fill="none"
-                            stroke="var(--theme-border)"
-                            strokeWidth={5}
-                            opacity={0.62}
+                            stroke={VISUAL.stroke.color[3]}
+                            strokeWidth={VISUAL.stroke.width[6]}
                         />
 
                         <circle
@@ -137,7 +148,7 @@ export default function EnvironmentAirTile({ model }: EnvironmentAirTileProps) {
                             r={GAUGE_RADIUS}
                             fill="none"
                             stroke="var(--environment-air-status)"
-                            strokeWidth={5}
+                            strokeWidth={VISUAL.stroke.width[6]}
                             strokeLinecap="butt"
                             strokeDasharray={`${gaugeLength} ${GAUGE_CIRCUMFERENCE}`}
                             transform={`rotate(-90 ${GAUGE_SIZE / 2} ${GAUGE_SIZE / 2})`}
@@ -169,16 +180,16 @@ function getAirGaugeValue(aqi: string): number {
 
 function getAirStatusToken(status: EnvironmentAirQualityStatus): string {
     if (status === "good") {
-        return "var(--theme-semantic-good, var(--theme-accent))";
+        return VISUAL.state.good[9];
     }
 
     if (status === "moderate") {
-        return "var(--theme-semantic-warning, var(--theme-accent))";
+        return VISUAL.state.warning[9];
     }
 
     if (status === "elevated") {
-        return "var(--theme-semantic-danger, var(--theme-accent))";
+        return VISUAL.state.danger[9];
     }
 
-    return "var(--theme-text-tertiary, var(--theme-text-secondary))";
+    return VISUAL.state.muted[6];
 }

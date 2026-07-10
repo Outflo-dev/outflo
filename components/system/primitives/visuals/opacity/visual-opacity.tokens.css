@@ -1,0 +1,19 @@
+/* ==========================================================
+   OUTFLO — VISUAL OPACITY TOKENS
+   File: components/system/primitives/visuals/opacity/visual-opacity.tokens.css
+   Scope: Canonical visual opacity dial
+   ========================================================== */
+
+:root {
+    --visual-opacity-0: 0;
+    --visual-opacity-1: 0.04;
+    --visual-opacity-2: 0.08;
+    --visual-opacity-3: 0.12;
+    --visual-opacity-4: 0.18;
+    --visual-opacity-5: 0.28;
+    --visual-opacity-6: 0.40;
+    --visual-opacity-7: 0.56;
+    --visual-opacity-8: 0.72;
+    --visual-opacity-9: 0.88;
+    --visual-opacity-10: 1;
+}

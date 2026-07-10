@@ -1,0 +1,47 @@
+/* ==========================================================
+   OUTFLO — VISUAL ACCENT TOKENS
+   File: components/system/primitives/visuals/accent/visual-accent.tokens.css
+   Scope: Theme-resolved accent paint intensity dial
+   ========================================================== */
+
+:root {
+    --visual-accent-0: transparent;
+
+    --visual-accent-1: color-mix(in srgb,
+            var(--visual-accent-source) 10%,
+            transparent);
+
+    --visual-accent-2: color-mix(in srgb,
+            var(--visual-accent-source) 20%,
+            transparent);
+
+    --visual-accent-3: color-mix(in srgb,
+            var(--visual-accent-source) 30%,
+            transparent);
+
+    --visual-accent-4: color-mix(in srgb,
+            var(--visual-accent-source) 40%,
+            transparent);
+
+    --visual-accent-5: color-mix(in srgb,
+            var(--visual-accent-source) 50%,
+            transparent);
+
+    --visual-accent-6: color-mix(in srgb,
+            var(--visual-accent-source) 60%,
+            transparent);
+
+    --visual-accent-7: color-mix(in srgb,
+            var(--visual-accent-source) 70%,
+            transparent);
+
+    --visual-accent-8: color-mix(in srgb,
+            var(--visual-accent-source) 80%,
+            transparent);
+
+    --visual-accent-9: color-mix(in srgb,
+            var(--visual-accent-source) 90%,
+            transparent);
+
+    --visual-accent-10: var(--visual-accent-source);
+}

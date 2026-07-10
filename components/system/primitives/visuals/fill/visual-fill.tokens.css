@@ -1,0 +1,47 @@
+/* ==========================================================
+   OUTFLO — VISUAL FILL TOKENS
+   File: components/system/primitives/visuals/fill/visual-fill.tokens.css
+   Scope: Theme-resolved surface and background fill dial
+   ========================================================== */
+
+:root {
+    --visual-fill-0: transparent;
+
+    --visual-fill-1: color-mix(in srgb,
+            var(--visual-fill-source) 10%,
+            transparent);
+
+    --visual-fill-2: color-mix(in srgb,
+            var(--visual-fill-source) 20%,
+            transparent);
+
+    --visual-fill-3: color-mix(in srgb,
+            var(--visual-fill-source) 30%,
+            transparent);
+
+    --visual-fill-4: color-mix(in srgb,
+            var(--visual-fill-source) 40%,
+            transparent);
+
+    --visual-fill-5: color-mix(in srgb,
+            var(--visual-fill-source) 50%,
+            transparent);
+
+    --visual-fill-6: color-mix(in srgb,
+            var(--visual-fill-source) 60%,
+            transparent);
+
+    --visual-fill-7: color-mix(in srgb,
+            var(--visual-fill-source) 70%,
+            transparent);
+
+    --visual-fill-8: color-mix(in srgb,
+            var(--visual-fill-source) 80%,
+            transparent);
+
+    --visual-fill-9: color-mix(in srgb,
+            var(--visual-fill-source) 90%,
+            transparent);
+
+    --visual-fill-10: var(--visual-fill-source);
+}

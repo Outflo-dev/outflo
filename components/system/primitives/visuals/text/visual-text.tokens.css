@@ -1,0 +1,47 @@
+/* ==========================================================
+   OUTFLO — VISUAL TEXT TOKENS
+   File: components/system/primitives/visuals/text/visual-text.tokens.css
+   Scope: Theme-resolved text paint intensity dial
+   ========================================================== */
+
+:root {
+    --visual-text-0: transparent;
+
+    --visual-text-1: color-mix(in srgb,
+            var(--visual-text-source) 10%,
+            transparent);
+
+    --visual-text-2: color-mix(in srgb,
+            var(--visual-text-source) 20%,
+            transparent);
+
+    --visual-text-3: color-mix(in srgb,
+            var(--visual-text-source) 30%,
+            transparent);
+
+    --visual-text-4: color-mix(in srgb,
+            var(--visual-text-source) 40%,
+            transparent);
+
+    --visual-text-5: color-mix(in srgb,
+            var(--visual-text-source) 50%,
+            transparent);
+
+    --visual-text-6: color-mix(in srgb,
+            var(--visual-text-source) 60%,
+            transparent);
+
+    --visual-text-7: color-mix(in srgb,
+            var(--visual-text-source) 70%,
+            transparent);
+
+    --visual-text-8: color-mix(in srgb,
+            var(--visual-text-source) 80%,
+            transparent);
+
+    --visual-text-9: color-mix(in srgb,
+            var(--visual-text-source) 90%,
+            transparent);
+
+    --visual-text-10: var(--visual-text-source);
+}

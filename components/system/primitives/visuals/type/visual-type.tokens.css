@@ -1,0 +1,108 @@
+/* ==========================================================
+   OUTFLO — VISUAL TYPE TOKENS
+   File: components/system/primitives/visuals/type/visual-type.tokens.css
+   Scope: Atomic typography construction dials
+   ========================================================== */
+
+:root {
+   /* ------------------------------------------------------
+       Font family
+
+       0 = inherit
+       1 = IBM Plex Sans
+       2 = Nunito Sans
+       3–10 = reserved
+       ------------------------------------------------------ */
+
+   --visual-type-family-0: inherit;
+   --visual-type-family-1: "IBM Plex Sans", sans-serif;
+   --visual-type-family-2: "Nunito Sans", sans-serif;
+   --visual-type-family-3: inherit;
+   --visual-type-family-4: inherit;
+   --visual-type-family-5: inherit;
+   --visual-type-family-6: inherit;
+   --visual-type-family-7: inherit;
+   --visual-type-family-8: inherit;
+   --visual-type-family-9: inherit;
+   --visual-type-family-10: inherit;
+
+   /* Font size */
+
+   --visual-type-size-0: inherit;
+   --visual-type-size-1: 0.375rem;
+   /* 6px */
+   --visual-type-size-2: 0.5rem;
+   /* 8px */
+   --visual-type-size-3: 0.5625rem;
+   /* 9px */
+   --visual-type-size-4: 0.625rem;
+   /* 10px */
+   --visual-type-size-5: 0.6875rem;
+   /* 11px */
+   --visual-type-size-6: 0.75rem;
+   /* 12px */
+   --visual-type-size-7: 0.875rem;
+   /* 14px */
+   --visual-type-size-8: 1rem;
+   /* 16px */
+   --visual-type-size-9: 1.25rem;
+   /* 20px */
+   --visual-type-size-10: 1.5rem;
+   /* 24px */
+
+   /* Font weight */
+
+   --visual-type-weight-0: inherit;
+   --visual-type-weight-1: 100;
+   --visual-type-weight-2: 200;
+   --visual-type-weight-3: 300;
+   --visual-type-weight-4: 400;
+   --visual-type-weight-5: 500;
+   --visual-type-weight-6: 600;
+   --visual-type-weight-7: 700;
+   --visual-type-weight-8: 800;
+   --visual-type-weight-9: 900;
+   --visual-type-weight-10: 1000;
+
+   /* Line height */
+
+   --visual-type-line-0: normal;
+   --visual-type-line-1: 1;
+   --visual-type-line-2: 1.1;
+   --visual-type-line-3: 1.2;
+   --visual-type-line-4: 1.3;
+   --visual-type-line-5: 1.4;
+   --visual-type-line-6: 1.5;
+   --visual-type-line-7: 1.6;
+   --visual-type-line-8: 1.7;
+   --visual-type-line-9: 1.8;
+   --visual-type-line-10: 2;
+
+   /* Letter spacing */
+
+   --visual-type-tracking-0: normal;
+   --visual-type-tracking-1: -0.03em;
+   --visual-type-tracking-2: -0.02em;
+   --visual-type-tracking-3: -0.01em;
+   --visual-type-tracking-4: 0;
+   --visual-type-tracking-5: 0.02em;
+   --visual-type-tracking-6: 0.04em;
+   --visual-type-tracking-7: 0.06em;
+   --visual-type-tracking-8: 0.08em;
+   --visual-type-tracking-9: 0.1em;
+   --visual-type-tracking-10: 0.12em;
+
+   /* Text transform */
+
+   --visual-type-transform-0: none;
+   --visual-type-transform-1: lowercase;
+   --visual-type-transform-2: uppercase;
+   --visual-type-transform-3: capitalize;
+   --visual-type-transform-4: none;
+   --visual-type-transform-5: none;
+   --visual-type-transform-6: none;
+   --visual-type-transform-7: none;
+   --visual-type-transform-8: none;
+   --visual-type-transform-9: none;
+   --visual-type-transform-10: none;
+}

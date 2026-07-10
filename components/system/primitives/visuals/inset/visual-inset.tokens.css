@@ -1,0 +1,102 @@
+/* ==========================================================
+   OUTFLO — VISUAL INSET TOKENS
+   File: components/system/primitives/visuals/inset/visual-inset.tokens.css
+   Scope: Canonical inner-shadow construction dials
+   ========================================================== */
+
+:root {
+    /* Horizontal offset */
+    --visual-inset-x-0: 0;
+    --visual-inset-x-1: 1px;
+    --visual-inset-x-2: 2px;
+    --visual-inset-x-3: 3px;
+    --visual-inset-x-4: 4px;
+    --visual-inset-x-5: 6px;
+    --visual-inset-x-6: 8px;
+    --visual-inset-x-7: 12px;
+    --visual-inset-x-8: 16px;
+    --visual-inset-x-9: 24px;
+    --visual-inset-x-10: 32px;
+
+    /* Vertical offset */
+    --visual-inset-y-0: 0;
+    --visual-inset-y-1: 1px;
+    --visual-inset-y-2: 2px;
+    --visual-inset-y-3: 3px;
+    --visual-inset-y-4: 4px;
+    --visual-inset-y-5: 6px;
+    --visual-inset-y-6: 8px;
+    --visual-inset-y-7: 12px;
+    --visual-inset-y-8: 16px;
+    --visual-inset-y-9: 24px;
+    --visual-inset-y-10: 32px;
+
+    /* Blur */
+    --visual-inset-blur-0: 0;
+    --visual-inset-blur-1: 2px;
+    --visual-inset-blur-2: 4px;
+    --visual-inset-blur-3: 6px;
+    --visual-inset-blur-4: 8px;
+    --visual-inset-blur-5: 12px;
+    --visual-inset-blur-6: 16px;
+    --visual-inset-blur-7: 20px;
+    --visual-inset-blur-8: 24px;
+    --visual-inset-blur-9: 32px;
+    --visual-inset-blur-10: 48px;
+
+    /* Spread */
+    --visual-inset-spread-0: 0;
+    --visual-inset-spread-1: 1px;
+    --visual-inset-spread-2: 2px;
+    --visual-inset-spread-3: 3px;
+    --visual-inset-spread-4: 4px;
+    --visual-inset-spread-5: 6px;
+    --visual-inset-spread-6: 8px;
+    --visual-inset-spread-7: 10px;
+    --visual-inset-spread-8: 12px;
+    --visual-inset-spread-9: 16px;
+    --visual-inset-spread-10: 24px;
+
+    /* Color */
+
+    --visual-inset-color-0: transparent;
+
+    --visual-inset-color-1: color-mix(in srgb,
+            var(--visual-inset-color-source) 10%,
+            transparent);
+
+    --visual-inset-color-2: color-mix(in srgb,
+            var(--visual-inset-color-source) 20%,
+            transparent);
+
+    --visual-inset-color-3: color-mix(in srgb,
+            var(--visual-inset-color-source) 30%,
+            transparent);
+
+    --visual-inset-color-4: color-mix(in srgb,
+            var(--visual-inset-color-source) 40%,
+            transparent);
+
+    --visual-inset-color-5: color-mix(in srgb,
+            var(--visual-inset-color-source) 50%,
+            transparent);
+
+    --visual-inset-color-6: color-mix(in srgb,
+            var(--visual-inset-color-source) 60%,
+            transparent);
+
+    --visual-inset-color-7: color-mix(in srgb,
+            var(--visual-inset-color-source) 70%,
+            transparent);
+
+    --visual-inset-color-8: color-mix(in srgb,
+            var(--visual-inset-color-source) 80%,
+            transparent);
+
+    --visual-inset-color-9: color-mix(in srgb,
+            var(--visual-inset-color-source) 90%,
+            transparent);
+
+    --visual-inset-color-10: var(--visual-inset-color-source);
+
+}

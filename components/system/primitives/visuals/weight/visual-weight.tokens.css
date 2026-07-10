@@ -1,0 +1,19 @@
+/* ==========================================================
+   OUTFLO — VISUAL WEIGHT TOKENS
+   File: components/system/primitives/visuals/weight/visual-weight.tokens.css
+   Scope: Canonical visual weight dial
+   ========================================================== */
+
+:root {
+    --visual-weight-0: inherit;
+    --visual-weight-1: 100;
+    --visual-weight-2: 200;
+    --visual-weight-3: 300;
+    --visual-weight-4: 400;
+    --visual-weight-5: 500;
+    --visual-weight-6: 600;
+    --visual-weight-7: 700;
+    --visual-weight-8: 800;
+    --visual-weight-9: 900;
+    --visual-weight-10: 1000;
+}

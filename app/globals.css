@@ -55,6 +55,9 @@
 /* ------------------------------
    System Primitive Tokens
 -------------------------------- */
+@import "../components/system/primitives/visuals/visual.tokens.css";
+
+
 @import "../components/system/primitives/display/type/font-family.tokens.css";
 @import "../components/system/primitives/display/type/font-weight.tokens.css";
 @import "../components/system/primitives/display/type/type.tokens.css";

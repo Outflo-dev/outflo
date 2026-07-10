@@ -1,0 +1,118 @@
+/* ==========================================================
+   OUTFLO — VISUAL STROKE TOKENS
+   File: components/system/primitives/visuals/stroke/visual-stroke.tokens.css
+   Scope: Canonical SVG and line stroke construction dials
+   ========================================================== */
+
+:root {
+    /* Stroke width */
+    --visual-stroke-width-0: 0;
+    --visual-stroke-width-1: 0.5px;
+    --visual-stroke-width-2: 1px;
+    --visual-stroke-width-3: 1.5px;
+    --visual-stroke-width-4: 2px;
+    --visual-stroke-width-5: 3px;
+    --visual-stroke-width-6: 4px;
+    --visual-stroke-width-7: 6px;
+    --visual-stroke-width-8: 8px;
+    --visual-stroke-width-9: 10px;
+    --visual-stroke-width-10: 12px;
+
+    /* Stroke cap
+       0–2 are canonical choices.
+       Remaining slots stay reserved. */
+    --visual-stroke-cap-0: butt;
+    --visual-stroke-cap-1: round;
+    --visual-stroke-cap-2: square;
+    --visual-stroke-cap-3: round;
+    --visual-stroke-cap-4: round;
+    --visual-stroke-cap-5: round;
+    --visual-stroke-cap-6: round;
+    --visual-stroke-cap-7: round;
+    --visual-stroke-cap-8: round;
+    --visual-stroke-cap-9: round;
+    --visual-stroke-cap-10: round;
+
+    /* Stroke join
+       0–2 are canonical choices.
+       Remaining slots stay reserved. */
+    --visual-stroke-join-0: miter;
+    --visual-stroke-join-1: round;
+    --visual-stroke-join-2: bevel;
+    --visual-stroke-join-3: round;
+    --visual-stroke-join-4: round;
+    --visual-stroke-join-5: round;
+    --visual-stroke-join-6: round;
+    --visual-stroke-join-7: round;
+    --visual-stroke-join-8: round;
+    --visual-stroke-join-9: round;
+    --visual-stroke-join-10: round;
+
+    /* Stroke dash */
+    --visual-stroke-dash-0: none;
+    --visual-stroke-dash-1: 1 3;
+    --visual-stroke-dash-2: 2 4;
+    --visual-stroke-dash-3: 3 5;
+    --visual-stroke-dash-4: 4 6;
+    --visual-stroke-dash-5: 6 8;
+    --visual-stroke-dash-6: 8 10;
+    --visual-stroke-dash-7: 10 12;
+    --visual-stroke-dash-8: 12 14;
+    --visual-stroke-dash-9: 16 16;
+    --visual-stroke-dash-10: 20 20;
+
+    /* Stroke opacity */
+    --visual-stroke-opacity-0: 0;
+    --visual-stroke-opacity-1: 0.04;
+    --visual-stroke-opacity-2: 0.08;
+    --visual-stroke-opacity-3: 0.12;
+    --visual-stroke-opacity-4: 0.18;
+    --visual-stroke-opacity-5: 0.28;
+    --visual-stroke-opacity-6: 0.40;
+    --visual-stroke-opacity-7: 0.56;
+    --visual-stroke-opacity-8: 0.72;
+    --visual-stroke-opacity-9: 0.88;
+    --visual-stroke-opacity-10: 1;
+
+    /* Stroke color */
+
+    --visual-stroke-color-0: transparent;
+
+    --visual-stroke-color-1: color-mix(in srgb,
+            var(--visual-stroke-color-source) 10%,
+            transparent);
+
+    --visual-stroke-color-2: color-mix(in srgb,
+            var(--visual-stroke-color-source) 20%,
+            transparent);
+
+    --visual-stroke-color-3: color-mix(in srgb,
+            var(--visual-stroke-color-source) 30%,
+            transparent);
+
+    --visual-stroke-color-4: color-mix(in srgb,
+            var(--visual-stroke-color-source) 40%,
+            transparent);
+
+    --visual-stroke-color-5: color-mix(in srgb,
+            var(--visual-stroke-color-source) 50%,
+            transparent);
+
+    --visual-stroke-color-6: color-mix(in srgb,
+            var(--visual-stroke-color-source) 60%,
+            transparent);
+
+    --visual-stroke-color-7: color-mix(in srgb,
+            var(--visual-stroke-color-source) 70%,
+            transparent);
+
+    --visual-stroke-color-8: color-mix(in srgb,
+            var(--visual-stroke-color-source) 80%,
+            transparent);
+
+    --visual-stroke-color-9: color-mix(in srgb,
+            var(--visual-stroke-color-source) 90%,
+            transparent);
+
+    --visual-stroke-color-10: var(--visual-stroke-color-source);
+}

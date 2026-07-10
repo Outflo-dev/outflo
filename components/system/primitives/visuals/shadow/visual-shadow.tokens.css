@@ -1,0 +1,59 @@
+/* ==========================================================
+   OUTFLO — VISUAL SHADOW TOKENS
+   File: components/system/primitives/visuals/shadow/visual-shadow.tokens.css
+   Scope: Canonical outer-shadow construction dials
+   ========================================================== */
+
+:root {
+    /* Horizontal offset */
+    --visual-shadow-x-0: 0;
+    --visual-shadow-x-1: 1px;
+    --visual-shadow-x-2: 2px;
+    --visual-shadow-x-3: 3px;
+    --visual-shadow-x-4: 4px;
+    --visual-shadow-x-5: 6px;
+    --visual-shadow-x-6: 8px;
+    --visual-shadow-x-7: 12px;
+    --visual-shadow-x-8: 16px;
+    --visual-shadow-x-9: 24px;
+    --visual-shadow-x-10: 32px;
+
+    /* Vertical offset */
+    --visual-shadow-y-0: 0;
+    --visual-shadow-y-1: 1px;
+    --visual-shadow-y-2: 2px;
+    --visual-shadow-y-3: 3px;
+    --visual-shadow-y-4: 4px;
+    --visual-shadow-y-5: 6px;
+    --visual-shadow-y-6: 8px;
+    --visual-shadow-y-7: 12px;
+    --visual-shadow-y-8: 16px;
+    --visual-shadow-y-9: 24px;
+    --visual-shadow-y-10: 32px;
+
+    /* Blur */
+    --visual-shadow-blur-0: 0;
+    --visual-shadow-blur-1: 2px;
+    --visual-shadow-blur-2: 4px;
+    --visual-shadow-blur-3: 6px;
+    --visual-shadow-blur-4: 8px;
+    --visual-shadow-blur-5: 12px;
+    --visual-shadow-blur-6: 16px;
+    --visual-shadow-blur-7: 20px;
+    --visual-shadow-blur-8: 24px;
+    --visual-shadow-blur-9: 32px;
+    --visual-shadow-blur-10: 48px;
+
+    /* Spread */
+    --visual-shadow-spread-0: 0;
+    --visual-shadow-spread-1: 1px;
+    --visual-shadow-spread-2: 2px;
+    --visual-shadow-spread-3: 3px;
+    --visual-shadow-spread-4: 4px;
+    --visual-shadow-spread-5: 6px;
+    --visual-shadow-spread-6: 8px;
+    --visual-shadow-spread-7: 10px;
+    --visual-shadow-spread-8: 12px;
+    --visual-shadow-spread-9: 16px;
+    --visual-shadow-spread-10: 24px;
+}

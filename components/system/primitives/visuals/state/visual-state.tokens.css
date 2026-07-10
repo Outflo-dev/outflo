@@ -1,0 +1,177 @@
+/* ==========================================================
+   OUTFLO — VISUAL STATE TOKENS
+   File: components/system/primitives/visuals/state/visual-state.tokens.css
+   Scope: Theme-resolved semantic state paint dials
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Normal
+       ------------------------------------------------------ */
+
+    --visual-state-normal-0: transparent;
+    --visual-state-normal-1: color-mix(in srgb,
+            var(--visual-state-normal-source) 10%,
+            transparent);
+    --visual-state-normal-2: color-mix(in srgb,
+            var(--visual-state-normal-source) 20%,
+            transparent);
+    --visual-state-normal-3: color-mix(in srgb,
+            var(--visual-state-normal-source) 30%,
+            transparent);
+    --visual-state-normal-4: color-mix(in srgb,
+            var(--visual-state-normal-source) 40%,
+            transparent);
+    --visual-state-normal-5: color-mix(in srgb,
+            var(--visual-state-normal-source) 50%,
+            transparent);
+    --visual-state-normal-6: color-mix(in srgb,
+            var(--visual-state-normal-source) 60%,
+            transparent);
+    --visual-state-normal-7: color-mix(in srgb,
+            var(--visual-state-normal-source) 70%,
+            transparent);
+    --visual-state-normal-8: color-mix(in srgb,
+            var(--visual-state-normal-source) 80%,
+            transparent);
+    --visual-state-normal-9: color-mix(in srgb,
+            var(--visual-state-normal-source) 90%,
+            transparent);
+    --visual-state-normal-10: var(--visual-state-normal-source);
+
+    /* ------------------------------------------------------
+       Good
+       ------------------------------------------------------ */
+
+    --visual-state-good-0: transparent;
+    --visual-state-good-1: color-mix(in srgb,
+            var(--visual-state-good-source) 10%,
+            transparent);
+    --visual-state-good-2: color-mix(in srgb,
+            var(--visual-state-good-source) 20%,
+            transparent);
+    --visual-state-good-3: color-mix(in srgb,
+            var(--visual-state-good-source) 30%,
+            transparent);
+    --visual-state-good-4: color-mix(in srgb,
+            var(--visual-state-good-source) 40%,
+            transparent);
+    --visual-state-good-5: color-mix(in srgb,
+            var(--visual-state-good-source) 50%,
+            transparent);
+    --visual-state-good-6: color-mix(in srgb,
+            var(--visual-state-good-source) 60%,
+            transparent);
+    --visual-state-good-7: color-mix(in srgb,
+            var(--visual-state-good-source) 70%,
+            transparent);
+    --visual-state-good-8: color-mix(in srgb,
+            var(--visual-state-good-source) 80%,
+            transparent);
+    --visual-state-good-9: color-mix(in srgb,
+            var(--visual-state-good-source) 90%,
+            transparent);
+    --visual-state-good-10: var(--visual-state-good-source);
+
+    /* ------------------------------------------------------
+       Warning
+       ------------------------------------------------------ */
+
+    --visual-state-warning-0: transparent;
+    --visual-state-warning-1: color-mix(in srgb,
+            var(--visual-state-warning-source) 10%,
+            transparent);
+    --visual-state-warning-2: color-mix(in srgb,
+            var(--visual-state-warning-source) 20%,
+            transparent);
+    --visual-state-warning-3: color-mix(in srgb,
+            var(--visual-state-warning-source) 30%,
+            transparent);
+    --visual-state-warning-4: color-mix(in srgb,
+            var(--visual-state-warning-source) 40%,
+            transparent);
+    --visual-state-warning-5: color-mix(in srgb,
+            var(--visual-state-warning-source) 50%,
+            transparent);
+    --visual-state-warning-6: color-mix(in srgb,
+            var(--visual-state-warning-source) 60%,
+            transparent);
+    --visual-state-warning-7: color-mix(in srgb,
+            var(--visual-state-warning-source) 70%,
+            transparent);
+    --visual-state-warning-8: color-mix(in srgb,
+            var(--visual-state-warning-source) 80%,
+            transparent);
+    --visual-state-warning-9: color-mix(in srgb,
+            var(--visual-state-warning-source) 90%,
+            transparent);
+    --visual-state-warning-10: var(--visual-state-warning-source);
+
+    /* ------------------------------------------------------
+       Danger
+       ------------------------------------------------------ */
+
+    --visual-state-danger-0: transparent;
+    --visual-state-danger-1: color-mix(in srgb,
+            var(--visual-state-danger-source) 10%,
+            transparent);
+    --visual-state-danger-2: color-mix(in srgb,
+            var(--visual-state-danger-source) 20%,
+            transparent);
+    --visual-state-danger-3: color-mix(in srgb,
+            var(--visual-state-danger-source) 30%,
+            transparent);
+    --visual-state-danger-4: color-mix(in srgb,
+            var(--visual-state-danger-source) 40%,
+            transparent);
+    --visual-state-danger-5: color-mix(in srgb,
+            var(--visual-state-danger-source) 50%,
+            transparent);
+    --visual-state-danger-6: color-mix(in srgb,
+            var(--visual-state-danger-source) 60%,
+            transparent);
+    --visual-state-danger-7: color-mix(in srgb,
+            var(--visual-state-danger-source) 70%,
+            transparent);
+    --visual-state-danger-8: color-mix(in srgb,
+            var(--visual-state-danger-source) 80%,
+            transparent);
+    --visual-state-danger-9: color-mix(in srgb,
+            var(--visual-state-danger-source) 90%,
+            transparent);
+    --visual-state-danger-10: var(--visual-state-danger-source);
+
+    /* ------------------------------------------------------
+       Muted
+       ------------------------------------------------------ */
+
+    --visual-state-muted-0: transparent;
+    --visual-state-muted-1: color-mix(in srgb,
+            var(--visual-state-muted-source) 10%,
+            transparent);
+    --visual-state-muted-2: color-mix(in srgb,
+            var(--visual-state-muted-source) 20%,
+            transparent);
+    --visual-state-muted-3: color-mix(in srgb,
+            var(--visual-state-muted-source) 30%,
+            transparent);
+    --visual-state-muted-4: color-mix(in srgb,
+            var(--visual-state-muted-source) 40%,
+            transparent);
+    --visual-state-muted-5: color-mix(in srgb,
+            var(--visual-state-muted-source) 50%,
+            transparent);
+    --visual-state-muted-6: color-mix(in srgb,
+            var(--visual-state-muted-source) 60%,
+            transparent);
+    --visual-state-muted-7: color-mix(in srgb,
+            var(--visual-state-muted-source) 70%,
+            transparent);
+    --visual-state-muted-8: color-mix(in srgb,
+            var(--visual-state-muted-source) 80%,
+            transparent);
+    --visual-state-muted-9: color-mix(in srgb,
+            var(--visual-state-muted-source) 90%,
+            transparent);
+    --visual-state-muted-10: var(--visual-state-muted-source);
+}

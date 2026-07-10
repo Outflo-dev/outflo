@@ -56,43 +56,23 @@
    --theme-semantic-proof: rgba(151, 190, 255, 0.88);
 
    /* ------------------------------
-         Environment Context Map
-   -------------------------------- */
-   --environment-context-map-fill: rgba(150, 205, 255, 0.62);
-   --environment-context-map-opacity: 0.82;
+           VISUAL Primitive Sources
+        -------------------------------- */
+   --visual-color-source: rgb(248, 251, 255);
+   --visual-fill-source: rgb(0, 132, 255);
+   --visual-text-source: rgb(248, 251, 255);
+   --visual-accent-source: rgb(0, 132, 255);
 
-   --environment-context-map-glow: rgba(0, 132, 255, 0.12);
-   --environment-context-map-glow-soft: rgba(0, 245, 212, 0.035);
-   --environment-context-map-fade: transparent;
+   --visual-border-color-source: rgb(0, 132, 255);
+   --visual-stroke-color-source: rgb(248, 251, 255);
 
-   --environment-context-map-pin-fill: var(--theme-accent);
-   --environment-context-map-pin-core: var(--theme-background);
-   --environment-context-map-pin-ring: rgba(248, 251, 255, 0.72);
-   --environment-context-map-pin-shadow: rgba(0, 132, 255, 0.32);
+   --visual-shadow-color-source: rgb(0, 8, 20);
+   --visual-glow-color-source: rgb(0, 132, 255);
+   --visual-inset-color-source: rgb(0, 8, 20);
 
-   --environment-context-planet-core: rgba(0, 132, 255, 0.12);
-   --environment-context-planet-glow: rgba(0, 132, 255, 0.075);
-   --environment-context-planet-falloff: rgba(0, 245, 212, 0.026);
-
-   --environment-context-planet-rim: rgba(120, 205, 255, 0.2);
-   --environment-context-planet-rim-soft: rgba(0, 132, 255, 0.08);
-
-   --environment-context-planet-shadow-strong: rgba(0, 8, 20, 0.68);
-   --environment-context-planet-shadow: rgba(0, 8, 20, 0.42);
-
-   --environment-context-planet-terminator: rgba(150, 210, 255, 0.14);
-   --environment-context-planet-terminator-opacity: 0.68;
-
-   --environment-context-map-fill: rgba(160, 195, 230, 0.54);
-   --environment-context-map-opacity: 0.72;
-
-   --environment-context-map-vignette-soft: rgba(0, 8, 20, 0.30);
-   --environment-context-map-vignette: rgba(0, 8, 20, 0.66);
-   --environment-context-map-vignette-strong: rgba(0, 8, 20, 0.94);
-
-   --environment-context-map-fill: rgba(150, 185, 220, 0.40);
-   --environment-context-map-opacity: 0.58;
-
-
-   color-scheme: dark;
+   --visual-state-normal-source: rgb(0, 132, 255);
+   --visual-state-good-source: rgb(49, 255, 154);
+   --visual-state-warning-source: rgb(255, 196, 78);
+   --visual-state-danger-source: rgb(255, 150, 165);
+   --visual-state-muted-source: rgb(248, 251, 255);
 }

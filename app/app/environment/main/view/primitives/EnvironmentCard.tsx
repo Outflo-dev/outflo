@@ -1,20 +1,17 @@
-// app/app/environment/main/view/primitives/EnvironmentCard.tsx
 "use client";
 
 /* ==========================================================
    OUTFLO — ENVIRONMENT CARD
    File: app/app/environment/main/view/primitives/EnvironmentCard.tsx
    Scope: Own reusable Environment card surface primitive
-   Last Updated:
-   - ms: 1782467976867
-   - iso: 2026-06-26T09:59:36.867Z
-   - note: introduce reusable Environment card primitive for new theme contract
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import type { CSSProperties, ReactNode } from "react";
+
+import { VISUAL } from "../../../../../../components/system/primitives/visuals";
 
 /* ------------------------------
    Types
@@ -35,18 +32,32 @@ type EnvironmentCardProps = {
 const BASE_STYLE: CSSProperties = {
     position: "relative",
     overflow: "hidden",
-    borderRadius: 16,
-    border: "1px solid var(--theme-border)",
-    color: "var(--theme-text-primary)",
     isolation: "isolate",
+
+    borderRadius: VISUAL.radius[6],
+
+    borderWidth: VISUAL.border.width[2],
+    borderStyle: VISUAL.border.style[1],
+    borderColor: VISUAL.border.color[1],
+
+    color: VISUAL.text[10],
 };
 
 const VARIANT_STYLES: Record<EnvironmentCardVariant, CSSProperties> = {
     soft: {
-        background: "var(--theme-surface)",
+        background: VISUAL.fill[1],
     },
+
     raised: {
-        background: "var(--theme-surface)",
+        background: VISUAL.fill[1],
+
+        boxShadow: `
+            ${VISUAL.shadow.x[0]}
+            ${VISUAL.shadow.y[6]}
+            ${VISUAL.shadow.blur[8]}
+            ${VISUAL.shadow.spread[0]}
+            ${VISUAL.shadow.color[2]}
+        `,
     },
 };
 

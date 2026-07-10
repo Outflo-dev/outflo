@@ -1,0 +1,24 @@
+/* ==========================================================
+   OUTFLO — VISUAL TOKEN MANIFEST
+   File: components/system/primitives/visuals/visual.tokens.css
+   Scope: Import all canonical VISUAL token families
+   ========================================================== */
+
+@import "./color/visual-color.tokens.css";
+@import "./fill/visual-fill.tokens.css";
+@import "./text/visual-text.tokens.css";
+@import "./accent/visual-accent.tokens.css";
+@import "./state/visual-state.tokens.css";
+
+@import "./border/visual-border.tokens.css";
+@import "./stroke/visual-stroke.tokens.css";
+
+@import "./shadow/visual-shadow.tokens.css";
+@import "./glow/visual-glow.tokens.css";
+@import "./inset/visual-inset.tokens.css";
+
+@import "./radius/visual-radius.tokens.css";
+@import "./opacity/visual-opacity.tokens.css";
+@import "./weight/visual-weight.tokens.css";
+@import "./type/visual-type.tokens.css";
+@import "./spacing/visual-spacing.tokens.css";

@@ -1,0 +1,47 @@
+/* ==========================================================
+   OUTFLO — VISUAL COLOR TOKENS
+   File: components/system/primitives/visuals/color/visual-color.tokens.css
+   Scope: Theme-resolved general color intensity dial
+   ========================================================== */
+
+:root {
+    --visual-color-0: transparent;
+
+    --visual-color-1: color-mix(in srgb,
+            var(--visual-color-source) 10%,
+            transparent);
+
+    --visual-color-2: color-mix(in srgb,
+            var(--visual-color-source) 20%,
+            transparent);
+
+    --visual-color-3: color-mix(in srgb,
+            var(--visual-color-source) 30%,
+            transparent);
+
+    --visual-color-4: color-mix(in srgb,
+            var(--visual-color-source) 40%,
+            transparent);
+
+    --visual-color-5: color-mix(in srgb,
+            var(--visual-color-source) 50%,
+            transparent);
+
+    --visual-color-6: color-mix(in srgb,
+            var(--visual-color-source) 60%,
+            transparent);
+
+    --visual-color-7: color-mix(in srgb,
+            var(--visual-color-source) 70%,
+            transparent);
+
+    --visual-color-8: color-mix(in srgb,
+            var(--visual-color-source) 80%,
+            transparent);
+
+    --visual-color-9: color-mix(in srgb,
+            var(--visual-color-source) 90%,
+            transparent);
+
+    --visual-color-10: var(--visual-color-source);
+}
