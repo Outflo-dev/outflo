@@ -5,15 +5,43 @@
    ========================================================== */
 
 :root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       old 0  → new 0
+       old 1  → new 2
+       old 2  → new 4
+       old 3  → new 6
+       old 4  → new 8
+       old 5  → new 10
+       old 6  → new 12
+       old 7  → new 14
+       old 8  → new 16
+       old 9  → new 18
+       old 10 → new 20
+
+       20 = full pill / circle
+       ------------------------------------------------------ */
+
     --visual-radius-0: 0;
-    --visual-radius-1: 2px;
-    --visual-radius-2: 4px;
-    --visual-radius-3: 6px;
-    --visual-radius-4: 8px;
-    --visual-radius-5: 12px;
-    --visual-radius-6: 16px;
-    --visual-radius-7: 20px;
-    --visual-radius-8: 24px;
-    --visual-radius-9: 32px;
-    --visual-radius-10: 999px;
+    --visual-radius-1: 1px;
+    --visual-radius-2: 2px;
+    --visual-radius-3: 3px;
+    --visual-radius-4: 4px;
+    --visual-radius-5: 5px;
+    --visual-radius-6: 6px;
+    --visual-radius-7: 7px;
+    --visual-radius-8: 8px;
+    --visual-radius-9: 10px;
+    --visual-radius-10: 12px;
+    --visual-radius-11: 14px;
+    --visual-radius-12: 16px;
+    --visual-radius-13: 18px;
+    --visual-radius-14: 20px;
+    --visual-radius-15: 22px;
+    --visual-radius-16: 24px;
+    --visual-radius-17: 28px;
+    --visual-radius-18: 32px;
+    --visual-radius-19: 48px;
+    --visual-radius-20: 999px;
 }

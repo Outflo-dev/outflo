@@ -1,0 +1,113 @@
+/* ==========================================================
+   OUTFLO — VISUAL GLOW COLOR TOKENS
+   File: components/system/primitives/visuals/glow/visual-glow-color.tokens.css
+   Scope: Atomic glow paint intensity dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       0  = transparent
+       1  = 5%
+       2  = 10%
+       3  = 15%
+       4  = 20%
+       5  = 25%
+       6  = 30%
+       7  = 35%
+       8  = 40%
+       9  = 45%
+       10 = 50%
+       11 = 55%
+       12 = 60%
+       13 = 65%
+       14 = 70%
+       15 = 75%
+       16 = 80%
+       17 = 85%
+       18 = 90%
+       19 = 95%
+       20 = source
+       ------------------------------------------------------ */
+
+    --visual-glow-color-0: transparent;
+
+    --visual-glow-color-1: color-mix(in srgb,
+            var(--visual-glow-color-source) 5%,
+            transparent);
+
+    --visual-glow-color-2: color-mix(in srgb,
+            var(--visual-glow-color-source) 10%,
+            transparent);
+
+    --visual-glow-color-3: color-mix(in srgb,
+            var(--visual-glow-color-source) 15%,
+            transparent);
+
+    --visual-glow-color-4: color-mix(in srgb,
+            var(--visual-glow-color-source) 20%,
+            transparent);
+
+    --visual-glow-color-5: color-mix(in srgb,
+            var(--visual-glow-color-source) 25%,
+            transparent);
+
+    --visual-glow-color-6: color-mix(in srgb,
+            var(--visual-glow-color-source) 30%,
+            transparent);
+
+    --visual-glow-color-7: color-mix(in srgb,
+            var(--visual-glow-color-source) 35%,
+            transparent);
+
+    --visual-glow-color-8: color-mix(in srgb,
+            var(--visual-glow-color-source) 40%,
+            transparent);
+
+    --visual-glow-color-9: color-mix(in srgb,
+            var(--visual-glow-color-source) 45%,
+            transparent);
+
+    --visual-glow-color-10: color-mix(in srgb,
+            var(--visual-glow-color-source) 50%,
+            transparent);
+
+    --visual-glow-color-11: color-mix(in srgb,
+            var(--visual-glow-color-source) 55%,
+            transparent);
+
+    --visual-glow-color-12: color-mix(in srgb,
+            var(--visual-glow-color-source) 60%,
+            transparent);
+
+    --visual-glow-color-13: color-mix(in srgb,
+            var(--visual-glow-color-source) 65%,
+            transparent);
+
+    --visual-glow-color-14: color-mix(in srgb,
+            var(--visual-glow-color-source) 70%,
+            transparent);
+
+    --visual-glow-color-15: color-mix(in srgb,
+            var(--visual-glow-color-source) 75%,
+            transparent);
+
+    --visual-glow-color-16: color-mix(in srgb,
+            var(--visual-glow-color-source) 80%,
+            transparent);
+
+    --visual-glow-color-17: color-mix(in srgb,
+            var(--visual-glow-color-source) 85%,
+            transparent);
+
+    --visual-glow-color-18: color-mix(in srgb,
+            var(--visual-glow-color-source) 90%,
+            transparent);
+
+    --visual-glow-color-19: color-mix(in srgb,
+            var(--visual-glow-color-source) 95%,
+            transparent);
+
+    --visual-glow-color-20: var(--visual-glow-color-source);
+}

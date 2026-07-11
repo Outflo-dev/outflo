@@ -1,0 +1,96 @@
+/* ==========================================================
+   OUTFLO — VISUAL WARNING STATE TOKENS
+   File: components/system/primitives/visuals/state/visual-state-warning.tokens.css
+   Scope: Theme-resolved warning-state paint intensity dial
+   Updated: 2026-07-10 21:48
+   ========================================================== */
+
+/* ------------------------------
+   Provisional Dial
+
+   0–20 resolves from transparent
+   through 5% increments to the
+   full theme-owned source.
+-------------------------------- */
+
+:root {
+    --visual-state-warning-0: transparent;
+
+    --visual-state-warning-1: color-mix(in srgb,
+            var(--visual-state-warning-source) 5%,
+            transparent);
+
+    --visual-state-warning-2: color-mix(in srgb,
+            var(--visual-state-warning-source) 10%,
+            transparent);
+
+    --visual-state-warning-3: color-mix(in srgb,
+            var(--visual-state-warning-source) 15%,
+            transparent);
+
+    --visual-state-warning-4: color-mix(in srgb,
+            var(--visual-state-warning-source) 20%,
+            transparent);
+
+    --visual-state-warning-5: color-mix(in srgb,
+            var(--visual-state-warning-source) 25%,
+            transparent);
+
+    --visual-state-warning-6: color-mix(in srgb,
+            var(--visual-state-warning-source) 30%,
+            transparent);
+
+    --visual-state-warning-7: color-mix(in srgb,
+            var(--visual-state-warning-source) 35%,
+            transparent);
+
+    --visual-state-warning-8: color-mix(in srgb,
+            var(--visual-state-warning-source) 40%,
+            transparent);
+
+    --visual-state-warning-9: color-mix(in srgb,
+            var(--visual-state-warning-source) 45%,
+            transparent);
+
+    --visual-state-warning-10: color-mix(in srgb,
+            var(--visual-state-warning-source) 50%,
+            transparent);
+
+    --visual-state-warning-11: color-mix(in srgb,
+            var(--visual-state-warning-source) 55%,
+            transparent);
+
+    --visual-state-warning-12: color-mix(in srgb,
+            var(--visual-state-warning-source) 60%,
+            transparent);
+
+    --visual-state-warning-13: color-mix(in srgb,
+            var(--visual-state-warning-source) 65%,
+            transparent);
+
+    --visual-state-warning-14: color-mix(in srgb,
+            var(--visual-state-warning-source) 70%,
+            transparent);
+
+    --visual-state-warning-15: color-mix(in srgb,
+            var(--visual-state-warning-source) 75%,
+            transparent);
+
+    --visual-state-warning-16: color-mix(in srgb,
+            var(--visual-state-warning-source) 80%,
+            transparent);
+
+    --visual-state-warning-17: color-mix(in srgb,
+            var(--visual-state-warning-source) 85%,
+            transparent);
+
+    --visual-state-warning-18: color-mix(in srgb,
+            var(--visual-state-warning-source) 90%,
+            transparent);
+
+    --visual-state-warning-19: color-mix(in srgb,
+            var(--visual-state-warning-source) 95%,
+            transparent);
+
+    --visual-state-warning-20: var(--visual-state-warning-source);
+}

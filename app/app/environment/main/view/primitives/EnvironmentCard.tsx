@@ -30,33 +30,33 @@ type EnvironmentCardProps = {
    Styles
 -------------------------------- */
 const BASE_STYLE: CSSProperties = {
-    position: "relative",
+    position: VISUAL.position[1],
     overflow: "hidden",
     isolation: "isolate",
 
-    borderRadius: VISUAL.radius[6],
+    borderRadius: VISUAL.radius[12],
 
-    borderWidth: VISUAL.border.width[2],
+    borderWidth: VISUAL.border.width[4],
     borderStyle: VISUAL.border.style[1],
-    borderColor: VISUAL.border.color[1],
+    borderColor: VISUAL.border.color[2],
 
-    color: VISUAL.text[10],
+    color: VISUAL.text[20],
 };
 
 const VARIANT_STYLES: Record<EnvironmentCardVariant, CSSProperties> = {
     soft: {
-        background: VISUAL.fill[1],
+        background: VISUAL.fill[0],
     },
 
     raised: {
-        background: VISUAL.fill[1],
+        background: VISUAL.fill[4],
 
         boxShadow: `
             ${VISUAL.shadow.x[0]}
-            ${VISUAL.shadow.y[6]}
-            ${VISUAL.shadow.blur[8]}
+            ${VISUAL.shadow.y[12]}
+            ${VISUAL.shadow.blur[16]}
             ${VISUAL.shadow.spread[0]}
-            ${VISUAL.shadow.color[2]}
+            ${VISUAL.shadow.color[4]}
         `,
     },
 };

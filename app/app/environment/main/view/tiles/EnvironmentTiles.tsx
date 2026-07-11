@@ -11,6 +11,8 @@
 -------------------------------- */
 import type { CSSProperties } from "react";
 
+import { VISUAL } from "../../../../../../components/system/primitives/visuals";
+
 import type { EnvironmentTilesModel } from "../../internal/environment.types";
 import EnvironmentAirTile from "./air/EnvironmentAirTile";
 
@@ -27,7 +29,7 @@ type EnvironmentTilesProps = {
 const TILE_GRID_STYLE: CSSProperties = {
     display: "grid",
     gridTemplateColumns: "clamp(132px, 29vw, 178px)",
-    gap: 12,
+    gap: VISUAL.spacing[5],
     alignItems: "stretch",
 };
 

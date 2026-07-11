@@ -28,60 +28,60 @@ type EnvironmentContextCardProps = {
 -------------------------------- */
 const CONTEXT_CARD_STYLE: CSSProperties = {
     minHeight: 86,
-    padding: `${VISUAL.spacing[5]} ${VISUAL.spacing[6]}`,
+    padding: `${VISUAL.spacing[10]} ${VISUAL.spacing[12]}`,
 };
 
 const CONTENT_STYLE: CSSProperties = {
-    display: "grid",
-    rowGap: VISUAL.spacing[5],
+    display: VISUAL.display[3],
+    rowGap: VISUAL.spacing[10],
 };
 
 const EYEBROW_STYLE: CSSProperties = {
     margin: 0,
-    color: VISUAL.text[5],
+    color: VISUAL.text[10],
     fontFamily: VISUAL.type.family[2],
-    fontSize: 6,
+    fontSize: VISUAL.type.size[2],
     fontWeight: VISUAL.type.weight[8],
-    lineHeight: 1,
+    lineHeight: VISUAL.type.line[2],
     letterSpacing: "0.2em",
     textTransform: VISUAL.type.transform[2],
 };
 
 const PLACE_STYLE: CSSProperties = {
     margin: 0,
-    color: VISUAL.text[10],
+    color: VISUAL.text[20],
     fontFamily: VISUAL.type.family[2],
     fontSize: "clamp(16px, 4.2vw, 20px)",
     fontWeight: VISUAL.type.weight[3],
     lineHeight: 0.98,
-    letterSpacing: VISUAL.type.tracking[2],
+    letterSpacing: VISUAL.type.tracking[4],
 };
 
 const META_STYLE: CSSProperties = {
-    margin: `${VISUAL.spacing[3]} 0 0`,
-    display: "inline-flex",
+    margin: `${VISUAL.spacing[6]} 0 0`,
+    display: VISUAL.display[6],
     alignItems: "center",
     width: "fit-content",
     color: "var(--environment-context-state)",
     fontFamily: VISUAL.type.family[2],
-    fontSize: 9,
+    fontSize: VISUAL.type.size[6],
     fontWeight: VISUAL.type.weight[8],
-    lineHeight: 1,
+    lineHeight: VISUAL.type.line[2],
     letterSpacing: "0.15em",
     textTransform: VISUAL.type.transform[2],
 };
 
 const PRECISION_DOT_STYLE: CSSProperties = {
-    width: VISUAL.spacing[3],
-    height: VISUAL.spacing[3],
+    width: VISUAL.spacing[6],
+    height: VISUAL.spacing[6],
     flex: "0 0 auto",
-    marginRight: VISUAL.spacing[4],
-    borderRadius: VISUAL.radius[10],
+    marginRight: VISUAL.spacing[8],
+    borderRadius: VISUAL.radius[20],
     background: "var(--environment-context-state)",
     boxShadow: `
         ${VISUAL.glow.x[0]}
         ${VISUAL.glow.y[0]}
-        ${VISUAL.glow.blur[2]}
+        ${VISUAL.glow.blur[4]}
         ${VISUAL.glow.spread[0]}
         var(--environment-context-state)
     `,
@@ -97,8 +97,8 @@ export default function EnvironmentContextCard({
     const precisionLabel = model.hasSnapshot ? "PRECISE" : "WAITING";
 
     const precisionToken = model.hasSnapshot
-        ? VISUAL.state.good[9]
-        : VISUAL.state.muted[6];
+        ? VISUAL.state.good[18]
+        : VISUAL.state.muted[12];
 
     return (
         <EnvironmentCard

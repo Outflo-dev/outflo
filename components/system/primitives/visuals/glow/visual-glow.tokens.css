@@ -1,105 +1,11 @@
 /* ==========================================================
-   OUTFLO — VISUAL GLOW TOKENS
+   OUTFLO — VISUAL GLOW TOKEN MANIFEST
    File: components/system/primitives/visuals/glow/visual-glow.tokens.css
-   Scope: Atomic glow construction and paint dials
+   Scope: Compose atomic glow token families
    ========================================================== */
 
-:root {
-    /* Horizontal offset */
-
-    --visual-glow-x-0: 0;
-    --visual-glow-x-1: 1px;
-    --visual-glow-x-2: 2px;
-    --visual-glow-x-3: 3px;
-    --visual-glow-x-4: 4px;
-    --visual-glow-x-5: 6px;
-    --visual-glow-x-6: 8px;
-    --visual-glow-x-7: 12px;
-    --visual-glow-x-8: 16px;
-    --visual-glow-x-9: 24px;
-    --visual-glow-x-10: 32px;
-
-    /* Vertical offset */
-
-    --visual-glow-y-0: 0;
-    --visual-glow-y-1: 1px;
-    --visual-glow-y-2: 2px;
-    --visual-glow-y-3: 3px;
-    --visual-glow-y-4: 4px;
-    --visual-glow-y-5: 6px;
-    --visual-glow-y-6: 8px;
-    --visual-glow-y-7: 12px;
-    --visual-glow-y-8: 16px;
-    --visual-glow-y-9: 24px;
-    --visual-glow-y-10: 32px;
-
-    /* Blur */
-
-    --visual-glow-blur-0: 0;
-    --visual-glow-blur-1: 4px;
-    --visual-glow-blur-2: 8px;
-    --visual-glow-blur-3: 12px;
-    --visual-glow-blur-4: 16px;
-    --visual-glow-blur-5: 20px;
-    --visual-glow-blur-6: 24px;
-    --visual-glow-blur-7: 32px;
-    --visual-glow-blur-8: 40px;
-    --visual-glow-blur-9: 56px;
-    --visual-glow-blur-10: 72px;
-
-    /* Spread */
-
-    --visual-glow-spread-0: 0;
-    --visual-glow-spread-1: 1px;
-    --visual-glow-spread-2: 2px;
-    --visual-glow-spread-3: 3px;
-    --visual-glow-spread-4: 4px;
-    --visual-glow-spread-5: 6px;
-    --visual-glow-spread-6: 8px;
-    --visual-glow-spread-7: 10px;
-    --visual-glow-spread-8: 12px;
-    --visual-glow-spread-9: 16px;
-    --visual-glow-spread-10: 24px;
-
-    /* Color */
-
-    --visual-glow-color-0: transparent;
-
-    --visual-glow-color-1: color-mix(in srgb,
-            var(--visual-glow-color-source) 10%,
-            transparent);
-
-    --visual-glow-color-2: color-mix(in srgb,
-            var(--visual-glow-color-source) 20%,
-            transparent);
-
-    --visual-glow-color-3: color-mix(in srgb,
-            var(--visual-glow-color-source) 30%,
-            transparent);
-
-    --visual-glow-color-4: color-mix(in srgb,
-            var(--visual-glow-color-source) 40%,
-            transparent);
-
-    --visual-glow-color-5: color-mix(in srgb,
-            var(--visual-glow-color-source) 50%,
-            transparent);
-
-    --visual-glow-color-6: color-mix(in srgb,
-            var(--visual-glow-color-source) 60%,
-            transparent);
-
-    --visual-glow-color-7: color-mix(in srgb,
-            var(--visual-glow-color-source) 70%,
-            transparent);
-
-    --visual-glow-color-8: color-mix(in srgb,
-            var(--visual-glow-color-source) 80%,
-            transparent);
-
-    --visual-glow-color-9: color-mix(in srgb,
-            var(--visual-glow-color-source) 90%,
-            transparent);
-
-    --visual-glow-color-10: var(--visual-glow-color-source);
-}
+@import "./visual-glow-x.tokens.css";
+@import "./visual-glow-y.tokens.css";
+@import "./visual-glow-blur.tokens.css";
+@import "./visual-glow-spread.tokens.css";
+@import "./visual-glow-color.tokens.css";

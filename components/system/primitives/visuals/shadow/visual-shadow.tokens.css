@@ -2,58 +2,194 @@
    OUTFLO — VISUAL SHADOW TOKENS
    File: components/system/primitives/visuals/shadow/visual-shadow.tokens.css
    Scope: Canonical outer-shadow construction dials
+   Updated: 2026-07-10 21:48
    ========================================================== */
 
 :root {
-    /* Horizontal offset */
+    /* ------------------------------
+       Horizontal Offset
+    -------------------------------- */
     --visual-shadow-x-0: 0;
-    --visual-shadow-x-1: 1px;
-    --visual-shadow-x-2: 2px;
-    --visual-shadow-x-3: 3px;
-    --visual-shadow-x-4: 4px;
-    --visual-shadow-x-5: 6px;
-    --visual-shadow-x-6: 8px;
-    --visual-shadow-x-7: 12px;
-    --visual-shadow-x-8: 16px;
-    --visual-shadow-x-9: 24px;
-    --visual-shadow-x-10: 32px;
+    --visual-shadow-x-1: 0.5px;
+    --visual-shadow-x-2: 1px;
+    --visual-shadow-x-3: 1.5px;
+    --visual-shadow-x-4: 2px;
+    --visual-shadow-x-5: 2.5px;
+    --visual-shadow-x-6: 3px;
+    --visual-shadow-x-7: 3.5px;
+    --visual-shadow-x-8: 4px;
+    --visual-shadow-x-9: 5px;
+    --visual-shadow-x-10: 6px;
+    --visual-shadow-x-11: 7px;
+    --visual-shadow-x-12: 8px;
+    --visual-shadow-x-13: 10px;
+    --visual-shadow-x-14: 12px;
+    --visual-shadow-x-15: 14px;
+    --visual-shadow-x-16: 16px;
+    --visual-shadow-x-17: 20px;
+    --visual-shadow-x-18: 24px;
+    --visual-shadow-x-19: 28px;
+    --visual-shadow-x-20: 32px;
 
-    /* Vertical offset */
+    /* ------------------------------
+       Vertical Offset
+    -------------------------------- */
     --visual-shadow-y-0: 0;
-    --visual-shadow-y-1: 1px;
-    --visual-shadow-y-2: 2px;
-    --visual-shadow-y-3: 3px;
-    --visual-shadow-y-4: 4px;
-    --visual-shadow-y-5: 6px;
-    --visual-shadow-y-6: 8px;
-    --visual-shadow-y-7: 12px;
-    --visual-shadow-y-8: 16px;
-    --visual-shadow-y-9: 24px;
-    --visual-shadow-y-10: 32px;
+    --visual-shadow-y-1: 0.5px;
+    --visual-shadow-y-2: 1px;
+    --visual-shadow-y-3: 1.5px;
+    --visual-shadow-y-4: 2px;
+    --visual-shadow-y-5: 2.5px;
+    --visual-shadow-y-6: 3px;
+    --visual-shadow-y-7: 3.5px;
+    --visual-shadow-y-8: 4px;
+    --visual-shadow-y-9: 5px;
+    --visual-shadow-y-10: 6px;
+    --visual-shadow-y-11: 7px;
+    --visual-shadow-y-12: 8px;
+    --visual-shadow-y-13: 10px;
+    --visual-shadow-y-14: 12px;
+    --visual-shadow-y-15: 14px;
+    --visual-shadow-y-16: 16px;
+    --visual-shadow-y-17: 20px;
+    --visual-shadow-y-18: 24px;
+    --visual-shadow-y-19: 28px;
+    --visual-shadow-y-20: 32px;
 
-    /* Blur */
+    /* ------------------------------
+       Blur
+    -------------------------------- */
     --visual-shadow-blur-0: 0;
-    --visual-shadow-blur-1: 2px;
-    --visual-shadow-blur-2: 4px;
-    --visual-shadow-blur-3: 6px;
-    --visual-shadow-blur-4: 8px;
-    --visual-shadow-blur-5: 12px;
-    --visual-shadow-blur-6: 16px;
-    --visual-shadow-blur-7: 20px;
-    --visual-shadow-blur-8: 24px;
-    --visual-shadow-blur-9: 32px;
-    --visual-shadow-blur-10: 48px;
+    --visual-shadow-blur-1: 1px;
+    --visual-shadow-blur-2: 2px;
+    --visual-shadow-blur-3: 3px;
+    --visual-shadow-blur-4: 4px;
+    --visual-shadow-blur-5: 5px;
+    --visual-shadow-blur-6: 6px;
+    --visual-shadow-blur-7: 7px;
+    --visual-shadow-blur-8: 8px;
+    --visual-shadow-blur-9: 10px;
+    --visual-shadow-blur-10: 12px;
+    --visual-shadow-blur-11: 14px;
+    --visual-shadow-blur-12: 16px;
+    --visual-shadow-blur-13: 18px;
+    --visual-shadow-blur-14: 20px;
+    --visual-shadow-blur-15: 22px;
+    --visual-shadow-blur-16: 24px;
+    --visual-shadow-blur-17: 28px;
+    --visual-shadow-blur-18: 32px;
+    --visual-shadow-blur-19: 40px;
+    --visual-shadow-blur-20: 48px;
 
-    /* Spread */
+    /* ------------------------------
+       Spread
+    -------------------------------- */
     --visual-shadow-spread-0: 0;
-    --visual-shadow-spread-1: 1px;
-    --visual-shadow-spread-2: 2px;
-    --visual-shadow-spread-3: 3px;
-    --visual-shadow-spread-4: 4px;
-    --visual-shadow-spread-5: 6px;
-    --visual-shadow-spread-6: 8px;
-    --visual-shadow-spread-7: 10px;
-    --visual-shadow-spread-8: 12px;
-    --visual-shadow-spread-9: 16px;
-    --visual-shadow-spread-10: 24px;
+    --visual-shadow-spread-1: 0.5px;
+    --visual-shadow-spread-2: 1px;
+    --visual-shadow-spread-3: 1.5px;
+    --visual-shadow-spread-4: 2px;
+    --visual-shadow-spread-5: 2.5px;
+    --visual-shadow-spread-6: 3px;
+    --visual-shadow-spread-7: 3.5px;
+    --visual-shadow-spread-8: 4px;
+    --visual-shadow-spread-9: 5px;
+    --visual-shadow-spread-10: 6px;
+    --visual-shadow-spread-11: 7px;
+    --visual-shadow-spread-12: 8px;
+    --visual-shadow-spread-13: 9px;
+    --visual-shadow-spread-14: 10px;
+    --visual-shadow-spread-15: 11px;
+    --visual-shadow-spread-16: 12px;
+    --visual-shadow-spread-17: 14px;
+    --visual-shadow-spread-18: 16px;
+    --visual-shadow-spread-19: 20px;
+    --visual-shadow-spread-20: 24px;
+
+    /* ------------------------------
+       Color
+
+       0–20 resolves from transparent
+       through 5% increments to the
+       full theme-owned source.
+    -------------------------------- */
+    --visual-shadow-color-0: transparent;
+
+    --visual-shadow-color-1: color-mix(in srgb,
+            var(--visual-shadow-color-source) 5%,
+            transparent);
+
+    --visual-shadow-color-2: color-mix(in srgb,
+            var(--visual-shadow-color-source) 10%,
+            transparent);
+
+    --visual-shadow-color-3: color-mix(in srgb,
+            var(--visual-shadow-color-source) 15%,
+            transparent);
+
+    --visual-shadow-color-4: color-mix(in srgb,
+            var(--visual-shadow-color-source) 20%,
+            transparent);
+
+    --visual-shadow-color-5: color-mix(in srgb,
+            var(--visual-shadow-color-source) 25%,
+            transparent);
+
+    --visual-shadow-color-6: color-mix(in srgb,
+            var(--visual-shadow-color-source) 30%,
+            transparent);
+
+    --visual-shadow-color-7: color-mix(in srgb,
+            var(--visual-shadow-color-source) 35%,
+            transparent);
+
+    --visual-shadow-color-8: color-mix(in srgb,
+            var(--visual-shadow-color-source) 40%,
+            transparent);
+
+    --visual-shadow-color-9: color-mix(in srgb,
+            var(--visual-shadow-color-source) 45%,
+            transparent);
+
+    --visual-shadow-color-10: color-mix(in srgb,
+            var(--visual-shadow-color-source) 50%,
+            transparent);
+
+    --visual-shadow-color-11: color-mix(in srgb,
+            var(--visual-shadow-color-source) 55%,
+            transparent);
+
+    --visual-shadow-color-12: color-mix(in srgb,
+            var(--visual-shadow-color-source) 60%,
+            transparent);
+
+    --visual-shadow-color-13: color-mix(in srgb,
+            var(--visual-shadow-color-source) 65%,
+            transparent);
+
+    --visual-shadow-color-14: color-mix(in srgb,
+            var(--visual-shadow-color-source) 70%,
+            transparent);
+
+    --visual-shadow-color-15: color-mix(in srgb,
+            var(--visual-shadow-color-source) 75%,
+            transparent);
+
+    --visual-shadow-color-16: color-mix(in srgb,
+            var(--visual-shadow-color-source) 80%,
+            transparent);
+
+    --visual-shadow-color-17: color-mix(in srgb,
+            var(--visual-shadow-color-source) 85%,
+            transparent);
+
+    --visual-shadow-color-18: color-mix(in srgb,
+            var(--visual-shadow-color-source) 90%,
+            transparent);
+
+    --visual-shadow-color-19: color-mix(in srgb,
+            var(--visual-shadow-color-source) 95%,
+            transparent);
+
+    --visual-shadow-color-20: var(--visual-shadow-color-source);
 }

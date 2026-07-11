@@ -1,0 +1,45 @@
+/* ==========================================================
+   OUTFLO — VISUAL INSET Y TOKENS
+   File: components/system/primitives/visuals/inset/visual-inset-y.tokens.css
+   Scope: Atomic vertical inset-shadow offset dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       old 0  → new 0
+       old 1  → new 2
+       old 2  → new 4
+       old 3  → new 6
+       old 4  → new 8
+       old 5  → new 10
+       old 6  → new 12
+       old 7  → new 14
+       old 8  → new 16
+       old 9  → new 18
+       old 10 → new 20
+       ------------------------------------------------------ */
+
+    --visual-inset-y-0: 0;
+    --visual-inset-y-1: 0.5px;
+    --visual-inset-y-2: 1px;
+    --visual-inset-y-3: 1.5px;
+    --visual-inset-y-4: 2px;
+    --visual-inset-y-5: 2.5px;
+    --visual-inset-y-6: 3px;
+    --visual-inset-y-7: 3.5px;
+    --visual-inset-y-8: 4px;
+    --visual-inset-y-9: 5px;
+    --visual-inset-y-10: 6px;
+    --visual-inset-y-11: 7px;
+    --visual-inset-y-12: 8px;
+    --visual-inset-y-13: 10px;
+    --visual-inset-y-14: 12px;
+    --visual-inset-y-15: 14px;
+    --visual-inset-y-16: 16px;
+    --visual-inset-y-17: 20px;
+    --visual-inset-y-18: 24px;
+    --visual-inset-y-19: 28px;
+    --visual-inset-y-20: 32px;
+}

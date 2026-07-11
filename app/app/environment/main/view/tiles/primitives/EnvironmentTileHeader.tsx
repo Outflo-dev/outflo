@@ -11,6 +11,8 @@
 -------------------------------- */
 import type { CSSProperties, ReactNode } from "react";
 
+import { VISUAL } from "../../../../../../../components/system/primitives/visuals";
+
 /* ------------------------------
    Types
 -------------------------------- */
@@ -25,23 +27,26 @@ type EnvironmentTileHeaderProps = {
 const HEADER_STYLE: CSSProperties = {
     display: "flex",
     alignItems: "center",
-    gap: 9,
+    gap: VISUAL.spacing[3],
 };
 
 const LABEL_STYLE: CSSProperties = {
     margin: 0,
-    color: "var(--theme-text-secondary)",
-    fontSize: 11,
-    fontWeight: 800,
-    letterSpacing: "0.14em",
-    textTransform: "uppercase",
+    color: VISUAL.text[7],
+    fontFamily: VISUAL.type.family[2],
+    fontSize: VISUAL.type.size[5],
+    fontWeight: VISUAL.type.weight[8],
+    lineHeight: VISUAL.type.line[1],
+    letterSpacing: VISUAL.type.tracking[10],
+    textTransform: VISUAL.type.transform[2],
 };
 
 const DEFAULT_MARK_STYLE: CSSProperties = {
-    width: 8,
-    height: 8,
-    borderRadius: 999,
-    background: "var(--theme-accent)",
+    width: VISUAL.spacing[4],
+    height: VISUAL.spacing[4],
+    flex: "0 0 auto",
+    borderRadius: VISUAL.radius[10],
+    background: VISUAL.accent[9],
 };
 
 /* ------------------------------

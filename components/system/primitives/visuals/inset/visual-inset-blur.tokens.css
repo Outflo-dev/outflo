@@ -1,0 +1,45 @@
+/* ==========================================================
+   OUTFLO — VISUAL INSET BLUR TOKENS
+   File: components/system/primitives/visuals/inset/visual-inset-blur.tokens.css
+   Scope: Atomic inset-shadow blur dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       old 0  → new 0
+       old 1  → new 2
+       old 2  → new 4
+       old 3  → new 6
+       old 4  → new 8
+       old 5  → new 10
+       old 6  → new 12
+       old 7  → new 14
+       old 8  → new 16
+       old 9  → new 18
+       old 10 → new 20
+       ------------------------------------------------------ */
+
+    --visual-inset-blur-0: 0;
+    --visual-inset-blur-1: 1px;
+    --visual-inset-blur-2: 2px;
+    --visual-inset-blur-3: 3px;
+    --visual-inset-blur-4: 4px;
+    --visual-inset-blur-5: 5px;
+    --visual-inset-blur-6: 6px;
+    --visual-inset-blur-7: 7px;
+    --visual-inset-blur-8: 8px;
+    --visual-inset-blur-9: 10px;
+    --visual-inset-blur-10: 12px;
+    --visual-inset-blur-11: 14px;
+    --visual-inset-blur-12: 16px;
+    --visual-inset-blur-13: 18px;
+    --visual-inset-blur-14: 20px;
+    --visual-inset-blur-15: 22px;
+    --visual-inset-blur-16: 24px;
+    --visual-inset-blur-17: 28px;
+    --visual-inset-blur-18: 32px;
+    --visual-inset-blur-19: 40px;
+    --visual-inset-blur-20: 48px;
+}

@@ -1,0 +1,45 @@
+/* ==========================================================
+   OUTFLO — VISUAL INSET SPREAD TOKENS
+   File: components/system/primitives/visuals/inset/visual-inset-spread.tokens.css
+   Scope: Atomic inset-shadow spread dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       old 0  → new 0
+       old 1  → new 2
+       old 2  → new 4
+       old 3  → new 6
+       old 4  → new 8
+       old 5  → new 10
+       old 6  → new 12
+       old 7  → new 14
+       old 8  → new 16
+       old 9  → new 18
+       old 10 → new 20
+       ------------------------------------------------------ */
+
+    --visual-inset-spread-0: 0;
+    --visual-inset-spread-1: 0.5px;
+    --visual-inset-spread-2: 1px;
+    --visual-inset-spread-3: 1.5px;
+    --visual-inset-spread-4: 2px;
+    --visual-inset-spread-5: 2.5px;
+    --visual-inset-spread-6: 3px;
+    --visual-inset-spread-7: 3.5px;
+    --visual-inset-spread-8: 4px;
+    --visual-inset-spread-9: 5px;
+    --visual-inset-spread-10: 6px;
+    --visual-inset-spread-11: 7px;
+    --visual-inset-spread-12: 8px;
+    --visual-inset-spread-13: 9px;
+    --visual-inset-spread-14: 10px;
+    --visual-inset-spread-15: 11px;
+    --visual-inset-spread-16: 12px;
+    --visual-inset-spread-17: 14px;
+    --visual-inset-spread-18: 16px;
+    --visual-inset-spread-19: 20px;
+    --visual-inset-spread-20: 24px;
+}

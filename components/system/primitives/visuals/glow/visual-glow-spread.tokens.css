@@ -1,0 +1,45 @@
+/* ==========================================================
+   OUTFLO — VISUAL GLOW SPREAD TOKENS
+   File: components/system/primitives/visuals/glow/visual-glow-spread.tokens.css
+   Scope: Atomic glow spread dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       old 0  → new 0
+       old 1  → new 2
+       old 2  → new 4
+       old 3  → new 6
+       old 4  → new 8
+       old 5  → new 10
+       old 6  → new 12
+       old 7  → new 14
+       old 8  → new 16
+       old 9  → new 18
+       old 10 → new 20
+       ------------------------------------------------------ */
+
+    --visual-glow-spread-0: 0;
+    --visual-glow-spread-1: 0.5px;
+    --visual-glow-spread-2: 1px;
+    --visual-glow-spread-3: 1.5px;
+    --visual-glow-spread-4: 2px;
+    --visual-glow-spread-5: 2.5px;
+    --visual-glow-spread-6: 3px;
+    --visual-glow-spread-7: 3.5px;
+    --visual-glow-spread-8: 4px;
+    --visual-glow-spread-9: 5px;
+    --visual-glow-spread-10: 6px;
+    --visual-glow-spread-11: 7px;
+    --visual-glow-spread-12: 8px;
+    --visual-glow-spread-13: 9px;
+    --visual-glow-spread-14: 10px;
+    --visual-glow-spread-15: 11px;
+    --visual-glow-spread-16: 12px;
+    --visual-glow-spread-17: 14px;
+    --visual-glow-spread-18: 16px;
+    --visual-glow-spread-19: 20px;
+    --visual-glow-spread-20: 24px;
+}

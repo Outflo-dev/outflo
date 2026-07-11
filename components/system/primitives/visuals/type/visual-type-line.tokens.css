@@ -1,0 +1,45 @@
+/* ==========================================================
+   OUTFLO — VISUAL TYPE LINE TOKENS
+   File: components/system/primitives/visuals/type/visual-type-line.tokens.css
+   Scope: Canonical typography line-height dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       old 0  → new 0
+       old 1  → new 2
+       old 2  → new 4
+       old 3  → new 6
+       old 4  → new 8
+       old 5  → new 10
+       old 6  → new 12
+       old 7  → new 14
+       old 8  → new 16
+       old 9  → new 18
+       old 10 → new 20
+       ------------------------------------------------------ */
+
+    --visual-type-line-0: normal;
+    --visual-type-line-1: 0.95;
+    --visual-type-line-2: 1;
+    --visual-type-line-3: 1.05;
+    --visual-type-line-4: 1.1;
+    --visual-type-line-5: 1.15;
+    --visual-type-line-6: 1.2;
+    --visual-type-line-7: 1.25;
+    --visual-type-line-8: 1.3;
+    --visual-type-line-9: 1.35;
+    --visual-type-line-10: 1.4;
+    --visual-type-line-11: 1.45;
+    --visual-type-line-12: 1.5;
+    --visual-type-line-13: 1.55;
+    --visual-type-line-14: 1.6;
+    --visual-type-line-15: 1.65;
+    --visual-type-line-16: 1.7;
+    --visual-type-line-17: 1.75;
+    --visual-type-line-18: 1.8;
+    --visual-type-line-19: 1.9;
+    --visual-type-line-20: 2;
+}

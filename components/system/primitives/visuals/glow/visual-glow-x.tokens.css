@@ -1,0 +1,45 @@
+/* ==========================================================
+   OUTFLO — VISUAL GLOW X TOKENS
+   File: components/system/primitives/visuals/glow/visual-glow-x.tokens.css
+   Scope: Atomic horizontal glow offset dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       old 0  → new 0
+       old 1  → new 2
+       old 2  → new 4
+       old 3  → new 6
+       old 4  → new 8
+       old 5  → new 10
+       old 6  → new 12
+       old 7  → new 14
+       old 8  → new 16
+       old 9  → new 18
+       old 10 → new 20
+       ------------------------------------------------------ */
+
+    --visual-glow-x-0: 0;
+    --visual-glow-x-1: 0.5px;
+    --visual-glow-x-2: 1px;
+    --visual-glow-x-3: 1.5px;
+    --visual-glow-x-4: 2px;
+    --visual-glow-x-5: 2.5px;
+    --visual-glow-x-6: 3px;
+    --visual-glow-x-7: 3.5px;
+    --visual-glow-x-8: 4px;
+    --visual-glow-x-9: 5px;
+    --visual-glow-x-10: 6px;
+    --visual-glow-x-11: 7px;
+    --visual-glow-x-12: 8px;
+    --visual-glow-x-13: 10px;
+    --visual-glow-x-14: 12px;
+    --visual-glow-x-15: 14px;
+    --visual-glow-x-16: 16px;
+    --visual-glow-x-17: 20px;
+    --visual-glow-x-18: 24px;
+    --visual-glow-x-19: 28px;
+    --visual-glow-x-20: 32px;
+}

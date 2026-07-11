@@ -2,46 +2,91 @@
    OUTFLO — VISUAL TEXT TOKENS
    File: components/system/primitives/visuals/text/visual-text.tokens.css
    Scope: Theme-resolved text paint intensity dial
+   Updated: 2026-07-10 21:48
    ========================================================== */
 
+/* ------------------------------
+   Provisional Dial
+-------------------------------- */
+
 :root {
-    --visual-text-0: transparent;
+        --visual-text-0: transparent;
 
-    --visual-text-1: color-mix(in srgb,
-            var(--visual-text-source) 10%,
-            transparent);
+        --visual-text-1: color-mix(in srgb,
+                        var(--visual-text-source) 5%,
+                        transparent);
 
-    --visual-text-2: color-mix(in srgb,
-            var(--visual-text-source) 20%,
-            transparent);
+        --visual-text-2: color-mix(in srgb,
+                        var(--visual-text-source) 10%,
+                        transparent);
 
-    --visual-text-3: color-mix(in srgb,
-            var(--visual-text-source) 30%,
-            transparent);
+        --visual-text-3: color-mix(in srgb,
+                        var(--visual-text-source) 15%,
+                        transparent);
 
-    --visual-text-4: color-mix(in srgb,
-            var(--visual-text-source) 40%,
-            transparent);
+        --visual-text-4: color-mix(in srgb,
+                        var(--visual-text-source) 20%,
+                        transparent);
 
-    --visual-text-5: color-mix(in srgb,
-            var(--visual-text-source) 50%,
-            transparent);
+        --visual-text-5: color-mix(in srgb,
+                        var(--visual-text-source) 25%,
+                        transparent);
 
-    --visual-text-6: color-mix(in srgb,
-            var(--visual-text-source) 60%,
-            transparent);
+        --visual-text-6: color-mix(in srgb,
+                        var(--visual-text-source) 30%,
+                        transparent);
 
-    --visual-text-7: color-mix(in srgb,
-            var(--visual-text-source) 70%,
-            transparent);
+        --visual-text-7: color-mix(in srgb,
+                        var(--visual-text-source) 35%,
+                        transparent);
 
-    --visual-text-8: color-mix(in srgb,
-            var(--visual-text-source) 80%,
-            transparent);
+        --visual-text-8: color-mix(in srgb,
+                        var(--visual-text-source) 40%,
+                        transparent);
 
-    --visual-text-9: color-mix(in srgb,
-            var(--visual-text-source) 90%,
-            transparent);
+        --visual-text-9: color-mix(in srgb,
+                        var(--visual-text-source) 45%,
+                        transparent);
 
-    --visual-text-10: var(--visual-text-source);
+        --visual-text-10: color-mix(in srgb,
+                        var(--visual-text-source) 50%,
+                        transparent);
+
+        --visual-text-11: color-mix(in srgb,
+                        var(--visual-text-source) 55%,
+                        transparent);
+
+        --visual-text-12: color-mix(in srgb,
+                        var(--visual-text-source) 60%,
+                        transparent);
+
+        --visual-text-13: color-mix(in srgb,
+                        var(--visual-text-source) 65%,
+                        transparent);
+
+        --visual-text-14: color-mix(in srgb,
+                        var(--visual-text-source) 70%,
+                        transparent);
+
+        --visual-text-15: color-mix(in srgb,
+                        var(--visual-text-source) 75%,
+                        transparent);
+
+        --visual-text-16: color-mix(in srgb,
+                        var(--visual-text-source) 80%,
+                        transparent);
+
+        --visual-text-17: color-mix(in srgb,
+                        var(--visual-text-source) 85%,
+                        transparent);
+
+        --visual-text-18: color-mix(in srgb,
+                        var(--visual-text-source) 90%,
+                        transparent);
+
+        --visual-text-19: color-mix(in srgb,
+                        var(--visual-text-source) 95%,
+                        transparent);
+
+        --visual-text-20: var(--visual-text-source);
 }

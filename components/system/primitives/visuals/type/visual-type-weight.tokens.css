@@ -1,0 +1,36 @@
+/* ==========================================================
+   OUTFLO — VISUAL TYPE WEIGHT TOKENS
+   File: components/system/primitives/visuals/type/visual-type-weight.tokens.css
+   Scope: Canonical typography weight dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Selection legend
+
+       0  = inherit
+       1  = 100
+       2  = 200
+       3  = 300
+       4  = 400
+       5  = 500
+       6  = 600
+       7  = 700
+       8  = 800
+       9  = 900
+       10 = 1000
+       11–20 = unassigned
+       ------------------------------------------------------ */
+
+    --visual-type-weight-0: inherit;
+    --visual-type-weight-1: 100;
+    --visual-type-weight-2: 200;
+    --visual-type-weight-3: 300;
+    --visual-type-weight-4: 400;
+    --visual-type-weight-5: 500;
+    --visual-type-weight-6: 600;
+    --visual-type-weight-7: 700;
+    --visual-type-weight-8: 800;
+    --visual-type-weight-9: 900;
+    --visual-type-weight-10: 1000;
+}

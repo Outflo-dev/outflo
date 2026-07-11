@@ -1,0 +1,113 @@
+/* ==========================================================
+   OUTFLO — VISUAL INSET COLOR TOKENS
+   File: components/system/primitives/visuals/inset/visual-inset-color.tokens.css
+   Scope: Atomic inset-shadow paint intensity dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       0  = transparent
+       1  = 5%
+       2  = 10%
+       3  = 15%
+       4  = 20%
+       5  = 25%
+       6  = 30%
+       7  = 35%
+       8  = 40%
+       9  = 45%
+       10 = 50%
+       11 = 55%
+       12 = 60%
+       13 = 65%
+       14 = 70%
+       15 = 75%
+       16 = 80%
+       17 = 85%
+       18 = 90%
+       19 = 95%
+       20 = source
+       ------------------------------------------------------ */
+
+    --visual-inset-color-0: transparent;
+
+    --visual-inset-color-1: color-mix(in srgb,
+            var(--visual-inset-color-source) 5%,
+            transparent);
+
+    --visual-inset-color-2: color-mix(in srgb,
+            var(--visual-inset-color-source) 10%,
+            transparent);
+
+    --visual-inset-color-3: color-mix(in srgb,
+            var(--visual-inset-color-source) 15%,
+            transparent);
+
+    --visual-inset-color-4: color-mix(in srgb,
+            var(--visual-inset-color-source) 20%,
+            transparent);
+
+    --visual-inset-color-5: color-mix(in srgb,
+            var(--visual-inset-color-source) 25%,
+            transparent);
+
+    --visual-inset-color-6: color-mix(in srgb,
+            var(--visual-inset-color-source) 30%,
+            transparent);
+
+    --visual-inset-color-7: color-mix(in srgb,
+            var(--visual-inset-color-source) 35%,
+            transparent);
+
+    --visual-inset-color-8: color-mix(in srgb,
+            var(--visual-inset-color-source) 40%,
+            transparent);
+
+    --visual-inset-color-9: color-mix(in srgb,
+            var(--visual-inset-color-source) 45%,
+            transparent);
+
+    --visual-inset-color-10: color-mix(in srgb,
+            var(--visual-inset-color-source) 50%,
+            transparent);
+
+    --visual-inset-color-11: color-mix(in srgb,
+            var(--visual-inset-color-source) 55%,
+            transparent);
+
+    --visual-inset-color-12: color-mix(in srgb,
+            var(--visual-inset-color-source) 60%,
+            transparent);
+
+    --visual-inset-color-13: color-mix(in srgb,
+            var(--visual-inset-color-source) 65%,
+            transparent);
+
+    --visual-inset-color-14: color-mix(in srgb,
+            var(--visual-inset-color-source) 70%,
+            transparent);
+
+    --visual-inset-color-15: color-mix(in srgb,
+            var(--visual-inset-color-source) 75%,
+            transparent);
+
+    --visual-inset-color-16: color-mix(in srgb,
+            var(--visual-inset-color-source) 80%,
+            transparent);
+
+    --visual-inset-color-17: color-mix(in srgb,
+            var(--visual-inset-color-source) 85%,
+            transparent);
+
+    --visual-inset-color-18: color-mix(in srgb,
+            var(--visual-inset-color-source) 90%,
+            transparent);
+
+    --visual-inset-color-19: color-mix(in srgb,
+            var(--visual-inset-color-source) 95%,
+            transparent);
+
+    --visual-inset-color-20: var(--visual-inset-color-source);
+}

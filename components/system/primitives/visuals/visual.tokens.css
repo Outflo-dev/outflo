@@ -22,3 +22,5 @@
 @import "./weight/visual-weight.tokens.css";
 @import "./type/visual-type.tokens.css";
 @import "./spacing/visual-spacing.tokens.css";
+
+@import "./z-index/visual-z-index.tokens.css";

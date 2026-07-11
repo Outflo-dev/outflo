@@ -1,0 +1,45 @@
+/* ==========================================================
+   OUTFLO — VISUAL TYPE TRACKING TOKENS
+   File: components/system/primitives/visuals/type/visual-type-tracking.tokens.css
+   Scope: Canonical typography letter-spacing dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       old 0  → new 0
+       old 1  → new 2
+       old 2  → new 4
+       old 3  → new 6
+       old 4  → new 8
+       old 5  → new 10
+       old 6  → new 12
+       old 7  → new 14
+       old 8  → new 16
+       old 9  → new 18
+       old 10 → new 20
+       ------------------------------------------------------ */
+
+    --visual-type-tracking-0: normal;
+    --visual-type-tracking-1: -0.035em;
+    --visual-type-tracking-2: -0.03em;
+    --visual-type-tracking-3: -0.025em;
+    --visual-type-tracking-4: -0.02em;
+    --visual-type-tracking-5: -0.015em;
+    --visual-type-tracking-6: -0.01em;
+    --visual-type-tracking-7: -0.005em;
+    --visual-type-tracking-8: 0;
+    --visual-type-tracking-9: 0.01em;
+    --visual-type-tracking-10: 0.02em;
+    --visual-type-tracking-11: 0.03em;
+    --visual-type-tracking-12: 0.04em;
+    --visual-type-tracking-13: 0.05em;
+    --visual-type-tracking-14: 0.06em;
+    --visual-type-tracking-15: 0.07em;
+    --visual-type-tracking-16: 0.08em;
+    --visual-type-tracking-17: 0.09em;
+    --visual-type-tracking-18: 0.1em;
+    --visual-type-tracking-19: 0.11em;
+    --visual-type-tracking-20: 0.12em;
+}

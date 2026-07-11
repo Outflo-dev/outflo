@@ -1,0 +1,45 @@
+/* ==========================================================
+   OUTFLO — VISUAL GLOW BLUR TOKENS
+   File: components/system/primitives/visuals/glow/visual-glow-blur.tokens.css
+   Scope: Atomic glow blur dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       old 0  → new 0
+       old 1  → new 2
+       old 2  → new 4
+       old 3  → new 6
+       old 4  → new 8
+       old 5  → new 10
+       old 6  → new 12
+       old 7  → new 14
+       old 8  → new 16
+       old 9  → new 18
+       old 10 → new 20
+       ------------------------------------------------------ */
+
+    --visual-glow-blur-0: 0;
+    --visual-glow-blur-1: 2px;
+    --visual-glow-blur-2: 4px;
+    --visual-glow-blur-3: 6px;
+    --visual-glow-blur-4: 8px;
+    --visual-glow-blur-5: 10px;
+    --visual-glow-blur-6: 12px;
+    --visual-glow-blur-7: 14px;
+    --visual-glow-blur-8: 16px;
+    --visual-glow-blur-9: 18px;
+    --visual-glow-blur-10: 20px;
+    --visual-glow-blur-11: 22px;
+    --visual-glow-blur-12: 24px;
+    --visual-glow-blur-13: 28px;
+    --visual-glow-blur-14: 32px;
+    --visual-glow-blur-15: 36px;
+    --visual-glow-blur-16: 40px;
+    --visual-glow-blur-17: 48px;
+    --visual-glow-blur-18: 56px;
+    --visual-glow-blur-19: 64px;
+    --visual-glow-blur-20: 72px;
+}

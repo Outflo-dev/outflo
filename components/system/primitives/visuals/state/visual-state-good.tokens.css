@@ -1,0 +1,96 @@
+/* ==========================================================
+   OUTFLO — VISUAL GOOD STATE TOKENS
+   File: components/system/primitives/visuals/state/visual-state-good.tokens.css
+   Scope: Theme-resolved good-state paint intensity dial
+   Updated: 2026-07-10 21:48
+   ========================================================== */
+
+/* ------------------------------
+   Provisional Dial
+
+   0–20 resolves from transparent
+   through 5% increments to the
+   full theme-owned source.
+-------------------------------- */
+
+:root {
+    --visual-state-good-0: transparent;
+
+    --visual-state-good-1: color-mix(in srgb,
+            var(--visual-state-good-source) 5%,
+            transparent);
+
+    --visual-state-good-2: color-mix(in srgb,
+            var(--visual-state-good-source) 10%,
+            transparent);
+
+    --visual-state-good-3: color-mix(in srgb,
+            var(--visual-state-good-source) 15%,
+            transparent);
+
+    --visual-state-good-4: color-mix(in srgb,
+            var(--visual-state-good-source) 20%,
+            transparent);
+
+    --visual-state-good-5: color-mix(in srgb,
+            var(--visual-state-good-source) 25%,
+            transparent);
+
+    --visual-state-good-6: color-mix(in srgb,
+            var(--visual-state-good-source) 30%,
+            transparent);
+
+    --visual-state-good-7: color-mix(in srgb,
+            var(--visual-state-good-source) 35%,
+            transparent);
+
+    --visual-state-good-8: color-mix(in srgb,
+            var(--visual-state-good-source) 40%,
+            transparent);
+
+    --visual-state-good-9: color-mix(in srgb,
+            var(--visual-state-good-source) 45%,
+            transparent);
+
+    --visual-state-good-10: color-mix(in srgb,
+            var(--visual-state-good-source) 50%,
+            transparent);
+
+    --visual-state-good-11: color-mix(in srgb,
+            var(--visual-state-good-source) 55%,
+            transparent);
+
+    --visual-state-good-12: color-mix(in srgb,
+            var(--visual-state-good-source) 60%,
+            transparent);
+
+    --visual-state-good-13: color-mix(in srgb,
+            var(--visual-state-good-source) 65%,
+            transparent);
+
+    --visual-state-good-14: color-mix(in srgb,
+            var(--visual-state-good-source) 70%,
+            transparent);
+
+    --visual-state-good-15: color-mix(in srgb,
+            var(--visual-state-good-source) 75%,
+            transparent);
+
+    --visual-state-good-16: color-mix(in srgb,
+            var(--visual-state-good-source) 80%,
+            transparent);
+
+    --visual-state-good-17: color-mix(in srgb,
+            var(--visual-state-good-source) 85%,
+            transparent);
+
+    --visual-state-good-18: color-mix(in srgb,
+            var(--visual-state-good-source) 90%,
+            transparent);
+
+    --visual-state-good-19: color-mix(in srgb,
+            var(--visual-state-good-source) 95%,
+            transparent);
+
+    --visual-state-good-20: var(--visual-state-good-source);
+}

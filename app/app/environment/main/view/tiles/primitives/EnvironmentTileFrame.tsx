@@ -11,6 +11,8 @@
 -------------------------------- */
 import type { CSSProperties, ReactNode } from "react";
 
+import { VISUAL } from "../../../../../../../components/system/primitives/visuals";
+
 import EnvironmentCard from "../../primitives/EnvironmentCard";
 
 /* ------------------------------
@@ -27,8 +29,7 @@ type EnvironmentTileFrameProps = {
 -------------------------------- */
 const FRAME_STYLE: CSSProperties = {
     minHeight: 220,
-    padding: 18,
-    borderRadius: 22,
+    padding: VISUAL.spacing[6],
 };
 
 /* ------------------------------

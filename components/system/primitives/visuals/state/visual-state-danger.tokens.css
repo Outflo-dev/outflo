@@ -1,0 +1,96 @@
+/* ==========================================================
+   OUTFLO — VISUAL DANGER STATE TOKENS
+   File: components/system/primitives/visuals/state/visual-state-danger.tokens.css
+   Scope: Theme-resolved danger-state paint intensity dial
+   Updated: 2026-07-10 21:48
+   ========================================================== */
+
+/* ------------------------------
+   Provisional Dial
+
+   0–20 resolves from transparent
+   through 5% increments to the
+   full theme-owned source.
+-------------------------------- */
+
+:root {
+    --visual-state-danger-0: transparent;
+
+    --visual-state-danger-1: color-mix(in srgb,
+            var(--visual-state-danger-source) 5%,
+            transparent);
+
+    --visual-state-danger-2: color-mix(in srgb,
+            var(--visual-state-danger-source) 10%,
+            transparent);
+
+    --visual-state-danger-3: color-mix(in srgb,
+            var(--visual-state-danger-source) 15%,
+            transparent);
+
+    --visual-state-danger-4: color-mix(in srgb,
+            var(--visual-state-danger-source) 20%,
+            transparent);
+
+    --visual-state-danger-5: color-mix(in srgb,
+            var(--visual-state-danger-source) 25%,
+            transparent);
+
+    --visual-state-danger-6: color-mix(in srgb,
+            var(--visual-state-danger-source) 30%,
+            transparent);
+
+    --visual-state-danger-7: color-mix(in srgb,
+            var(--visual-state-danger-source) 35%,
+            transparent);
+
+    --visual-state-danger-8: color-mix(in srgb,
+            var(--visual-state-danger-source) 40%,
+            transparent);
+
+    --visual-state-danger-9: color-mix(in srgb,
+            var(--visual-state-danger-source) 45%,
+            transparent);
+
+    --visual-state-danger-10: color-mix(in srgb,
+            var(--visual-state-danger-source) 50%,
+            transparent);
+
+    --visual-state-danger-11: color-mix(in srgb,
+            var(--visual-state-danger-source) 55%,
+            transparent);
+
+    --visual-state-danger-12: color-mix(in srgb,
+            var(--visual-state-danger-source) 60%,
+            transparent);
+
+    --visual-state-danger-13: color-mix(in srgb,
+            var(--visual-state-danger-source) 65%,
+            transparent);
+
+    --visual-state-danger-14: color-mix(in srgb,
+            var(--visual-state-danger-source) 70%,
+            transparent);
+
+    --visual-state-danger-15: color-mix(in srgb,
+            var(--visual-state-danger-source) 75%,
+            transparent);
+
+    --visual-state-danger-16: color-mix(in srgb,
+            var(--visual-state-danger-source) 80%,
+            transparent);
+
+    --visual-state-danger-17: color-mix(in srgb,
+            var(--visual-state-danger-source) 85%,
+            transparent);
+
+    --visual-state-danger-18: color-mix(in srgb,
+            var(--visual-state-danger-source) 90%,
+            transparent);
+
+    --visual-state-danger-19: color-mix(in srgb,
+            var(--visual-state-danger-source) 95%,
+            transparent);
+
+    --visual-state-danger-20: var(--visual-state-danger-source);
+}

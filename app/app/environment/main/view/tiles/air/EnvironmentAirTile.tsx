@@ -180,7 +180,7 @@ function getAirGaugeValue(aqi: string): number {
 
 function getAirStatusToken(status: EnvironmentAirQualityStatus): string {
     if (status === "good") {
-        return VISUAL.state.good[9];
+        return VISUAL.state.good[20];
     }
 
     if (status === "moderate") {

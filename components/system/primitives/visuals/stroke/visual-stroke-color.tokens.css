@@ -1,0 +1,98 @@
+/* ==========================================================
+   OUTFLO — VISUAL STROKE COLOR TOKENS
+   File: components/system/primitives/visuals/stroke/visual-stroke-color.tokens.css
+   Scope: Theme-resolved stroke-paint intensity dial
+   Updated: 2026-07-10 21:48
+   ========================================================== */
+
+/* ------------------------------
+   Provisional Dial
+
+   Existing 0–10 values occupy
+   even-numbered units.
+
+   Odd-numbered units provide
+   intermediate stroke-paint precision.
+-------------------------------- */
+
+:root {
+    --visual-stroke-color-0: transparent;
+
+    --visual-stroke-color-1: color-mix(in srgb,
+            var(--visual-stroke-color-source) 5%,
+            transparent);
+
+    --visual-stroke-color-2: color-mix(in srgb,
+            var(--visual-stroke-color-source) 10%,
+            transparent);
+
+    --visual-stroke-color-3: color-mix(in srgb,
+            var(--visual-stroke-color-source) 15%,
+            transparent);
+
+    --visual-stroke-color-4: color-mix(in srgb,
+            var(--visual-stroke-color-source) 20%,
+            transparent);
+
+    --visual-stroke-color-5: color-mix(in srgb,
+            var(--visual-stroke-color-source) 25%,
+            transparent);
+
+    --visual-stroke-color-6: color-mix(in srgb,
+            var(--visual-stroke-color-source) 30%,
+            transparent);
+
+    --visual-stroke-color-7: color-mix(in srgb,
+            var(--visual-stroke-color-source) 35%,
+            transparent);
+
+    --visual-stroke-color-8: color-mix(in srgb,
+            var(--visual-stroke-color-source) 40%,
+            transparent);
+
+    --visual-stroke-color-9: color-mix(in srgb,
+            var(--visual-stroke-color-source) 45%,
+            transparent);
+
+    --visual-stroke-color-10: color-mix(in srgb,
+            var(--visual-stroke-color-source) 50%,
+            transparent);
+
+    --visual-stroke-color-11: color-mix(in srgb,
+            var(--visual-stroke-color-source) 55%,
+            transparent);
+
+    --visual-stroke-color-12: color-mix(in srgb,
+            var(--visual-stroke-color-source) 60%,
+            transparent);
+
+    --visual-stroke-color-13: color-mix(in srgb,
+            var(--visual-stroke-color-source) 65%,
+            transparent);
+
+    --visual-stroke-color-14: color-mix(in srgb,
+            var(--visual-stroke-color-source) 70%,
+            transparent);
+
+    --visual-stroke-color-15: color-mix(in srgb,
+            var(--visual-stroke-color-source) 75%,
+            transparent);
+
+    --visual-stroke-color-16: color-mix(in srgb,
+            var(--visual-stroke-color-source) 80%,
+            transparent);
+
+    --visual-stroke-color-17: color-mix(in srgb,
+            var(--visual-stroke-color-source) 85%,
+            transparent);
+
+    --visual-stroke-color-18: color-mix(in srgb,
+            var(--visual-stroke-color-source) 90%,
+            transparent);
+
+    --visual-stroke-color-19: color-mix(in srgb,
+            var(--visual-stroke-color-source) 95%,
+            transparent);
+
+    --visual-stroke-color-20: var(--visual-stroke-color-source);
+}

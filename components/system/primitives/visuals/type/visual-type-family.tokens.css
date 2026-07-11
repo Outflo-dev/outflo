@@ -1,0 +1,20 @@
+/* ==========================================================
+   OUTFLO — VISUAL TYPE FAMILY TOKENS
+   File: components/system/primitives/visuals/type/visual-type-family.tokens.css
+   Scope: Canonical typography family selection dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Selection legend
+
+       0 = inherit
+       1 = IBM Plex Sans
+       2 = Nunito Sans
+       3–20 = unassigned
+       ------------------------------------------------------ */
+
+    --visual-type-family-0: inherit;
+    --visual-type-family-1: "IBM Plex Sans", sans-serif;
+    --visual-type-family-2: "Nunito Sans", sans-serif;
+}

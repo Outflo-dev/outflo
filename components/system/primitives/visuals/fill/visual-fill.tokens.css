@@ -2,46 +2,100 @@
    OUTFLO — VISUAL FILL TOKENS
    File: components/system/primitives/visuals/fill/visual-fill.tokens.css
    Scope: Theme-resolved surface and background fill dial
+   Updated: 2026-07-10 21:48
    ========================================================== */
 
+/* ------------------------------
+   Provisional Dial
+
+   Existing 0–10 values occupy
+   even-numbered units.
+
+   Odd-numbered units provide
+   intermediate visual precision.
+
+   This curve remains subject to
+   browser inspection and tuning.
+-------------------------------- */
+
 :root {
-    --visual-fill-0: transparent;
+        --visual-fill-0: transparent;
 
-    --visual-fill-1: color-mix(in srgb,
-            var(--visual-fill-source) 10%,
-            transparent);
+        --visual-fill-1: color-mix(in srgb,
+                        var(--visual-fill-source) 1%,
+                        transparent);
 
-    --visual-fill-2: color-mix(in srgb,
-            var(--visual-fill-source) 20%,
-            transparent);
+        --visual-fill-2: color-mix(in srgb,
+                        var(--visual-fill-source) 2%,
+                        transparent);
 
-    --visual-fill-3: color-mix(in srgb,
-            var(--visual-fill-source) 30%,
-            transparent);
+        --visual-fill-3: color-mix(in srgb,
+                        var(--visual-fill-source) 3%,
+                        transparent);
 
-    --visual-fill-4: color-mix(in srgb,
-            var(--visual-fill-source) 40%,
-            transparent);
+        --visual-fill-4: color-mix(in srgb,
+                        var(--visual-fill-source) 4%,
+                        transparent);
 
-    --visual-fill-5: color-mix(in srgb,
-            var(--visual-fill-source) 50%,
-            transparent);
+        --visual-fill-5: color-mix(in srgb,
+                        var(--visual-fill-source) 5.5%,
+                        transparent);
 
-    --visual-fill-6: color-mix(in srgb,
-            var(--visual-fill-source) 60%,
-            transparent);
+        --visual-fill-6: color-mix(in srgb,
+                        var(--visual-fill-source) 7%,
+                        transparent);
 
-    --visual-fill-7: color-mix(in srgb,
-            var(--visual-fill-source) 70%,
-            transparent);
+        --visual-fill-7: color-mix(in srgb,
+                        var(--visual-fill-source) 9%,
+                        transparent);
 
-    --visual-fill-8: color-mix(in srgb,
-            var(--visual-fill-source) 80%,
-            transparent);
+        --visual-fill-8: color-mix(in srgb,
+                        var(--visual-fill-source) 11%,
+                        transparent);
 
-    --visual-fill-9: color-mix(in srgb,
-            var(--visual-fill-source) 90%,
-            transparent);
+        --visual-fill-9: color-mix(in srgb,
+                        var(--visual-fill-source) 14%,
+                        transparent);
 
-    --visual-fill-10: var(--visual-fill-source);
+        --visual-fill-10: color-mix(in srgb,
+                        var(--visual-fill-source) 17%,
+                        transparent);
+
+        --visual-fill-11: color-mix(in srgb,
+                        var(--visual-fill-source) 21%,
+                        transparent);
+
+        --visual-fill-12: color-mix(in srgb,
+                        var(--visual-fill-source) 25%,
+                        transparent);
+
+        --visual-fill-13: color-mix(in srgb,
+                        var(--visual-fill-source) 30.5%,
+                        transparent);
+
+        --visual-fill-14: color-mix(in srgb,
+                        var(--visual-fill-source) 36%,
+                        transparent);
+
+        --visual-fill-15: color-mix(in srgb,
+                        var(--visual-fill-source) 44%,
+                        transparent);
+
+        --visual-fill-16: color-mix(in srgb,
+                        var(--visual-fill-source) 52%,
+                        transparent);
+
+        --visual-fill-17: color-mix(in srgb,
+                        var(--visual-fill-source) 62%,
+                        transparent);
+
+        --visual-fill-18: color-mix(in srgb,
+                        var(--visual-fill-source) 72%,
+                        transparent);
+
+        --visual-fill-19: color-mix(in srgb,
+                        var(--visual-fill-source) 86%,
+                        transparent);
+
+        --visual-fill-20: var(--visual-fill-source);
 }

@@ -5,6 +5,7 @@
    ========================================================== */
 
 import { createVisualDial } from "../visual.dial";
+import { VISUAL_TYPE_TRANSFORM } from "./visual-type-transform.config";
 
 export const VISUAL_TYPE = {
     family: createVisualDial("--visual-type-family"),
@@ -12,5 +13,5 @@ export const VISUAL_TYPE = {
     weight: createVisualDial("--visual-type-weight"),
     line: createVisualDial("--visual-type-line"),
     tracking: createVisualDial("--visual-type-tracking"),
-    transform: createVisualDial("--visual-type-transform"),
+    transform: VISUAL_TYPE_TRANSFORM,
 } as const;

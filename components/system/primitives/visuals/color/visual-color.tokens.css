@@ -2,46 +2,97 @@
    OUTFLO — VISUAL COLOR TOKENS
    File: components/system/primitives/visuals/color/visual-color.tokens.css
    Scope: Theme-resolved general color intensity dial
+   Updated: 2026-07-10 21:48
    ========================================================== */
 
+/* ------------------------------
+   Provisional Dial
+
+   Existing 0–10 values occupy
+   even-numbered units.
+
+   Odd-numbered units provide
+   intermediate color precision.
+-------------------------------- */
+
 :root {
-    --visual-color-0: transparent;
+        --visual-color-0: transparent;
 
-    --visual-color-1: color-mix(in srgb,
-            var(--visual-color-source) 10%,
-            transparent);
+        --visual-color-1: color-mix(in srgb,
+                        var(--visual-color-source) 5%,
+                        transparent);
 
-    --visual-color-2: color-mix(in srgb,
-            var(--visual-color-source) 20%,
-            transparent);
+        --visual-color-2: color-mix(in srgb,
+                        var(--visual-color-source) 10%,
+                        transparent);
 
-    --visual-color-3: color-mix(in srgb,
-            var(--visual-color-source) 30%,
-            transparent);
+        --visual-color-3: color-mix(in srgb,
+                        var(--visual-color-source) 15%,
+                        transparent);
 
-    --visual-color-4: color-mix(in srgb,
-            var(--visual-color-source) 40%,
-            transparent);
+        --visual-color-4: color-mix(in srgb,
+                        var(--visual-color-source) 20%,
+                        transparent);
 
-    --visual-color-5: color-mix(in srgb,
-            var(--visual-color-source) 50%,
-            transparent);
+        --visual-color-5: color-mix(in srgb,
+                        var(--visual-color-source) 25%,
+                        transparent);
 
-    --visual-color-6: color-mix(in srgb,
-            var(--visual-color-source) 60%,
-            transparent);
+        --visual-color-6: color-mix(in srgb,
+                        var(--visual-color-source) 30%,
+                        transparent);
 
-    --visual-color-7: color-mix(in srgb,
-            var(--visual-color-source) 70%,
-            transparent);
+        --visual-color-7: color-mix(in srgb,
+                        var(--visual-color-source) 35%,
+                        transparent);
 
-    --visual-color-8: color-mix(in srgb,
-            var(--visual-color-source) 80%,
-            transparent);
+        --visual-color-8: color-mix(in srgb,
+                        var(--visual-color-source) 40%,
+                        transparent);
 
-    --visual-color-9: color-mix(in srgb,
-            var(--visual-color-source) 90%,
-            transparent);
+        --visual-color-9: color-mix(in srgb,
+                        var(--visual-color-source) 45%,
+                        transparent);
 
-    --visual-color-10: var(--visual-color-source);
+        --visual-color-10: color-mix(in srgb,
+                        var(--visual-color-source) 50%,
+                        transparent);
+
+        --visual-color-11: color-mix(in srgb,
+                        var(--visual-color-source) 55%,
+                        transparent);
+
+        --visual-color-12: color-mix(in srgb,
+                        var(--visual-color-source) 60%,
+                        transparent);
+
+        --visual-color-13: color-mix(in srgb,
+                        var(--visual-color-source) 65%,
+                        transparent);
+
+        --visual-color-14: color-mix(in srgb,
+                        var(--visual-color-source) 70%,
+                        transparent);
+
+        --visual-color-15: color-mix(in srgb,
+                        var(--visual-color-source) 75%,
+                        transparent);
+
+        --visual-color-16: color-mix(in srgb,
+                        var(--visual-color-source) 80%,
+                        transparent);
+
+        --visual-color-17: color-mix(in srgb,
+                        var(--visual-color-source) 85%,
+                        transparent);
+
+        --visual-color-18: color-mix(in srgb,
+                        var(--visual-color-source) 90%,
+                        transparent);
+
+        --visual-color-19: color-mix(in srgb,
+                        var(--visual-color-source) 95%,
+                        transparent);
+
+        --visual-color-20: var(--visual-color-source);
 }

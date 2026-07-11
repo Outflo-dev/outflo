@@ -2,46 +2,97 @@
    OUTFLO — VISUAL ACCENT TOKENS
    File: components/system/primitives/visuals/accent/visual-accent.tokens.css
    Scope: Theme-resolved accent paint intensity dial
+   Updated: 2026-07-10 21:48
    ========================================================== */
 
+/* ------------------------------
+   Provisional Dial
+
+   Existing 0–10 values occupy
+   even-numbered units.
+
+   Odd-numbered units provide
+   intermediate accent-paint precision.
+-------------------------------- */
+
 :root {
-    --visual-accent-0: transparent;
+        --visual-accent-0: transparent;
 
-    --visual-accent-1: color-mix(in srgb,
-            var(--visual-accent-source) 10%,
-            transparent);
+        --visual-accent-1: color-mix(in srgb,
+                        var(--visual-accent-source) 5%,
+                        transparent);
 
-    --visual-accent-2: color-mix(in srgb,
-            var(--visual-accent-source) 20%,
-            transparent);
+        --visual-accent-2: color-mix(in srgb,
+                        var(--visual-accent-source) 10%,
+                        transparent);
 
-    --visual-accent-3: color-mix(in srgb,
-            var(--visual-accent-source) 30%,
-            transparent);
+        --visual-accent-3: color-mix(in srgb,
+                        var(--visual-accent-source) 15%,
+                        transparent);
 
-    --visual-accent-4: color-mix(in srgb,
-            var(--visual-accent-source) 40%,
-            transparent);
+        --visual-accent-4: color-mix(in srgb,
+                        var(--visual-accent-source) 20%,
+                        transparent);
 
-    --visual-accent-5: color-mix(in srgb,
-            var(--visual-accent-source) 50%,
-            transparent);
+        --visual-accent-5: color-mix(in srgb,
+                        var(--visual-accent-source) 25%,
+                        transparent);
 
-    --visual-accent-6: color-mix(in srgb,
-            var(--visual-accent-source) 60%,
-            transparent);
+        --visual-accent-6: color-mix(in srgb,
+                        var(--visual-accent-source) 30%,
+                        transparent);
 
-    --visual-accent-7: color-mix(in srgb,
-            var(--visual-accent-source) 70%,
-            transparent);
+        --visual-accent-7: color-mix(in srgb,
+                        var(--visual-accent-source) 35%,
+                        transparent);
 
-    --visual-accent-8: color-mix(in srgb,
-            var(--visual-accent-source) 80%,
-            transparent);
+        --visual-accent-8: color-mix(in srgb,
+                        var(--visual-accent-source) 40%,
+                        transparent);
 
-    --visual-accent-9: color-mix(in srgb,
-            var(--visual-accent-source) 90%,
-            transparent);
+        --visual-accent-9: color-mix(in srgb,
+                        var(--visual-accent-source) 45%,
+                        transparent);
 
-    --visual-accent-10: var(--visual-accent-source);
+        --visual-accent-10: color-mix(in srgb,
+                        var(--visual-accent-source) 50%,
+                        transparent);
+
+        --visual-accent-11: color-mix(in srgb,
+                        var(--visual-accent-source) 55%,
+                        transparent);
+
+        --visual-accent-12: color-mix(in srgb,
+                        var(--visual-accent-source) 60%,
+                        transparent);
+
+        --visual-accent-13: color-mix(in srgb,
+                        var(--visual-accent-source) 65%,
+                        transparent);
+
+        --visual-accent-14: color-mix(in srgb,
+                        var(--visual-accent-source) 70%,
+                        transparent);
+
+        --visual-accent-15: color-mix(in srgb,
+                        var(--visual-accent-source) 75%,
+                        transparent);
+
+        --visual-accent-16: color-mix(in srgb,
+                        var(--visual-accent-source) 80%,
+                        transparent);
+
+        --visual-accent-17: color-mix(in srgb,
+                        var(--visual-accent-source) 85%,
+                        transparent);
+
+        --visual-accent-18: color-mix(in srgb,
+                        var(--visual-accent-source) 90%,
+                        transparent);
+
+        --visual-accent-19: color-mix(in srgb,
+                        var(--visual-accent-source) 95%,
+                        transparent);
+
+        --visual-accent-20: var(--visual-accent-source);
 }

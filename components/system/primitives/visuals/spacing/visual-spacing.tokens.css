@@ -2,62 +2,29 @@
    OUTFLO — VISUAL SPACING TOKENS
    File: components/system/primitives/visuals/spacing/visual-spacing.tokens.css
    Scope: Canonical spacing and rhythm dial
+   Updated: 2026-07-10 21:48
    ========================================================== */
 
 :root {
-    --visual-spacing-0: 0;
-    --visual-spacing-1: 2px;
-    --visual-spacing-2: 4px;
-    --visual-spacing-3: 6px;
-    --visual-spacing-4: 8px;
-    --visual-spacing-5: 12px;
-    --visual-spacing-6: 16px;
-    --visual-spacing-7: 20px;
-    --visual-spacing-8: 24px;
-    --visual-spacing-9: 32px;
-    --visual-spacing-10: 48px;
-
-    /* Color */
-
-    --visual-shadow-color-0: transparent;
-
-    --visual-shadow-color-1: color-mix(in srgb,
-            var(--visual-shadow-color-source) 10%,
-            transparent);
-
-    --visual-shadow-color-2: color-mix(in srgb,
-            var(--visual-shadow-color-source) 20%,
-            transparent);
-
-    --visual-shadow-color-3: color-mix(in srgb,
-            var(--visual-shadow-color-source) 30%,
-            transparent);
-
-    --visual-shadow-color-4: color-mix(in srgb,
-            var(--visual-shadow-color-source) 40%,
-            transparent);
-
-    --visual-shadow-color-5: color-mix(in srgb,
-            var(--visual-shadow-color-source) 50%,
-            transparent);
-
-    --visual-shadow-color-6: color-mix(in srgb,
-            var(--visual-shadow-color-source) 60%,
-            transparent);
-
-    --visual-shadow-color-7: color-mix(in srgb,
-            var(--visual-shadow-color-source) 70%,
-            transparent);
-
-    --visual-shadow-color-8: color-mix(in srgb,
-            var(--visual-shadow-color-source) 80%,
-            transparent);
-
-    --visual-shadow-color-9: color-mix(in srgb,
-            var(--visual-shadow-color-source) 90%,
-            transparent);
-
-    --visual-shadow-color-10: var(--visual-shadow-color-source);
-
-
+        --visual-spacing-0: 0;
+        --visual-spacing-1: 1px;
+        --visual-spacing-2: 2px;
+        --visual-spacing-3: 3px;
+        --visual-spacing-4: 4px;
+        --visual-spacing-5: 5px;
+        --visual-spacing-6: 6px;
+        --visual-spacing-7: 7px;
+        --visual-spacing-8: 8px;
+        --visual-spacing-9: 10px;
+        --visual-spacing-10: 12px;
+        --visual-spacing-11: 14px;
+        --visual-spacing-12: 16px;
+        --visual-spacing-13: 18px;
+        --visual-spacing-14: 20px;
+        --visual-spacing-15: 22px;
+        --visual-spacing-16: 24px;
+        --visual-spacing-17: 28px;
+        --visual-spacing-18: 32px;
+        --visual-spacing-19: 40px;
+        --visual-spacing-20: 48px;
 }

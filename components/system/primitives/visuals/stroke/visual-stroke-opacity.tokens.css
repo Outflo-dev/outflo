@@ -1,0 +1,40 @@
+/* ==========================================================
+   OUTFLO — VISUAL STROKE OPACITY TOKENS
+   File: components/system/primitives/visuals/stroke/visual-stroke-opacity.tokens.css
+   Scope: Canonical stroke-opacity dial
+   Updated: 2026-07-10 21:48
+   ========================================================== */
+
+/* ------------------------------
+   Provisional Dial
+
+   Existing 0–10 values occupy
+   even-numbered units.
+
+   Odd-numbered units provide
+   intermediate opacity precision.
+-------------------------------- */
+
+:root {
+    --visual-stroke-opacity-0: 0;
+    --visual-stroke-opacity-1: 0.02;
+    --visual-stroke-opacity-2: 0.04;
+    --visual-stroke-opacity-3: 0.06;
+    --visual-stroke-opacity-4: 0.08;
+    --visual-stroke-opacity-5: 0.10;
+    --visual-stroke-opacity-6: 0.12;
+    --visual-stroke-opacity-7: 0.15;
+    --visual-stroke-opacity-8: 0.18;
+    --visual-stroke-opacity-9: 0.23;
+    --visual-stroke-opacity-10: 0.28;
+    --visual-stroke-opacity-11: 0.34;
+    --visual-stroke-opacity-12: 0.40;
+    --visual-stroke-opacity-13: 0.48;
+    --visual-stroke-opacity-14: 0.56;
+    --visual-stroke-opacity-15: 0.64;
+    --visual-stroke-opacity-16: 0.72;
+    --visual-stroke-opacity-17: 0.80;
+    --visual-stroke-opacity-18: 0.88;
+    --visual-stroke-opacity-19: 0.94;
+    --visual-stroke-opacity-20: 1;
+}

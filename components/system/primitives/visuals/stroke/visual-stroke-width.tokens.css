@@ -1,0 +1,40 @@
+/* ==========================================================
+   OUTFLO — VISUAL STROKE WIDTH TOKENS
+   File: components/system/primitives/visuals/stroke/visual-stroke-width.tokens.css
+   Scope: Canonical SVG and line stroke-width dial
+   Updated: 2026-07-10 21:48
+   ========================================================== */
+
+/* ------------------------------
+   Provisional Dial
+
+   Existing 0–10 values occupy
+   even-numbered units.
+
+   Odd-numbered units provide
+   intermediate stroke-width precision.
+-------------------------------- */
+
+:root {
+    --visual-stroke-width-0: 0;
+    --visual-stroke-width-1: 0.25px;
+    --visual-stroke-width-2: 0.5px;
+    --visual-stroke-width-3: 0.75px;
+    --visual-stroke-width-4: 1px;
+    --visual-stroke-width-5: 1.25px;
+    --visual-stroke-width-6: 1.5px;
+    --visual-stroke-width-7: 1.75px;
+    --visual-stroke-width-8: 2px;
+    --visual-stroke-width-9: 2.5px;
+    --visual-stroke-width-10: 3px;
+    --visual-stroke-width-11: 3.5px;
+    --visual-stroke-width-12: 4px;
+    --visual-stroke-width-13: 5px;
+    --visual-stroke-width-14: 6px;
+    --visual-stroke-width-15: 7px;
+    --visual-stroke-width-16: 8px;
+    --visual-stroke-width-17: 9px;
+    --visual-stroke-width-18: 10px;
+    --visual-stroke-width-19: 11px;
+    --visual-stroke-width-20: 12px;
+}

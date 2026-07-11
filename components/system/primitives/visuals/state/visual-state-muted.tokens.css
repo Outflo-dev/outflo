@@ -1,0 +1,96 @@
+/* ==========================================================
+   OUTFLO — VISUAL MUTED STATE TOKENS
+   File: components/system/primitives/visuals/state/visual-state-muted.tokens.css
+   Scope: Theme-resolved muted-state paint intensity dial
+   Updated: 2026-07-10 21:48
+   ========================================================== */
+
+/* ------------------------------
+   Provisional Dial
+
+   0–20 resolves from transparent
+   through 5% increments to the
+   full theme-owned source.
+-------------------------------- */
+
+:root {
+    --visual-state-muted-0: transparent;
+
+    --visual-state-muted-1: color-mix(in srgb,
+            var(--visual-state-muted-source) 5%,
+            transparent);
+
+    --visual-state-muted-2: color-mix(in srgb,
+            var(--visual-state-muted-source) 10%,
+            transparent);
+
+    --visual-state-muted-3: color-mix(in srgb,
+            var(--visual-state-muted-source) 15%,
+            transparent);
+
+    --visual-state-muted-4: color-mix(in srgb,
+            var(--visual-state-muted-source) 20%,
+            transparent);
+
+    --visual-state-muted-5: color-mix(in srgb,
+            var(--visual-state-muted-source) 25%,
+            transparent);
+
+    --visual-state-muted-6: color-mix(in srgb,
+            var(--visual-state-muted-source) 30%,
+            transparent);
+
+    --visual-state-muted-7: color-mix(in srgb,
+            var(--visual-state-muted-source) 35%,
+            transparent);
+
+    --visual-state-muted-8: color-mix(in srgb,
+            var(--visual-state-muted-source) 40%,
+            transparent);
+
+    --visual-state-muted-9: color-mix(in srgb,
+            var(--visual-state-muted-source) 45%,
+            transparent);
+
+    --visual-state-muted-10: color-mix(in srgb,
+            var(--visual-state-muted-source) 50%,
+            transparent);
+
+    --visual-state-muted-11: color-mix(in srgb,
+            var(--visual-state-muted-source) 55%,
+            transparent);
+
+    --visual-state-muted-12: color-mix(in srgb,
+            var(--visual-state-muted-source) 60%,
+            transparent);
+
+    --visual-state-muted-13: color-mix(in srgb,
+            var(--visual-state-muted-source) 65%,
+            transparent);
+
+    --visual-state-muted-14: color-mix(in srgb,
+            var(--visual-state-muted-source) 70%,
+            transparent);
+
+    --visual-state-muted-15: color-mix(in srgb,
+            var(--visual-state-muted-source) 75%,
+            transparent);
+
+    --visual-state-muted-16: color-mix(in srgb,
+            var(--visual-state-muted-source) 80%,
+            transparent);
+
+    --visual-state-muted-17: color-mix(in srgb,
+            var(--visual-state-muted-source) 85%,
+            transparent);
+
+    --visual-state-muted-18: color-mix(in srgb,
+            var(--visual-state-muted-source) 90%,
+            transparent);
+
+    --visual-state-muted-19: color-mix(in srgb,
+            var(--visual-state-muted-source) 95%,
+            transparent);
+
+    --visual-state-muted-20: var(--visual-state-muted-source);
+}

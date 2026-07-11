@@ -5,4 +5,9 @@
    ========================================================== */
 
 export { VISUAL } from "./visual.config";
-export type { VisualDial, VisualDialNumber } from "./visual.types";
+
+export type {
+   VisualDial,
+   VisualDialNumber,
+   VisualSelectionDial,
+} from "./visual.types";

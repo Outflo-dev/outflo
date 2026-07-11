@@ -5,15 +5,41 @@
    ========================================================== */
 
 :root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       old 0  → new 0
+       old 1  → new 2
+       old 2  → new 4
+       old 3  → new 6
+       old 4  → new 8
+       old 5  → new 10
+       old 6  → new 12
+       old 7  → new 14
+       old 8  → new 16
+       old 9  → new 18
+       old 10 → new 20
+       ------------------------------------------------------ */
+
     --visual-opacity-0: 0;
-    --visual-opacity-1: 0.04;
-    --visual-opacity-2: 0.08;
-    --visual-opacity-3: 0.12;
-    --visual-opacity-4: 0.18;
-    --visual-opacity-5: 0.28;
-    --visual-opacity-6: 0.40;
-    --visual-opacity-7: 0.56;
-    --visual-opacity-8: 0.72;
-    --visual-opacity-9: 0.88;
-    --visual-opacity-10: 1;
+    --visual-opacity-1: 0.02;
+    --visual-opacity-2: 0.04;
+    --visual-opacity-3: 0.06;
+    --visual-opacity-4: 0.08;
+    --visual-opacity-5: 0.10;
+    --visual-opacity-6: 0.12;
+    --visual-opacity-7: 0.15;
+    --visual-opacity-8: 0.18;
+    --visual-opacity-9: 0.23;
+    --visual-opacity-10: 0.28;
+    --visual-opacity-11: 0.34;
+    --visual-opacity-12: 0.40;
+    --visual-opacity-13: 0.48;
+    --visual-opacity-14: 0.56;
+    --visual-opacity-15: 0.64;
+    --visual-opacity-16: 0.72;
+    --visual-opacity-17: 0.80;
+    --visual-opacity-18: 0.88;
+    --visual-opacity-19: 0.94;
+    --visual-opacity-20: 1;
 }

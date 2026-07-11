@@ -1,0 +1,45 @@
+/* ==========================================================
+   OUTFLO — VISUAL GLOW Y TOKENS
+   File: components/system/primitives/visuals/glow/visual-glow-y.tokens.css
+   Scope: Atomic vertical glow offset dial
+   ========================================================== */
+
+:root {
+    /* ------------------------------------------------------
+       Mapping legend
+
+       old 0  → new 0
+       old 1  → new 2
+       old 2  → new 4
+       old 3  → new 6
+       old 4  → new 8
+       old 5  → new 10
+       old 6  → new 12
+       old 7  → new 14
+       old 8  → new 16
+       old 9  → new 18
+       old 10 → new 20
+       ------------------------------------------------------ */
+
+    --visual-glow-y-0: 0;
+    --visual-glow-y-1: 0.5px;
+    --visual-glow-y-2: 1px;
+    --visual-glow-y-3: 1.5px;
+    --visual-glow-y-4: 2px;
+    --visual-glow-y-5: 2.5px;
+    --visual-glow-y-6: 3px;
+    --visual-glow-y-7: 3.5px;
+    --visual-glow-y-8: 4px;
+    --visual-glow-y-9: 5px;
+    --visual-glow-y-10: 6px;
+    --visual-glow-y-11: 7px;
+    --visual-glow-y-12: 8px;
+    --visual-glow-y-13: 10px;
+    --visual-glow-y-14: 12px;
+    --visual-glow-y-15: 14px;
+    --visual-glow-y-16: 16px;
+    --visual-glow-y-17: 20px;
+    --visual-glow-y-18: 24px;
+    --visual-glow-y-19: 28px;
+    --visual-glow-y-20: 32px;
+}

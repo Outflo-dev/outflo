@@ -1,77 +1,9 @@
 /* ==========================================================
-   OUTFLO — VISUAL BORDER TOKENS
+   OUTFLO — VISUAL BORDER TOKEN MANIFEST
    File: components/system/primitives/visuals/border/visual-border.tokens.css
-   Scope: Atomic border construction and paint dials
+   Scope: Import all canonical border token dials
+   Updated: 2026-07-10 21:48
    ========================================================== */
 
-:root {
-    /* Border width */
-
-    --visual-border-width-0: 0;
-    --visual-border-width-1: 0.5px;
-    --visual-border-width-2: 1px;
-    --visual-border-width-3: 1.5px;
-    --visual-border-width-4: 2px;
-    --visual-border-width-5: 3px;
-    --visual-border-width-6: 4px;
-    --visual-border-width-7: 6px;
-    --visual-border-width-8: 8px;
-    --visual-border-width-9: 10px;
-    --visual-border-width-10: 12px;
-
-    /* Border style */
-
-    --visual-border-style-0: none;
-    --visual-border-style-1: solid;
-    --visual-border-style-2: dashed;
-    --visual-border-style-3: dotted;
-    --visual-border-style-4: double;
-    --visual-border-style-5: groove;
-    --visual-border-style-6: ridge;
-    --visual-border-style-7: inset;
-    --visual-border-style-8: outset;
-    --visual-border-style-9: solid;
-    --visual-border-style-10: solid;
-
-    /* Border color */
-
-    --visual-border-color-0: transparent;
-
-    --visual-border-color-1: color-mix(in srgb,
-            var(--visual-border-color-source) 10%,
-            transparent);
-
-    --visual-border-color-2: color-mix(in srgb,
-            var(--visual-border-color-source) 20%,
-            transparent);
-
-    --visual-border-color-3: color-mix(in srgb,
-            var(--visual-border-color-source) 30%,
-            transparent);
-
-    --visual-border-color-4: color-mix(in srgb,
-            var(--visual-border-color-source) 40%,
-            transparent);
-
-    --visual-border-color-5: color-mix(in srgb,
-            var(--visual-border-color-source) 50%,
-            transparent);
-
-    --visual-border-color-6: color-mix(in srgb,
-            var(--visual-border-color-source) 60%,
-            transparent);
-
-    --visual-border-color-7: color-mix(in srgb,
-            var(--visual-border-color-source) 70%,
-            transparent);
-
-    --visual-border-color-8: color-mix(in srgb,
-            var(--visual-border-color-source) 80%,
-            transparent);
-
-    --visual-border-color-9: color-mix(in srgb,
-            var(--visual-border-color-source) 90%,
-            transparent);
-
-    --visual-border-color-10: var(--visual-border-color-source);
-}
+@import "./visual-border-width.tokens.css";
+@import "./visual-border-color.tokens.css";
