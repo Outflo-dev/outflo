@@ -31,6 +31,7 @@ type EnvironmentViewProps = {
     onBack: () => void;
     onRefresh: () => void;
     refreshing: boolean;
+    lastUpdatedAt: number | null;
     environmentPreferences: EnvironmentPreferences;
 };
 
@@ -38,32 +39,32 @@ type EnvironmentViewProps = {
    Styles
 -------------------------------- */
 const ROOT_STYLE: CSSProperties = {
-    position: "relative",
+    position: VISUAL.position[1],
     width: "100%",
     isolation: "isolate",
 };
 
 const CONTENT_STYLE: CSSProperties = {
-    position: "relative",
-    zIndex: 1,
-    display: "grid",
+    position: VISUAL.position[1],
+    zIndex: VISUAL.zIndex[2],
+    display: VISUAL.display[3],
     rowGap: VISUAL.spacing[2],
 };
 
 const CONTEXT_SLOT_STYLE: CSSProperties = {
-    position: "relative",
-    zIndex: 2,
+    position: VISUAL.position[1],
+    zIndex: VISUAL.zIndex[4],
 };
 
 const HERO_SLOT_STYLE: CSSProperties = {
-    position: "relative",
-    zIndex: 4,
+    position: VISUAL.position[1],
+    zIndex: VISUAL.zIndex[8],
     marginTop: -20,
 };
 
 const TILES_SLOT_STYLE: CSSProperties = {
-    position: "relative",
-    zIndex: 3,
+    position: VISUAL.position[1],
+    zIndex: VISUAL.zIndex[6],
     marginTop: -30,
 };
 
@@ -75,6 +76,7 @@ export default function EnvironmentView({
     onBack,
     onRefresh,
     refreshing,
+    lastUpdatedAt,
     environmentPreferences,
 }: EnvironmentViewProps) {
     return (
@@ -86,11 +88,18 @@ export default function EnvironmentView({
                     onBack={onBack}
                     onRefresh={onRefresh}
                     refreshing={refreshing}
+                    lastUpdatedAt={lastUpdatedAt}
                     environmentPreferences={environmentPreferences}
                 />
 
                 <div style={CONTEXT_SLOT_STYLE}>
-                    <EnvironmentContextCard model={model} />
+                    <EnvironmentContextCard
+                        model={model}
+                        pingCount="—"
+                        moneyValue="—"
+                        onRefresh={onRefresh}
+                        isRefreshing={refreshing}
+                    />
                 </div>
 
                 <div style={HERO_SLOT_STYLE}>

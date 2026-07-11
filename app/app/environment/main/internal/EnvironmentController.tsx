@@ -7,7 +7,7 @@
    Last Updated:
    - ms:
    - iso:
-   - note: remove route frame ownership from controller
+   - note: own last successful Environment refresh timestamp
    ========================================================== */
 
 /* ------------------------------
@@ -42,6 +42,7 @@ export default function EnvironmentController({
     const router = useRouter();
 
     const [refreshing, setRefreshing] = useState(false);
+    const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(null);
 
     const model = useMemo(() => {
         return getEnvironmentModel(
@@ -57,19 +58,21 @@ export default function EnvironmentController({
 
     async function handleRefresh() {
         if (refreshing) return;
-
-        if (!environmentEnabled) {
-            return;
-        }
+        if (!environmentEnabled) return;
 
         setRefreshing(true);
 
         try {
-            await fetch("/api/environment/context/pull", {
+            const response = await fetch("/api/environment/context/pull", {
                 method: "GET",
                 cache: "no-store",
             });
 
+            if (!response.ok) {
+                throw new Error("Environment refresh failed.");
+            }
+
+            setLastUpdatedAt(Date.now());
             router.refresh();
         } finally {
             setRefreshing(false);
@@ -82,6 +85,7 @@ export default function EnvironmentController({
             onBack={handleBack}
             onRefresh={handleRefresh}
             refreshing={refreshing}
+            lastUpdatedAt={lastUpdatedAt}
             environmentPreferences={environmentPreferences}
         />
     );

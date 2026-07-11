@@ -6,17 +6,12 @@
    OUTFLO — ENVIRONMENT HEADER
    File: app/app/environment/main/view/header/EnvironmentHeader.tsx
    Scope: Compose Environment Kelvin header regions
-   Last Updated:
-   - note: compose local header regions toward Kelvin mock
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import {
-    DEFAULT_ENVIRONMENT_PREFERENCES,
-    type EnvironmentPreferences,
-} from "@/lib/app-state/environment/environment-preferences";
+import type { EnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences";
 
 import EnvironmentHeaderFrame from "./internal/EnvironmentHeaderFrame";
 import EnvironmentHeaderCenter from "./internal/regions/EnvironmentHeaderCenter";
@@ -30,18 +25,39 @@ type EnvironmentHeaderProps = {
     onBack: () => void;
     onRefresh: () => void;
     refreshing: boolean;
+    lastUpdatedAt: number | null;
     environmentPreferences?: EnvironmentPreferences;
 };
+
+/* ------------------------------
+   Helpers
+-------------------------------- */
+function getUpdatedLabel(lastUpdatedAt: number | null): string {
+    if (lastUpdatedAt === null) {
+        return "UPDATED —";
+    }
+
+    const elapsedMinutes = Math.floor(
+        (Date.now() - lastUpdatedAt) / 60_000
+    );
+
+    if (elapsedMinutes < 1) {
+        return "UPDATED NOW";
+    }
+
+    return `UPDATED ${elapsedMinutes}M AGO`;
+}
 
 /* ------------------------------
    Component
 -------------------------------- */
 export default function EnvironmentHeader({
     onBack,
-    environmentPreferences,
+    onRefresh,
+    refreshing,
+    lastUpdatedAt,
 }: EnvironmentHeaderProps) {
-    const resolvedPreferences =
-        environmentPreferences ?? DEFAULT_ENVIRONMENT_PREFERENCES;
+    const updatedLabel = getUpdatedLabel(lastUpdatedAt);
 
     return (
         <EnvironmentHeaderFrame
@@ -49,7 +65,9 @@ export default function EnvironmentHeader({
             center={<EnvironmentHeaderCenter />}
             right={
                 <EnvironmentHeaderRight
-                    environmentPreferences={resolvedPreferences}
+                    lastUpdatedAt={lastUpdatedAt}
+                    onRefresh={onRefresh}
+                    refreshing={refreshing}
                 />
             }
         />

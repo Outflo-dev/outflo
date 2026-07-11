@@ -3,7 +3,7 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT CONTEXT CARD
    File: app/app/environment/main/view/context/EnvironmentContextCard.tsx
-   Scope: Render current Environment context through shared card form
+   Scope: Compose current Environment context card owners
    ========================================================== */
 
 /* ------------------------------
@@ -15,12 +15,19 @@ import { VISUAL } from "../../../../../../components/system/primitives/visuals";
 
 import type { EnvironmentViewModel } from "../../internal/environment.types";
 import EnvironmentCard from "../primitives/EnvironmentCard";
+import EnvironmentContextContent from "./EnvironmentContextContent";
+import EnvironmentContextMetrics from "./EnvironmentContextMetrics";
+import EnvironmentContextRefreshAction from "./EnvironmentContextRefreshAction";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type EnvironmentContextCardProps = {
     model: EnvironmentViewModel;
+    pingCount?: string;
+    moneyValue?: string;
+    isRefreshing?: boolean;
+    onRefresh?: () => void;
 };
 
 /* ------------------------------
@@ -31,60 +38,34 @@ const CONTEXT_CARD_STYLE: CSSProperties = {
     padding: `${VISUAL.spacing[10]} ${VISUAL.spacing[12]}`,
 };
 
-const CONTENT_STYLE: CSSProperties = {
+const CARD_LAYOUT_STYLE: CSSProperties = {
     display: VISUAL.display[3],
-    rowGap: VISUAL.spacing[10],
+    gridTemplateColumns: "minmax(0, 1fr) auto",
+    gridTemplateRows: "auto 1fr",
+    columnGap: VISUAL.spacing[12],
+    height: "100%",
 };
 
-const EYEBROW_STYLE: CSSProperties = {
-    margin: 0,
-    color: VISUAL.text[10],
-    fontFamily: VISUAL.type.family[2],
-    fontSize: VISUAL.type.size[2],
-    fontWeight: VISUAL.type.weight[8],
-    lineHeight: VISUAL.type.line[2],
-    letterSpacing: "0.2em",
-    textTransform: VISUAL.type.transform[2],
+const CONTENT_SLOT_STYLE: CSSProperties = {
+    gridColumn: 1,
+    gridRow: "1 / span 2",
+    minWidth: 0,
 };
 
-const PLACE_STYLE: CSSProperties = {
-    margin: 0,
-    color: VISUAL.text[20],
-    fontFamily: VISUAL.type.family[2],
-    fontSize: "clamp(16px, 4.2vw, 20px)",
-    fontWeight: VISUAL.type.weight[3],
-    lineHeight: 0.98,
-    letterSpacing: VISUAL.type.tracking[4],
-};
-
-const META_STYLE: CSSProperties = {
-    margin: `${VISUAL.spacing[6]} 0 0`,
+const REFRESH_SLOT_STYLE: CSSProperties = {
+    gridColumn: 2,
+    gridRow: 1,
     display: VISUAL.display[6],
-    alignItems: "center",
-    width: "fit-content",
-    color: "var(--environment-context-state)",
-    fontFamily: VISUAL.type.family[2],
-    fontSize: VISUAL.type.size[6],
-    fontWeight: VISUAL.type.weight[8],
-    lineHeight: VISUAL.type.line[2],
-    letterSpacing: "0.15em",
-    textTransform: VISUAL.type.transform[2],
+    justifyContent: "flex-end",
+    alignItems: "flex-start",
 };
 
-const PRECISION_DOT_STYLE: CSSProperties = {
-    width: VISUAL.spacing[6],
-    height: VISUAL.spacing[6],
-    flex: "0 0 auto",
-    marginRight: VISUAL.spacing[8],
-    borderRadius: VISUAL.radius[20],
-    background: "var(--environment-context-state)",
-    boxShadow: `
-        ${VISUAL.glow.x[0]}
-        ${VISUAL.glow.y[0]}
-        ${VISUAL.glow.blur[4]}
-        ${VISUAL.glow.spread[0]}
-        var(--environment-context-state)
-    `,
+const METRICS_SLOT_STYLE: CSSProperties = {
+    gridColumn: 2,
+    gridRow: 2,
+    display: VISUAL.display[6],
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
 };
 
 /* ------------------------------
@@ -92,6 +73,10 @@ const PRECISION_DOT_STYLE: CSSProperties = {
 -------------------------------- */
 export default function EnvironmentContextCard({
     model,
+    pingCount = "—",
+    moneyValue = "—",
+    isRefreshing = false,
+    onRefresh,
 }: EnvironmentContextCardProps) {
     const placeLabel = model.hero.place;
     const precisionLabel = model.hasSnapshot ? "PRECISE" : "WAITING";
@@ -103,24 +88,32 @@ export default function EnvironmentContextCard({
     return (
         <EnvironmentCard
             variant="raised"
-            style={
-                {
-                    ...CONTEXT_CARD_STYLE,
-                    "--environment-context-state": precisionToken,
-                } as CSSProperties
-            }
+            style={CONTEXT_CARD_STYLE}
             ariaLabel="Current environment context"
         >
-            <div style={CONTENT_STYLE}>
-                <p style={EYEBROW_STYLE}>Current Context</p>
+            <div style={CARD_LAYOUT_STYLE}>
+                <div style={CONTENT_SLOT_STYLE}>
+                    <EnvironmentContextContent
+                        placeLabel={placeLabel}
+                        precisionLabel={precisionLabel}
+                        precisionToken={precisionToken}
+                    />
+                </div>
 
-                <div>
-                    <h2 style={PLACE_STYLE}>{placeLabel}</h2>
+                {onRefresh ? (
+                    <div style={REFRESH_SLOT_STYLE}>
+                        <EnvironmentContextRefreshAction
+                            onRefresh={onRefresh}
+                            isRefreshing={isRefreshing}
+                        />
+                    </div>
+                ) : null}
 
-                    <p style={META_STYLE}>
-                        <span style={PRECISION_DOT_STYLE} aria-hidden="true" />
-                        {precisionLabel}
-                    </p>
+                <div style={METRICS_SLOT_STYLE}>
+                    <EnvironmentContextMetrics
+                        pingCount={pingCount}
+                        moneyValue={moneyValue}
+                    />
                 </div>
             </div>
         </EnvironmentCard>

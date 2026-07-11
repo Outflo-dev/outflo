@@ -1,0 +1,137 @@
+/* ==========================================================
+   OUTFLO — ENVIRONMENT REFRESH RING MOTION
+   File: components/system/primitives/marks/environment/refresh-ring/environment-refresh-ring.module.css
+   Scope: Own Environment refresh ring state transitions and wind motion
+   ========================================================== */
+
+/* ------------------------------
+   Root
+-------------------------------- */
+.ring {
+    pointer-events: none;
+}
+
+/* ------------------------------
+   Shared State Layers
+-------------------------------- */
+.glow {
+    opacity: 1;
+    transition: opacity 180ms ease;
+}
+
+.outfloRing {
+    opacity: 1;
+    transition: opacity 180ms ease;
+}
+
+.idle {
+    opacity: 1;
+    transition: opacity 140ms ease;
+}
+
+.wind {
+    opacity: 0;
+    transform-box: view-box;
+    transform-origin: 22px 22px;
+    transition: opacity 160ms ease;
+}
+
+.success {
+    opacity: 0;
+    transition: opacity 180ms ease;
+}
+
+/* ------------------------------
+   Updating State
+-------------------------------- */
+.refreshing .glow {
+    opacity: 0.12;
+}
+
+.refreshing .outfloRing {
+    opacity: 0.28;
+}
+
+.refreshing .idle {
+    opacity: 0;
+}
+
+.refreshing .wind {
+    opacity: 1;
+    animation:
+        refreshRingSweep 1.35s linear infinite,
+        refreshRingBreathe 1.35s ease-in-out infinite;
+}
+
+.refreshing .success {
+    opacity: 0;
+}
+
+/* ------------------------------
+   Success State
+-------------------------------- */
+.succeeded .glow {
+    opacity: 0.22;
+}
+
+.succeeded .outfloRing {
+    opacity: 0.18;
+}
+
+.succeeded .idle {
+    opacity: 0;
+}
+
+.succeeded .wind {
+    opacity: 0;
+    animation: none;
+}
+
+.succeeded .success {
+    opacity: 1;
+}
+
+/* ------------------------------
+   Wind Sweep
+-------------------------------- */
+@keyframes refreshRingSweep {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ------------------------------
+   Wind Breath
+-------------------------------- */
+@keyframes refreshRingBreathe {
+
+    0%,
+    100% {
+        opacity: 0.82;
+        filter: brightness(0.94);
+    }
+
+    45% {
+        opacity: 1;
+        filter: brightness(1.14);
+    }
+
+    70% {
+        opacity: 0.9;
+        filter: brightness(1.02);
+    }
+}
+
+/* ------------------------------
+   Reduced Motion
+-------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .refreshing .wind {
+        animation: none;
+        opacity: 1;
+    }
+}
