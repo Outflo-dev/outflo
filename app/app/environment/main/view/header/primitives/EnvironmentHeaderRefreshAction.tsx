@@ -37,7 +37,7 @@ type EnvironmentRefreshRingState =
 /* ------------------------------
    Constants
 -------------------------------- */
-const SUCCESS_DURATION_MS = 900;
+const SUCCESS_DURATION_MS = 10_000;
 
 /* ------------------------------
    Styles
