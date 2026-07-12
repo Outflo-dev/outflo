@@ -1,7 +1,7 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT REFRESH MARK
    File: components/system/primitives/marks/environment/EnvironmentRefreshMark.tsx
-   Scope: Render Environment refresh action geometry
+   Scope: Render conventional two-arrow Environment refresh geometry
    ========================================================== */
 
 /* ------------------------------
@@ -42,17 +42,41 @@ export default function EnvironmentRefreshMark({
                 xmlns="http://www.w3.org/2000/svg"
             >
                 <path
-                    d="M18.2 8.1A7.25 7.25 0 1 0 19.25 14"
+                    d="
+                        M21 12
+                        A9 9 0 0 0 5.78 5.78
+                        L3 8
+                    "
                     stroke="currentColor"
-                    strokeWidth="1.5"
+                    strokeWidth="1.6"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                 />
 
                 <path
-                    d="M18.2 4.75V8.1H14.85"
+                    d="M3 3V8H8"
                     stroke="currentColor"
-                    strokeWidth="1.5"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+
+                <path
+                    d="
+                        M3 12
+                        A9 9 0 0 0 18.22 18.22
+                        L21 16
+                    "
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+
+                <path
+                    d="M21 21V16H16"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                 />

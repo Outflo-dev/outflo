@@ -1,0 +1,71 @@
+/* ==========================================================
+   OUTFLO — ENVIRONMENT HEADER REFRESH ACTION MOTION
+   File: app/app/environment/main/view/header/primitives/EnvironmentHeaderRefreshAction.module.css
+   Scope: Own Environment refresh control interaction and mark motion
+   ========================================================== */
+
+.button {
+    transition:
+        transform 160ms ease,
+        opacity 160ms ease,
+        filter 160ms ease,
+        box-shadow 180ms ease;
+}
+
+.button:hover:not(:disabled) {
+    filter: brightness(1.08);
+}
+
+.button:active:not(:disabled) {
+    transform:
+        translateY(-1px) scale(0.96);
+}
+
+.button:focus-visible {
+    outline: 2px solid var(--theme-accent);
+    outline-offset: 3px;
+}
+
+.button:disabled {
+    cursor: default;
+}
+
+.mark {
+    display: grid;
+    place-items: center;
+    transform-origin: center;
+    transition:
+        opacity 160ms ease,
+        transform 180ms ease;
+}
+
+.refreshing {
+    opacity: 0.82;
+}
+
+.refreshing .mark {
+    animation: environmentRefreshSpin 900ms linear infinite;
+}
+
+@keyframes environmentRefreshSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .button,
+    .mark {
+        transition: none;
+    }
+
+    .refreshing .mark {
+        animation: none;
+        opacity: 0.64;
+    }
+}

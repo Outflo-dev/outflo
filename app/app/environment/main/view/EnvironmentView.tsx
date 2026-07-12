@@ -97,8 +97,6 @@ export default function EnvironmentView({
                         model={model}
                         pingCount="—"
                         moneyValue="—"
-                        onRefresh={onRefresh}
-                        isRefreshing={refreshing}
                     />
                 </div>
 

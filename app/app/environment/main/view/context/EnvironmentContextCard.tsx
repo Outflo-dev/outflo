@@ -17,7 +17,6 @@ import type { EnvironmentViewModel } from "../../internal/environment.types";
 import EnvironmentCard from "../primitives/EnvironmentCard";
 import EnvironmentContextContent from "./EnvironmentContextContent";
 import EnvironmentContextMetrics from "./EnvironmentContextMetrics";
-import EnvironmentContextRefreshAction from "./EnvironmentContextRefreshAction";
 
 /* ------------------------------
    Types
@@ -26,46 +25,33 @@ type EnvironmentContextCardProps = {
     model: EnvironmentViewModel;
     pingCount?: string;
     moneyValue?: string;
-    isRefreshing?: boolean;
-    onRefresh?: () => void;
 };
 
 /* ------------------------------
    Styles
 -------------------------------- */
 const CONTEXT_CARD_STYLE: CSSProperties = {
-    minHeight: 86,
-    padding: `${VISUAL.spacing[10]} ${VISUAL.spacing[12]}`,
+    minHeight: 74,
+    padding: `${VISUAL.spacing[8]} ${VISUAL.spacing[10]}`,
 };
 
 const CARD_LAYOUT_STYLE: CSSProperties = {
     display: VISUAL.display[3],
     gridTemplateColumns: "minmax(0, 1fr) auto",
-    gridTemplateRows: "auto 1fr",
-    columnGap: VISUAL.spacing[12],
+    columnGap: VISUAL.spacing[8],
+    alignItems: "center",
     height: "100%",
 };
 
 const CONTENT_SLOT_STYLE: CSSProperties = {
-    gridColumn: 1,
-    gridRow: "1 / span 2",
     minWidth: 0,
 };
 
-const REFRESH_SLOT_STYLE: CSSProperties = {
-    gridColumn: 2,
-    gridRow: 1,
-    display: VISUAL.display[6],
-    justifyContent: "flex-end",
-    alignItems: "flex-start",
-};
-
 const METRICS_SLOT_STYLE: CSSProperties = {
-    gridColumn: 2,
-    gridRow: 2,
     display: VISUAL.display[6],
     justifyContent: "flex-end",
-    alignItems: "flex-end",
+    alignItems: "center",
+    minWidth: 0,
 };
 
 /* ------------------------------
@@ -75,11 +61,12 @@ export default function EnvironmentContextCard({
     model,
     pingCount = "—",
     moneyValue = "—",
-    isRefreshing = false,
-    onRefresh,
 }: EnvironmentContextCardProps) {
     const placeLabel = model.hero.place;
-    const precisionLabel = model.hasSnapshot ? "PRECISE" : "WAITING";
+
+    const precisionLabel = model.hasSnapshot
+        ? "PRECISE"
+        : "WAITING";
 
     const precisionToken = model.hasSnapshot
         ? VISUAL.state.good[18]
@@ -99,15 +86,6 @@ export default function EnvironmentContextCard({
                         precisionToken={precisionToken}
                     />
                 </div>
-
-                {onRefresh ? (
-                    <div style={REFRESH_SLOT_STYLE}>
-                        <EnvironmentContextRefreshAction
-                            onRefresh={onRefresh}
-                            isRefreshing={isRefreshing}
-                        />
-                    </div>
-                ) : null}
 
                 <div style={METRICS_SLOT_STYLE}>
                     <EnvironmentContextMetrics

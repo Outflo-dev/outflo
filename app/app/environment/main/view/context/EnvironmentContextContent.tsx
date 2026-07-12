@@ -25,51 +25,72 @@ type EnvironmentContextContentProps = {
 -------------------------------- */
 const CONTENT_STYLE: CSSProperties = {
     display: VISUAL.display[3],
-    rowGap: VISUAL.spacing[10],
+    rowGap: VISUAL.spacing[6],
+    minWidth: 0,
 };
 
 const EYEBROW_STYLE: CSSProperties = {
     margin: 0,
+
     color: VISUAL.text[10],
+
     fontFamily: VISUAL.type.family[2],
-    fontSize: VISUAL.type.size[2],
+    fontSize: VISUAL.type.size[1],
     fontWeight: VISUAL.type.weight[8],
     lineHeight: VISUAL.type.line[2],
-    letterSpacing: "0.2em",
+    letterSpacing: "0.18em",
     textTransform: VISUAL.type.transform[2],
+};
+
+const CONTEXT_STYLE: CSSProperties = {
+    display: VISUAL.display[3],
+    rowGap: VISUAL.spacing[4],
+    minWidth: 0,
 };
 
 const PLACE_STYLE: CSSProperties = {
     margin: 0,
+
+    overflow: "hidden",
     color: VISUAL.text[20],
+
     fontFamily: VISUAL.type.family[2],
-    fontSize: "clamp(16px, 4.2vw, 20px)",
+    fontSize: "clamp(16px, 4vw, 19px)",
     fontWeight: VISUAL.type.weight[3],
-    lineHeight: 0.98,
+    lineHeight: 1,
     letterSpacing: VISUAL.type.tracking[4],
+
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
 };
 
 const META_STYLE: CSSProperties = {
-    margin: `${VISUAL.spacing[6]} 0 0`,
+    margin: 0,
+
     display: VISUAL.display[6],
     alignItems: "center",
     width: "fit-content",
+
     color: "var(--environment-context-state)",
+
     fontFamily: VISUAL.type.family[2],
-    fontSize: VISUAL.type.size[6],
+    fontSize: VISUAL.type.size[4],
     fontWeight: VISUAL.type.weight[8],
     lineHeight: VISUAL.type.line[2],
-    letterSpacing: "0.15em",
+    letterSpacing: "0.14em",
     textTransform: VISUAL.type.transform[2],
 };
 
 const PRECISION_DOT_STYLE: CSSProperties = {
-    width: VISUAL.spacing[6],
-    height: VISUAL.spacing[6],
+    width: VISUAL.spacing[4],
+    height: VISUAL.spacing[4],
     flex: "0 0 auto",
-    marginRight: VISUAL.spacing[8],
+
+    marginRight: VISUAL.spacing[5],
+
     borderRadius: VISUAL.radius[20],
     background: "var(--environment-context-state)",
+
     boxShadow: `
         ${VISUAL.glow.x[0]}
         ${VISUAL.glow.y[0]}
@@ -96,13 +117,21 @@ export default function EnvironmentContextContent({
                 } as CSSProperties
             }
         >
-            <p style={EYEBROW_STYLE}>Current Context</p>
+            <p style={EYEBROW_STYLE}>
+                Current Context
+            </p>
 
-            <div>
-                <h2 style={PLACE_STYLE}>{placeLabel}</h2>
+            <div style={CONTEXT_STYLE}>
+                <h2 style={PLACE_STYLE}>
+                    {placeLabel}
+                </h2>
 
                 <p style={META_STYLE}>
-                    <span style={PRECISION_DOT_STYLE} aria-hidden="true" />
+                    <span
+                        style={PRECISION_DOT_STYLE}
+                        aria-hidden="true"
+                    />
+
                     {precisionLabel}
                 </p>
             </div>

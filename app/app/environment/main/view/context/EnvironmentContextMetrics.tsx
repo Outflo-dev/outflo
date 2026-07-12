@@ -13,7 +13,10 @@ import {
     EnvironmentMoneyMark,
     EnvironmentPingMark,
 } from "../../../../../../components/system/primitives/marks/environment";
-import { VISUAL } from "../../../../../../components/system/primitives/visuals";
+
+import {
+    VISUAL,
+} from "../../../../../../components/system/primitives/visuals";
 
 import EnvironmentContextMetric from "./primitives/EnvironmentContextMetric";
 
@@ -30,12 +33,12 @@ type EnvironmentContextMetricsProps = {
 -------------------------------- */
 const METRICS_STYLE: CSSProperties = {
     display: VISUAL.display[3],
-    gridTemplateColumns: "repeat(2, auto)",
-    alignItems: "center",
-    columnGap: VISUAL.spacing[12],
+    gridTemplateColumns: "repeat(2, minmax(0, auto))",
+    alignItems: "end",
+    columnGap: VISUAL.spacing[6],
 };
 
-const MARK_SIZE = VISUAL.spacing[10];
+const MARK_SIZE = VISUAL.spacing[8];
 
 /* ------------------------------
    Component

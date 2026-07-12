@@ -3,23 +3,21 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT HEADER REFRESH ACTION
    File: app/app/environment/main/view/header/primitives/EnvironmentHeaderRefreshAction.tsx
-   Scope: Own Environment refresh interaction and mount refresh ring
+   Scope: Own Environment refresh interaction and control composition
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import {
-    useEffect,
-    useRef,
-    useState,
-} from "react";
-
 import type { CSSProperties } from "react";
 
 import {
-    EnvironmentRefreshRing,
+    EnvironmentRefreshMark,
 } from "@/components/system/primitives/marks/environment";
+
+import { VISUAL } from "@/components/system/primitives/visuals";
+
+import styles from "./EnvironmentHeaderRefreshAction.module.css";
 
 /* ------------------------------
    Types
@@ -29,42 +27,74 @@ type EnvironmentHeaderRefreshActionProps = {
     refreshing: boolean;
 };
 
-type EnvironmentRefreshRingState =
-    | "idle"
-    | "refreshing"
-    | "success";
-
-/* ------------------------------
-   Constants
--------------------------------- */
-const SUCCESS_DURATION_MS = 10_000;
-
 /* ------------------------------
    Styles
 -------------------------------- */
 const BUTTON_STYLE: CSSProperties = {
-    position: "relative",
-    display: "grid",
+    position: VISUAL.position[1],
+    display: VISUAL.display[3],
     placeItems: "center",
 
-    width: "clamp(36px, 9.4vw, 44px)",
-    height: "clamp(36px, 9.4vw, 44px)",
+    width: "clamp(34px, 8.8vw, 40px)",
+    height: "clamp(34px, 8.8vw, 40px)",
 
     margin: 0,
     padding: 0,
-    border: 0,
-    borderRadius: 999,
 
-    background: "transparent",
+    borderWidth: VISUAL.border.width[3],
+    borderStyle: VISUAL.border.style[1],
+    borderColor: "transparent",
+    borderRadius: VISUAL.radius[20],
+
+    background: `
+        linear-gradient(
+            color-mix(
+                in srgb,
+                var(--theme-background) 88%,
+                var(--theme-surface-raised)
+            ),
+            color-mix(
+                in srgb,
+                var(--theme-background) 88%,
+                var(--theme-surface-raised)
+            )
+        ) padding-box,
+        linear-gradient(
+            135deg,
+            var(--theme-accent),
+            var(--theme-semantic-proof)
+        ) border-box
+    `,
+
+    color: "var(--theme-text-primary)",
+
+    boxShadow: `
+        0 0 0 1px color-mix(
+            in srgb,
+            var(--theme-accent) 14%,
+            transparent
+        ),
+        0 0 12px color-mix(
+            in srgb,
+            var(--theme-accent) 28%,
+            transparent
+        ),
+        0 0 20px color-mix(
+            in srgb,
+            var(--theme-semantic-proof) 20%,
+            transparent
+        ),
+        inset 0 0 10px color-mix(
+            in srgb,
+            var(--theme-accent) 8%,
+            transparent
+        )
+    `,
 
     cursor: "pointer",
     transform: "translateY(-1px)",
-    WebkitTapHighlightColor: "transparent",
-};
 
-const RING_STYLE: CSSProperties = {
-    position: "absolute",
-    inset: 0,
+    WebkitTapHighlightColor: "transparent",
 };
 
 /* ------------------------------
@@ -74,35 +104,12 @@ export default function EnvironmentHeaderRefreshAction({
     onRefresh,
     refreshing,
 }: EnvironmentHeaderRefreshActionProps) {
-    const [ringState, setRingState] =
-        useState<EnvironmentRefreshRingState>("idle");
-
-    const previousRefreshingRef = useRef(refreshing);
-
-    useEffect(() => {
-        let successTimer: ReturnType<typeof setTimeout> | undefined;
-
-        const wasRefreshing =
-            previousRefreshingRef.current;
-
-        previousRefreshingRef.current = refreshing;
-
-        if (refreshing) {
-            setRingState("refreshing");
-        } else if (wasRefreshing) {
-            setRingState("success");
-
-            successTimer = setTimeout(() => {
-                setRingState("idle");
-            }, SUCCESS_DURATION_MS);
-        }
-
-        return () => {
-            if (successTimer) {
-                clearTimeout(successTimer);
-            }
-        };
-    }, [refreshing]);
+    const className = [
+        styles.button,
+        refreshing ? styles.refreshing : "",
+    ]
+        .filter(Boolean)
+        .join(" ");
 
     return (
         <button
@@ -110,21 +117,20 @@ export default function EnvironmentHeaderRefreshAction({
             aria-label={
                 refreshing
                     ? "Refreshing Environment"
-                    : ringState === "success"
-                        ? "Environment updated"
-                        : "Refresh Environment"
+                    : "Refresh Environment"
             }
             aria-busy={refreshing}
             disabled={refreshing}
             onClick={onRefresh}
+            className={className}
             style={BUTTON_STYLE}
         >
             <span
                 aria-hidden="true"
-                style={RING_STYLE}
+                className={styles.mark}
             >
-                <EnvironmentRefreshRing
-                    state={ringState}
+                <EnvironmentRefreshMark
+                    size="clamp(14px, 3.8vw, 17px)"
                 />
             </span>
         </button>
