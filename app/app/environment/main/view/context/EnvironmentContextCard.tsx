@@ -3,20 +3,20 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT CONTEXT CARD
    File: app/app/environment/main/view/context/EnvironmentContextCard.tsx
-   Scope: Compose current Environment context card owners
+   Scope: Resolve Context Card display values and compose owned regions
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CSSProperties } from "react";
-
 import { VISUAL } from "../../../../../../components/system/primitives/visuals";
 
 import type { EnvironmentViewModel } from "../../internal/environment.types";
-import EnvironmentCard from "../primitives/EnvironmentCard";
+import EnvironmentContextCardFrame from "./internal/EnvironmentContextCardFrame";
+import EnvironmentContextRight from "./internal/regions/EnvironmentContextRight";
 import EnvironmentContextContent from "./EnvironmentContextContent";
 import EnvironmentContextMetrics from "./EnvironmentContextMetrics";
+import EnvironmentContextLeft from "./internal/regions/EnvironmentContextLeft";
 
 /* ------------------------------
    Types
@@ -25,33 +25,6 @@ type EnvironmentContextCardProps = {
     model: EnvironmentViewModel;
     pingCount?: string;
     moneyValue?: string;
-};
-
-/* ------------------------------
-   Styles
--------------------------------- */
-const CONTEXT_CARD_STYLE: CSSProperties = {
-    minHeight: 74,
-    padding: `${VISUAL.spacing[8]} ${VISUAL.spacing[10]}`,
-};
-
-const CARD_LAYOUT_STYLE: CSSProperties = {
-    display: VISUAL.display[3],
-    gridTemplateColumns: "minmax(0, 1fr) auto",
-    columnGap: VISUAL.spacing[8],
-    alignItems: "center",
-    height: "100%",
-};
-
-const CONTENT_SLOT_STYLE: CSSProperties = {
-    minWidth: 0,
-};
-
-const METRICS_SLOT_STYLE: CSSProperties = {
-    display: VISUAL.display[6],
-    justifyContent: "flex-end",
-    alignItems: "center",
-    minWidth: 0,
 };
 
 /* ------------------------------
@@ -73,27 +46,26 @@ export default function EnvironmentContextCard({
         : VISUAL.state.muted[12];
 
     return (
-        <EnvironmentCard
-            variant="raised"
-            style={CONTEXT_CARD_STYLE}
-            ariaLabel="Current environment context"
-        >
-            <div style={CARD_LAYOUT_STYLE}>
-                <div style={CONTENT_SLOT_STYLE}>
+        <EnvironmentContextCardFrame
+            left={
+                <EnvironmentContextLeft>
                     <EnvironmentContextContent
                         placeLabel={placeLabel}
                         precisionLabel={precisionLabel}
                         precisionToken={precisionToken}
                     />
-                </div>
-
-                <div style={METRICS_SLOT_STYLE}>
-                    <EnvironmentContextMetrics
-                        pingCount={pingCount}
-                        moneyValue={moneyValue}
-                    />
-                </div>
-            </div>
-        </EnvironmentCard>
+                </EnvironmentContextLeft>
+            }
+            right={
+                <EnvironmentContextRight
+                    bottom={
+                        <EnvironmentContextMetrics
+                            pingCount={pingCount}
+                            moneyValue={moneyValue}
+                        />
+                    }
+                />
+            }
+        />
     );
 }

@@ -5,6 +5,4 @@
    ========================================================== */
 
 export { default as EnvironmentMarkFrame } from "./EnvironmentMarkFrame";
-export { default as EnvironmentMoneyMark } from "./EnvironmentMoneyMark";
-export { default as EnvironmentPingMark } from "./EnvironmentPingMark";
 export { default as EnvironmentRefreshMark } from "./EnvironmentRefreshMark";

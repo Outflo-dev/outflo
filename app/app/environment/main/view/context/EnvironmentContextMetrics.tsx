@@ -1,7 +1,7 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT CONTEXT METRICS
    File: app/app/environment/main/view/context/EnvironmentContextMetrics.tsx
-   Scope: Arrange Context Card metrics side by side
+   Scope: Compose interchangeable Context Card metric slots
    ========================================================== */
 
 /* ------------------------------
@@ -10,15 +10,11 @@
 import type { CSSProperties } from "react";
 
 import {
-    EnvironmentMoneyMark,
-    EnvironmentPingMark,
-} from "../../../../../../components/system/primitives/marks/environment";
-
-import {
     VISUAL,
 } from "../../../../../../components/system/primitives/visuals";
 
-import EnvironmentContextMetric from "./primitives/EnvironmentContextMetric";
+import EnvironmentContextPingsTile from "./tiles/EnvironmentContextPingsTile";
+import EnvironmentContextUsdTile from "./tiles/EnvironmentContextUsdTile";
 
 /* ------------------------------
    Types
@@ -34,11 +30,9 @@ type EnvironmentContextMetricsProps = {
 const METRICS_STYLE: CSSProperties = {
     display: VISUAL.display[3],
     gridTemplateColumns: "repeat(2, minmax(0, auto))",
-    alignItems: "end",
-    columnGap: VISUAL.spacing[6],
+    alignItems: "stretch",
+    columnGap: VISUAL.spacing[5],
 };
-
-const MARK_SIZE = VISUAL.spacing[8];
 
 /* ------------------------------
    Component
@@ -49,26 +43,12 @@ export default function EnvironmentContextMetrics({
 }: EnvironmentContextMetricsProps) {
     return (
         <div style={METRICS_STYLE}>
-            <EnvironmentContextMetric
-                label="Pings"
+            <EnvironmentContextPingsTile
                 value={pingCount}
-                mark={
-                    <EnvironmentPingMark
-                        size={MARK_SIZE}
-                        color={VISUAL.text[10]}
-                    />
-                }
             />
 
-            <EnvironmentContextMetric
-                label="Money"
+            <EnvironmentContextUsdTile
                 value={moneyValue}
-                mark={
-                    <EnvironmentMoneyMark
-                        size={MARK_SIZE}
-                        color={VISUAL.text[10]}
-                    />
-                }
             />
         </div>
     );
