@@ -80,11 +80,11 @@ export default function CaptureHeader({ onBack }: CaptureHeaderProps) {
 
             <div style={INTRO_STYLE}>
                 <Text as="h1" type="display" style={TITLE_STYLE}>
-                    Capture
+                    Engagement
                 </Text>
 
                 <Text as="p" type="meta" style={COPY_STYLE}>
-                    Control when environment context is recorded.
+                    Control whether and how Environment is saved.
                 </Text>
             </div>
         </header>

@@ -1,13 +1,12 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — ENVIRONMENT CAPTURE VIEW
+   OUTFLO — ENVIRONMENT ENGAGEMENT VIEW
    File: app/account/profile/(pages)/environment/capture/main/view/CaptureView.tsx
-   Scope: Compose capture control surface
+   Scope: Compose Environment engagement control surface
    Last Updated:
-   - ms: 1779269374486
-   - iso: 2026-05-20T09:29:34.486Z
-   - note: add capture control view with header footer packet shape
+   - iso: 2026-07-13
+   - note: connect Engagement, Precise, and Capture controls
    ========================================================== */
 
 /* ------------------------------
@@ -15,10 +14,15 @@
 -------------------------------- */
 import type { CSSProperties } from "react";
 
-import type { CaptureViewModel } from "../internal/capture.types";
+import type {
+    CaptureControlId,
+    CaptureViewModel,
+} from "../internal/capture.types";
+
+import CaptureFooter from "./footer/CaptureFooter";
 import CaptureHeader from "./header/CaptureHeader";
 import CaptureControlsSection from "./sections/CaptureControlsSection";
-import CaptureFooter from "./footer/CaptureFooter";
+import CaptureSystemSection from "./sections/CaptureSystemSection";
 
 /* ------------------------------
    Types
@@ -26,6 +30,7 @@ import CaptureFooter from "./footer/CaptureFooter";
 type CaptureViewProps = {
     model: CaptureViewModel;
     onBack: () => void;
+    onToggle: (controlId: CaptureControlId) => void;
 };
 
 /* ------------------------------
@@ -40,12 +45,24 @@ const SURFACE_STYLE: CSSProperties = {
 /* ------------------------------
    Component
 -------------------------------- */
-export default function CaptureView({ model, onBack }: CaptureViewProps) {
+export default function CaptureView({
+    model,
+    onBack,
+    onToggle,
+}: CaptureViewProps) {
     return (
         <section style={SURFACE_STYLE}>
             <CaptureHeader onBack={onBack} />
 
-            <CaptureControlsSection model={model} />
+            <CaptureSystemSection
+                model={model}
+                onToggle={onToggle}
+            />
+
+            <CaptureControlsSection
+                model={model}
+                onToggle={onToggle}
+            />
 
             <CaptureFooter />
         </section>

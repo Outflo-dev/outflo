@@ -1,22 +1,49 @@
 /* ==========================================================
-   OUTFLO — ENVIRONMENT CAPTURE TYPES
+   OUTFLO — ENVIRONMENT ENGAGEMENT TYPES
    File: app/account/profile/(pages)/environment/capture/main/internal/capture.types.ts
-   Scope: Define capture control view model contracts
+   Scope: Define Environment engagement page view contracts
    Last Updated:
-   - ms: 1779269374486
-   - iso: 2026-05-20T09:29:34.486Z
-   - note: add capture control row contracts
+   - iso: 2026-07-13
+   - note: distinguish disabled controls from inactive selectable modes
    ========================================================== */
 
 /* ------------------------------
-   Types
+   Imports
 -------------------------------- */
+import type {
+    EnvironmentEngagementMode,
+    EnvironmentEngagementState,
+} from "@/lib/app-state/environment/environment-engagement";
+
+/* ------------------------------
+   State Aliases
+-------------------------------- */
+export type EngagementMode =
+    EnvironmentEngagementMode;
+
+export type EngagementState =
+    EnvironmentEngagementState;
+
+/* ------------------------------
+   Controls
+-------------------------------- */
+export type CaptureControlId =
+    | "engagement"
+    | "precise"
+    | "capture";
+
 export type CaptureControlRowData = {
+    id: CaptureControlId;
     label: string;
     value: string;
-    enabled: boolean;
+    isOn: boolean;
+    isDisabled: boolean;
+    isMuted: boolean;
 };
 
+/* ------------------------------
+   View Model
+-------------------------------- */
 export type CaptureViewModel = {
     controls: CaptureControlRowData[];
 };

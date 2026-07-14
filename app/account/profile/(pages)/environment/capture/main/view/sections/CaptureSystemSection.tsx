@@ -1,12 +1,12 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — ENGAGEMENT CONTROLS SECTION
-   File: app/account/profile/(pages)/environment/capture/main/view/sections/CaptureControlsSection.tsx
-   Scope: Render Precise and Capture engagement controls
+   OUTFLO — ENGAGEMENT SYSTEM SECTION
+   File: app/account/profile/(pages)/environment/capture/main/view/sections/CaptureSystemSection.tsx
+   Scope: Render the Environment Engagement system control
    Last Updated:
    - iso: 2026-07-13
-   - note: separate engagement mode controls from the system control
+   - note: connect the Engagement control to controller state
    ========================================================== */
 
 /* ------------------------------
@@ -25,7 +25,7 @@ import CaptureControlRow from "../rows/CaptureControlRow";
 /* ------------------------------
    Types
 -------------------------------- */
-type CaptureControlsSectionProps = {
+type CaptureSystemSectionProps = {
     model: CaptureViewModel;
     onToggle: (controlId: CaptureControlId) => void;
 };
@@ -44,43 +44,31 @@ const TITLE_STYLE: CSSProperties = {
     textTransform: "uppercase",
 };
 
-const ROW_DIVIDER_STYLE: CSSProperties = {
-    borderBottom: "1px solid var(--border-soft)",
-};
-
 /* ------------------------------
    Component
 -------------------------------- */
-export default function CaptureControlsSection({
+export default function CaptureSystemSection({
     model,
     onToggle,
-}: CaptureControlsSectionProps) {
-    const controls = model.controls.filter(
-        (row) =>
-            row.id === "precise" ||
-            row.id === "capture",
+}: CaptureSystemSectionProps) {
+    const engagement = model.controls.find(
+        (row) => row.id === "engagement",
     );
+
+    if (!engagement) {
+        return null;
+    }
 
     return (
         <section style={SECTION_STYLE}>
             <Text as="h2" type="meta" style={TITLE_STYLE}>
-                Controls
+                System
             </Text>
 
-            <div>
-                {controls.map((row, index) => (
-                    <CaptureControlRow
-                        key={row.id}
-                        row={row}
-                        onToggle={onToggle}
-                        style={
-                            index < controls.length - 1
-                                ? ROW_DIVIDER_STYLE
-                                : undefined
-                        }
-                    />
-                ))}
-            </div>
+            <CaptureControlRow
+                row={engagement}
+                onToggle={onToggle}
+            />
         </section>
     );
 }

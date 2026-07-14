@@ -1,38 +1,65 @@
 /* ==========================================================
-   OUTFLO — ENVIRONMENT CAPTURE MODEL
+   OUTFLO — ENVIRONMENT ENGAGEMENT MODEL
    File: app/account/profile/(pages)/environment/capture/main/internal/capture.sections.ts
-   Scope: Build capture control view model
+   Scope: Build Environment engagement control view model
    Last Updated:
-   - ms: 1779269374486
-   - iso: 2026-05-20T09:29:34.486Z
-   - note: define Off, Moment, and Continuous capture controls
+   - iso: 2026-07-13
+   - note: distinguish disabled controls from inactive selectable modes
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { CaptureViewModel } from "./capture.types";
+import type {
+    CaptureViewModel,
+    EngagementState,
+} from "./capture.types";
 
 /* ------------------------------
    Model
 -------------------------------- */
-export function getCaptureModel(): CaptureViewModel {
+export function getCaptureModel(
+    state: EngagementState,
+): CaptureViewModel {
+    const engagementEnabled = state.enabled;
+
+    const preciseSelected =
+        engagementEnabled &&
+        state.mode === "precise";
+
+    const captureSelected =
+        engagementEnabled &&
+        state.mode === "capture";
+
     return {
         controls: [
             {
-                label: "Off",
-                value: "Do not record Environment context.",
-                enabled: false,
+                id: "engagement",
+                label: "Engagement",
+                value: "Allow Environment to save permitted context.",
+                isOn: engagementEnabled,
+                isDisabled: false,
+                isMuted: false,
             },
             {
-                label: "Moment",
-                value: "Record Environment when explicitly requested.",
-                enabled: false,
+                id: "precise",
+                label: "Precise",
+                value: "Save each permitted emission as it happens.",
+                isOn: preciseSelected,
+                isDisabled: !engagementEnabled,
+                isMuted:
+                    engagementEnabled &&
+                    captureSelected,
             },
             {
-                label: "Continuous",
-                value: "Accept background emitter reports.",
-                enabled: true,
+                id: "capture",
+                label: "Capture",
+                value: "Save Environment only when explicitly requested.",
+                isOn: captureSelected,
+                isDisabled: !engagementEnabled,
+                isMuted:
+                    engagementEnabled &&
+                    preciseSelected,
             },
         ],
     };

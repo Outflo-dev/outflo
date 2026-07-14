@@ -3,9 +3,8 @@
    File: app/account/profile/(pages)/environment/main/internal/environment.sections.ts
    Scope: Build profile environment category doorway view model
    Last Updated:
-   - ms: 1779269374486
-   - iso: 2026-05-20T09:29:34.486Z
-   - note: add Display section and normalize environment action grammar
+   - iso: 2026-07-13
+   - note: move Location to Signals and replace Capture doorway with Engagement
    ========================================================== */
 
 /* ------------------------------
@@ -22,26 +21,26 @@ export function getEnvironmentModel(): EnvironmentViewModel {
             {
                 mark: "environment",
                 label: "Environment",
-                value: "Environment may participate in Outflō.",
+                value: "Control whether Environment is available in Outflō.",
                 actionLabel: "On",
             },
             {
-                mark: "location",
-                label: "Location",
-                value: "Control how place enters Environment.",
-                href: "/account/profile/environment/location",
-                actionLabel: "Select",
-            },
-            {
                 mark: "capture",
-                label: "Capture",
-                value: "Control when Environment records.",
+                label: "Engagement",
+                value: "Control whether and how Environment records.",
                 href: "/account/profile/environment/capture",
                 actionLabel: "Controls",
             },
         ],
 
         signals: [
+            {
+                mark: "location",
+                label: "Location",
+                value: "Control how place enters Environment.",
+                href: "/account/profile/environment/location",
+                actionLabel: "Controls",
+            },
             {
                 mark: "weather",
                 label: "Weather",

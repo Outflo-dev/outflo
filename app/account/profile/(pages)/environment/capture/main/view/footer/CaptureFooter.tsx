@@ -1,13 +1,12 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — CAPTURE FOOTER
+   OUTFLO — ENGAGEMENT FOOTER
    File: app/account/profile/(pages)/environment/capture/main/view/footer/CaptureFooter.tsx
-   Scope: Render capture controls permission footer
+   Scope: Render Environment engagement boundary
    Last Updated:
-   - ms: 1779269374486
-   - iso: 2026-05-20T09:29:34.486Z
-   - note: add capture control boundary footer
+   - iso: 2026-07-13
+   - note: align footer language with Environment engagement law
    ========================================================== */
 
 /* ------------------------------
@@ -45,12 +44,12 @@ export default function CaptureFooter() {
     return (
         <footer style={FOOTER_STYLE}>
             <Text as="p" type="meta" style={LABEL_STYLE}>
-                Capture boundary
+                Engagement boundary
             </Text>
 
             <Text as="p" type="meta" style={COPY_STYLE}>
-                Turning capture off stops future user-specific environment records
-                without changing past snapshots.
+                Turning Engagement off stops future Environment records
+                without changing existing history.
             </Text>
         </footer>
     );

@@ -1,13 +1,12 @@
 "use client";
 
 /* ==========================================================
-   OUTFLO — CAPTURE CONTROL ROW
+   OUTFLO — ENGAGEMENT CONTROL ROW
    File: app/account/profile/(pages)/environment/capture/main/view/rows/CaptureControlRow.tsx
-   Scope: Render one capture switch row
+   Scope: Render one interactive Environment engagement switch row
    Last Updated:
-   - ms: 1779269374486
-   - iso: 2026-05-20T09:29:34.486Z
-   - note: add inert capture switch row
+   - iso: 2026-07-13
+   - note: distinguish disabled rows from inactive selectable modes
    ========================================================== */
 
 /* ------------------------------
@@ -17,7 +16,10 @@ import type { CSSProperties } from "react";
 
 import Text from "@/components/system/primitives/display/type/Text";
 
-import type { CaptureControlRowData } from "../../internal/capture.types";
+import type {
+    CaptureControlId,
+    CaptureControlRowData,
+} from "../../internal/capture.types";
 
 /* ------------------------------
    Types
@@ -25,6 +27,7 @@ import type { CaptureControlRowData } from "../../internal/capture.types";
 type CaptureControlRowProps = {
     row: CaptureControlRowData;
     style?: CSSProperties;
+    onToggle: (controlId: CaptureControlId) => void;
 };
 
 /* ------------------------------
@@ -36,6 +39,7 @@ const ROW_STYLE: CSSProperties = {
     gridTemplateColumns: "minmax(0, 1fr) auto",
     alignItems: "center",
     columnGap: 18,
+    transition: "opacity 160ms ease",
 };
 
 const TEXT_STACK_STYLE: CSSProperties = {
@@ -51,20 +55,35 @@ const VALUE_STYLE: CSSProperties = {
 const SWITCH_STYLE: CSSProperties = {
     width: 48,
     height: 28,
+    boxSizing: "border-box",
+
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "flex-start",
+
+    appearance: "none",
     border: "1px solid var(--border-soft)",
     borderRadius: 999,
     padding: 2,
+
+    overflow: "hidden",
     background: "var(--surface-muted)",
+
+    transition:
+        "border-color 160ms ease, background 160ms ease",
 };
 
 const SWITCH_DOT_STYLE: CSSProperties = {
     width: 22,
     height: 22,
+    flex: "0 0 auto",
+
     borderRadius: 999,
     background: "var(--text-tertiary)",
+
+    transform: "translateX(0)",
+    transition:
+        "transform 160ms ease, background 160ms ease",
 };
 
 /* ------------------------------
@@ -73,27 +92,85 @@ const SWITCH_DOT_STYLE: CSSProperties = {
 export default function CaptureControlRow({
     row,
     style,
+    onToggle,
 }: CaptureControlRowProps) {
+    const rowOpacity = row.isDisabled
+        ? 0.42
+        : row.isMuted
+            ? 0.62
+            : 1;
+
+    const rowStyle: CSSProperties = {
+        ...ROW_STYLE,
+        ...style,
+        opacity: rowOpacity,
+    };
+
+    const switchStyle: CSSProperties = {
+        ...SWITCH_STYLE,
+
+        borderColor: row.isOn
+            ? "var(--accent-primary)"
+            : "var(--border-soft)",
+
+        background: row.isOn
+            ? "var(--accent-primary)"
+            : "var(--surface-muted)",
+
+        cursor: row.isDisabled
+            ? "not-allowed"
+            : "pointer",
+    };
+
+    const switchDotStyle: CSSProperties = {
+        ...SWITCH_DOT_STYLE,
+
+        background: row.isOn
+            ? "var(--text-primary)"
+            : "var(--text-tertiary)",
+
+        transform: row.isOn
+            ? "translateX(20px)"
+            : "translateX(0)",
+    };
+
+    function handleToggle() {
+        if (row.isDisabled) {
+            return;
+        }
+
+        onToggle(row.id);
+    }
+
     return (
-        <div style={{ ...ROW_STYLE, ...style }}>
+        <div style={rowStyle}>
             <div style={TEXT_STACK_STYLE}>
                 <Text as="h3" type="label">
                     {row.label}
                 </Text>
 
-                <Text as="p" type="meta" style={VALUE_STYLE}>
+                <Text
+                    as="p"
+                    type="meta"
+                    style={VALUE_STYLE}
+                >
                     {row.value}
                 </Text>
             </div>
 
-            <span
-                aria-label={`${row.label} off`}
+            <button
+                type="button"
                 role="switch"
-                aria-checked={row.enabled}
-                style={SWITCH_STYLE}
+                aria-label={`${row.label} ${row.isOn ? "on" : "off"
+                    }`}
+                aria-checked={row.isOn}
+                aria-disabled={row.isDisabled}
+                disabled={row.isDisabled}
+                onClick={handleToggle}
+                style={switchStyle}
             >
-                <span style={SWITCH_DOT_STYLE} />
-            </span>
+                <span style={switchDotStyle} />
+            </button>
         </div>
     );
 }
