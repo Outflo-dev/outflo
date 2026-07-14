@@ -1,19 +1,24 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT MODEL COMPILER
    File: app/app/environment/main/internal/compiler/environment.compiler.ts
-   Scope: Own Environment view model compilation from snapshot truth
+   Scope: Compile live Environment state separately from persisted record proof
    Last Updated:
-   - ms: 1782467976867
-   - iso: 2026-06-26T09:59:36.867Z
-   - note: add location model compilation for Context Card globe projection
+   - iso: 2026-07-14
+   - note: preserve ephemeral Environment resolution without presenting it as recorded truth
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { EnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences";
+import type {
+    EnvironmentEngagementState,
+} from "@/lib/app-state/environment/environment-engagement";
+import type {
+    EnvironmentPreferences,
+} from "@/lib/app-state/environment/environment-preferences";
 
 import type {
+    EnvironmentEngagementModel,
     EnvironmentForecastModel,
     EnvironmentHeroModel,
     EnvironmentLocationModel,
@@ -28,18 +33,26 @@ import {
     formatTemperatureC,
     getEnvironmentDisplayContext,
 } from "./environment.display";
-import { compileEnvironmentForecast } from "./environment.forecast";
+import {
+    compileEnvironmentForecast,
+} from "./environment.forecast";
 import {
     getEnvironmentPlace,
     getEnvironmentSignal,
 } from "./environment.location";
-import { compileEnvironmentRecord } from "./environment.record";
-import { compileEnvironmentSummary } from "./environment.summary";
+import {
+    compileEnvironmentRecord,
+} from "./environment.record";
+import {
+    compileEnvironmentSummary,
+} from "./environment.summary";
 import {
     compileEnvironmentScene,
     getEnvironmentCondition,
 } from "./environment.weather";
-import { formatHeroTime } from "./environment.compiler.utils";
+import {
+    formatHeroTime,
+} from "./environment.compiler.utils";
 import {
     compileEnvironmentTiles,
     getEmptyEnvironmentTiles,
@@ -49,32 +62,100 @@ import {
    Public API
 -------------------------------- */
 export function compileEnvironmentModel(
-    snapshot: EnvironmentSnapshot | null,
+    liveSnapshot: EnvironmentSnapshot | null,
+    recordedSnapshot: EnvironmentSnapshot | null,
     environmentEnabled: boolean,
-    environmentPreferences: EnvironmentPreferences
+    environmentPreferences: EnvironmentPreferences,
+    engagementState: EnvironmentEngagementState,
 ): EnvironmentViewModel {
+    const engagement =
+        compileEnvironmentEngagement(
+            engagementState,
+        );
+
     if (!environmentEnabled) {
-        return getDisabledEnvironmentModel();
+        return getDisabledEnvironmentModel(
+            engagement,
+        );
     }
 
-    if (!snapshot) {
-        return getEmptyEnvironmentModel();
+    const record =
+        compileRecordedEnvironment(
+            recordedSnapshot,
+        );
+
+    if (!liveSnapshot) {
+        return getEmptyEnvironmentModel(
+            engagement,
+            record,
+        );
     }
 
-    const displayContext = getEnvironmentDisplayContext(
-        snapshot,
-        environmentPreferences
-    );
+    const displayContext =
+        getEnvironmentDisplayContext(
+            liveSnapshot,
+            environmentPreferences,
+        );
 
     return {
         hasSnapshot: true,
-        scene: compileEnvironmentScene(snapshot),
-        hero: compileEnvironmentHero(snapshot, displayContext),
-        location: compileEnvironmentLocation(snapshot),
-        tiles: compileEnvironmentTiles(snapshot),
-        forecast: compileEnvironmentForecast(snapshot, displayContext),
-        summary: compileEnvironmentSummary(snapshot, displayContext),
-        record: compileEnvironmentRecord(snapshot),
+
+        scene:
+            compileEnvironmentScene(
+                liveSnapshot,
+            ),
+
+        hero: compileEnvironmentHero(
+            liveSnapshot,
+            displayContext,
+        ),
+
+        location:
+            compileEnvironmentLocation(
+                liveSnapshot,
+            ),
+
+        engagement,
+
+        tiles:
+            compileEnvironmentTiles(
+                liveSnapshot,
+            ),
+
+        forecast:
+            compileEnvironmentForecast(
+                liveSnapshot,
+                displayContext,
+            ),
+
+        summary:
+            compileEnvironmentSummary(
+                liveSnapshot,
+                displayContext,
+            ),
+
+        record,
+    };
+}
+
+/* ------------------------------
+   Engagement
+-------------------------------- */
+function compileEnvironmentEngagement(
+    state: EnvironmentEngagementState,
+): EnvironmentEngagementModel {
+    const selectedMode =
+        state.enabled &&
+            (
+                state.mode === "precise" ||
+                state.mode === "capture"
+            )
+            ? state.mode
+            : null;
+
+    return {
+        enabled: state.enabled,
+        selectedMode,
     };
 }
 
@@ -83,26 +164,43 @@ export function compileEnvironmentModel(
 -------------------------------- */
 function compileEnvironmentHero(
     snapshot: EnvironmentSnapshot,
-    displayContext: ReturnType<typeof getEnvironmentDisplayContext>
+    displayContext: ReturnType<
+        typeof getEnvironmentDisplayContext
+    >,
 ): EnvironmentHeroModel {
-    const temperature = formatTemperatureC(
-        snapshot.temperature_c,
-        displayContext.temperatureUnit
-    );
-    const feelsLike = formatTemperatureC(
-        snapshot.apparent_temperature_c,
-        displayContext.temperatureUnit
-    );
+    const temperature =
+        formatTemperatureC(
+            snapshot.temperature_c,
+            displayContext.temperatureUnit,
+        );
+
+    const feelsLike =
+        formatTemperatureC(
+            snapshot.apparent_temperature_c,
+            displayContext.temperatureUnit,
+        );
 
     return {
-        place: getEnvironmentPlace(snapshot),
+        place:
+            getEnvironmentPlace(snapshot),
+
         temperature,
-        condition: getEnvironmentCondition(snapshot),
-        feelsLike: `Feels like ${feelsLike}`,
-        updated: `Updated ${formatHeroTime(
-            snapshot.environment_context_pulled_at_ms ?? snapshot.moment_ms
-        )}`,
-        signal: getEnvironmentSignal(snapshot),
+
+        condition:
+            getEnvironmentCondition(snapshot),
+
+        feelsLike:
+            `Feels like ${feelsLike}`,
+
+        updated:
+            `Updated ${formatHeroTime(
+                snapshot
+                    .environment_context_pulled_at_ms ??
+                snapshot.moment_ms,
+            )}`,
+
+        signal:
+            getEnvironmentSignal(snapshot),
     };
 }
 
@@ -110,56 +208,101 @@ function compileEnvironmentHero(
    Location
 -------------------------------- */
 function compileEnvironmentLocation(
-    snapshot: EnvironmentSnapshot
+    snapshot: EnvironmentSnapshot,
 ): EnvironmentLocationModel {
-    const latitude = snapshot.latitude;
-    const longitude = snapshot.longitude;
+    const latitude =
+        snapshot.latitude;
+
+    const longitude =
+        snapshot.longitude;
 
     return {
-        latitude: typeof latitude === "number" ? latitude : undefined,
-        longitude: typeof longitude === "number" ? longitude : undefined,
+        latitude:
+            typeof latitude === "number"
+                ? latitude
+                : undefined,
+
+        longitude:
+            typeof longitude === "number"
+                ? longitude
+                : undefined,
     };
+}
+
+/* ------------------------------
+   Recorded Environment
+-------------------------------- */
+function compileRecordedEnvironment(
+    snapshot: EnvironmentSnapshot | null,
+): EnvironmentRecordModel {
+    if (!snapshot) {
+        return getEmptyRecord();
+    }
+
+    return compileEnvironmentRecord(
+        snapshot,
+    );
 }
 
 /* ------------------------------
    Empty States
 -------------------------------- */
-function getEmptyEnvironmentModel(): EnvironmentViewModel {
+function getEmptyEnvironmentModel(
+    engagement: EnvironmentEngagementModel,
+    record: EnvironmentRecordModel,
+): EnvironmentViewModel {
     return {
         hasSnapshot: false,
         scene: getEmptyScene(),
         hero: getEmptyHero(),
         location: getEmptyLocation(),
+        engagement,
         tiles: getEmptyEnvironmentTiles(),
         forecast: getEmptyForecast(),
         summary: getEmptySummary(),
-        record: getEmptyRecord(),
+        record,
     };
 }
 
-function getDisabledEnvironmentModel(): EnvironmentViewModel {
+function getDisabledEnvironmentModel(
+    engagement: EnvironmentEngagementModel,
+): EnvironmentViewModel {
     return {
         hasSnapshot: false,
+
         scene: getEmptyScene(),
+
         hero: {
             ...getEmptyHero(),
             place: "Environment off",
-            condition: "Environment is disabled",
-            signal: "Enable Environment to resume signals",
+            condition:
+                "Environment is disabled",
+            signal:
+                "Enable Environment to resume signals",
         },
+
         location: getEmptyLocation(),
+
+        engagement,
+
         tiles: getEmptyEnvironmentTiles(),
+
         forecast: getEmptyForecast(),
+
         summary: {
             title: "Environment Details",
-            subtitle: "Environment is currently disabled.",
+            subtitle:
+                "Environment is currently disabled.",
             tiles: [],
         },
+
         record: {
             title: "Latest Record",
-            subtitle: "Environment disabled.",
+            subtitle:
+                "Environment disabled.",
             primary: "Off",
-            secondary: "No active environment snapshot.",
+            secondary:
+                "No active environment snapshot.",
         },
     };
 }
@@ -167,49 +310,60 @@ function getDisabledEnvironmentModel(): EnvironmentViewModel {
 /* ------------------------------
    Empty Model Parts
 -------------------------------- */
-function getEmptyScene(): EnvironmentSceneModel {
+function getEmptyScene():
+    EnvironmentSceneModel {
     return {
         key: "empty",
         label: "No snapshot",
     };
 }
 
-function getEmptyHero(): EnvironmentHeroModel {
+function getEmptyHero():
+    EnvironmentHeroModel {
     return {
         place: "Current location",
         temperature: "—",
-        condition: "Waiting for Environment",
+        condition:
+            "Waiting for Environment",
         feelsLike: "Feels like —",
         updated: "Updated —",
         signal: "Signal pending",
     };
 }
 
-function getEmptyLocation(): EnvironmentLocationModel {
+function getEmptyLocation():
+    EnvironmentLocationModel {
     return {};
 }
 
-function getEmptyForecast(): EnvironmentForecastModel {
+function getEmptyForecast():
+    EnvironmentForecastModel {
     return {
         title: "Forecast",
-        subtitle: "Hourly forecast pending",
+        subtitle:
+            "Hourly forecast pending",
         items: [],
     };
 }
 
-function getEmptySummary(): EnvironmentSummarySectionModel {
+function getEmptySummary():
+    EnvironmentSummarySectionModel {
     return {
         title: "Environment Details",
-        subtitle: "Waiting for resolved environment signals.",
+        subtitle:
+            "Waiting for resolved environment signals.",
         tiles: [],
     };
 }
 
-function getEmptyRecord(): EnvironmentRecordModel {
+function getEmptyRecord():
+    EnvironmentRecordModel {
     return {
         title: "Latest Record",
-        subtitle: "Current snapshot proof.",
+        subtitle:
+            "Current snapshot proof.",
         primary: "No snapshot",
-        secondary: "No environment record has been resolved yet.",
+        secondary:
+            "No environment record has been resolved yet.",
     };
 }

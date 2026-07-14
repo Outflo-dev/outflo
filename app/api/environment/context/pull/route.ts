@@ -1,13 +1,29 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT CONTEXT PULL ROUTE
    File: app/api/environment/context/pull/route.ts
-   Scope: Pull derived Environment context from current snapshot and record DB event
+   Scope: Resolve current Environment context and conditionally admit it to persistence
+   Last Updated:
+   - iso: 2026-07-14
+   - note: keep Engagement Off resolutions entirely ephemeral
    ========================================================== */
 
 import { NextResponse } from "next/server";
 
+import {
+    isEnvironmentEngagementSelectableMode,
+    type EnvironmentEngagementState,
+} from "@/lib/app-state/environment/environment-engagement";
+import {
+    getEnvironmentEngagementState,
+} from "@/lib/app-state/environment/environment-engagement.server";
+import {
+    getEnvironmentPreferences,
+} from "@/lib/app-state/environment/environment-preferences.server";
 import { supabaseServer } from "@/lib/supabase/server";
 
+import {
+    buildEnvironmentContextLiveProjection,
+} from "./internal/environment-context-live-projection";
 import {
     pullEnvironmentProviderContext,
     toNumber,
@@ -17,9 +33,32 @@ import {
     buildSnapshotUpdate,
     type EnvironmentSnapshotRow,
 } from "./internal/environment-context-rows";
-import { filterWeatherPersistenceRow } from "./internal/environment-context-permissions";
+import {
+    filterWeatherPersistenceRow,
+} from "./internal/environment-context-permissions";
 
 export const dynamic = "force-dynamic";
+
+/* ------------------------------
+   Types
+-------------------------------- */
+type EnvironmentSnapshotRecord =
+    EnvironmentSnapshotRow &
+    Record<string, unknown>;
+
+/* ------------------------------
+   Engagement
+-------------------------------- */
+function shouldRecordContextEvent(
+    engagementState: EnvironmentEngagementState,
+): boolean {
+    return (
+        engagementState.enabled &&
+        isEnvironmentEngagementSelectableMode(
+            engagementState.mode,
+        )
+    );
+}
 
 /* ------------------------------
    Route
@@ -42,9 +81,12 @@ export async function GET() {
         );
     }
 
-    const { data: snapshot, error: snapshotError } = await supabase
+    const {
+        data: snapshot,
+        error: snapshotError,
+    } = await supabase
         .from("environment_snapshots")
-        .select("id,moment_ms,lat,lng")
+        .select("*")
         .eq("user_id", user.id)
         .maybeSingle();
 
@@ -69,10 +111,16 @@ export async function GET() {
         );
     }
 
-    const typedSnapshot = snapshot as EnvironmentSnapshotRow;
+    const typedSnapshot =
+        snapshot as EnvironmentSnapshotRecord;
 
-    const lat = toNumber(typedSnapshot.lat);
-    const lng = toNumber(typedSnapshot.lng);
+    const lat = toNumber(
+        typedSnapshot.lat,
+    );
+
+    const lng = toNumber(
+        typedSnapshot.lng,
+    );
 
     if (lat === null || lng === null) {
         return NextResponse.json(
@@ -85,120 +133,187 @@ export async function GET() {
         );
     }
 
-    const { data: preferences, error: preferencesError } = await supabase
-        .from("user_preferences")
-        .select("weather_mode")
-        .eq("user_id", user.id)
-        .maybeSingle();
+    let environmentPreferences;
 
-    if (preferencesError) {
+    try {
+        environmentPreferences =
+            await getEnvironmentPreferences();
+    } catch (preferencesReadError) {
         return NextResponse.json(
             {
                 ok: false,
-                code: "ENVIRONMENT_PREFERENCES_READ_FAILED",
-                error: preferencesError.message,
+                code:
+                    "ENVIRONMENT_PREFERENCES_READ_FAILED",
+                error:
+                    preferencesReadError instanceof Error
+                        ? preferencesReadError.message
+                        : "Environment preferences could not be read.",
             },
             { status: 500 },
         );
     }
 
-    const weatherEnabled = preferences?.weather_mode === "on";
+    let engagementState:
+        EnvironmentEngagementState;
+
+    try {
+        engagementState =
+            await getEnvironmentEngagementState();
+    } catch (engagementReadError) {
+        return NextResponse.json(
+            {
+                ok: false,
+                code:
+                    "ENVIRONMENT_ENGAGEMENT_READ_FAILED",
+                error:
+                    engagementReadError instanceof Error
+                        ? engagementReadError.message
+                        : "Environment Engagement could not be read.",
+            },
+            { status: 500 },
+        );
+    }
+
+    const weatherEnabled =
+        environmentPreferences.weather_mode ===
+        "on";
+
+    const recordingRequested =
+        shouldRecordContextEvent(
+            engagementState,
+        );
+
     const pulledAtMs = Date.now();
 
-    const { forecast, airQuality, normalizedContext } =
-        await pullEnvironmentProviderContext({
-            snapshotId: typedSnapshot.id,
-            momentMs: typedSnapshot.moment_ms,
-            lat,
-            lng,
-            pulledAtMs,
-        });
-
-    const rawInsertRow = buildContextEventRow({
-        userId: user.id,
-        snapshot: typedSnapshot,
-        normalizedContext,
+    const {
         forecast,
         airQuality,
+        normalizedContext,
+    } = await pullEnvironmentProviderContext({
+        snapshotId: typedSnapshot.id,
+        momentMs: typedSnapshot.moment_ms,
+        lat,
+        lng,
+        pulledAtMs,
     });
 
-    const insertRow = filterWeatherPersistenceRow({
-        row: rawInsertRow,
-        weatherEnabled,
-    });
+    /*
+     * Resolve the current Environment independently from
+     * participation persistence and Engagement recording.
+     */
+    const liveProjection =
+        buildEnvironmentContextLiveProjection({
+            normalizedContext,
+        });
 
-    const { data: inserted, error: insertError } = await supabase
+    const resolvedSnapshot = {
+        ...typedSnapshot,
+        ...liveProjection,
+    };
+
+    /*
+     * Engagement Off:
+     *
+     * Return the resolved Environment to the active browser
+     * surface without writing an event or updating the
+     * canonical snapshot.
+     */
+    if (!recordingRequested) {
+        return NextResponse.json({
+            ok: true,
+
+            engagement:
+                engagementState,
+
+            recording_requested: false,
+            event_recorded: false,
+            event: null,
+
+            snapshot_persisted: false,
+            resolved_snapshot:
+                resolvedSnapshot,
+        });
+    }
+
+    /*
+     * Capture / Precise:
+     *
+     * The event must be admitted before canonical current
+     * state may advance.
+     */
+    const rawInsertRow =
+        buildContextEventRow({
+            userId: user.id,
+            snapshot: typedSnapshot,
+            normalizedContext,
+            forecast,
+            airQuality,
+        });
+
+    const insertRow =
+        filterWeatherPersistenceRow({
+            row: rawInsertRow,
+            weatherEnabled,
+        });
+
+    const {
+        data: insertedEvent,
+        error: insertError,
+    } = await supabase
         .from("environment_context_events")
         .insert(insertRow)
-        .select("id,pulled_at_ms,input_lat,input_lng,temperature_c,us_aqi")
+        .select(
+            "id,pulled_at_ms,input_lat,input_lng,temperature_c,us_aqi",
+        )
         .single();
 
     if (insertError) {
         return NextResponse.json(
             {
                 ok: false,
-                code: "CONTEXT_INSERT_FAILED",
-                error: insertError.message,
-                normalized_context: normalizedContext,
+                code:
+                    "CONTEXT_INSERT_FAILED",
+                error:
+                    insertError.message,
             },
             { status: 500 },
         );
     }
 
-    const rawSnapshotUpdate = buildSnapshotUpdate({
-        insertedEventId: inserted.id,
-        insertedPulledAtMs: inserted.pulled_at_ms,
-        normalizedContext,
-    });
+    const snapshotUpdate =
+        filterWeatherPersistenceRow({
+            row: buildSnapshotUpdate({
+                contextEventId:
+                    insertedEvent.id,
+                pulledAtMs:
+                    insertedEvent.pulled_at_ms,
+                normalizedContext,
+            }),
+            weatherEnabled,
+        });
 
-    const snapshotUpdate = filterWeatherPersistenceRow({
-        row: rawSnapshotUpdate,
-        weatherEnabled,
-    });
-
-    const { data: updatedSnapshot, error: snapshotUpdateError } = await supabase
+    const {
+        data: updatedSnapshot,
+        error: snapshotUpdateError,
+    } = await supabase
         .from("environment_snapshots")
         .update(snapshotUpdate)
         .eq("id", typedSnapshot.id)
         .eq("user_id", user.id)
-        .select(
-            [
-                "id",
-                "temperature_c",
-                "apparent_temperature_c",
-                "humidity_pct",
-                "is_day",
-                "pressure_hpa",
-                "pressure_msl_hpa",
-                "surface_pressure_hpa",
-                "wind_speed_mps",
-                "wind_speed_kmh",
-                "cloud_cover_pct",
-                "aqi",
-                "us_aqi",
-                "pm2_5",
-                "carbon_monoxide",
-                "nitrogen_dioxide",
-                "sulphur_dioxide",
-                "ozone_ug_m3",
-                "uv_index",
-                "sunrise_local",
-                "sunset_local",
-                "environment_context_event_id",
-                "environment_context_pulled_at_ms",
-                "environment_context_provider",
-            ].join(","),
-        )
+        .select("*")
         .maybeSingle();
 
     if (snapshotUpdateError) {
         return NextResponse.json(
             {
                 ok: false,
-                code: "SNAPSHOT_CONTEXT_UPDATE_FAILED",
-                error: snapshotUpdateError.message,
-                event: inserted,
-                normalized_context: normalizedContext,
+                code:
+                    "SNAPSHOT_CONTEXT_UPDATE_FAILED",
+                error:
+                    snapshotUpdateError.message,
+                event:
+                    insertedEvent,
+                event_recorded: true,
             },
             { status: 500 },
         );
@@ -208,11 +323,15 @@ export async function GET() {
         return NextResponse.json(
             {
                 ok: false,
-                code: "SNAPSHOT_CONTEXT_UPDATE_NO_ROW",
-                event: inserted,
-                snapshot_id: typedSnapshot.id,
-                user_id: user.id,
-                normalized_context: normalizedContext,
+                code:
+                    "SNAPSHOT_CONTEXT_UPDATE_NO_ROW",
+                event:
+                    insertedEvent,
+                event_recorded: true,
+                snapshot_id:
+                    typedSnapshot.id,
+                user_id:
+                    user.id,
             },
             { status: 500 },
         );
@@ -220,9 +339,17 @@ export async function GET() {
 
     return NextResponse.json({
         ok: true,
-        event: inserted,
-        snapshot_updated: true,
-        updated_snapshot: updatedSnapshot,
-        normalized_context: normalizedContext,
+
+        engagement:
+            engagementState,
+
+        recording_requested: true,
+        event_recorded: true,
+        event:
+            insertedEvent,
+
+        snapshot_persisted: true,
+        resolved_snapshot:
+            updatedSnapshot,
     });
 }

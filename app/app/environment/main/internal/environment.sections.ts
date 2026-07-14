@@ -1,19 +1,25 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT SECTIONS
    File: app/app/environment/main/internal/environment.sections.ts
-   Scope: Preserve Environment model entrypoint while delegating to compiler layer
+   Scope: Preserve Environment model entrypoint while separating live and recorded snapshots
    Last Updated:
-   - ms: 1781108888881
-   - iso: 2026-06-10T16:28:08.881Z
-   - note: pass persisted Environment preferences through compiler wrapper
+   - iso: 2026-07-14
+   - note: forward ephemeral Environment state separately from persisted record proof
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import type { EnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences";
+import type {
+    EnvironmentEngagementState,
+} from "@/lib/app-state/environment/environment-engagement";
+import type {
+    EnvironmentPreferences,
+} from "@/lib/app-state/environment/environment-preferences";
 
-import { compileEnvironmentModel } from "./compiler/environment.compiler";
+import {
+    compileEnvironmentModel,
+} from "./compiler/environment.compiler";
 import type {
     EnvironmentSnapshot,
     EnvironmentViewModel,
@@ -23,13 +29,17 @@ import type {
    Public API
 -------------------------------- */
 export function getEnvironmentModel(
-    snapshot: EnvironmentSnapshot | null,
+    liveSnapshot: EnvironmentSnapshot | null,
+    recordedSnapshot: EnvironmentSnapshot | null,
     environmentEnabled: boolean,
-    environmentPreferences: EnvironmentPreferences
+    environmentPreferences: EnvironmentPreferences,
+    engagementState: EnvironmentEngagementState,
 ): EnvironmentViewModel {
     return compileEnvironmentModel(
-        snapshot,
+        liveSnapshot,
+        recordedSnapshot,
         environmentEnabled,
-        environmentPreferences
+        environmentPreferences,
+        engagementState,
     );
 }

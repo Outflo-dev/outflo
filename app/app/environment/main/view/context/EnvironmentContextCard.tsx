@@ -4,14 +4,21 @@
    OUTFLO — ENVIRONMENT CONTEXT CARD
    File: app/app/environment/main/view/context/EnvironmentContextCard.tsx
    Scope: Resolve Context Card display values and compose owned regions
+   Last Updated:
+   - iso: 2026-07-14
+   - note: bind Context Card posture control to compiled Engagement state
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
-import { VISUAL } from "../../../../../../components/system/primitives/visuals";
+import type {
+    EnvironmentEngagementSelectableMode,
+} from "@/lib/app-state/environment/environment-engagement";
 
-import type { EnvironmentViewModel } from "../../internal/environment.types";
+import type {
+    EnvironmentViewModel,
+} from "../../internal/environment.types";
 import EnvironmentContextCardFrame from "./internal/EnvironmentContextCardFrame";
 import EnvironmentContextRight from "./internal/regions/EnvironmentContextRight";
 import EnvironmentContextContent from "./EnvironmentContextContent";
@@ -25,6 +32,10 @@ type EnvironmentContextCardProps = {
     model: EnvironmentViewModel;
     pingCount?: string;
     moneyValue?: string;
+    engagementSaving: boolean;
+    onEngagementModeChange: (
+        mode: EnvironmentEngagementSelectableMode,
+    ) => void;
 };
 
 /* ------------------------------
@@ -34,25 +45,22 @@ export default function EnvironmentContextCard({
     model,
     pingCount = "—",
     moneyValue = "—",
+    engagementSaving,
+    onEngagementModeChange,
 }: EnvironmentContextCardProps) {
-    const placeLabel = model.hero.place;
-
-    const precisionLabel = model.hasSnapshot
-        ? "PRECISE"
-        : "WAITING";
-
-    const precisionToken = model.hasSnapshot
-        ? VISUAL.state.good[18]
-        : VISUAL.state.muted[12];
-
     return (
         <EnvironmentContextCardFrame
             left={
                 <EnvironmentContextLeft>
                     <EnvironmentContextContent
-                        placeLabel={placeLabel}
-                        precisionLabel={precisionLabel}
-                        precisionToken={precisionToken}
+                        placeLabel={model.hero.place}
+                        engagement={model.engagement}
+                        engagementSaving={
+                            engagementSaving
+                        }
+                        onEngagementModeChange={
+                            onEngagementModeChange
+                        }
                     />
                 </EnvironmentContextLeft>
             }

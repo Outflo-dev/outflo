@@ -3,15 +3,15 @@
    File: app/app/environment/main/internal/environment.types.ts
    Scope: Define Environment substrate landing page display contracts
    Last Updated:
-   - ms: 1780011540053
-   - iso: 2026-05-28T23:39:00.053Z
-   - note: add Environment scene model and remove hero background ownership
+   - iso: 2026-07-14
+   - note: add Environment-facing Engagement projection
    ========================================================== */
 
 /* ------------------------------
    Types
 -------------------------------- */
-export type EnvironmentSnapshot = Record<string, unknown>;
+export type EnvironmentSnapshot =
+    Record<string, unknown>;
 
 export type EnvironmentSceneKey =
     | "empty"
@@ -29,6 +29,16 @@ export type EnvironmentAirQualityStatus =
     | "moderate"
     | "elevated"
     | "unknown";
+
+export type EnvironmentEngagementMode =
+    | "precise"
+    | "capture";
+
+export type EnvironmentEngagementModel = {
+    enabled: boolean;
+    selectedMode:
+    EnvironmentEngagementMode | null;
+};
 
 export type EnvironmentAirTileModel = {
     title: string;
@@ -96,6 +106,7 @@ export type EnvironmentViewModel = {
     scene: EnvironmentSceneModel;
     hero: EnvironmentHeroModel;
     location: EnvironmentLocationModel;
+    engagement: EnvironmentEngagementModel;
     tiles: EnvironmentTilesModel;
     forecast: EnvironmentForecastModel;
     summary: EnvironmentSummarySectionModel;

@@ -1,7 +1,12 @@
+"use client";
+
 /* ==========================================================
    OUTFLO — ENVIRONMENT CONTEXT RESOLUTION TILE
    File: app/app/environment/main/view/context/controls/EnvironmentContextResolutionTile.tsx
-   Scope: Render the current Environment resolution state
+   Scope: Render the current Environment Engagement posture control
+   Last Updated:
+   - iso: 2026-07-14
+   - note: wire the Context Card word tile as an interactive Engagement control
    ========================================================== */
 
 /* ------------------------------
@@ -9,7 +14,6 @@
 -------------------------------- */
 import type {
     CSSProperties,
-    ReactNode,
 } from "react";
 
 import {
@@ -22,7 +26,9 @@ import {
 type EnvironmentContextResolutionTileProps = {
     label: string;
     token: string;
-    mark: ReactNode;
+    disabled: boolean;
+    ariaLabel: string;
+    onClick: () => void;
 };
 
 /* ------------------------------
@@ -31,16 +37,21 @@ type EnvironmentContextResolutionTileProps = {
 const TILE_STYLE: CSSProperties = {
     display: VISUAL.display[6],
     alignItems: "center",
+    justifyContent: "center",
+
     width: "fit-content",
     minWidth: 0,
 
-    padding: `${VISUAL.spacing[3]} ${VISUAL.spacing[5]}`,
+    padding:
+        `${VISUAL.spacing[3]} ${VISUAL.spacing[6]}`,
 
     borderWidth: VISUAL.border.width[1],
     borderStyle: VISUAL.border.style[1],
-    borderColor: "var(--environment-context-resolution)",
+    borderColor:
+        "var(--environment-context-resolution)",
 
     borderRadius: VISUAL.radius[5],
+
     background: VISUAL.fill[2],
 
     boxShadow: `
@@ -50,26 +61,21 @@ const TILE_STYLE: CSSProperties = {
         ${VISUAL.inset.spread[0]}
         var(--environment-context-resolution)
     `,
+
+    appearance: "none",
+    cursor: "pointer",
 };
 
-const MARK_STYLE: CSSProperties = {
-    display: VISUAL.display[6],
-    alignItems: "center",
-    justifyContent: "center",
-
-    width: VISUAL.spacing[8],
-    height: VISUAL.spacing[8],
-    flex: "0 0 auto",
-
-    marginRight: VISUAL.spacing[4],
-
-    color: "var(--environment-context-resolution)",
+const DISABLED_STYLE: CSSProperties = {
+    cursor: "default",
+    opacity: VISUAL.opacity[12],
 };
 
 const LABEL_STYLE: CSSProperties = {
     margin: 0,
 
-    color: "var(--environment-context-resolution)",
+    color:
+        "var(--environment-context-resolution)",
 
     fontFamily: VISUAL.type.family[2],
     fontSize: VISUAL.type.size[4],
@@ -87,27 +93,30 @@ const LABEL_STYLE: CSSProperties = {
 export default function EnvironmentContextResolutionTile({
     label,
     token,
-    mark,
+    disabled,
+    ariaLabel,
+    onClick,
 }: EnvironmentContextResolutionTileProps) {
     return (
-        <div
+        <button
+            type="button"
+            disabled={disabled}
+            aria-label={ariaLabel}
+            onClick={onClick}
             style={
                 {
                     ...TILE_STYLE,
-                    "--environment-context-resolution": token,
+                    ...(disabled
+                        ? DISABLED_STYLE
+                        : null),
+                    "--environment-context-resolution":
+                        token,
                 } as CSSProperties
             }
         >
-            <span
-                style={MARK_STYLE}
-                aria-hidden="true"
-            >
-                {mark}
-            </span>
-
-            <p style={LABEL_STYLE}>
+            <span style={LABEL_STYLE}>
                 {label}
-            </p>
-        </div>
+            </span>
+        </button>
     );
 }

@@ -1,7 +1,10 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT CONTEXT CONTENT
    File: app/app/environment/main/view/context/EnvironmentContextContent.tsx
-   Scope: Compose Context Card place and resolution content
+   Scope: Compose Context Card place and Engagement control
+   Last Updated:
+   - iso: 2026-07-14
+   - note: resolve canonical Engagement through the Environment word tile
    ========================================================== */
 
 /* ------------------------------
@@ -11,20 +14,29 @@ import type {
     CSSProperties,
 } from "react";
 
+import type {
+    EnvironmentEngagementSelectableMode,
+} from "@/lib/app-state/environment/environment-engagement";
+
 import {
     VISUAL,
 } from "../../../../../../components/system/primitives/visuals";
 
+import type {
+    EnvironmentEngagementModel,
+} from "../../internal/environment.types";
 import EnvironmentContextResolutionTile from "./controls/EnvironmentContextResolutionTile";
-import EnvironmentContextResolutionMark from "./primitives/marks/EnvironmentContextResolutionMark";
 
 /* ------------------------------
    Types
 -------------------------------- */
 type EnvironmentContextContentProps = {
     placeLabel: string;
-    precisionLabel: string;
-    precisionToken: string;
+    engagement: EnvironmentEngagementModel;
+    engagementSaving: boolean;
+    onEngagementModeChange: (
+        mode: EnvironmentEngagementSelectableMode,
+    ) => void;
 };
 
 /* ------------------------------
@@ -75,13 +87,54 @@ const PLACE_STYLE: CSSProperties = {
 };
 
 /* ------------------------------
+   Engagement Resolution
+-------------------------------- */
+function getEngagementLabel(
+    engagement: EnvironmentEngagementModel,
+): string {
+    if (!engagement.enabled) {
+        return "OFF";
+    }
+
+    if (engagement.selectedMode === "precise") {
+        return "PRECISE";
+    }
+
+    if (engagement.selectedMode === "capture") {
+        return "CAPTURE";
+    }
+
+    return "SYSTEM";
+}
+
+function getNextEngagementMode(
+    engagement: EnvironmentEngagementModel,
+): EnvironmentEngagementSelectableMode {
+    return engagement.selectedMode === "precise"
+        ? "capture"
+        : "precise";
+}
+
+/* ------------------------------
    Component
 -------------------------------- */
 export default function EnvironmentContextContent({
     placeLabel,
-    precisionLabel,
-    precisionToken,
+    engagement,
+    engagementSaving,
+    onEngagementModeChange,
 }: EnvironmentContextContentProps) {
+    const engagementLabel =
+        getEngagementLabel(engagement);
+
+    const nextMode =
+        getNextEngagementMode(engagement);
+
+    const engagementToken =
+        engagement.enabled
+            ? VISUAL.state.good[18]
+            : VISUAL.state.muted[12];
+
     return (
         <div style={CONTENT_STYLE}>
             <p style={EYEBROW_STYLE}>
@@ -94,11 +147,22 @@ export default function EnvironmentContextContent({
                 </h2>
 
                 <EnvironmentContextResolutionTile
-                    label={precisionLabel}
-                    token={precisionToken}
-                    mark={
-                        <EnvironmentContextResolutionMark />
+                    label={engagementLabel}
+                    token={engagementToken}
+                    disabled={
+                        !engagement.enabled ||
+                        engagementSaving
                     }
+                    ariaLabel={
+                        engagement.enabled
+                            ? `Change Environment engagement from ${engagementLabel.toLowerCase()}`
+                            : "Environment engagement is off"
+                    }
+                    onClick={() => {
+                        onEngagementModeChange(
+                            nextMode,
+                        );
+                    }}
                 />
             </div>
         </div>

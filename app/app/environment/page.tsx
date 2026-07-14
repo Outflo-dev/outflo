@@ -2,23 +2,35 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT PAGE
    File: app/app/environment/page.tsx
-   Scope: Server route entry for Environment substrate surface
+   Scope: Restore canonical Environment state for the substrate surface
    Last Updated:
-   - ms:
-   - iso:
-   - note: route applies AppFrame directly for Environment
+   - iso: 2026-07-14
+   - note: restore canonical Engagement state through shared server ownership
    ========================================================== */
 
 /* ------------------------------
    Imports
 -------------------------------- */
 import AppFrame from "@/components/system/shell/app/AppFrame";
-import { DEFAULT_ENVIRONMENT_PREFERENCES } from "@/lib/app-state/environment/environment-preferences";
-import { getEnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences.server";
+
+import {
+    DEFAULT_ENVIRONMENT_ENGAGEMENT_STATE,
+} from "@/lib/app-state/environment/environment-engagement";
+import {
+    getEnvironmentEngagementState,
+} from "@/lib/app-state/environment/environment-engagement.server";
+import {
+    DEFAULT_ENVIRONMENT_PREFERENCES,
+} from "@/lib/app-state/environment/environment-preferences";
+import {
+    getEnvironmentPreferences,
+} from "@/lib/app-state/environment/environment-preferences.server";
 import { supabaseServer } from "@/lib/supabase/server";
 
 import EnvironmentController from "./main/internal/EnvironmentController";
-import type { EnvironmentSnapshot } from "./main/internal/environment.types";
+import type {
+    EnvironmentSnapshot,
+} from "./main/internal/environment.types";
 
 /* ------------------------------
    Runtime
@@ -41,7 +53,12 @@ export default async function Page() {
                 <EnvironmentController
                     snapshot={null}
                     environmentEnabled={false}
-                    environmentPreferences={DEFAULT_ENVIRONMENT_PREFERENCES}
+                    environmentPreferences={
+                        DEFAULT_ENVIRONMENT_PREFERENCES
+                    }
+                    engagementState={
+                        DEFAULT_ENVIRONMENT_ENGAGEMENT_STATE
+                    }
                 />
             </AppFrame>
         );
@@ -51,6 +68,7 @@ export default async function Page() {
         { data: snapshot },
         { data: preferences },
         environmentPreferences,
+        engagementState,
     ] = await Promise.all([
         supabase
             .from("environment_snapshots")
@@ -65,6 +83,8 @@ export default async function Page() {
             .maybeSingle(),
 
         getEnvironmentPreferences(),
+
+        getEnvironmentEngagementState(),
     ]);
 
     const environmentEnabled =
@@ -73,9 +93,19 @@ export default async function Page() {
     return (
         <AppFrame>
             <EnvironmentController
-                snapshot={(snapshot ?? null) as EnvironmentSnapshot | null}
-                environmentEnabled={environmentEnabled}
-                environmentPreferences={environmentPreferences}
+                snapshot={
+                    (snapshot ?? null) as
+                    EnvironmentSnapshot | null
+                }
+                environmentEnabled={
+                    environmentEnabled
+                }
+                environmentPreferences={
+                    environmentPreferences
+                }
+                engagementState={
+                    engagementState
+                }
             />
         </AppFrame>
     );

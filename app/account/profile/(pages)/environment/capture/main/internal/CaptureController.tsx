@@ -3,10 +3,10 @@
 /* ==========================================================
    OUTFLO — ENVIRONMENT ENGAGEMENT CONTROLLER
    File: app/account/profile/(pages)/environment/capture/main/internal/CaptureController.tsx
-   Scope: Load, own, and persist Environment engagement state
+   Scope: Load, present, and persist Environment engagement state
    Last Updated:
    - iso: 2026-07-13
-   - note: connect Engagement controls to canonical Guide persistence
+   - note: consume shared canonical Engagement transitions and client transport
    ========================================================== */
 
 /* ------------------------------
@@ -25,9 +25,14 @@ import Motion, {
 import AppFrame from "@/components/system/shell/app/AppFrame";
 
 import {
+    readEnvironmentEngagementState,
+    writeEnvironmentEngagementState,
+} from "@/lib/app-state/environment/environment-engagement.client";
+import {
     DEFAULT_ENVIRONMENT_ENGAGEMENT_STATE,
-    isEnvironmentEngagementState,
+    resolveEnvironmentEngagementState,
     type EnvironmentEngagementState,
+    type EnvironmentEngagementTransition,
 } from "@/lib/app-state/environment/environment-engagement";
 
 import CaptureView from "../view/CaptureView";
@@ -39,9 +44,6 @@ import type {
 /* ------------------------------
    Constants
 -------------------------------- */
-const ENGAGEMENT_ENDPOINT =
-    "/api/profile/environment/engagement";
-
 const MAIN_STYLE: CSSProperties = {
     minHeight: "100svh",
     padding:
@@ -51,109 +53,21 @@ const MAIN_STYLE: CSSProperties = {
 };
 
 /* ------------------------------
-   State Resolution
+   Transition Resolution
 -------------------------------- */
-function resolveNextEngagementState(
-    current: EnvironmentEngagementState,
+function getEngagementTransition(
     controlId: CaptureControlId,
-): EnvironmentEngagementState {
+): EnvironmentEngagementTransition {
     if (controlId === "engagement") {
         return {
-            ...current,
-            enabled: !current.enabled,
-        };
-    }
-
-    if (!current.enabled) {
-        return current;
-    }
-
-    if (controlId === "precise") {
-        return {
-            enabled: true,
-            mode: "precise",
+            type: "toggle-enabled",
         };
     }
 
     return {
-        enabled: true,
-        mode: "capture",
+        type: "select-mode",
+        mode: controlId,
     };
-}
-
-/* ------------------------------
-   Persistence
--------------------------------- */
-async function readEngagementState(
-    signal: AbortSignal,
-): Promise<EnvironmentEngagementState> {
-    const response = await fetch(
-        ENGAGEMENT_ENDPOINT,
-        {
-            method: "GET",
-            cache: "no-store",
-            signal,
-        },
-    );
-
-    const body: unknown = await response.json();
-
-    if (!response.ok) {
-        const errorBody = body as {
-            error?: string;
-        };
-
-        throw new Error(
-            errorBody.error ??
-            "Unable to load Environment engagement.",
-        );
-    }
-
-    const responseBody = body as {
-        engagement?: unknown;
-    };
-
-    if (
-        !isEnvironmentEngagementState(
-            responseBody.engagement,
-        )
-    ) {
-        throw new Error(
-            "Environment engagement response was invalid.",
-        );
-    }
-
-    return responseBody.engagement;
-}
-
-async function writeEngagementState(
-    state: EnvironmentEngagementState,
-): Promise<void> {
-    const response = await fetch(
-        ENGAGEMENT_ENDPOINT,
-        {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(state),
-        },
-    );
-
-    if (response.ok) {
-        return;
-    }
-
-    const body = await response
-        .json()
-        .catch(() => null) as {
-            error?: string;
-        } | null;
-
-    throw new Error(
-        body?.error ??
-        "Unable to save Environment engagement.",
-    );
 }
 
 /* ------------------------------
@@ -171,6 +85,11 @@ export default function CaptureController() {
         DEFAULT_ENVIRONMENT_ENGAGEMENT_STATE,
     );
 
+    const confirmedStateRef =
+        useRef<EnvironmentEngagementState>(
+            DEFAULT_ENVIRONMENT_ENGAGEMENT_STATE,
+        );
+
     const saveVersionRef = useRef(0);
 
     const model =
@@ -183,9 +102,12 @@ export default function CaptureController() {
         async function loadEngagement() {
             try {
                 const state =
-                    await readEngagementState(
+                    await readEnvironmentEngagementState(
                         controller.signal,
                     );
+
+                confirmedStateRef.current =
+                    state;
 
                 setEngagementState(state);
             } catch (error) {
@@ -213,16 +135,15 @@ export default function CaptureController() {
     function handleToggle(
         controlId: CaptureControlId,
     ) {
-        const previousState =
-            engagementState;
-
         const nextState =
-            resolveNextEngagementState(
-                previousState,
-                controlId,
+            resolveEnvironmentEngagementState(
+                engagementState,
+                getEngagementTransition(
+                    controlId,
+                ),
             );
 
-        if (nextState === previousState) {
+        if (nextState === engagementState) {
             return;
         }
 
@@ -234,25 +155,41 @@ export default function CaptureController() {
         saveVersionRef.current =
             saveVersion;
 
-        void writeEngagementState(
+        void writeEnvironmentEngagementState(
             nextState,
-        ).catch((error) => {
-            console.error(
-                "Failed to save Environment engagement.",
-                error,
-            );
+        )
+            .then((persistedState) => {
+                confirmedStateRef.current =
+                    persistedState;
 
-            if (
-                saveVersionRef.current !==
-                saveVersion
-            ) {
-                return;
-            }
+                if (
+                    saveVersionRef.current !==
+                    saveVersion
+                ) {
+                    return;
+                }
 
-            setEngagementState(
-                previousState,
-            );
-        });
+                setEngagementState(
+                    persistedState,
+                );
+            })
+            .catch((error) => {
+                console.error(
+                    "Failed to save Environment engagement.",
+                    error,
+                );
+
+                if (
+                    saveVersionRef.current !==
+                    saveVersion
+                ) {
+                    return;
+                }
+
+                setEngagementState(
+                    confirmedStateRef.current,
+                );
+            });
     }
 
     function handleBack() {

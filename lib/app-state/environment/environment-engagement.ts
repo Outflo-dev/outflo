@@ -2,6 +2,9 @@
    OUTFLO — ENVIRONMENT ENGAGEMENT
    File: lib/app-state/environment/environment-engagement.ts
    Scope: Define canonical Guide-owned Environment engagement state
+   Last Updated:
+   - iso: 2026-07-13
+   - note: centralize canonical Engagement state transitions
    ========================================================== */
 
 /* ------------------------------
@@ -12,10 +15,23 @@ export type EnvironmentEngagementMode =
     | "precise"
     | "capture";
 
+export type EnvironmentEngagementSelectableMode =
+    | "precise"
+    | "capture";
+
 export type EnvironmentEngagementState = {
     enabled: boolean;
     mode: EnvironmentEngagementMode;
 };
+
+export type EnvironmentEngagementTransition =
+    | {
+        type: "toggle-enabled";
+    }
+    | {
+        type: "select-mode";
+        mode: EnvironmentEngagementSelectableMode;
+    };
 
 /* ------------------------------
    Defaults
@@ -39,6 +55,15 @@ export function isEnvironmentEngagementMode(
     );
 }
 
+export function isEnvironmentEngagementSelectableMode(
+    value: unknown,
+): value is EnvironmentEngagementSelectableMode {
+    return (
+        value === "precise" ||
+        value === "capture"
+    );
+}
+
 export function isEnvironmentEngagementState(
     value: unknown,
 ): value is EnvironmentEngagementState {
@@ -56,4 +81,32 @@ export function isEnvironmentEngagementState(
         typeof candidate.enabled === "boolean" &&
         isEnvironmentEngagementMode(candidate.mode)
     );
+}
+
+/* ------------------------------
+   State Resolution
+-------------------------------- */
+export function resolveEnvironmentEngagementState(
+    current: EnvironmentEngagementState,
+    transition: EnvironmentEngagementTransition,
+): EnvironmentEngagementState {
+    if (transition.type === "toggle-enabled") {
+        return {
+            ...current,
+            enabled: !current.enabled,
+        };
+    }
+
+    if (!current.enabled) {
+        return current;
+    }
+
+    if (current.mode === transition.mode) {
+        return current;
+    }
+
+    return {
+        enabled: true,
+        mode: transition.mode,
+    };
 }

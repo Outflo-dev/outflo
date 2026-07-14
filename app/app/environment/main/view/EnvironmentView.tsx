@@ -5,6 +5,9 @@
    OUTFLO — ENVIRONMENT VIEW
    File: app/app/environment/main/view/EnvironmentView.tsx
    Scope: Compose Environment substrate shell around Kelvin center
+   Last Updated:
+   - iso: 2026-07-14
+   - note: propagate Environment Engagement interaction into Context Card
    ========================================================== */
 
 /* ------------------------------
@@ -12,11 +15,20 @@
 -------------------------------- */
 import type { CSSProperties } from "react";
 
-import type { EnvironmentPreferences } from "@/lib/app-state/environment/environment-preferences";
+import type {
+    EnvironmentEngagementSelectableMode,
+} from "@/lib/app-state/environment/environment-engagement";
+import type {
+    EnvironmentPreferences,
+} from "@/lib/app-state/environment/environment-preferences";
 
-import { VISUAL } from "../../../../../components/system/primitives/visuals";
+import {
+    VISUAL,
+} from "../../../../../components/system/primitives/visuals";
 
-import type { EnvironmentViewModel } from "../internal/environment.types";
+import type {
+    EnvironmentViewModel,
+} from "../internal/environment.types";
 import EnvironmentContextCard from "./context/EnvironmentContextCard";
 import EnvironmentHeader from "./header/EnvironmentHeader";
 import EnvironmentHero from "./hero/EnvironmentHero";
@@ -30,7 +42,11 @@ type EnvironmentViewProps = {
     model: EnvironmentViewModel;
     onBack: () => void;
     onRefresh: () => void;
+    onEngagementModeChange: (
+        mode: EnvironmentEngagementSelectableMode,
+    ) => void;
     refreshing: boolean;
+    engagementSaving: boolean;
     lastUpdatedAt: number | null;
     environmentPreferences: EnvironmentPreferences;
 };
@@ -75,13 +91,17 @@ export default function EnvironmentView({
     model,
     onBack,
     onRefresh,
+    onEngagementModeChange,
     refreshing,
+    engagementSaving,
     lastUpdatedAt,
     environmentPreferences,
 }: EnvironmentViewProps) {
     return (
         <section style={ROOT_STYLE}>
-            <EnvironmentAtmosphere scene={model.scene} />
+            <EnvironmentAtmosphere
+                scene={model.scene}
+            />
 
             <section style={CONTENT_STYLE}>
                 <EnvironmentHeader
@@ -89,7 +109,9 @@ export default function EnvironmentView({
                     onRefresh={onRefresh}
                     refreshing={refreshing}
                     lastUpdatedAt={lastUpdatedAt}
-                    environmentPreferences={environmentPreferences}
+                    environmentPreferences={
+                        environmentPreferences
+                    }
                 />
 
                 <div style={CONTEXT_SLOT_STYLE}>
@@ -97,6 +119,12 @@ export default function EnvironmentView({
                         model={model}
                         pingCount="—"
                         moneyValue="—"
+                        engagementSaving={
+                            engagementSaving
+                        }
+                        onEngagementModeChange={
+                            onEngagementModeChange
+                        }
                     />
                 </div>
 
@@ -105,7 +133,9 @@ export default function EnvironmentView({
                 </div>
 
                 <div style={TILES_SLOT_STYLE}>
-                    <EnvironmentTiles model={model.tiles} />
+                    <EnvironmentTiles
+                        model={model.tiles}
+                    />
                 </div>
             </section>
         </section>
